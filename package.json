@@ -1,0 +1,31 @@
+{
+  "name": "cst",
+  "version": "1.0.0",
+  "description": "chatta sangayana tipitaka",
+  "private": true,
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tokenizer": "babel-node ./dev/tokenizer.js",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "jsdom": "^11.11.0",
+    "vkbeautify": "^0.99.3",
+    "webpack": "^4.16.4",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1"
+  }
+}

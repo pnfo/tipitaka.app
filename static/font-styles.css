@@ -1,0 +1,84 @@
+@font-face {
+    font-family: 'noto si sans';
+    src: local('###'), url('./fonts/NotoSansSinhala-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'noto si sans';
+    src: local('###'), url('./fonts/NotoSansSinhala-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+@font-face {
+    font-family: 'noto si serif';
+    src: local('###'), url('./fonts/NotoSerifSinhala-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'noto si serif';
+    src: local('###'), url('./fonts/NotoSerifSinhala-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'noto de serif';
+    src: local('###'), url('./fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'noto de serif';
+    src: local('###'), url('./fonts/NotoSerifDevanagari-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'noto ro serif';
+    src: local('###'), url('./fonts/NotoSerif-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'noto ro serif';
+    src: local('###'), url('./fonts/NotoSerif-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'noto th serif';
+    src: local('###'), url('./fonts/NotoSerifThai-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'noto th serif';
+    src: local('###'), url('./fonts/NotoSerifThai-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'itmsu';
+    src: local('###'), url('./fonts/itmsu-r.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'itmsu';
+    src: local('###'), url('./fonts/itmsu-b.ttf') format('truetype');
+    font-weight: bold;
+}
+
+.UT[lang=en] {
+    font-family: 'noto ro serif';
+}
+.UT[lang=si] {
+    font-family: 'noto si serif';
+}
+
+.PT[lang=si],.tab-content[lang=si] {
+    font-family: 'noto si serif';
+}
+.PT[lang=de],.tab-content[lang=de] {
+    font-family: 'noto de serif';
+}
+.PT[lang=ro],.tab-content[lang=ro] {
+    font-family: 'noto ro serif';
+}
+.PT[lang=th],.tab-content[lang=th] {
+    font-family: 'noto th serif';
+}

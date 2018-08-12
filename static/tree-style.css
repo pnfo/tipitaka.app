@@ -1,0 +1,74 @@
+.pitaka-tree-container {
+    overflow: auto;
+    max-width: 15rem;
+    top: 0;
+    left: 0;
+    background-color: whitesmoke;
+    z-index: 4;
+}
+
+.pitaka-tree {
+    text-align: left;
+}
+
+.pitaka-tree a {
+	cursor: pointer;
+    font-size: 0.85rem;
+}
+.pitaka-tree > ul {
+    margin: 0px 0px 0px -20px;
+    padding: 0.3rem;
+}
+.pitaka-tree ul {
+    list-style: none inside none;
+    /* change indentation width */
+    padding-left: 15px;
+}
+/* bigger font for the first level only */
+.pitaka-tree > ul > li > a {
+    font-weight: bold;
+}
+.pitaka-tree a {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    padding: 0 0 0 20px;
+    white-space: nowrap;
+}
+.pitaka-tree a:hover {
+    background-color: silver;
+	font-weight: bold;
+}
+.pitaka-tree a:active {
+    background-color: lavender;
+}
+
+.pitaka-tree a:before {
+    font-family: "Font Awesome 5 Pro"; 
+    font-weight: 400; 
+    content: "\f15c";
+    padding-right: 5px;
+    color: rgb(252, 125, 7);
+}
+.pitaka-tree a:hover::before {
+    font-weight: 900;
+}
+
+.pitaka-tree li.parent > a:before {
+    content: "\f07b";
+}
+.pitaka-tree li.parent > a:hover::before {
+    font-weight: 900; 
+}
+
+.pitaka-tree li.parent.active > a:before {
+    font-weight: 900; 
+    content: "\f07c";
+}
+
+.pitaka-tree > ul > li ul {
+    display: none;
+}
+.pitaka-tree li {
+    position: relative;
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="3q30uQ1_gO_dEVjUO6EsTgpovt8MHTyY75774HmTSb0" />
+    <title>Chattha Sangayana Tipitaka</title>
+    <meta name="description" content="Tipitaka in Many Languages">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="./static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="./static/common-styles.css?v=1" />
+    <link rel="stylesheet" href="./static/font-styles.css?v=1" />
+    <link rel="stylesheet" href="./static/tree-style.css?v=1" />
+    <link rel="stylesheet" href="./static/text-styles.css?v=1" />
+    <link rel="stylesheet" href="./static/fontawesome/all.min.css?v=1"/>
+    <link rel="stylesheet" href="./static/search.css?v=1"/>
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-46817481-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <style>
+        i.ss-hide {
+            font-style: normal;
+        }
+        @media screen and (max-width: 800pt) {
+            .pitaka-tree-container {
+                position: absolute;
+                display: none;
+                height: 100%;
+                max-width: 100%;
+                -webkit-box-shadow: 8px 9px 42px 8px rgba(0,0,0,0.19);
+                -moz-box-shadow: 8px 9px 42px 8px rgba(0,0,0,0.19);
+                box-shadow: 8px 9px 42px 8px rgba(0,0,0,0.19);
+            }
+            .pitaka-tree-container .user-opened {
+                display: block;
+            }
+        }
+        @media screen and (max-width: 400pt) {
+            .ss-hide {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div align="center" style="margin:0 auto; max-width: 1000pt; height: 100%; display: flex; flex-flow: column; overflow: hidden;">
+
+    <div style="flex: 0 1 auto;">
+        <div class="title-bar">
+            <i id="tree-toggle" class="far fa-sitemap"></i>
+            <div style="flex: 1 1;"><i class="UT" lang="en">Chatta Sangayana Tipitaka</i></div>
+            <i id="menu-toggle" class="far fa-bars tipright"></i>
+        </div>
+        <div id="search-bar-div">
+            <input class="search-bar" type="text" placeholder=" Search">
+            <a id="settings-button" class="button tipright"><i class="far fa-wrench action"></i></a>
+            <a id="text-view-button" class="button tipright"><i class="far fa-book-open"></i><i class="ss-hide UT"> Text</i></a>
+            
+            <div id="menu-list" style="right: 0; top: 0;">
+                <!--<a class="menu-list-item" href="intro.html?goto=about"><i class="fa fa-male fa-fw"></i> අප ගැන</a>
+                <a class="menu-list-item" href="intro.html?goto=usage"><i class="fa fa-question-circle fa-fw"></i> භාවිතයට උපදෙස්</a>-->
+                <!--<a class="menu-list-item" href="../"><i class="fa fa-file-text-o fa-fw" style="color: darkgreen;"></i> සරල ත්‍රිපිටකය</a>-->
+                <a class="menu-list-item" href="./static/offline.html"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
+                <a class="menu-list-item" href="https://tipitaka.app/convert"><i class="far fa-language fa-fw" style="color: green;"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
+                <a class="menu-list-item" href="./static/about.html"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
+                <a class="menu-list-item" href="./static/help.html"><i class="far fa-question-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">Help</i></a>
+                <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: blue;" class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="contents-area" style="flex: 1 1 auto; display: flex; flex-flow: row nowrap; position: relative;" >
+        <div class="pitaka-tree-container" style="flex: 0 1 auto;">
+            <div class="pitaka-tree"></div>
+        </div>
+
+        <div id="search-area" class="pane" style="flex: 1 1 auto; overflow-y: auto;">
+            <div id="search-status" align="center"><i class="UT" lang="en">For searching type the search term in the box above</i></div>
+            <div id="search-filter-status" align="center"></div>
+            <table id="search-results">
+                <thead>
+                    <tr>
+                        <td><i class="fa fa-search fa-fw"></i> ගැළපෙන වචන<span class="sort-action" by="nikaya">
+                            <a class="button" tip="නිකාය වැඩිවන පිළිවෙලට පෙළගස්වන්න" order="asc"><i class="fa fa-sort-alpha-asc fa-fw"></i></a>
+                            <a class="button" tip="නිකාය අඩුවන පිළිවෙලට පෙළගස්වන්න" order="desc"><i class="fa fa-sort-alpha-desc fa-fw"></i></a></span>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="settings-area" class="pane" style="flex: 1 1 auto; overflow-y: auto;">
+            <h1><i class="far fa-wrench"></i> <i class="UT" lang="en">Settings</i></h1>
+            <h2><i class="far fa-globe-asia"></i> <i class="UT" lang="en">Select User Interface Language</i></h2>
+            <div id="ui-lang-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-language"></i> <i class="UT" lang="en">Select Pali Text Display Script</i></h2>
+            <div id="pali-script-select" class="custom-radio"></div>
+            
+            <h2><i class="far fa-comment"></i> <i class="UT" lang="en">Abbreviations Format</i></h2>
+            <div id="abbre-format-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-book"></i> <i class="UT" lang="en">Page Tags Format</i></h2>
+            <div id="pagetag-format-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-font"></i> <i class="UT" lang="en">Text Size</i></h2>
+            <div id="text-size-select" class="custom-radio"></div>
+        </div>
+
+        <div id="text-view-area" class="text-section pane" style="flex: 1 1 ; position: relative; display: flex; flex-direction: column;">
+            <div class="tab-heads"></div>
+            <div class="tab-contents" style="overflow-y: auto; height: 100%;"></div>
+        </div>
+
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="./scripts/jquery-3.3.1.min.js"></script>
+<script>
+    function showPane(pane) {
+        $('div.pane').hide();
+        if (pane == 'text') $('#text-view-area').show();
+        else if (pane == 'settings') $('#settings-area').show();
+        else if (pane == 'search') $('#search-view-area').show();
+    }
+    showPane('settings');
+</script>
+<!--<script src="./scripts/underscore-min.js"></script>-->
+<!--<script src="./scripts/pitakaTabs.js?v=1" type="module"></script>
+<script src="./scripts/pitakaTree.js?v=1" type="module"></script>
+<script src="./scripts/search.js?v=1" type="module"></script>-->
+
+<script src="./scripts/index.js?v=1" type="module"></script>
+<!--use webpack (npm run build) to build this and uncomment for production-->
+<!--<script src="./bundle.js"></script>-->
+
+<script id="__bs_script__">//<![CDATA[
+    document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.24.6'><\/script>".replace("HOST", location.hostname));
+//]]></script>
+</body>
+</html>

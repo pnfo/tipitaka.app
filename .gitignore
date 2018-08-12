@@ -1,0 +1,8 @@
+.cache
+.vscode
+dev
+node_modules
+test
+static/text
+static/fontawesome
+static/webfonts
