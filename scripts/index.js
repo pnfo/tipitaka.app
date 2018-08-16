@@ -1,4 +1,4 @@
-import {appSettings} from './settings.js';
+import {appSettings, Language} from './settings.js';
 import {PitakaTabs} from './pitaka-tabs.js';
 import {PitakaTree} from './pitaka-tree.js';
 
@@ -24,6 +24,7 @@ function createLanguageSelectOption(lang, name, flag) {
     return $('<div/>').addClass('option').append(span, img).attr('value', lang);
 }
 
+// Pali Script Changing
 const paliScriptSelect = $('#pali-script-select');
 appSettings.paliScriptList.forEach((val, lang) => {
     createLanguageSelectOption(lang, val[2], val[3]).appendTo(paliScriptSelect);
@@ -31,19 +32,20 @@ appSettings.paliScriptList.forEach((val, lang) => {
 paliScriptSelect.on('click', '.option', e => {
     const option = $(e.currentTarget);
     //if (appSettings.paliScript == option.attr('value')) return; // no change
-    
     console.log(`Pali script changing from ${appSettings.paliScript} to ${option.attr('value')}`);
     appSettings.paliScript = option.attr('value');
     appTree.changeScript(); // all tree item text updated
     appTabs.changeScript(); // check the script of active tab only
 }).children(`[value=${appSettings.paliScript}]`).addClass('active');
 
+
+// UI Language related
 appSettings.uiLanguageList.forEach((val, lang) => {
     createLanguageSelectOption(lang, val[0], val[1]).appendTo($('#ui-lang-select'));
 });
 $('#ui-lang-select').on('click', '.option', e => {
-    appSettings.uiLanguage = e.currentTarget.value;
-    $('i.UT').attr('lang', appSettings.uiLanguage);
+    appSettings.uiLanguage = $(e.currentTarget).attr('value');
+    Language.changeTranslation(appSettings.uiLanguage);
 }).children(`[value=${appSettings.uiLanguage}]`).addClass('active');
 
 function changeTextSize(size) {
@@ -64,15 +66,6 @@ function populateFormatSelect(formatList, select, settingName, onChangeCallback)
 populateFormatSelect(appSettings.abbreFormatList, $('#abbre-format-select'), 'abbreFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'), 'pageTagFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.textSizeList, $('#text-size-select'), 'textSize', changeTextSize);
-
-/*$('#abbre-format-select').on('click', '.option', e => {
-    appSettings.abbreFormat = $(e.currentTarget).attr('value');
-    appTabs.changeTextFormat();
-}).children(`[value=${appSettings.abbreFormat}]`).addClass('active');
-$('#pagetag-format-select').on('click', '.option', e => {
-    appSettings.pageTagFormat = $(e.currentTarget).attr('value');
-    appTabs.changeTextFormat();
-}).children(`[value=${appSettings.pageTagFormat}]`).addClass('active');*/
 
 $('.custom-radio').on('click', '.option', e => {
     $(e.currentTarget).addClass('active').siblings().removeClass('active');
@@ -104,14 +97,6 @@ $('body').mousedown(function() {
         $('.pitaka-tree-container').animate({width: 'hide'}, 250);
     }
 });
-
-function handleResize() {
-    // to make sure the overlay fills the screen and dialogbox aligned to center
-    // only do it if the dialog box is not hidden
-    //if (!$('#dialog-box').is(':hidden')) repositionDialog();
-}
-//$(window).resize(handleResize);
-
 
 $('span.sort-action').on('click', 'a', function () {
     var by = $(this).parent().attr('by');

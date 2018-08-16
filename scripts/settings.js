@@ -40,6 +40,7 @@ class AppSettings {
         this.abbreFormat = 'inline';
         this.pageTagFormat = 'click';
         this.textSize = '16';
+        this.savedLocations = []; // bookmarks saved by the user
         this.paliScriptList = paliScriptList;
         this.uiLanguageList = uiLanguageList;
         this.abbreFormatList = abbreFormatList;
@@ -58,4 +59,54 @@ class AppSettings {
     // try to determine from browser or ip address
     loadDefaults() {}
 }
+
+
+export class Language {
+    static extractLanguageStrings(lang) {
+        // copy over the entries from the current translation
+        Language.loadTranslation(lang).then(function() {
+            const translations = new Map(data_trans);
+            $('i.UT').each((i, ut) => {
+                const enText = $(ut).attr('lang') == 'en' ? $(ut).text().trim() : $(ut).attr('en-text');
+                if (!translations.has(enText)) {
+                    translations.set(enText, ''); // new translation needed
+                }
+            });
+            const logPhrases = [];
+            translations.forEach((trans, enText) => logPhrases.push(enText, trans));
+            console.log(logPhrases.join('\r\n'));
+        });
+    }
+
+    static loadTranslation(lang) {
+        const scriptFile = `./scripts/translations/${lang}_trans.js`;
+        return $.getScript( scriptFile, function( data, textStatus, jqxhr ) {
+            console.log(`Translation script with data length ${data.length} was loaded from file ${scriptFile}. 
+                Status '${textStatus}:${jqxhr.status}`); // Data returned
+        });
+    }
+    static changeTranslation(lang) {
+        console.log(`changing UI language to ${lang}`);
+        if (lang == 'en') { // no need to load translations
+            $('i.UT').each((_1, ut) => $(ut).text($(ut).attr('en-text') || $(ut).text().trim())).attr('lang', lang);
+            return;
+        }
+        Language.loadTranslation(lang).then(function() { // if not 'en' load translations
+            const translations = new Map(data_trans);
+            $('i.UT').each((_1, ut) => {
+                const enText = $(ut).attr('lang') == 'en' ? $(ut).text().trim() : $(ut).attr('en-text');
+                if (!enText) {
+                    console.error(`UT found with empty en-text ${$(ut)}`);
+                }
+                if (translations.has(enText)) {
+                    $(ut).attr('en-text', enText).attr('lang', lang).text(translations.get(enText));
+                } else {
+                    // leave as-is in english
+                }
+            }).attr('lang', lang);
+        });
+    }
+}
+//setTimeout(Language.extractLanguageStrings, 1000, 'si');
+//Language.changeTranslation('si');
 export const appSettings = new AppSettings();

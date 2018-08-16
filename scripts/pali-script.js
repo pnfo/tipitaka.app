@@ -98,7 +98,7 @@ const specials = [
     ['එ', 'ए', 'e', 'เอ'],
     ['ඔ', 'ओ', 'o', 'โอ'],
     // various signs
-    ['්', '्', '', '\u0E3A'], // Sinhala virama -> Dev. virama (al - hal). roman need special handling
+    ['්', '्', '', '\u0E3A'], // virama (al - hal). roman need special handling
     // digits
     ['0', '०', '0', '๐'],
     ['1', '१', '1', '๑'],

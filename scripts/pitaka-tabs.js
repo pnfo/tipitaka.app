@@ -9,12 +9,11 @@ export class PitakaTabs {
         this.tabs = new Map(); // arry of head and content
         this.files = new Map();
         this.activeFileId = ''; // keep track of active tab
-        this.heads = $('div.tab-heads', this.root); //$('<div/>').addClass('tab-heads').appendTo(this.root);
-        this.contents = $('div.tab-contents', this.root); //$('<div/>').addClass('tab-contents').appendTo(this.root);
+        this.heads = $('div.tab-heads', this.root);
+        this.contents = $('div.tab-contents', this.root);
         this.registerClicks();
     }
     registerClicks() {
-        this.contents.on('click', 'n.click', e => showNoteBox(e));
         this.heads.on('click', '.tab-head', e => {
             this.showTab($(e.currentTarget).attr('file-id'));
         });
@@ -65,10 +64,6 @@ export class PitakaTabs {
     }
 }
 
-function showNoteBox(e) {
-    const note = $(e.currentTarget);
-    alert(note.attr('text'));
-}
 
 
 function printDebug(str, len) {

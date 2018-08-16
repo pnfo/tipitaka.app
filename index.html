@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="3q30uQ1_gO_dEVjUO6EsTgpovt8MHTyY75774HmTSb0" />
     <title>Chattha Sangayana Tipitaka</title>
-    <meta name="description" content="Tipitaka in Many Languages">
+    <meta name="description" content="Pali Tipitaka in many scripts">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="./static/favicon.ico" type="image/x-icon">
     <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
@@ -26,9 +26,6 @@
         ga('send', 'pageview');
     </script>
     <style>
-        i.ss-hide {
-            font-style: normal;
-        }
         @media screen and (max-width: 800pt) {
             .pitaka-tree-container {
                 position: absolute;
@@ -57,18 +54,15 @@
     <div style="flex: 0 1 auto;">
         <div class="title-bar">
             <i id="tree-toggle" class="far fa-sitemap"></i>
-            <div style="flex: 1 1;"><i class="UT" lang="en">Chatta Sangayana Tipitaka</i></div>
+            <div style="flex: 1 1;"><i class="UT" lang="en">Chaṭṭha Saṅgāyana Tipiṭaka</i></div>
             <i id="menu-toggle" class="far fa-bars tipright"></i>
         </div>
         <div id="search-bar-div">
             <input class="search-bar" type="text" placeholder=" Search">
-            <a id="settings-button" class="button tipright"><i class="far fa-wrench action"></i></a>
-            <a id="text-view-button" class="button tipright"><i class="far fa-book-open"></i><i class="ss-hide UT"> Text</i></a>
+            <a id="settings-button" class="button tipright"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
+            <a id="text-view-button" class="button tipright"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
             
             <div id="menu-list" style="right: 0; top: 0;">
-                <!--<a class="menu-list-item" href="intro.html?goto=about"><i class="fa fa-male fa-fw"></i> අප ගැන</a>
-                <a class="menu-list-item" href="intro.html?goto=usage"><i class="fa fa-question-circle fa-fw"></i> භාවිතයට උපදෙස්</a>-->
-                <!--<a class="menu-list-item" href="../"><i class="fa fa-file-text-o fa-fw" style="color: darkgreen;"></i> සරල ත්‍රිපිටකය</a>-->
                 <a class="menu-list-item" href="./static/offline.html"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
                 <a class="menu-list-item" href="https://tipitaka.app/convert"><i class="far fa-language fa-fw" style="color: green;"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
                 <a class="menu-list-item" href="./static/about.html"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
@@ -107,7 +101,7 @@
             <h2><i class="far fa-language"></i> <i class="UT" lang="en">Select Pali Text Display Script</i></h2>
             <div id="pali-script-select" class="custom-radio"></div>
             
-            <h2><i class="far fa-comment"></i> <i class="UT" lang="en">Abbreviations Format</i></h2>
+            <h2><i class="far fa-comment"></i> <i class="UT" lang="en">Footnotes Format</i></h2>
             <div id="abbre-format-select" class="custom-radio"></div>
 
             <h2><i class="far fa-book"></i> <i class="UT" lang="en">Page Tags Format</i></h2>
@@ -137,14 +131,12 @@
     }
     showPane('settings');
 </script>
-<!--<script src="./scripts/pitakaTabs.js?v=1" type="module"></script>
-<script src="./scripts/pitakaTree.js?v=1" type="module"></script>
-<script src="./scripts/search.js?v=1" type="module"></script>-->
 
 <script src="./scripts/index.js?v=1" type="module"></script>
 <!--use webpack (npm run build) to build this and uncomment for production-->
 <!--<script src="./bundle.js"></script>-->
 
+<!--Remove the browser sync code below for production-->
 <script id="__bs_script__">//<![CDATA[
     document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.24.6'><\/script>".replace("HOST", location.hostname));
 //]]></script>

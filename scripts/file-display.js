@@ -27,22 +27,40 @@ export function PT_REFRESH(root) {
     });
 }
 
+
+function showNoteBox(e) {
+    const note = $(e.currentTarget);
+    alert(note.attr('text'));
+}
+
+const titleTypes = new Map([ ['cha', '1-2-3'], ['tit', '1-2'], ['sub', '1'] ]);
 export class FileDisplay {
     constructor(elem, fileId) {
         this.root = elem;
         this.fileId = fileId;
         this.data = ''; // raw text in sinhala script
         this.script = appSettings.paliScript; // per tab script
+        this.registerClicks();
     }
     load() {
         const oReq = new XMLHttpRequest();
         oReq.open('GET', `../static/text/${this.fileId}.txt`, true);
-        oReq.responseType = "arraybuffer"
+        oReq.responseType = "arraybuffer";
         oReq.onload = (oEvent) => {
             this.data = Uint16ArrayToString(new Uint16Array(oReq.response));
             this.refresh();
         };
         oReq.send();
+    }
+    registerClicks() {
+        this.root.on('click', 'n.click', e => showNoteBox(e))
+        .on('click', '[tt] .line-text', e => {
+            const div = $(e.currentTarget).parent();
+            const lines = div.toggleClass('open').nextUntil(`[tt|=${div.attr('tt')}]`);
+            lines.filter(':not([tt])').toggle(div.hasClass('open'));
+            lines.filter('[tt]').toggleClass('open', div.hasClass('open'));
+            this.root.parent().scrollTop(this.root.parent().scrollTop() + div.position().top);
+        });
     }
     changeScript() {
         if (this.script != appSettings.paliScript) {
@@ -50,27 +68,39 @@ export class FileDisplay {
             this.refresh();
         }
     }
-    refresh() { // change script
+    refresh() { // change script, abbre and pageTags
         this.root.empty().attr('lang', this.script);
         const lines = textProcessor.basicConvert(this.data, this.script).split('\r\n');
-        lines.forEach(line => {
-            this.root.append(this.getDivForLine(line));
+        lines.forEach((line, ind) => {
+            this.root.append(this.getDivForLine(line, ind));
         });
-    }
-    getDivForLine(line) {
-        const [rendType, paraNum, text] = this.lineToParts(line);
-        const div = $('<div/>').addClass(rendType);
-        if (paraNum) {
-            $('<span/>').addClass('hangnum').text(paraNum + '.').appendTo(div);
+        if (this.root.find('[tt]').length == 1) { // if only one title element keep it open
+            this.root.find('[tt]').children('.line-text').click();
         }
-        this.textLineRender(text, rendType).appendTo(div);
+        this.root.children('.cha').first().prevUntil().show(); // show namo, nik, boo
+    }
+    
+    getDivForLine(line, ind) {
+        const [rendType, paraNum, text] = this.lineToParts(line);
+        const div = $('<div/>').addClass(rendType).attr('line-ind', ind);
+        const textLine = this.textLineRender(text, rendType);
+        const shareIcon = $('<i/>').addClass('far fa-share share-icon action-icon');
+        if (titleTypes.has(rendType)) {
+            if (paraNum) $('<span/>').addClass('titnum').text(paraNum + '.').appendTo(div);
+            const saveIcon = $('<i/>').addClass('far fa-star save-icon action-icon');
+            div.attr('tt', titleTypes.get(rendType)).append(textLine, shareIcon, saveIcon);
+        } else {
+            if (paraNum) {
+                $('<span/>').addClass('hangnum').text(paraNum + '.').append(shareIcon).appendTo(div);
+            }
+            div.append(textLine).hide();
+        }
         return div;
-
     }
     lineToParts(line) {
         const parts = line.split(':');
-        if (parts.length < 2 || parts.length > 3) {
-            console.log(`malformed line ${line} in file ${this.fileId}`)
+        if (line && (parts.length < 2 || parts.length > 3)) {
+            console.log(`malformed line ${line} in file ${this.fileId}`);
         }
         return [parts[0], parts.length > 2 ? parts[1] : '', parts[parts.length-1]];
     }

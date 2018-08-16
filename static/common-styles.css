@@ -87,11 +87,12 @@ a.button:active, a.button.pressed {
 #settings-area h2 { color: rgb(253, 94, 36); font-size: 1.25rem;}
 #settings-area h2 .far {color: brown;}
 .custom-radio { position: relative; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center;}
-.custom-radio .option { cursor: pointer; padding: 5pt; border: 1px solid darkgoldenrod; margin: 2pt;}
+.custom-radio .option { cursor: pointer; padding: 5pt; border: 1px solid darkgoldenrod; margin: 2pt; transition: 0.3s;}
 .custom-radio .option.active {background-color: lightgray;}
 .custom-radio .option span::before  { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f111"; padding-right: 5pt;}
 .custom-radio .option.active span::before {font-weight: 900; }
-.custom-radio .option:not(.active):hover span::before { content: "\f192";  font-weight: 300; }
+.custom-radio .option:not(.active):hover {background-color: whitesmoke;}
+.custom-radio .option:not(.active):hover span::before { content: "\f192";  font-weight: 400; }
 .custom-radio .option img {height: 35px; vertical-align: middle; padding-left: 5pt;}
 .custom-radio .option .example {padding-left: 5pt; color: blue; font-size: smaller;}
 

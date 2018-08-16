@@ -7,7 +7,7 @@ body {
     -webkit-font-smoothing: antialiased !important;
 }
 
-.tab-contents { padding: 0.3rem 0.6rem 0.3rem 0.6rem;}
+.tab-contents { padding: 0.3rem 0.6rem 0.3rem 0.6rem; position: relative;}
 .tab-content { display: none;}
 .tab-content.active { display: block;}
 .tab-heads { display: flex; flex-direction: row; flex-wrap: wrap; background-color: lightgray;}
@@ -18,16 +18,20 @@ body {
 .tab-head .close-icon { padding-left: 0.5rem;}
 .tab-head .close-icon:hover { color: red; font-weight: 900;}
 
-.text-section .share-icon { font-size: smaller; cursor: pointer; color: lightblue; padding-left: 5pt;}
+
+.text-section .action-icon {font-size: smaller; cursor: pointer; padding-left: 5pt; color: lightblue;}
+.text-section .share-icon {   font-weight: 900; }
 .text-section .share-icon:hover { color: blue; }
-.text-section .share-icon { float: left; }
+.text-section .save-icon:hover { color: gold; font-weight: 900;}
+
+
 
 .text-section n {color: blue;}
-.text-section n.click::before { font-family: "Font Awesome 5 Pro"; font-weight: 400;  content: "\f069";  /*vertical-align: super;*/ font-size: 10pt;}
+.text-section n.click::before { font-family: "Font Awesome 5 Pro"; font-weight: 400;  content: "\f069"; font-size: 10pt;}
 .text-section n.click:hover::before { font-weight: 900;}
 .text-section pd > i {font-style: normal;}
-.text-section pd.T {color: blue;}
-.text-section pd.P {color:darkred}
+.text-section pd.T {color: darkblue;}
+.text-section pd.P {color:darkred;}
 .text-section pd.M {color: goldenrod;}
 .text-section pd.V {color: darkseagreen;}
 
@@ -35,23 +39,32 @@ body {
 /* namothassa line if exists */
 .tab-content > div:first-child.cen { font-style: italic; color: darkred}
 
-.text-section .hangnum { padding-right: 10pt; font-weight: bold; color: darkred;}
+.hangnum,.titnum { padding-right: 10pt; font-weight: bold; color: darkred;}
+.hangnum { position: absolute; left: 10pt;}
+.line-text { display: inline-block;}
+
 
 .text-section .nik { font-size: 1.8rem; font-weight: bold; margin: 7px 0px 7px 0px;}
 .text-section .boo { font-size: 1.6rem; font-weight: bold; margin: 7px 0px 7px 0px;}
+/* title lines */
 .text-section .cha { font-size: 1.4rem; font-weight: bold; color: darkgoldenrod; margin: 5px 0px 5px 0px; }
-.text-section .tit { font-size: 1.25rem; cursor: pointer; font-weight: bold; margin: 5px 0px 5px 0px; }
+.text-section .tit { font-size: 1.25rem; font-weight: bold; color: rgb(158, 66, 12); margin: 5px 0px 5px 0px; }
+.text-section .sub { font-size: 1.1rem; font-weight: bold; margin: 5px 0px 5px 0px;}
 
-.text-section .sub { font-size: 1.1rem; cursor: pointer; font-weight: bold; margin: 5px 0px 5px 0px;}
-.text-section span.sub.sc_collapsed { color: #5423DB; }
+.text-section div[tt]:not(.open)::before { content: "\f063"; font-family: "Font Awesome 5 Pro"; font-weight: 400; padding-right: 10pt; color: blue; transition: 0.25s;}
+.text-section div[tt]:not(.open):hover::before { content: "\f354"; color: red; font-weight: 900;}
+.text-section div[tt] {cursor: pointer;}
 
 .text-section .ssh { font-weight: bold;  margin: 3px 0px 3px 0px;}
-.text-section .bod { text-align: justify; text-indent: 1em;}
-/* Gatha line */
+
+/* content lines */
+.text-section .bod { text-align: justify; }
+.text-section .bod .line-text { text-indent: 4em; }
 .text-section .gax { margin-bottom: 0em; margin-left: 4em; text-align:left;}
 .text-section .gae { margin-bottom: 0.5cm; margin-left: 4em; text-align:left;}
 
-
+.text-section .ind { text-indent: 2em; margin-left: 3em; } /*indent*/
+.text-section .uni { } /*unindented*/
 
 
 
@@ -69,8 +82,6 @@ body {
 .text-section span.paranum::after { font-weight: bold; content: "."; }
 .text-section .bld { font-weight: bold; }
 
-.text-section .indent { text-indent: 2em; margin-left: 3em; }
-.text-section .unindented { }
 /*.text-section .hangnum { margin-bottom: -0.75cm; text-indent: 2em; }*/
 /* Namo tassa, and nitthita -- no unique structural distinction */
 .text-section .centered { text-align:center; }
