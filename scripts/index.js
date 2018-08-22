@@ -1,4 +1,4 @@
-import {appSettings, Language} from './settings.js';
+import {appSettings, LangHelper} from './settings.js';
 import {PitakaTabs} from './pitaka-tabs.js';
 import {PitakaTree} from './pitaka-tree.js';
 
@@ -27,13 +27,13 @@ function createLanguageSelectOption(lang, name, flag) {
 // Pali Script Changing
 const paliScriptSelect = $('#pali-script-select');
 appSettings.paliScriptList.forEach((val, lang) => {
-    createLanguageSelectOption(lang, val[2], val[3]).appendTo(paliScriptSelect);
+    createLanguageSelectOption(lang, val[1], val[2]).appendTo(paliScriptSelect);
 });
 paliScriptSelect.on('click', '.option', e => {
     const option = $(e.currentTarget);
     //if (appSettings.paliScript == option.attr('value')) return; // no change
     console.log(`Pali script changing from ${appSettings.paliScript} to ${option.attr('value')}`);
-    appSettings.paliScript = option.attr('value');
+    appSettings.set('paliScript', option.attr('value'));
     appTree.changeScript(); // all tree item text updated
     appTabs.changeScript(); // check the script of active tab only
 }).children(`[value=${appSettings.paliScript}]`).addClass('active');
@@ -44,8 +44,8 @@ appSettings.uiLanguageList.forEach((val, lang) => {
     createLanguageSelectOption(lang, val[0], val[1]).appendTo($('#ui-lang-select'));
 });
 $('#ui-lang-select').on('click', '.option', e => {
-    appSettings.uiLanguage = $(e.currentTarget).attr('value');
-    Language.changeTranslation(appSettings.uiLanguage);
+    appSettings.set('uiLanguage', $(e.currentTarget).attr('value'));
+    LangHelper.changeTranslation(appSettings.uiLanguage);
 }).children(`[value=${appSettings.uiLanguage}]`).addClass('active');
 
 function changeTextSize(size) {
@@ -59,11 +59,11 @@ function populateFormatSelect(formatList, select, settingName, onChangeCallback)
         $('<div/>').addClass('option').append(span, example).attr('value', val).appendTo(select);
     });
     select.on('click', '.option', e => {
-        const val = appSettings[settingName] = $(e.currentTarget).attr('value');
+        const val = appSettings.set(settingName, $(e.currentTarget).attr('value'));
         onChangeCallback(val);
     }).children(`[value=${appSettings[settingName]}]`).addClass('active');
 }
-populateFormatSelect(appSettings.abbreFormatList, $('#abbre-format-select'), 'abbreFormat', appTabs.changeTextFormat.bind(appTabs));
+populateFormatSelect(appSettings.footnoteFormatList, $('#footnote-format-select'), 'footnoteFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'), 'pageTagFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.textSizeList, $('#text-size-select'), 'textSize', changeTextSize);
 
@@ -74,6 +74,9 @@ $('.custom-radio').on('click', '.option', e => {
     }
 });
 
+// apply initial settings
+LangHelper.changeTranslation(appSettings.uiLanguage);
+changeTextSize(appSettings.textSize);
 
 $('#settings-button').click(e => showPane('settings'));
 $('#text-view-button').click(e => showPane('text'));

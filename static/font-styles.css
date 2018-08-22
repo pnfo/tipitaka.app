@@ -20,12 +20,12 @@
 }
 
 @font-face {
-    font-family: 'noto de serif';
+    font-family: 'noto hi serif';
     src: local('###'), url('./fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
     font-weight: normal;
 }
 @font-face {
-    font-family: 'noto de serif';
+    font-family: 'noto hi serif';
     src: local('###'), url('./fonts/NotoSerifDevanagari-Bold.ttf') format('truetype');
     font-weight: bold;
 }
@@ -43,12 +43,43 @@
 
 @font-face {
     font-family: 'noto th serif';
-    src: local('###'), url('./fonts/NotoSerifThai-Regular.ttf') format('truetype');
+    src: local('###'), url('./fonts/THSarabun.ttf') format('truetype');
     font-weight: normal;
 }
 @font-face {
     font-family: 'noto th serif';
-    src: local('###'), url('./fonts/NotoSerifThai-Bold.ttf') format('truetype');
+    src: local('###'), url('./fonts/THSarabun-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'noto lo serif'; font-weight: normal;
+    src: local('###'), url('./fonts/LaoPaliAlpha-Light.woff') format('truetype');
+}
+@font-face {
+    font-family: 'noto lo serif'; font-weight: bold;
+    src: local('###'), url('./fonts/LaoPaliAlpha-Regular.woff') format('truetype');
+}
+
+@font-face {
+    font-family: 'noto my serif';
+    src: local('###'), url('./fonts/NotoSansMyanmar-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'noto my serif';
+    src: local('###'), url('./fonts/NotoSansMyanmar-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'noto km serif';
+    src: local('###'), url('./fonts/NotoSerifKhmer-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'noto km serif';
+    src: local('###'), url('./fonts/NotoSerifKhmer-Bold.ttf') format('truetype');
     font-weight: bold;
 }
 
@@ -73,12 +104,21 @@
 .PT[lang=si],.tab-content[lang=si] {
     font-family: 'noto si serif';
 }
-.PT[lang=de],.tab-content[lang=de] {
-    font-family: 'noto de serif';
+.PT[lang=hi],.tab-content[lang=hi] {
+    font-family: 'noto hi serif';
 }
 .PT[lang=ro],.tab-content[lang=ro] {
     font-family: 'noto ro serif';
 }
 .PT[lang=th],.tab-content[lang=th] {
-    font-family: 'noto th serif';
+    font-family: 'noto th serif'; font-size: 150%;
+}
+.PT[lang=lo],.tab-content[lang=lo] {
+    font-family: 'noto lo serif'; line-height: 170%; /*font-size: 125%;*/
+}
+.PT[lang=my],.tab-content[lang=my] {
+    font-family: 'noto my serif';
+}
+.PT[lang=km],.tab-content[lang=km] {
+    font-family: 'noto km serif';
 }

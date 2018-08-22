@@ -10,16 +10,20 @@ class PitakaTree {
     constructor(elem) {
         this.root = elem;
         this.treeJson = {};
+        this.collections = [];
+        this.fileIdToColl = {};
     }
     initialize(tabs) {
         this.appTabs = tabs;
         return $.getJSON(treeJsonFileURL, data => {
             this.treeJson = data;
+            this.createCollections(this.treeJson, -1);
             this.root.append(this.createSubtree(this.treeJson, ['m'], 'tree-mul'));
             this.root.append(this.createSubtree(this.treeJson, ['a'], 'tree-att'));
             this.root.append(this.createSubtree(this.treeJson, ['t', 'ta'], 'tree-tik'));
             this.root.append(this.createSubtree(this.treeJson[3].c, ['e'], 'tree-e'));
             this.registerClick();
+            console.log(`Tree loaded. num collections: ${this.collections.length}, num fileIds: ${Object.keys(this.fileIdToColl).length}`);
             //$(this).children('ul').children('li:nth-child(2)').children('a').click(); // expand sutta nikaya by default
         }).fail(function(d, textStatus, error) {
             console.error("getJSON failed, status: " + textStatus + ", error: "+error);
@@ -39,10 +43,38 @@ class PitakaTree {
                 }
             } else if (child[`f${leafAttr}`]) { // leaf
                 const label = $('<a/>').append(PT(child[leafAttr]));
-                $('<li/>').append(label).attr('file-id', child[`f${leafAttr}`]).appendTo(ul);
+                const fileId = child[`f${leafAttr}`];
+                $('<li/>').append(label).attr('file-id', fileId).appendTo(ul);
             }
         });
         return ul;
+    }
+
+    addCollection(node, parentCollId) {
+        const collId = this.collections.length;
+        const coll = { id: collId, p: parentCollId, n: [] }; 
+        Object.keys(node).forEach(nameAttr => { // copy over name attrs
+            if (nameAttr != 'c' && !nameAttr.startsWith('f')) {
+                const fileId = node[`f${nameAttr}`];
+                if (fileId) { // leaf
+                    coll.n.push([ nameAttr, node[nameAttr], fileId ]);
+                    this.fileIdToColl[ fileId ] = collId;
+                } else { // parent
+                    coll.n.push([ nameAttr, node[nameAttr] ]);
+                }
+            }
+        });
+        this.collections.push(coll);
+        return collId;
+    }
+    createCollections(jsonRoot, parentCollId) {
+        jsonRoot.forEach(child => {
+            if (child.c) { // parent - create node and recurse
+                this.createCollections(child.c, this.addCollection(child, parentCollId));
+            } else { // leaf
+                this.addCollection(child, parentCollId);
+            }
+        });
     }
 
     changeScript() {
@@ -56,13 +88,12 @@ class PitakaTree {
             var li = $(e.currentTarget).parent();
             if (li.hasClass('parent')) {
                 this.toggleBranch(li);
-            } else {
-                if (li.attr('file-id')) {
-                    // TODO - not good to access si-text attr directly
-                    const title = li.find('.PT').attr('si-text').replace(/^[\(\)\d+\s\.]+/, '');
-                    this.appTabs.newTab(li.attr('file-id'), PT(title));
-                    showPane('text');
-                }
+            } else if (li.attr('file-id')) {
+                // TODO - not good to access si-text attr directly
+                const title = li.find('.PT').attr('si-text');
+                const fileId = li.attr('file-id');
+                this.appTabs.newTab(fileId, title, this.collections[this.fileIdToColl[fileId]]);
+                showPane('text');
             }
         });
     }

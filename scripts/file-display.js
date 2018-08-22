@@ -1,5 +1,6 @@
-import { textProcessor } from './pali-script.js';
+import { TextProcessor } from './pali-script.js';
 import { appSettings } from './settings.js';
+import { PageTag, Note, Collection } from './note-tag.js';
 
 function Uint16ArrayToString(u16Arr) {
     const CHUNK_SZ = 0x8000;
@@ -16,28 +17,23 @@ function Uint16ArrayToString(u16Arr) {
  */
 export function PT(text) {
     const pt = $('<i/>').addClass('PT').attr('si-text', text).attr('lang', appSettings.paliScript);
-    return pt.text(textProcessor.convert(text, appSettings.paliScript));
+    return pt.text(TextProcessor.convert(text, appSettings.paliScript));
 }
 // change language of all PT in the root
 export function PT_REFRESH(root) {
     $('i.PT', root).each((_1, pt) => {
         let text = $(pt).attr('si-text');
-        text = textProcessor.convert(text, appSettings.paliScript);
+        text = TextProcessor.convert(text, appSettings.paliScript);
         $(pt).text(text).attr('lang', appSettings.paliScript);
     });
 }
 
-
-function showNoteBox(e) {
-    const note = $(e.currentTarget);
-    alert(note.attr('text'));
-}
-
 const titleTypes = new Map([ ['cha', '1-2-3'], ['tit', '1-2'], ['sub', '1'] ]);
 export class FileDisplay {
-    constructor(elem, fileId) {
+    constructor(elem, fileId, collObj, appTabs) {
         this.root = elem;
         this.fileId = fileId;
+        this.collection = new Collection(collObj, this.root, this.fileId, appTabs);
         this.data = ''; // raw text in sinhala script
         this.script = appSettings.paliScript; // per tab script
         this.registerClicks();
@@ -53,14 +49,14 @@ export class FileDisplay {
         oReq.send();
     }
     registerClicks() {
-        this.root.on('click', 'n.click', e => showNoteBox(e))
+        this.root.on('click', 'n.click', e => Note.showNoteBox(e))
         .on('click', '[tt] .line-text', e => {
             const div = $(e.currentTarget).parent();
             const lines = div.toggleClass('open').nextUntil(`[tt|=${div.attr('tt')}]`);
             lines.filter(':not([tt])').toggle(div.hasClass('open'));
             lines.filter('[tt]').toggleClass('open', div.hasClass('open'));
             this.root.parent().scrollTop(this.root.parent().scrollTop() + div.position().top);
-        });
+        }).on('click', '.hangnum,.titnum', e => this.collection.renderOnClick(e));
     }
     changeScript() {
         if (this.script != appSettings.paliScript) {
@@ -70,7 +66,8 @@ export class FileDisplay {
     }
     refresh() { // change script, abbre and pageTags
         this.root.empty().attr('lang', this.script);
-        const lines = textProcessor.basicConvert(this.data, this.script).split('\r\n');
+        //this.root.append($('<div/>').text(JSON.stringify(this.collection)));
+        const lines = TextProcessor.basicConvert(this.data, this.script).split('\r\n');
         lines.forEach((line, ind) => {
             this.root.append(this.getDivForLine(line, ind));
         });
@@ -78,6 +75,7 @@ export class FileDisplay {
             this.root.find('[tt]').children('.line-text').click();
         }
         this.root.children('.cha').first().prevUntil().show(); // show namo, nik, boo
+        this.collection.renderTop();
     }
     
     getDivForLine(line, ind) {
@@ -91,7 +89,10 @@ export class FileDisplay {
             div.attr('tt', titleTypes.get(rendType)).append(textLine, shareIcon, saveIcon);
         } else {
             if (paraNum) {
-                $('<span/>').addClass('hangnum').text(paraNum + '.').append(shareIcon).appendTo(div);
+                $('<span/>').addClass(`hangnum ${paraNum.length > 4 ? 'long' : ''}`)
+                .text(paraNum + '.').append(shareIcon).appendTo(div);
+            } else if ($.inArray(rendType, ['bod', 'gax', 'gae']) >= 0) {
+                $('<span/>').addClass('hangnum').appendTo(div); // just for the first line indent in bod,gax,gae
             }
             div.append(textLine).hide();
         }
@@ -110,53 +111,15 @@ export class FileDisplay {
      * @param {String} text 
      */
     textLineRender(text, rendType = '') {
-        text = textProcessor.beautify(text, this.script, rendType);
+        text = TextProcessor.beautify(text, this.script, rendType);
         const span = $('<span/>').addClass('line-text').html(text);
-        // Notes rendering
-        if (appSettings.abbreFormat == 'none') {
-            span.children('n').remove();
-        } else if (appSettings.abbreFormat == 'click') {
-            span.children('n').each((_1, n) => {
-                $(n).attr('text', $(n).text()).empty().addClass('click');
-            });
-        } else { // inline
-            span.children('n').each((_1, n) => $(n).text(`[${$(n).text()}]`));
-        }
-        // pageTags rendering
-        if (appSettings.pageTagFormat == 'none') {
-            span.children('pd').remove();
-        } else { // full, short
-            span.children('pd').each((_1, pd) => this.getPageTagDisplay($(pd)));
-        }
+        // Notes and page tag rendering according to the settings
+        Note.render(span);
+        PageTag.render(span);
+        
         return span;
     }
-    getPageTagDisplay(pd) {
-        let tag, page;
-        for(let entry of pageTagNames) {
-            if (page = pd.attr(entry[0])) {
-                tag = entry;
-                break;
-            }
-        }
-        page = page.split('.');
-        const book = isUniversalZero(page[0]) ? '' : `${page[0]}.`;
-        if (appSettings.pageTagFormat == 'click') {
-            pd.text('¶').addClass('click');
-        } else if (appSettings.pageTagFormat == 'short') {
-            pd.text(`[${tag[0]}: ${book}${stripLeadingZeros(page[1])}]`);
-        } else {
-            pd.html(`[<i>${tag[1]}</i> ${book}${stripLeadingZeros(page[1])}]`);
-        }
-        pd.addClass(tag[0]);
-    }
+
 }
 
-const pageTagNames = new Map([
-    ['T', 'Thai'],
-    ['M', 'Myanmar'],
-    ['V', 'VRI'],
-    ['P', 'PTS']
-]);
-const digitZero = '0०๐'; // distinct chars from the 0 line in pali specials
-const isUniversalZero = (num) => digitZero.indexOf(num) != -1;
-const stripLeadingZeros = (str) => str.replace(new RegExp(`^[${digitZero}]+`, 'g'), ''); 
+

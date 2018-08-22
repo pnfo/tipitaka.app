@@ -1,6 +1,6 @@
 "use strict";
 
-import { FileDisplay, PT_REFRESH } from './file-display.js';
+import { FileDisplay, PT, PT_REFRESH } from './file-display.js';
 
 export class PitakaTabs {
     constructor(elem, tree) {
@@ -37,15 +37,19 @@ export class PitakaTabs {
         this.files.delete(fileId);
         if (this.activeFileId == fileId) this.showTab(this.tabs.keys().next().value); // if deleting the active tab
     }
-    newTab(fileId, ptTitle) {
+    newTab(fileId, title, collection) {
         if (this.tabs.has(fileId)) {
             return this.showTab(fileId);
         }
+        console.log(this);
+        const ptTitle = PT(title.replace(/^[\(\)\d+\s\.]+/, ''));
         const headLabel = $('<span/>').append(ptTitle).addClass('head-label');
-        const closeIcon = $('<span/>').addClass('close-icon far fa-times-square');
-        const headDiv = $('<div/>').addClass('tab-head').append(headLabel, closeIcon).attr('file-id', fileId).appendTo(this.heads);
+        const closeIcon = $('<span/>').addClass('close-icon far fa-times');
+        const collIcon = PitakaTabs.getCollIcon(fileId, collection);
+        const headDiv = $('<div/>').addClass('tab-head').append(collIcon, headLabel, closeIcon).attr('file-id', fileId).appendTo(this.heads);
         const contentDiv = $('<div/>').addClass('tab-content').attr('file-id', fileId).appendTo(this.contents);
-        const fileDisplay = new FileDisplay(contentDiv, fileId); fileDisplay.load();
+        const fileDisplay = new FileDisplay(contentDiv, fileId, collection, this); 
+        fileDisplay.load();
         this.tabs.set(fileId, [headDiv, contentDiv]);
         this.files.set(fileId, fileDisplay);
         this.showTab(fileId); // make this the active tab
@@ -61,6 +65,10 @@ export class PitakaTabs {
     }
     getNumTabs() {
         return this.tabs.size;
+    }
+    static getCollIcon(fileId, collection) {
+        const cls = collection.n.find(val => val[2] == fileId)[0].charAt(0).toUpperCase();
+        return $('<span/>').addClass(cls).addClass('coll-icon').text(cls);
     }
 }
 

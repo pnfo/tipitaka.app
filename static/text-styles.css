@@ -10,16 +10,29 @@ body {
 .tab-contents { padding: 0.3rem 0.6rem 0.3rem 0.6rem; position: relative;}
 .tab-content { display: none;}
 .tab-content.active { display: block;}
-.tab-heads { display: flex; flex-direction: row; flex-wrap: wrap; background-color: lightgray;}
-.tab-head { cursor: pointer; padding: 0.5rem 1rem 0.5rem 1rem; border-right: 1px solid black; }
+.tab-heads { display: flex; flex-direction: row; flex-wrap: wrap; background-color: lightgray; flex-shrink: 0;}
+.tab-head { cursor: pointer; padding: 0.5rem 1rem 0.5rem 1rem; border-right: 1px solid black; display: flex; align-items: center; }
 .tab-head.active { background-color: white; color: black; font-weight: 900;}
-.tab-head .head-label::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f15c"; padding-right: 5pt;}
-.tab-head.active .head-label::before { font-weight: 900; color: rgb(252, 125, 7); }
-.tab-head .close-icon { padding-left: 0.5rem;}
+
+.tab-head .head-label {text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;  max-width: 5rem; display: inline-block;}
+.tab-head.active .head-label {max-width: 10rem;}
+.tab-head .coll-icon {padding-right: 5pt; font-family: 'noto ro serif'; color: rgb(252, 76, 7); }
+.tab-head .coll-icon.A {color: blue;}
+.tab-head .coll-icon.T {color: green}
+.tab-head .coll-icon.E {color: darkgoldenrod}
+.tab-head.active .coll-icon {font-weight: bold; }
+.tab-head .close-icon { padding-left: 0.5rem; }
 .tab-head .close-icon:hover { color: red; font-weight: 900;}
 
 
-.text-section .action-icon {font-size: smaller; cursor: pointer; padding-left: 5pt; color: lightblue;}
+.coll-buttons { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: row; font-size: 1rem;}
+.coll-button { font-family: 'noto ro serif'; color: rgb(252, 76, 7); background-color: white; cursor: pointer; width: 2rem; height: 2rem; line-height: 2rem; border: 1px solid black;}
+.coll-button:hover {font-weight: bold; font-size: 1.5rem;}
+.coll-button.A {color: blue; background-color: rgb(212, 234, 241);}
+.coll-button.T {color: green; background-color: lightyellow;}
+
+
+.text-section .action-icon {font-size: 0.8rem; cursor: pointer; padding-left: 5pt; color: lightblue;}
 .text-section .share-icon {   font-weight: 900; }
 .text-section .share-icon:hover { color: blue; }
 .text-section .save-icon:hover { color: gold; font-weight: 900;}
@@ -29,7 +42,6 @@ body {
 .text-section n {color: blue;}
 .text-section n.click::before { font-family: "Font Awesome 5 Pro"; font-weight: 400;  content: "\f069"; font-size: 10pt;}
 .text-section n.click:hover::before { font-weight: 900;}
-.text-section pd > i {font-style: normal;}
 .text-section pd.T {color: darkblue;}
 .text-section pd.P {color:darkred;}
 .text-section pd.M {color: goldenrod;}
@@ -39,31 +51,30 @@ body {
 /* namothassa line if exists */
 .tab-content > div:first-child.cen { font-style: italic; color: darkred}
 
-.hangnum,.titnum { padding-right: 10pt; font-weight: bold; color: darkred;}
-.hangnum { position: absolute; left: 10pt;}
-.line-text { display: inline-block;}
+.hangnum,.titnum { padding-right: 0.7rem; font-weight: bold; color: darkred;}
+.hangnum { min-width: 4rem; display: inline-block;}
+.hangnum.long { font-size: smaller; padding-top: 0.1rem;}
 
 
-.text-section .nik { font-size: 1.8rem; font-weight: bold; margin: 7px 0px 7px 0px;}
-.text-section .boo { font-size: 1.6rem; font-weight: bold; margin: 7px 0px 7px 0px;}
+.text-section .nik { font-size: 1.8em; font-weight: bold; margin: 7px 0px 7px 0px;}
+.text-section .boo { font-size: 1.6em; font-weight: bold; margin: 7px 0px 7px 0px;}
 /* title lines */
-.text-section .cha { font-size: 1.4rem; font-weight: bold; color: darkgoldenrod; margin: 5px 0px 5px 0px; }
-.text-section .tit { font-size: 1.25rem; font-weight: bold; color: rgb(158, 66, 12); margin: 5px 0px 5px 0px; }
-.text-section .sub { font-size: 1.1rem; font-weight: bold; margin: 5px 0px 5px 0px;}
+.text-section .cha { font-size: 1.4em; font-weight: bold; color: darkgoldenrod; margin: 5px 0px 5px 0px; }
+.text-section .tit { font-size: 1.25em; font-weight: bold; color: rgb(158, 66, 12); margin: 5px 0px 5px 0px; }
+.text-section .sub { font-size: 1.1em; font-weight: bold; margin: 5px 0px 5px 0px;}
 
-.text-section div[tt]:not(.open)::before { content: "\f063"; font-family: "Font Awesome 5 Pro"; font-weight: 400; padding-right: 10pt; color: blue; transition: 0.25s;}
+.text-section div[tt]:not(.open)::before { content: "\f063"; font-family: "Font Awesome 5 Pro"; font-weight: 400; font-size: 1rem; padding-right: 10pt; color: blue; transition: 0.25s;}
 .text-section div[tt]:not(.open):hover::before { content: "\f354"; color: red; font-weight: 900;}
 .text-section div[tt] {cursor: pointer;}
 
 .text-section .ssh { font-weight: bold;  margin: 3px 0px 3px 0px;}
 
 /* content lines */
-.text-section .bod { text-align: justify; }
-.text-section .bod .line-text { text-indent: 4em; }
-.text-section .gax { margin-bottom: 0em; margin-left: 4em; text-align:left;}
-.text-section .gae { margin-bottom: 0.5cm; margin-left: 4em; text-align:left;}
+.text-section .bod { text-align: justify;  }
+.text-section .gax { margin-bottom: 0rem; text-align:left;}
+.text-section .gae { margin-bottom: 0.5rem; text-align:left;}
 
-.text-section .ind { text-indent: 2em; margin-left: 3em; } /*indent*/
+.text-section .ind { text-indent: 2rem; margin-left: 3rem; text-align: justify; } /*indent*/
 .text-section .uni { } /*unindented*/
 
 

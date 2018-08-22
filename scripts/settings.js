@@ -1,18 +1,16 @@
-const paliScriptList = new Map ([
-    ['si', ['sinh', 'Sinhala', 'සිංහල', 'sl_flag.png']],
-    ['de', ['deva', 'Devanagari', 'हिन्दी', 'in_flag.png']],
-    ['ro', ['romn', 'Roman', 'Roman', 'uk_flag.png']],
-    ['th', ['thai', 'Thai', 'ภาษาไทย', 'th_flag.png']],
-    ['my', ['mymr', 'Myanmar', 'ဗမာစကား', 'my_flag.png']],
-    ['gu', ['guja', 'Gujarati', 'ગુજરાતી', 'in_flag.png']]
-]);
 
+import {Script, paliScriptInfo} from './pali-script.js';
+
+const Language = Object.freeze({
+    SI: 'si',
+    EN: 'en'
+});
 const uiLanguageList = new Map([
-    ['si', ['සිංහල', 'sl_flag.png']],
-    ['en', ['English', 'uk_flag.png']]
+    [Language.SI, ['සිංහල', 'sl_flag.png']],
+    [Language.EN, ['English', 'uk_flag.png']]
 ]);
 
-const abbreFormatList = new Map([
+const footnoteFormatList = new Map([
     ['none', ['Do Not Show', '']],
     ['click', ['Show On Click', '<n><i class="far fa-asterisk"></i></n>']],
     ['inline', ['Show Inline', '<n>[…]</n>']]
@@ -35,39 +33,40 @@ const textSizeList = new Map([
 
 class AppSettings {
     constructor() {
-        this.uiLanguage = 'en';
-        this.paliScript = 'si';
-        this.abbreFormat = 'inline';
-        this.pageTagFormat = 'click';
-        this.textSize = '16';
-        this.savedLocations = []; // bookmarks saved by the user
-        this.paliScriptList = paliScriptList;
+        this.loadFromStorage();
+        this.paliScriptList = paliScriptInfo;
         this.uiLanguageList = uiLanguageList;
-        this.abbreFormatList = abbreFormatList;
+        this.footnoteFormatList = footnoteFormatList;
         this.pageTagFormatList = pageTagFormatList;
         this.textSizeList = textSizeList;
     }
-    initialize() {
-        if (!this.loadFromStorage()) {
-            return this.loadDefaults();
-        }
-        return true;
+    set(prop, value) {
+        this[prop] = value;
+        localStorage.setItem(prop, value);
+        return value;
     }
     // TODO add functions to read/write to local storage and change
-    loadFromStorage() {}
-    saveToStorage() {}
+    loadFromStorage() {
+        this.uiLanguage = localStorage.getItem('uiLanguage') || Language.EN;
+        this.paliScript = localStorage.getItem('paliScript') || Script.SI;
+        this.footnoteFormat = localStorage.getItem('footnoteFormat') || 'inline';
+        this.pageTagFormat = localStorage.getItem('pageTagFormat') || 'click';
+        this.textSize = localStorage.getItem('textSize') || '16';
+        const bookmarksStr = localStorage.getItem('bookmarks');
+        this.bookmarks = bookmarksStr ? JSON.parse(bookmarksStr) : []; // bookmarks saved by the user
+    }
     // try to determine from browser or ip address
     loadDefaults() {}
 }
 
 
-export class Language {
+export class LangHelper {
     static extractLanguageStrings(lang) {
         // copy over the entries from the current translation
-        Language.loadTranslation(lang).then(function() {
+        LangHelper.loadTranslation(lang).then(function() {
             const translations = new Map(data_trans);
             $('i.UT').each((i, ut) => {
-                const enText = $(ut).attr('lang') == 'en' ? $(ut).text().trim() : $(ut).attr('en-text');
+                const enText = $(ut).attr('lang') == Language.EN ? $(ut).text().trim() : $(ut).attr('en-text');
                 if (!translations.has(enText)) {
                     translations.set(enText, ''); // new translation needed
                 }
@@ -87,14 +86,14 @@ export class Language {
     }
     static changeTranslation(lang) {
         console.log(`changing UI language to ${lang}`);
-        if (lang == 'en') { // no need to load translations
+        if (lang == Language.EN) { // no need to load translations
             $('i.UT').each((_1, ut) => $(ut).text($(ut).attr('en-text') || $(ut).text().trim())).attr('lang', lang);
             return;
         }
-        Language.loadTranslation(lang).then(function() { // if not 'en' load translations
+        LangHelper.loadTranslation(lang).then(function() { // if not 'en' load translations
             const translations = new Map(data_trans);
             $('i.UT').each((_1, ut) => {
-                const enText = $(ut).attr('lang') == 'en' ? $(ut).text().trim() : $(ut).attr('en-text');
+                const enText = $(ut).attr('lang') == Language.EN ? $(ut).text().trim() : $(ut).attr('en-text');
                 if (!enText) {
                     console.error(`UT found with empty en-text ${$(ut)}`);
                 }
