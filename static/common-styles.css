@@ -5,9 +5,7 @@ html, body {
     font-family: 'Times New Roman', Times, serif;
 }
 
-i {
-    font-style: normal;
-}
+i { font-style: normal; }
 
 .title-bar {
     padding: 6pt 8pt 6pt 8pt; 
@@ -26,8 +24,6 @@ i {
     display: none; 
     text-align: left;
     background-color: lightsalmon;
-    -webkit-box-shadow: -8px 9px 42px 8px rgba(0,0,0,0.19);
-    -moz-box-shadow: -8px 9px 42px 8px rgba(0,0,0,0.19);
     box-shadow: -8px 9px 42px 8px rgba(0,0,0,0.19);
 }
 .menu-list-item {
@@ -59,7 +55,6 @@ i {
     border: 1px solid lightsalmon;
     max-width: 350pt;
     min-width: 70pt;
-    /*box-shadow: 0 3px 3px rgba(0,0,0,0.2);*/
 }
 
 a.button {
@@ -69,9 +64,7 @@ a.button {
     background-color: white;
     text-decoration: none;
     line-height: 1;
-    /*border-radius: 4px;*/
     border: 1px solid lightsalmon;
-    /*box-shadow: 0 3px 3px rgba(0,0,0,0.2);*/
     cursor: pointer;
     display: inline-block;
 }
@@ -95,6 +88,16 @@ a.button:active, a.button.pressed {
 .custom-radio .option:not(.active):hover span::before { content: "\f192";  font-weight: 400; }
 .custom-radio .option img {height: 35px; vertical-align: middle; padding-left: 5pt;}
 .custom-radio .option .example {padding-left: 5pt; color: blue; font-size: smaller;}
+.custom-radio .option.beta-script { color: rgb(138, 138, 138); }
+.custom-radio .option.larger { font-size: larger; }
+
+
+.action-icon { font-size: 0.8rem; cursor: pointer; padding-left: 5pt; color: lightblue;}
+.share-icon { font-weight: 400; }
+.share-icon:hover { color: blue; font-weight: 900; }
+.save-icon:hover { color: gold; font-weight: 900;}
+.save-icon.saved { color: gold; font-weight: 900;}
+.save-icon.saved:hover { color: gray; }
 
 
 .tooltip {

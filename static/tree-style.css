@@ -1,6 +1,7 @@
 .pitaka-tree-container {
     overflow: auto;
-    max-width: 15rem;
+    max-width: 14rem;
+    min-width: 14rem;
     top: 0;
     left: 0;
     background-color: whitesmoke;

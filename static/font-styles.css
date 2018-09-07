@@ -1,124 +1,70 @@
-@font-face {
-    font-family: 'noto si sans';
-    src: local('###'), url('./fonts/NotoSansSinhala-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'noto si sans';
-    src: local('###'), url('./fonts/NotoSansSinhala-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
-@font-face {
-    font-family: 'noto si serif';
-    src: local('###'), url('./fonts/NotoSerifSinhala-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'noto si serif';
-    src: local('###'), url('./fonts/NotoSerifSinhala-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
+@font-face { src: url('./fonts/NotoSerifSinhala-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'sinhala'; }
+@font-face { src: url('./fonts/NotoSerifSinhala-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'sinhala'; }
 
-@font-face {
-    font-family: 'noto hi serif';
-    src: local('###'), url('./fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'noto hi serif';
-    src: local('###'), url('./fonts/NotoSerifDevanagari-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
+@font-face { src: url('./fonts/NotoSerifDevanagari-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'devanagari'; }
+@font-face { src: url('./fonts/NotoSerifDevanagari-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'devanagari'; }
 
-@font-face {
-    font-family: 'noto ro serif';
-    src: local('###'), url('./fonts/NotoSerif-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'noto ro serif';
-    src: local('###'), url('./fonts/NotoSerif-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
+@font-face { src: url('./fonts/NotoSerif-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'roman'; }
+@font-face { src: url('./fonts/NotoSerif-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'roman'; }
 
-@font-face {
-    font-family: 'noto th serif';
-    src: local('###'), url('./fonts/THSarabun.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'noto th serif';
-    src: local('###'), url('./fonts/THSarabun-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
+@font-face { src: url('./fonts/THSarabun.ttf') format('truetype'); font-weight: normal; font-family: 'thai'; }
+@font-face { src: url('./fonts/THSarabun-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'thai'; }
 
-@font-face {
-    font-family: 'noto lo serif'; font-weight: normal;
-    src: local('###'), url('./fonts/LaoPaliAlpha-Light.woff') format('truetype');
-}
-@font-face {
-    font-family: 'noto lo serif'; font-weight: bold;
-    src: local('###'), url('./fonts/LaoPaliAlpha-Regular.woff') format('truetype');
-}
+@font-face { src: url('./fonts/LaoPaliAlpha-Light.woff') format('truetype'); font-weight: normal; font-family: 'lao'; }
+@font-face { src: url('./fonts/LaoPaliAlpha-Regular.woff') format('truetype'); font-weight: bold; font-family: 'lao'; }
 
-@font-face {
-    font-family: 'noto my serif';
-    src: local('###'), url('./fonts/NotoSansMyanmar-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'noto my serif';
-    src: local('###'), url('./fonts/NotoSansMyanmar-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
+@font-face { src: url('./fonts/mm3-multi-os(16-08-2011).ttf') format('truetype'); font-weight: normal; font-family: 'myanmar'; }
+@font-face { src: url('./fonts/mm3-multi-os(16-08-2011).ttf') format('truetype'); font-weight: bold; font-family: 'myanmar'; }
 
-@font-face {
-    font-family: 'noto km serif';
-    src: local('###'), url('./fonts/NotoSerifKhmer-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'noto km serif';
-    src: local('###'), url('./fonts/NotoSerifKhmer-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
+@font-face { src: url('./fonts/NotoSerifKhmer-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'khmer'; }
+@font-face { src: url('./fonts/NotoSerifKhmer-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'khmer'; }
 
-@font-face {
-    font-family: 'itmsu';
-    src: local('###'), url('./fonts/itmsu-r.ttf') format('truetype');
-    font-weight: normal;
-}
-@font-face {
-    font-family: 'itmsu';
-    src: local('###'), url('./fonts/itmsu-b.ttf') format('truetype');
-    font-weight: bold;
-}
+@font-face { src: url('./fonts/NotoSerifBengali-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'bengali'; }
+@font-face { src: url('./fonts/NotoSerifBengali-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'bengali'; }
 
-.UT[lang=en] {
-    font-family: 'noto ro serif';
-}
-.UT[lang=si] {
-    font-family: 'noto si serif';
-}
+@font-face { src: url('./fonts/NotoSansGurmukhi-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'gurmukhi'; }
+@font-face { src: url('./fonts/NotoSansGurmukhi-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'gurmukhi'; }
 
-.PT[lang=si],.tab-content[lang=si] {
-    font-family: 'noto si serif';
-}
-.PT[lang=hi],.tab-content[lang=hi] {
-    font-family: 'noto hi serif';
-}
-.PT[lang=ro],.tab-content[lang=ro] {
-    font-family: 'noto ro serif';
-}
-.PT[lang=th],.tab-content[lang=th] {
-    font-family: 'noto th serif'; font-size: 150%;
-}
-.PT[lang=lo],.tab-content[lang=lo] {
-    font-family: 'noto lo serif'; line-height: 170%; /*font-size: 125%;*/
-}
-.PT[lang=my],.tab-content[lang=my] {
-    font-family: 'noto my serif';
-}
-.PT[lang=km],.tab-content[lang=km] {
-    font-family: 'noto km serif';
-}
+@font-face { src: url('./fonts/Tai\ Tham\ LN2.otf') format('truetype'); font-weight: normal; font-family: 'tai tham'; }
+@font-face { src: url('./fonts/Tai\ Tham\ LN2.otf') format('truetype'); font-weight: bold; font-family: 'tai tham'; }
+
+@font-face { src: url('./fonts/NotoSerifGujarati-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'gujarati'; }
+@font-face { src: url('./fonts/NotoSerifGujarati-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'gujarati'; }
+
+@font-face { src: url('./fonts/NotoSerifTelugu-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'telugu'; }
+@font-face { src: url('./fonts/NotoSerifTelugu-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'telugu'; }
+
+@font-face { src: url('./fonts/NotoSerifKannada-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'kannada'; }
+@font-face { src: url('./fonts/NotoSerifKannada-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'kannada'; }
+
+@font-face { src: url('./fonts/NotoSerifMalayalam-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'malayalam'; }
+@font-face { src: url('./fonts/NotoSerifMalayalam-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'malayalam'; }
+
+@font-face { src: url('./fonts/NotoSansBrahmi-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'brahmi'; }
+
+@font-face { src: url('./fonts/DDC_Uchen.ttf') format('truetype'); font-weight: normal; font-family: 'tibetan'; }
+@font-face { src: url('./fonts/NotoSansTibetan-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'tibetan'; }
+
+@font-face { src: url('./fonts/NotoSerif-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'cyrillic'; }
+@font-face { src: url('./fonts/NotoSerif-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'cyrillic'; }
+
+.UT[lang=en] { font-family: 'roman'; }
+.UT[lang=si] { font-family: 'sinhala';}
+
+.PT[script=si],.tab-content[script=si] { font-family: 'sinhala'; }
+.PT[script=hi],.tab-content[script=hi] { font-family: 'devanagari'; }
+.PT[script=ro],.tab-content[script=ro] { font-family: 'roman'; }
+.PT[script=th],.tab-content[script=th] { font-family: 'thai'; font-size: 150%; }
+.PT[script=lo],.tab-content[script=lo] { font-family: 'lao'; line-height: 170%; /*font-size: 125%;*/ }
+.PT[script=my],.tab-content[script=my] { font-family: 'myanmar'; }
+.PT[script=km],.tab-content[script=km] { font-family: 'khmer'; }
+.PT[script=be],.tab-content[script=be] { font-family: 'bengali'; }
+.PT[script=gm],.tab-content[script=gm] { font-family: 'gurmukhi'; }
+.PT[script=tt],.tab-content[script=tt] { font-family: 'tai tham'; }
+.PT[script=gj],.tab-content[script=gj] { font-family: 'gujarati'; }
+.PT[script=te],.tab-content[script=te] { font-family: 'telugu'; }
+.PT[script=ka],.tab-content[script=ka] { font-family: 'kannada'; }
+.PT[script=mm],.tab-content[script=mm] { font-family: 'malayalam'; }
+.PT[script=br],.tab-content[script=br] { font-family: 'brahmi'; }
+.PT[script=tb],.tab-content[script=tb] { font-family: 'tibetan'; }
+.PT[script=cy],.tab-content[script=cy] { font-family: 'cyrillic'; }

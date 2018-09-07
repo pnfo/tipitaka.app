@@ -1,6 +1,7 @@
 import { TextProcessor } from './pali-script.js';
 import { appSettings } from './settings.js';
-import { PageTag, Note, Collection } from './note-tag.js';
+import { PageTag, Note, Collection, LinkHandler } from './note-tag.js';
+import { bookmarks } from './title-search.js';
 
 function Uint16ArrayToString(u16Arr) {
     const CHUNK_SZ = 0x8000;
@@ -11,31 +12,16 @@ function Uint16ArrayToString(u16Arr) {
     return c.join('');
 }
 
-/**
- * Macro function to get the pali text in the selected script in settings
- * param text - should be the text in sinhala script
- */
-export function PT(text) {
-    const pt = $('<i/>').addClass('PT').attr('si-text', text).attr('lang', appSettings.paliScript);
-    return pt.text(TextProcessor.convert(text, appSettings.paliScript));
-}
-// change language of all PT in the root
-export function PT_REFRESH(root) {
-    $('i.PT', root).each((_1, pt) => {
-        let text = $(pt).attr('si-text');
-        text = TextProcessor.convert(text, appSettings.paliScript);
-        $(pt).text(text).attr('lang', appSettings.paliScript);
-    });
-}
-
 const titleTypes = new Map([ ['cha', '1-2-3'], ['tit', '1-2'], ['sub', '1'] ]);
 export class FileDisplay {
-    constructor(elem, fileId, collObj, appTabs) {
+    constructor(elem, appTabs, fileId, collObj, lineToOpen = 0) {
         this.root = elem;
         this.fileId = fileId;
         this.collection = new Collection(collObj, this.root, this.fileId, appTabs);
+        this.linkHandler = new LinkHandler(this);
+        this.lineToOpen = lineToOpen;
         this.data = ''; // raw text in sinhala script
-        this.script = appSettings.paliScript; // per tab script
+        this.script = appSettings.get('paliScript'); // per tab script
         this.registerClicks();
     }
     load() {
@@ -45,27 +31,37 @@ export class FileDisplay {
         oReq.onload = (oEvent) => {
             this.data = Uint16ArrayToString(new Uint16Array(oReq.response));
             this.refresh();
+            this.openAndHighlightLine(this.lineToOpen);
         };
         oReq.send();
+    }
+    openAndHighlightLine(lineToOpen) { // call this method from tabs
+        this.linkHandler.openAndHighlightLine(lineToOpen);
     }
     registerClicks() {
         this.root.on('click', 'n.click', e => Note.showNoteBox(e))
         .on('click', '[tt] .line-text', e => {
             const div = $(e.currentTarget).parent();
-            const lines = div.toggleClass('open').nextUntil(`[tt|=${div.attr('tt')}]`);
-            lines.filter(':not([tt])').toggle(div.hasClass('open'));
-            lines.filter('[tt]').toggleClass('open', div.hasClass('open'));
-            this.root.parent().scrollTop(this.root.parent().scrollTop() + div.position().top);
+            this.openTitleDiv(div);
+            this.scrollToDiv(div);
         }).on('click', '.hangnum,.titnum', e => this.collection.renderOnClick(e));
     }
+    openTitleDiv(div) { // can be static too
+        const lines = div.toggleClass('open').nextUntil(`[tt|=${div.attr('tt')}]`);
+        lines.filter(':not([tt])').toggle(div.hasClass('open'));
+        lines.filter('[tt]').toggleClass('open', div.hasClass('open'));
+    }
+    scrollToDiv(div) {
+        this.root.parent().scrollTop(this.root.parent().scrollTop() + div.position().top);
+    }
     changeScript() {
-        if (this.script != appSettings.paliScript) {
-            this.script = appSettings.paliScript;
+        if (this.script != appSettings.get('paliScript')) {
+            this.script = appSettings.get('paliScript');
             this.refresh();
         }
     }
     refresh() { // change script, abbre and pageTags
-        this.root.empty().attr('lang', this.script);
+        this.root.empty().attr('script', this.script);
         //this.root.append($('<div/>').text(JSON.stringify(this.collection)));
         const lines = TextProcessor.basicConvert(this.data, this.script).split('\r\n');
         lines.forEach((line, ind) => {
@@ -80,12 +76,12 @@ export class FileDisplay {
     
     getDivForLine(line, ind) {
         const [rendType, paraNum, text] = this.lineToParts(line);
-        const div = $('<div/>').addClass(rendType).attr('line-ind', ind);
+        const div = $('<div/>').addClass(rendType).attr('line-ind', ind + 1);
         const textLine = this.textLineRender(text, rendType);
         const shareIcon = $('<i/>').addClass('far fa-share share-icon action-icon');
         if (titleTypes.has(rendType)) {
             if (paraNum) $('<span/>').addClass('titnum').text(paraNum + '.').appendTo(div);
-            const saveIcon = $('<i/>').addClass('far fa-star save-icon action-icon');
+            const saveIcon = bookmarks.getIcon(this.fileId, ind + 1);
             div.attr('tt', titleTypes.get(rendType)).append(textLine, shareIcon, saveIcon);
         } else {
             if (paraNum) {

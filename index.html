@@ -40,7 +40,7 @@
                 display: block;
             }
         }
-        @media screen and (max-width: 400pt) {
+        @media screen and (max-width: 600pt) {
             .ss-hide {
                 display: none;
             }
@@ -49,22 +49,24 @@
 </head>
 <body>
 
-<div align="center" style="margin:0 auto; max-width: 1500pt; height: 100%; display: flex; flex-flow: column; overflow: hidden;">
+<div align="center" style="margin:0 auto; height: 100%; display: flex; flex-direction: column;">
 
-    <div style="flex: 0 1 auto;">
+    <div style="flex: 0 0 auto;">
         <div class="title-bar">
-            <i id="tree-toggle" class="far fa-sitemap"></i>
-            <div style="flex: 1 1;"><i class="UT" lang="en">Chaṭṭha Saṅgāyana Tipiṭaka</i></div>
-            <i id="menu-toggle" class="far fa-bars tipright"></i>
+            <i id="tree-toggle" class="far fa-sitemap"> <i class="ss-hide UT" lang="en">Tree View</i></i>
+            <div style="flex: 1 1; text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;"><i class="UT" lang="en">Chaṭṭha Saṅgāyana Tipiṭaka</i></div>
+            <i id="menu-toggle" class="far fa-bars tipright"> <i class="ss-hide UT" lang="en">Menu</i></i>
         </div>
         <div id="search-bar-div">
+            <a id="columns-button" class="button"><i class="far fa-columns action"></i> <i class="ss-hide UT" lang="en">Columns</i></a>
             <input class="search-bar" type="text" placeholder=" Search">
-            <a id="settings-button" class="button tipright"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
-            <a id="text-view-button" class="button tipright"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
+            <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
+            <a id="text-view-button" class="button"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
+            <a id="bookmarks-button" class="button"><i id="bookmarks-count"></i> <i class="fas fa-star" style="color: gold;"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
             
             <div id="menu-list" style="right: 0; top: 0;">
                 <a class="menu-list-item" href="./static/offline.html"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
-                <a class="menu-list-item" href="https://tipitaka.app/convert"><i class="far fa-language fa-fw" style="color: green;"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
+                <a class="menu-list-item" href="https://tipitaka.app/misc/convert"><i class="far fa-language fa-fw" style="color: green;"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
                 <a class="menu-list-item" href="./static/about.html"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
                 <a class="menu-list-item" href="./static/help.html"><i class="far fa-question-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">Help</i></a>
                 <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: blue;" class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
@@ -72,28 +74,21 @@
         </div>
     </div>
 
-    <div id="contents-area" style="flex: 1 1 auto; display: flex; flex-flow: row nowrap; position: relative;" >
-        <div class="pitaka-tree-container" style="flex: 0 1 auto;">
+    <div id="contents-area" style="flex: 1 1 auto; display: flex; flex-flow: row nowrap; position: relative; min-height: 0px; height: 100%" >
+        <div class="pitaka-tree-container" style="flex: 1 1 auto;">
             <div class="pitaka-tree"></div>
         </div>
 
-        <div id="search-area" class="pane" style="flex: 1 1 auto; overflow-y: auto;">
-            <div id="search-status" align="center"><i class="UT" lang="en">For searching type the search term in the box above</i></div>
-            <div id="search-filter-status" align="center"></div>
-            <table id="search-results">
-                <thead>
-                    <tr>
-                        <td><i class="fa fa-search fa-fw"></i> ගැළපෙන වචන<span class="sort-action" by="nikaya">
-                            <a class="button" tip="නිකාය වැඩිවන පිළිවෙලට පෙළගස්වන්න" order="asc"><i class="fa fa-sort-alpha-asc fa-fw"></i></a>
-                            <a class="button" tip="නිකාය අඩුවන පිළිවෙලට පෙළගස්වන්න" order="desc"><i class="fa fa-sort-alpha-desc fa-fw"></i></a></span>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+        <div id="search-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
+            <div align="center">
+                <span id="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
+                <a id="search-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Results</i></a>
+            </div>
+            <div id="search-filter"></div>
+            <div id="search-results"></div>
         </div>
 
-        <div id="settings-area" class="pane" style="flex: 1 1 auto; overflow-y: auto;">
+        <div id="settings-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
             <h1><i class="far fa-wrench"></i> <i class="UT" lang="en">Settings</i></h1>
             <h2><i class="far fa-globe-asia"></i> <i class="UT" lang="en">Select User Interface Language</i></h2>
             <div id="ui-lang-select" class="custom-radio"></div>
@@ -111,9 +106,18 @@
             <div id="text-size-select" class="custom-radio"></div>
         </div>
 
-        <div id="text-view-area" class="text-section pane" style="flex: 1 1 ; position: relative; display: flex; flex-direction: column;">
+        <div id="bookmarks-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
+            <div align="center">
+                <span id="bookmarks-status"><i class="UT" lang="en">You have no bookmarks saved. Click the star icon to save to bookmarks.</i></span>
+                <a id="bookmarks-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Bookmarks</i></a>
+            </div>
+            <div id="bookmarks-filter"></div>
+            <div id="bookmarks-list"></div>
+        </div>
+
+        <div id="text-view-area" class="text-section top-pane" style="flex: 1 1 auto; position: relative; display: flex; flex-direction: column;">
             <div class="tab-heads"></div>
-            <div class="tab-contents" style="overflow-y: auto; height: 100%;"></div>
+            <div class="tab-contents"></div>
         </div>
 
     </div>
@@ -122,23 +126,16 @@
 <div id="toast"></div>
 
 <script src="./scripts/jquery-3.3.1.min.js"></script>
-<script>
-    function showPane(pane) {
-        $('div.pane').hide();
-        if (pane == 'text') $('#text-view-area').show();
-        else if (pane == 'settings') $('#settings-area').show();
-        else if (pane == 'search') $('#search-view-area').show();
-    }
-    showPane('settings');
-</script>
+<script src="./scripts/lz-string.min.js"></script>
+<script src="./scripts/clipboard.min.js"></script>
 
 <script src="./scripts/index.js?v=1" type="module"></script>
 <!--use webpack (npm run build) to build this and uncomment for production-->
 <!--<script src="./bundle.js"></script>-->
 
-<!--Remove the browser sync code below for production-->
+<!--Remove the browser sync code below for production
 <script id="__bs_script__">//<![CDATA[
     document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.24.6'><\/script>".replace("HOST", location.hostname));
-//]]></script>
+//]]></script>-->
 </body>
 </html>

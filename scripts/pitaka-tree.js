@@ -1,8 +1,7 @@
 /**
  * Created by janaka on 2018/08/02.
  */
-import { PT, PT_REFRESH } from './file-display.js';
-import { appSettings } from './settings.js';
+import { PT, PT_REFRESH } from './settings.js';
 
 const treeJsonFileURL = '../static/json/full-tree.json';
 
@@ -79,25 +78,28 @@ class PitakaTree {
 
     changeScript() {
         PT_REFRESH(this.root);
-        //$('li > a', this.root).each((_1, a) => $(a).text(PT($(a).text())).attr('lang', appSettings.paliScript));
     }
 
     registerClick() {
-        console.log('reg');
         this.root.on('click', 'li > a', e => { // delegate to new ajax elements(li > a) as well
             var li = $(e.currentTarget).parent();
             if (li.hasClass('parent')) {
                 this.toggleBranch(li);
             } else if (li.attr('file-id')) {
-                // TODO - not good to access si-text attr directly
-                const title = li.find('.PT').attr('si-text');
                 const fileId = li.attr('file-id');
-                this.appTabs.newTab(fileId, title, this.collections[this.fileIdToColl[fileId]]);
-                showPane('text');
+                const coll = this.getCollection(fileId);
+                const newT = PitakaTree.filterCollection(coll, fileId);
+                this.appTabs.newTab(fileId, newT[1], coll);
             }
         });
     }
-
+    getCollection(fileId) {
+        return this.collections[this.fileIdToColl[fileId]];
+    }
+    // filter Collection by nameAttr or fileId - can be a static func
+    static filterCollection(coll, val) { 
+        return coll.n.filter(v => v[0] == val || v[2] == val)[0];
+    }
     toggleBranch(li) {
         li.toggleClass('active').children('ul').slideToggle('fast');
     }
@@ -105,14 +107,12 @@ class PitakaTree {
         li.addClass('active').children('ul').slideDown('fast');
     }
     collapse() {
-        $('li.parent', this.root).removeClass('active');
+        $('li.parent.active', this.root).removeClass('active').children('ul').slideUp('fast');
     }
     openBranch(fileId) {
-        //this.collapse(); // collapse all other branches first
-        var fileLi = $(`li[file-id=${fileId}]`, this.root);
-        console.log(fileLi.length);
-        fileLi.parents('li').each(p => this.showBranch($(p)));
-        console.log(fileLi.parents('li'));
+        this.collapse(); // collapse all other branches first
+        const fileLi = $(`li[file-id=${fileId}]`, this.root);
+        fileLi.parents('li').each((_1, li) => this.showBranch($(li)));
         //this.showBranch(bookLi);
     }
 }

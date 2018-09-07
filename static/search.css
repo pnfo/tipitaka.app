@@ -1,68 +1,50 @@
+#search-area {
+    margin: 0.3rem;
+}
+
 #search-status {
-    font-size: 10pt;
+    font-size: 0.8rem;
     font-style: italic;
     color: darkblue;
-    padding: 5pt;
+    padding: 0.3rem;
 }
 #search-filter-status {
-    font-size: 9pt;
+    font-size: 0.6rem;
     color: darkred;
 }
 
 #search-results {
-    margin: 0px;
-    padding-left: 0pt;
-    display: none;
     width: 100%;
     background-color: white;
 }
-#search-results thead {
-    font-size: 15pt;
-    font-weight: bold;
-    background: lightgrey;
+#search-results .search-result:nth-child(even) {
+    background-color: whitesmoke;
 }
-#search-results tr {
-    font-size: 13pt;
-    padding: 2pt 5pt 2pt 5pt;
-    border-top: 1pt solid;
+.search-result {
+    padding: 0.2rem 0.3rem 0.2rem 0.3rem;
+    border-top: 1px dashed wheat;
+    text-align: left;
 }
-#search-results tr:nth-child(even) {
-    background-color: antiquewhite;
-}
-#search-results tr:hover {
+.search-result:hover {
     background: lightgoldenrodyellow;
-}
-#search-results td {
-    padding: 0pt 5pt 0pt 5pt;
-}
-#search-results span.action {
-    float: right;
-    color: blue;
-    cursor: pointer;
-}
-#search-results span.action i:hover {
-    color: red;
+    word-break: break-word;
 }
 
-.result-sutta-name {
-    color: darkblue;
-    font-weight: bold;
-    padding-right: 10pt;
-    font-size: 12pt;
-    word-break: break-word;
-}
-.result-parents {
-    font-size: 11pt;
+.search-result i.parent {
     color: darkgreen;
 }
-.result-nikaya-name {
-    font-size: 11pt;
+
+.search-result i.child {
+    font-weight: bold;
+    color: darkred;
 }
-.result-page-number, .result-book-name {
-    font-size: 12pt;
-    word-break: break-word;
-}
-span.result-sutta-name:hover, span.result-parent-name:hover {
+
+.search-result i.name:hover {
     cursor: pointer;
     text-decoration: underline;
 }
+
+.filter-table td { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; }
+.filter-table td:hover { background-color: antiquewhite; }
+.filter-table td::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f0c8"; padding-right: 5pt; }
+.filter-table td.checked::before { content: "\f14a"; }
