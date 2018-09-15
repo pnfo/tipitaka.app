@@ -39,6 +39,7 @@ const defaultSettings = { // to be used when not found in local storage
     textSize: '16',
     uiLanguage: Language.EN,
     tabViewFormat: 'tabbed',
+    ftsSelected: false,
 };
 class AppSettings {
     constructor() {

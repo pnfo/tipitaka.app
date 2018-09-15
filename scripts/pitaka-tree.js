@@ -28,6 +28,13 @@ class PitakaTree {
             console.error("getJSON failed, status: " + textStatus + ", error: "+error);
         });
     }
+    /*getFilesForParent() {
+        $('#tree-e').children().each((_1, li) => {
+            const ids = [];
+            $(li).find('li[file-id]').each( (_2, li) => ids.push($(li).attr('file-id')) );
+            console.log(ids);
+        });
+    }*/
 
     createSubtree(jsonRoot, nameAttrs, idAttr, leafAttr) {
         const ul = $('<ul/>').attr('id', idAttr);

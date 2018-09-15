@@ -2,7 +2,9 @@ import { appSettings, LangHelper, UT } from './settings.js';
 import { PitakaTabs, vManager } from './pitaka-tabs.js';
 import { PitakaTree } from './pitaka-tree.js';
 import { LinkHandler } from './note-tag.js';
+import { TSH } from "./search-common.js";
 import { TitleSearch, bookmarks } from './title-search.js';
+import { FTSHandler } from './fts-handler.js';
 import { Util } from './util.js';
 
 //import 'babel-polyfill'; // for internet explorer - use when bundling for production
@@ -15,9 +17,26 @@ appTree.initialize(appTabs).done(function() {
     LinkHandler.tryStartupLocation(appTree, appTabs);
 });
 const titleSearch = new TitleSearch($('#search-area'), appTree, appTabs);
-titleSearch.init().done(() => {
+const ftsHandler = new FTSHandler();
+TSH.init().then(() => {
+//titleSearch.init().then(() => {
+    $('.search-bar').on('keyup compositionend', e => ftsSelected ?  ftsHandler.performSearch(e) : titleSearch.performSearch(e)); 
+    $('.search-bar').focus(e => ftsSelected ? vManager.showPane('fts') : vManager.showPane('search'));
+    titleSearch.init();
     bookmarks.init(appTree, appTabs);
+    ftsHandler.init(appTree, appTabs);
+}).catch(err => {
+    console.error(`Title Search Index init failed with error ${err}`);
 });
+
+// whether to do fts or title search
+let ftsSelected = true; // not put in settings - instead user should select on each restart (for perf)
+ftsHandler.checkInit(); // todo remove in prod
+function setFtsSelected(state) {
+    $('#fts-select-button').toggleClass('active', state).children().toggleClass('fal', !state).toggleClass('fas', state);
+    if (ftsSelected = state) ftsHandler.checkInit();
+}
+$('#fts-select-button').click(e => setFtsSelected(!ftsSelected));
 
 // populating the settings pane
 // Pali Script Changing
@@ -34,6 +53,7 @@ paliScriptSelect.on('click', '.option', e => {
     appTabs.changeScript(); // check the script of active tab only
     titleSearch.changeScript(); // results, status and filters
     bookmarks.changeScript(); // bookmarks and filters
+    ftsHandler.changeScript(); // results, status and filters
 }).children(`[value=${appSettings.get('paliScript')}]`).addClass('active');
 
 

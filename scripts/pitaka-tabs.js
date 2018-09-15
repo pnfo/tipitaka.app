@@ -106,13 +106,13 @@ class ViewManager {
         else if (pane == 'settings') $('#settings-area').show();
         else if (pane == 'search') $('#search-area').show();
         else if (pane == 'bookmarks') $('#bookmarks-area').show();
+        else if (pane == 'fts') $('#fts-area').show();
         this.prevPane = this.curPane;
         this.curPane = pane;
     }
     registerEvents() {
         $('#settings-button').click(e => this.showPane('settings'));
         $('#text-view-button').click(e => this.showPane('text'));
-        $('.search-bar').focus(e => this.showPane('search'));
 
         $('#menu-toggle').mousedown(function (e) {
             $('#menu-list').animate({height: 'toggle'}, 200);

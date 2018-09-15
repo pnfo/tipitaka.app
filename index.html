@@ -60,6 +60,8 @@
         <div id="search-bar-div">
             <a id="columns-button" class="button"><i class="far fa-columns action"></i> <i class="ss-hide UT" lang="en">Columns</i></a>
             <input class="search-bar" type="text" placeholder=" Search">
+            <a id="fts-select-button" class="button"><i class="fal fa-search action"></i></a>
+            <!--<span id="fts-select-button" class="fa-stack fa-1x"><i class="fal fa-square-full fa-stack-1x" style="font-size: 2.1rem;"></i><i class="fal fa-search fa-stack-1x"></i></span>-->
             <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
             <a id="text-view-button" class="button"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
             <a id="bookmarks-button" class="button"><i id="bookmarks-count"></i> <i class="fas fa-star" style="color: gold;"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
@@ -79,15 +81,6 @@
             <div class="pitaka-tree"></div>
         </div>
 
-        <div id="search-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
-            <div align="center">
-                <span id="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
-                <a id="search-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Results</i></a>
-            </div>
-            <div id="search-filter"></div>
-            <div id="search-results"></div>
-        </div>
-
         <div id="settings-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
             <h1><i class="far fa-wrench"></i> <i class="UT" lang="en">Settings</i></h1>
             <h2><i class="far fa-globe-asia"></i> <i class="UT" lang="en">Select User Interface Language</i></h2>
@@ -104,6 +97,33 @@
 
             <h2><i class="far fa-font"></i> <i class="UT" lang="en">Text Size</i></h2>
             <div id="text-size-select" class="custom-radio"></div>
+        </div>
+
+        <div id="search-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
+            <div align="center">
+                <span id="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
+                <a id="search-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Results</i></a>
+            </div>
+            <div id="search-filter"></div>
+            <div id="search-results"></div>
+        </div>
+
+        <div id="fts-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
+            <div align="center">
+                <span id="fts-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
+                <a id="fts-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Results</i></a>
+            </div>
+            <div id="fts-filter"></div>
+            <div id="fts-options">
+                <span class="option check-box checked" param="exactWord"><i class="UT" lang="en">Exact Word</i></span>
+                <span class="option check-box checked" param="exactPhrase"><i class="UT" lang="en">Exact Phrase</i></span>
+                <span class="option check-box checked" param="matchOrder" hide="exactPhrase"><i class="UT" lang="en">Match Order</i></span>
+                <span class="option" hide="exactPhrase"><i class="UT" lang="en">Word Distance</i><input id="input-word-distance" type="text" value="10"></span>
+            </div>
+            <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                <div id="fts-match-list" style="flex: 1 1 auto;"></div>
+                <div id="fts-match-info" style="flex: 1 1 auto;"></div>
+            </div>
         </div>
 
         <div id="bookmarks-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
