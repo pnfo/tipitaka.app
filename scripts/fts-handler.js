@@ -5,9 +5,10 @@
  */
 "use strict";
 import { FTSQT, FTSQuery, FTSResponse } from './fts-runner.js';
-import { UT, PT, appSettings } from './settings.js';
+import { UT, PT, PT_REFRESH, appSettings } from './settings.js';
 import { TextProcessor } from './pali-script.js';
 import { vManager } from './pitaka-tabs.js';
+import { PitakaTree } from "./pitaka-tree.js";
 import { TSH, SearchFilter, TSE } from "./search-common.js";
 
 // 10 top parents file names start with this regex - add ^ to the front
@@ -28,8 +29,8 @@ export class FTSHandler {
             maxMatches: this.settings.maxMatches, maxFiles: this.settings.maxFiles };
     }
     init(appTree, appTabs) {
-        this.tree = appTree;
-        this.tabs = appTabs;
+        this.appTree = appTree;
+        this.appTabs = appTabs;
 
         this.filterParents = appSettings.get('fts-search-filter');
         if (!this.filterParents) {
@@ -61,11 +62,13 @@ export class FTSHandler {
         $('#fts-match-list').on('click', '.search-result', e => {
             this.displayInfo($(e.currentTarget).attr('matchInd'));
         });
+        $('#fts-match-info').on('click', 'i.name', e => this.openResult(e));
     }
     performSearch(e) {
         e.stopPropagation();
         vManager.showPane('fts');
-        const termStr = $('.search-bar').val().trim().replace(/\s+/g, ' '); // multiple spaces by 1 space
+        // multiple spaces by 1 space, other non-regex chars removed by tokenizer also removed (so user can directly copy paste terms)
+        const termStr = $('.search-bar').val().trim().replace(/\s+/g, ' ').replace(/[\d\,!;"‘’“”–<>=\:]/g, '');
         if (termStr.length < this.settings.minQueryLength) {
             this.setStatus(`Please enter some more characters to start the searching. Minimum: ${this.settings.minQueryLength}`); //todo string res
             return;
@@ -119,6 +122,8 @@ export class FTSHandler {
                 if (this.filterParents.indexOf(info[0]) >= 0) fileFilter.push(fileNameFilter[i]);
             });
             params.filter = fileFilter;
+        } else {
+            params.filter = null; // clear so that filter will not tried to be applied
         }
         return params;
     }
@@ -132,14 +137,14 @@ export class FTSHandler {
             this.setStatus(`Search term did not return any results. Your search term is ${this.prevTerms.join(' ')}.`); //todo
             return;
         }
-        $('#fts-match-list').append(this.matchesStore.matches.map(([indexes, freq, fileAr]), matchInd => {
+        $('#fts-match-list').append(this.matchesStore.matches.map(([indexes, freq, fileAr, numFiles], matchInd) => {
             const entryDiv = $('<div/>').addClass('search-result').attr('matchInd', matchInd);
             indexes.forEach(ind => {
                 PT(this.matchesStore.wordInfo[ind][0]).addClass('token').appendTo(entryDiv);
             });
             
             $('<span/>').text(freq).addClass('total-freq').appendTo(entryDiv);
-            $('<span/>').text(fileAr.length).addClass('count-files').appendTo(entryDiv);
+            $('<span/>').text(numFiles).addClass('count-files').appendTo(entryDiv);
             return entryDiv;
         }));
         if (this.matchesStore.matches.length < this.settings.maxMatches) {
@@ -149,24 +154,49 @@ export class FTSHandler {
         }
         this.displayInfo(0);
     }
+
     displayInfo(matchInd) {
         $('#fts-match-list').children().removeClass('selected').filter(`[matchInd=${matchInd}]`).addClass('selected');
+
         const match = this.matchesStore.matches[matchInd];
-        $('#fts-match-info').append(match[2].map(([file, offsetAr, numOffsets], fileInd) => {
+        $('#fts-match-info').empty().append(match[2].map(([file, offsetAr, numOffsets], fileInd) => {
             const entryDiv = $('<div/>').addClass('search-result').attr('file', file).attr('fileInd', fileInd);
-            
-            match[0].forEach(ind => {
-                PT(this.matchesStore.wordInfo[ind][0]).addClass('token').appendTo(entryDiv);
+            const tsEntry = TSH.data[TSH.fileToTSI.get(file)];
+            tsEntry[TSE.parents].forEach(ind => {
+                PT(TSH.data[ind][TSE.name]).addClass('parent name').attr('index', ind).appendTo(entryDiv);
+                $('<i/>').text(' » ').appendTo(entryDiv);
             });
-            
+            PT(tsEntry[TSE.name]).addClass('child name').attr('index', tsEntry[TSE.id]).appendTo(entryDiv);
             $('<span/>').text(numOffsets).addClass('count-files').appendTo(entryDiv);
+            return entryDiv;
         })).attr('matchInd', matchInd);
+    }
+
+    openResult(e) {
+        const nameDiv = $(e.currentTarget);
+        const entry = TSH.data[nameDiv.attr('index')];
+        const fileId = entry[TSE.file];
+        if (nameDiv.parent().attr('file') != fileId) { // different file will be opened
+            return; // for now do nothing
+        }
+        const coll = this.appTree.getCollection(fileId);
+        const newT = PitakaTree.filterCollection(coll, fileId);
+
+        const matchInd = nameDiv.parents('[matchInd]').first().attr('matchInd');
+        const match = this.matchesStore.matches[matchInd];
+        const highlightWords = match[0].map(ind => this.matchesStore.wordInfo[ind][0]);
+
+        const fileInd = nameDiv.parent().attr('fileInd');
+        const offsetAr = match[2][fileInd][1];
+
+        this.appTabs.newTab(fileId, newT[1], coll, { words: highlightWords, offsets: offsetAr } );
+        this.appTree.openBranch(fileId);
     }
 
     filterChanged(newFilter) {
         this.filterParents = newFilter;
-        appSettings.set('title-search-filter', this.filterParents);
-        console.log(newFilter);
+        appSettings.set('fts-search-filter', this.filterParents);
+        console.log(`fts filter changing to ${this.filterParents}`);
         this.scheduleSearchIndex();
     }
 
@@ -174,6 +204,7 @@ export class FTSHandler {
         $('#fts-status', this.root).empty().append(UT(text));
     }
     changeScript() {
+        PT_REFRESH($('#fts-area'));
     }
     checkInit() {
         new FTSQuery(FTSQT.initData).send();

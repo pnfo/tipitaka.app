@@ -9,15 +9,22 @@ class TitleStorageHelper {
         this.version = version;
         this.data = [];
         this.topParentsInfo = []; // todo move to subclass
+        this.fileToTSI = new Map(); // file to title storage index (used by fts results display)
     }
     async init() {
         if (this.version != localStorage.getItem(`version_${this.name}`) || !this.getLocalData()) {
             await this.loadUrlData();
         }
         this.data.forEach(entry => {
-            if (!entry[TSE.parents].length) 
+            if (!this.fileToTSI.has(entry[TSE.file]) && entry[TSE.type] == 'cha') { // the first 'cha' entry with the file
+                this.fileToTSI.set(entry[TSE.file], entry[TSE.id]);
+            }
+            if (!entry[TSE.parents].length) {
                 this.topParentsInfo.push([entry[TSE.id], entry[TSE.name]]);
+            }
         });
+        console.log(`fileToTSI map created with ${this.fileToTSI.size} entries.`);
+        console.log(`Top Parents Info created ${this.topParentsInfo}`);
     }
 
     getLocalData() {

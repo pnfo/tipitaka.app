@@ -60,7 +60,10 @@ const DEL = Object.freeze({
 class DictionaryLoader extends DataLoader {
     constructor(url, name) {
         super(url, name);
-        this.regExpSearchCache = new Map(); // results cache for linearsearches
+        this.searchCache = new Map(); // results cache for matching indexes for terms
+        this.settings = { 
+            maxMatchingWords: 10000, // throw error if number of matching words for a term is more than this
+        };
     }
     processDataStr(dataStr) {
         dataStr.split('\r\n').forEach((line, tIndex) => {
@@ -84,29 +87,24 @@ class DictionaryLoader extends DataLoader {
         }
         return this.binarySearch(mid, end, term, termReg);
     }
-    linearSearch(termRegStr) {
-        if (this.regExpSearchCache.has(termRegStr)) {
-            return this.regExpSearchCache.get(termRegStr);
-        }
-        const termReg = new RegExp(termRegStr, 'i');
-        const indexes = [];
-        for (let ind = 0; ind < this.data.length; ind++) {
-            if (termReg.exec(this.data[ind][DEL.word])) indexes.push(ind);
-        }
-        this.regExpSearchCache.set(termRegStr, indexes); // TODO need to prevent from growing too much
-        return indexes;
-    }
 
     checkTermMatch(ind, termReg) {
         return termReg.exec(this.data[ind][DEL.word]);
     }
     getMatchingIndexes(term, exactWord) {
         const termRegStr = `^${term}${exactWord ? '$' : ''}`;
-        if (isRegExp(term)) {
+        if (this.searchCache.has(termRegStr)) {
+            return this.searchCache.get(termRegStr);
+        }
+
+        const termReg = new RegExp(termRegStr, 'i');
+        let indexes = [];
+        if (isRegExp(term)) {    
             console.log(`linear search for term ${term}`);
-            return this.linearSearch(termRegStr);
+            for (let ind = 0; ind < this.data.length; ind++) {
+                if (termReg.exec(this.data[ind][DEL.word])) indexes.push(ind);
+            }
         } else {
-            const termReg = new RegExp(termRegStr, 'i'), indexes = [];
             let ind = this.binarySearch(0, this.data.length - 1, term, termReg); // find index of a matching word
             if (ind < 0) return [];
             let startInd = ind, endInd = ind + 1;
@@ -114,15 +112,18 @@ class DictionaryLoader extends DataLoader {
                 indexes.push(startInd);
                 startInd--;
             }
-            //startInd = Math.max(0, startInd + 1);
             while (endInd < this.data.length && termReg.exec(this.data[endInd][DEL.word])) {
                 indexes.push(endInd);
                 endInd++;
             }
-            return indexes;
-            //endInd = Math.min(this.data.length - 1, endInd - 1);
-            //return [startInd, endInd];
         }
+
+        /*if (indexes.length >= this.settings.maxMatchingWords) {
+            throw new Error(`Number of words matching the term ${term} is more than ${this.settings.maxMatchingWords}. Please make that term more unique.`)
+        }*/
+        console.log(`term ${term} has ${indexes.length} matching words`);
+        this.searchCache.set(termRegStr, indexes); // TODO need to prevent from growing too much
+        return indexes;
     }
     getFiles(indexes, filter) { 
         const filterReg = filter ? new RegExp(`^[${filter.join('')}]`) : '';
@@ -150,6 +151,11 @@ class FTSQuery {
     checkQuery() { // check for errors
         if (this.type == FTSQT.initData) return;
         if (!this.terms || !this.terms.length || this.terms.some(t => !t)) throw new Error(`Query terms all or some empty`);
+        this.terms.forEach(term => {
+            try { new RegExp(term); } catch(e) {
+                throw new Error(`${term} is not a valid regular expression`);
+            }
+        });
         if (!this.type || !this.terms || !this.params) {
             throw new Error(`Query type, terms and params should not be empty`);
         }
@@ -186,7 +192,7 @@ class MatchStore extends FTSResponse {
             const offsets = match.map(wo => wo[1]);
             if (!this.matchesMap.has(matchStr)) {
                 this.matchesMap.set(matchStr, this.matches.length);
-                this.matches.push([ match.map(wo => wo[0]), 1, {[file]: [offsets]} ]); // 3 elem array (indexes, freq, offsetsByFile)
+                this.matches.push([ match.map(wo => wo[0]), 1, {[file]: [offsets]}, 1 ]); // 4 elem array (indexes, freq, offsetsByFile, numFiles)
             } else {
                 const i = this.matchesMap.get(matchStr);
                 const match = this.matches[i];
@@ -195,6 +201,7 @@ class MatchStore extends FTSResponse {
                     match[2][file].push(offsets)
                 } else {
                     match[2][file] = [offsets]; 
+                    match[3]++; // num files
                 }
             }
         });
@@ -282,20 +289,33 @@ class FTSRunner {
         });
         return false; // matches already added if any
     }
-    intersectFiles(fileList) {
+    intersectFiles(fileList, terms) {
         let intersect = [...fileList[0]];
         for (let i = 1; i < fileList.length; i++) {
             intersect = intersect.filter(x => fileList[i].has(x));
         }
+        console.log(`number of files with all the terms: ${intersect.length} terms: ${terms}`);
         return intersect;
+    }
+    
+    checkQueryExplosion(terms, files, indexList) {
+        indexList.forEach((indexes, termInd) => {
+            if ((indexes.length * files.length) > 10000000) { // 10000 * 1000 used as rough measure
+                console.log(`indexes x files = ${indexes.length * files.length} terms: ${terms}`);
+                throw new Error(`The term ${terms[termInd]} is making this query run slower. Please make that term more unique.`);
+            }
+        });
     }
 
     getMatches(query) { // at this point all the data is loaded
+        let timer = new Date();
         const indexList = query.terms.map(term => dictLoader.getMatchingIndexes(term, query.params.exactWord));
 
         // get files for each term and intersect to find files that have all terms
         const fileList = indexList.map(indexes => dictLoader.getFiles(indexes, query.params.filter)); // array of sets
-        const files = this.intersectFiles(fileList); 
+        const files = this.intersectFiles(fileList, query.terms);
+
+        this.checkQueryExplosion(query.terms, files, indexList); // throws if (num files) x (num indexes) is too big for a term
 
         // for each file check the available words within the word distance
         const matchesByFile = new Map();
@@ -305,12 +325,12 @@ class FTSRunner {
         matchesByFile.forEach((matches, file) => matchStore.add(matches, file));
 
         matchStore.finalize(); // sort/cut by freq
+        console.log(`Query ${query.terms} ran in ${new Date() - timer} ms.`);
         return matchStore;
     }
-
 }
 
-const useNode = fals;
+const useNode = false;
 
 const dictLoader = new DictionaryLoader('./dev/tokenizer/dict-all.txt', 'dict');
 const offLoader = new OffsetsLoader('./dev/tokenizer/pos-all.txt', 'offsets');
@@ -331,7 +351,7 @@ if (useNode) {
             condMsg(expectedCount == matchCount, `matchCount for ${terms} mismatch got ${expectedCount}`);
             expectedCount = Object.keys(ms.wordInfo).length;
             condMsg(expectedCount == wordCount, `wordCount for ${terms} mismatch got ${expectedCount}`);
-            console.log(`first match freq = ${ms.matches[0][1]}`);
+            //console.log(`first match freq = ${ms.matches[0][1]}`);
         } catch(err) {
             console.error(err);
         }
@@ -340,12 +360,21 @@ if (useNode) {
     // init data and then run tests
     new FTSQuery(FTSQT.initData).send().then(() => {
         testRunner(100, 100, ['ජනක'], false, true); // cutoff by maxMatches
+        testRunner(100, 100, ['[ව]'], false, true); // regex with huge number of matches, cause error
+        testRunner(100, 100, ['න'], false, true); // with huge number of matches, cause error
+        testRunner(100, 100, ['න', 'සො', 'ධම්මං', 'විජානාති'], false, true); // combined not cause error
+        testRunner(100, 100, ['වී'], false, true); // with huge number of matches
+        testRunner(32, 48, ['වෙ', 'වී'], false, true); // combined with huge number of matches for each term
+        testRunner(100, 78, ['වෙ', 'වී'], false, false, false, 99); // combined with huge number of matches for each term
+        
         testRunner(2, 4, ["බුද්ධො", "භගවා", "වෙරඤ්ජා.*"], true, true);
         testRunner(6, 6, ['.*ජනක'], true, false); // regex
         testRunner(1, 2, ["බුද්ධො", "භගවා"], true, true, null, null, ['1', '2']); //filter only vin and abhi mula
 
         testRunner(2, 3, ["බුද්ධො", "වෙරඤ්ජා.*"], false, false, true, 2); // match order & word distance
         testRunner(4, 6, ["එකං", "සමයං", "භගවා.*"], false, false, true, 10); // match order & word distance
+        const termStr = 'යො බාලො මඤ්ඤති බාල්‍යං පණ්ඩිතො වාපි තෙන සො බාලො ච පණ්ඩිතමානී ස වෙ බාලොති වුච්චති';
+        testRunner(1, 1, termStr.split(' '), true, true); // many terms
     });
     
 }

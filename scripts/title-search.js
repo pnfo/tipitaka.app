@@ -45,7 +45,7 @@ export class TitleSearch {
         const fileId = entry[TSE.file];
         const coll = appTree.getCollection(fileId);
         const newT = PitakaTree.filterCollection(coll, fileId);
-        appTabs.newTab(fileId, newT[1], coll, Number(entry[TSE.lineInd]));
+        appTabs.newTab(fileId, newT[1], coll, { lineToOpen: Number(entry[TSE.lineInd]) });
         appTree.openBranch(fileId);
     }
 

@@ -108,11 +108,7 @@
             <div id="search-results"></div>
         </div>
 
-        <div id="fts-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
-            <div align="center">
-                <span id="fts-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
-                <a id="fts-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Results</i></a>
-            </div>
+        <div id="fts-area" class="top-pane" style="flex: 1 1 auto;">
             <div id="fts-filter"></div>
             <div id="fts-options">
                 <span class="option check-box checked" param="exactWord"><i class="UT" lang="en">Exact Word</i></span>
@@ -120,9 +116,13 @@
                 <span class="option check-box checked" param="matchOrder" hide="exactPhrase"><i class="UT" lang="en">Match Order</i></span>
                 <span class="option" hide="exactPhrase"><i class="UT" lang="en">Word Distance</i><input id="input-word-distance" type="text" value="10"></span>
             </div>
-            <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
-                <div id="fts-match-list" style="flex: 1 1 auto;"></div>
-                <div id="fts-match-info" style="flex: 1 1 auto;"></div>
+            <div align="center">
+                <span id="fts-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
+                <a id="fts-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Show/Hide Filter</i></a>
+            </div>
+            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; height: 100%;">
+                <div id="fts-match-list" style="flex: 1 1 0; overflow-y: auto;"></div>
+                <div id="fts-match-info" style="flex: 1 1 0; overflow-y: auto;"></div>
             </div>
         </div>
 
@@ -145,9 +145,9 @@
 
 <div id="toast"></div>
 
-<script src="./scripts/jquery-3.3.1.min.js"></script>
-<script src="./scripts/lz-string.min.js"></script>
-<script src="./scripts/clipboard.min.js"></script>
+<script src="./scripts/3rdparty/jquery-3.3.1.min.js"></script>
+<script src="./scripts/3rdparty/lz-string.min.js"></script>
+<script src="./scripts/3rdparty/clipboard.min.js"></script>
 
 <script src="./scripts/index.js?v=1" type="module"></script>
 <!--use webpack (npm run build) to build this and uncomment for production-->

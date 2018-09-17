@@ -44,6 +44,9 @@ body {
 .text-section pb.M {color: rgb(167, 126, 23);}
 .text-section pb.V {color: rgb(81, 119, 81);}
 
+.text-section f { background-color: yellow; }
+.text-section f.active { background-color: greenyellow; }
+
 .tab-content > div { padding-top: 2pt; padding-bottom: 2pt;}
 /* namothassa line if exists */
 .tab-content > div:first-child.cen { font-style: italic; color: darkred}

@@ -414,7 +414,7 @@ class TextProcessor {
         for(let i = 0; i < mixedText.length; i++) {
             const newScript = getScriptForCode(mixedText.charCodeAt(i));
             if (newScript != curScript || (i == mixedText.length - 1)) { // make sure to process the last run
-                console.log(`process run: "${run}", i: ${i}, script: ${curScript}`);
+                //console.log(`process run: "${run}", i: ${i}, script: ${curScript}`);
                 output += this.convertFrom(run, curScript);
                 curScript = newScript;
                 run = mixedText.charAt(i);

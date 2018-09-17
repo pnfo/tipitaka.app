@@ -6,8 +6,8 @@
 #search-results { width: 100%; background-color: white; }
 #search-results .search-result:nth-child(even) { background-color: whitesmoke; }
 
-.search-result { padding: 0.2rem 0.3rem 0.2rem 0.3rem;    border-top: 1px dashed wheat;    text-align: left;}
-.search-result:hover { background: lightgoldenrodyellow;    word-break: break-word;}
+.search-result { padding: 0.2rem 0.3rem 0.2rem 0.3rem; border-top: 1px dashed wheat; text-align: left; word-break: break-word;}
+.search-result:hover { background: lightgoldenrodyellow; }
 .search-result i.parent { color: darkgreen;}
 .search-result i.child { font-weight: bold;    color: darkred;}
 .search-result i.name:hover { cursor: pointer;    text-decoration: underline;}
@@ -23,6 +23,7 @@
 #fts-select-button:hover { background-color: white; }
 #fts-select-button.active { color: rgb(231, 10, 10); background-color: lightsalmon; }
 
+#fts-options { padding-top: 0.25rem }
 #fts-options .option { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; }
 #fts-options .option.hidden { visibility: hidden; }
 #fts-options .option:hover { background-color: antiquewhite; }
@@ -30,6 +31,11 @@
 #fts-options .check-box.checked::before { content: "\f14a"; }
 #input-word-distance { border: 1px solid lightsalmon; max-width: 2rem; min-width: 2rem; margin-left: 0.4rem; }
 
-#fts-word-list .total-freq { padding: 0.5rem; }
-#fts-word-list .count-files { padding: 0.5rem; }
-#fts-word-list .token { padding: 0.5rem; }
+#fts-match-list .total-freq { padding: 0.5rem; }
+#fts-match-list .count-files { padding: 0.5rem; }
+#fts-match-list .token { padding: 0.5rem; }
+#fts-match-list .search-result { cursor: pointer; color: darkgray;}
+#fts-match-list .search-result.selected { background-color: floralwhite; color: darkred; }
+
+#fts-match-info { background-color: floralwhite; }
+#fts-match-info .count-files { padding: 0.5rem; }

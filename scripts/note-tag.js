@@ -131,6 +131,10 @@ export class LinkHandler {
         if (!lineDiv) return; // non-existant line-ind
 
         lineDiv.css('background-color', 'lightyellow'); // highlight
+        this.openDivToShowLine(lineDiv);
+        this.fileDisplay.scrollToDiv(lineDiv);
+    }
+    openDivToShowLine(lineDiv) {
         const rendType = lineDiv.attr('class').split(' ')[0];
         let titleDiv = lineDiv;
         if ($.inArray(rendType, ['bod', 'gax', 'gae']) >= 0) { // para
@@ -139,7 +143,14 @@ export class LinkHandler {
         if (!titleDiv.hasClass('open')) {
             this.fileDisplay.openTitleDiv(titleDiv);
         }
-        this.fileDisplay.scrollToDiv(lineDiv);
+    }
+    openHighlightedLines() {
+        let smallestLineInd = 1e10; // a big number
+        this.root.find('f').parents('[line-ind]').each((_1, lineDiv) => {
+            this.openDivToShowLine($(lineDiv));
+            smallestLineInd = Math.min($(lineDiv).attr('line-ind'), smallestLineInd);
+        });
+        this.fileDisplay.scrollToDiv(this.root.children(`[line-ind=${smallestLineInd}]`));
     }
     static createLink(fileId, lineInd, script) {
         return `https://tipitaka.app/?a=${fileId}-${lineInd}-${script}`;
@@ -147,7 +158,7 @@ export class LinkHandler {
 
     // url format tipitaka.app/?a=ab1-323-th
     static tryStartupLocation(appTree, appTabs) {
-        const params = Util.getParameterByName('a', '').split('-'); //, lineId = getParameterByName('l', 0),            spt = getParameterByName('s', '');
+        const params = Util.getParameterByName('a', '').split('-'); 
         if (!params) return false;
         let [fileId, lineId, spt] = params;
 
@@ -164,9 +175,69 @@ export class LinkHandler {
             const coll = appTree.getCollection(fileId);
             const newT = PitakaTree.filterCollection(coll, fileId);
             appTree.openBranch(fileId);
-            appTabs.newTab(fileId, newT[1], coll, Number(lineId));
+            appTabs.newTab(fileId, newT[1], coll, { lineToOpen: Number(lineId) });
             return true;
         }
         return false;
+    }
+}
+
+export class HitHighlighter {
+    /**
+     * Three step process to mark the offset locations in the text in fileDisplay
+     * 1) insert a special character to the beginnings of words
+     * 2) run the tokenizer with the same settings and mark the locations of special chars which has a hit
+     * 3) add the <f> tag to locations in the original text which have marked special chars
+     */
+    static markOffsets(dataStr, highlight) {
+        // NOTE: tokenizer code below that compute the offsets should match exactly with the tokenizer in dev
+
+        // remove all punctuation marks, digits, ascii range, danda
+        // remove notes too - seaching exact matches over the notes
+        const tokenizerFilterRegex =
+        /<n>.+?<\/n>|[\u0964\u0965\u0970]|[A-Za-z0-9\.\?\,!;'"‘’“”–<>=\:\\\/\[\]\+\(\)]/g;
+        // new lines … and - also used to split the words
+        // § is used inside the <note> sometimes 
+        const tokenizerSplitRegex = /[-…§\s\r\n]+/g;
+
+        const offsetsMap = new Map(); // assumption - no duplicate offsets
+        highlight.offsets.forEach((offsets, offInd) => 
+            offsets.forEach((offset, termInd) => offsetsMap.set(offset, [offInd, termInd])));
+
+        // insert special char where a civ is followed by a not sinhala letter (possible starts of sinhala words)
+        // dont need to do this inside notes because tokenizer removes notes - so remove sp char inside the notes
+        dataStr = dataStr.replace(/([^ം-ෟ])([අ-ෆ])/g, '$1෴$2')
+            .replace(/<n>(.+?)<\/n>/g, (m, p1) => `<n>${p1.replace(/෴/g, '')}</n>`);
+
+        // perform the same tokenizer process so that the offsets would match
+        const tokenText = dataStr.replace(tokenizerFilterRegex, '');
+        const tokens = tokenText.replace(tokenizerSplitRegex, ' ').split(' ');
+        let spcCount = 0;
+        const tagLocations = new Map();
+        tokens.forEach((token, offset) => {
+            // if offset need to be highlighted, mark it in the tagLocations
+            if (offsetsMap.has(offset)) {
+                tagLocations.set(spcCount, offsetsMap.get(offset));
+                if (highlight.words[offsetsMap.get(offset)[1]] != token.substring(1)) { // error checking
+                    console.log(`token ${token.substring(1)} at offset ${offset} not matching with word ${highlight.words[offsetsMap.get(offset)[1]]}`);
+                }
+            }
+            // count the number of times special char () is occuring and keep track of it
+            spcCount += (token.match(/෴/g) || []).length;
+        });
+        console.log(`spcCount: ${spcCount}, offsetsMap: ${offsetsMap.size} tagLocations Found: ${tagLocations.size}`);
+
+        let spcCount2 = 0, tagsMarked = 0;
+        dataStr = dataStr.replace(/෴([^-…§\s\r\n<෴]*)/g, (m, p1, o) => { // assume that replace function will be called in order
+            spcCount2++;
+            if (tagLocations.has(spcCount2 - 1)) {
+                tagsMarked++;
+                const tagData = tagLocations.get(spcCount2 - 1);
+                return `<f oi="${tagData[0]}" ti="${tagData[1]}">${p1}</f>`;
+            }
+            return p1; // remove the un-necessary (un-marked) special char
+        });
+        console.log(`TagLocations marked: ${tagsMarked} spcCount2: ${spcCount2}`);
+        return dataStr;
     }
 }

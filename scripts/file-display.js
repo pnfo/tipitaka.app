@@ -1,6 +1,6 @@
 import { TextProcessor } from './pali-script.js';
 import { appSettings } from './settings.js';
-import { PageTag, Note, Collection, LinkHandler } from './note-tag.js';
+import { PageTag, Note, Collection, LinkHandler, HitHighlighter } from './note-tag.js';
 import { bookmarks } from './title-search.js';
 
 function Uint16ArrayToString(u16Arr) {
@@ -14,12 +14,13 @@ function Uint16ArrayToString(u16Arr) {
 
 const titleTypes = new Map([ ['cha', '1-2-3'], ['tit', '1-2'], ['sub', '1'] ]);
 export class FileDisplay {
-    constructor(elem, appTabs, fileId, collObj, lineToOpen = 0) {
+    constructor(elem, appTabs, fileId, collObj, highlight) {
         this.root = elem;
         this.fileId = fileId;
         this.collection = new Collection(collObj, this.root, this.fileId, appTabs);
         this.linkHandler = new LinkHandler(this);
-        this.lineToOpen = lineToOpen;
+        this.lineToOpen = highlight.lineToOpen || 0;
+        this.highlight = highlight;
         this.data = ''; // raw text in sinhala script
         this.script = appSettings.get('paliScript'); // per tab script
         this.registerClicks();
@@ -30,13 +31,14 @@ export class FileDisplay {
         oReq.responseType = "arraybuffer";
         oReq.onload = (oEvent) => {
             this.data = Uint16ArrayToString(new Uint16Array(oReq.response));
+            if (this.highlight.words) {
+                this.data = HitHighlighter.markOffsets(this.data, this.highlight);
+            }
             this.refresh();
-            this.openAndHighlightLine(this.lineToOpen);
+            this.linkHandler.openAndHighlightLine(this.lineToOpen);
+            this.linkHandler.openHighlightedLines(); //if HitHighlighter has marked any hits
         };
         oReq.send();
-    }
-    openAndHighlightLine(lineToOpen) { // call this method from tabs
-        this.linkHandler.openAndHighlightLine(lineToOpen);
     }
     registerClicks() {
         this.root.on('click', 'n.click', e => Note.showNoteBox(e))
@@ -52,7 +54,7 @@ export class FileDisplay {
         lines.filter('[tt]').toggleClass('open', div.hasClass('open'));
     }
     scrollToDiv(div) {
-        this.root.parent().scrollTop(this.root.parent().scrollTop() + div.position().top);
+        this.root.scrollTop(this.root.scrollTop() + div.position().top);
     }
     changeScript() {
         if (this.script != appSettings.get('paliScript')) {

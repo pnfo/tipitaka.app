@@ -25,11 +25,10 @@ export class PitakaTabs {
             e.stopPropagation();
         });
     }
-    showTab(tabId, lineToOpen = 0) {
+    showTab(tabId) {
         if (!this.tabs.has(tabId)) return false;
         this.tabs.forEach(tab => tab.forEach(elem => elem.removeClass('active')));
         this.tabs.get(tabId).forEach(elem => elem.addClass('active'));
-        this.files.get(tabId).openAndHighlightLine(lineToOpen);
         this.activeTabId = tabId;
         return true;
         //this.appTree.openBranch(fileId);
@@ -43,12 +42,9 @@ export class PitakaTabs {
         this.files.delete(tabId);
         if (this.activeTabId == tabId) this.showTab(this.tabs.keys().next().value); // if deleting the active tab
     }
-    newTab(fileId, title, collection, lineToOpen = 0) {
+    newTab(fileId, title, collection, highlight = {}) {
         vManager.showPane('text');
         const tabId = getNewTabId();
-        /*if (this.tabs.has(fileId)) {
-            return this.showTab(fileId, lineToOpen);
-        }*/
         const ptTitle = PT(title.replace(/^[\(\)\d+\s\-\.]+/, ''));
         const headLabel = $('<span/>').append(ptTitle).addClass('head-label');
         const closeIcon = $('<span/>').addClass('close-icon far fa-times');
@@ -56,7 +52,7 @@ export class PitakaTabs {
         const headDiv = $('<div/>').addClass('tab-head').append(collIcon, headLabel, closeIcon).appendTo(this.heads);
         const contentDiv = $('<div/>').addClass('tab-content').appendTo(this.contents);
         headDiv.add(contentDiv).attr('view', this.currentView).attr('file-id', fileId).attr('tab-id', tabId); // set view attr for both head and contents
-        const fileDisplay = new FileDisplay(contentDiv, this, fileId, collection, lineToOpen); 
+        const fileDisplay = new FileDisplay(contentDiv, this, fileId, collection, highlight); 
         fileDisplay.load();
         this.tabs.set(tabId, [headDiv, contentDiv]);
         this.files.set(tabId, fileDisplay);
