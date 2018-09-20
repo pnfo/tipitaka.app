@@ -1,3 +1,5 @@
+import 'babel-polyfill'; // for internet explorer - use when bundling for production
+
 import { appSettings, LangHelper, UT } from './settings.js';
 import { PitakaTabs, vManager } from './pitaka-tabs.js';
 import { PitakaTree } from './pitaka-tree.js';
@@ -7,7 +9,7 @@ import { TitleSearch, bookmarks } from './title-search.js';
 import { FTSHandler } from './fts-handler.js';
 import { Util } from './util.js';
 
-//import 'babel-polyfill'; // for internet explorer - use when bundling for production
+
 
 const appTree = new PitakaTree($('.pitaka-tree'));
 const appTabs = new PitakaTabs($('.text-section'), appTree);
@@ -30,8 +32,8 @@ TSH.init().then(() => {
 });
 
 // whether to do fts or title search
-let ftsSelected = true; // not put in settings - instead user should select on each restart (for perf)
-ftsHandler.checkInit(); // todo remove in prod
+let ftsSelected = false; // not put in settings - instead user should select on each restart (for perf)
+// ftsHandler.checkInit(); // todo remove in prod
 function setFtsSelected(state) {
     $('#fts-select-button').toggleClass('active', state).children().toggleClass('fal', !state).toggleClass('fas', state);
     if (ftsSelected = state) ftsHandler.checkInit();

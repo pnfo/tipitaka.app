@@ -26,6 +26,7 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "restify": "^7.2.1"
   }
 }

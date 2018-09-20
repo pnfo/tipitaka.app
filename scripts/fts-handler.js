@@ -4,12 +4,15 @@
  * that is either in server (node) or running in the browser (offline apps)
  */
 "use strict";
-import { FTSQT, FTSQuery, FTSResponse } from './fts-runner.js';
+
 import { UT, PT, PT_REFRESH, appSettings } from './settings.js';
 import { TextProcessor } from './pali-script.js';
 import { vManager } from './pitaka-tabs.js';
 import { PitakaTree } from "./pitaka-tree.js";
 import { TSH, SearchFilter, TSE } from "./search-common.js";
+
+const FTSRunLocally = false; // uncomment the following when run locally
+//import { FTSQuery } from './fts-runner.js';
 
 // 10 top parents file names start with this regex - add ^ to the front
 const fileNameFilter = ['1', 'abcde', '2', '3', 'fghij', '4', '5', 'klmno', '6', 'pqrstuvwxy'];
@@ -100,7 +103,9 @@ export class FTSHandler {
     searchIndex() { // send the query to do the search
         if (!this.checkTerms(this.prevTerms)) return; // changing filter/options at the very beginning
         $('#fts-match-list,#fts-match-info').empty();
-        const ftsQ = new FTSQuery(FTSQT.getMatches, this.prevTerms, this.getQueryParams());
+
+        const query = {type: 'get-matches', terms: this.prevTerms, params: this.getQueryParams() };
+        const ftsQ = FTSRunLocally ? new FTSQuery(query) : new RemoteFTSQuery(query);
         console.log(`sending query with terms ${this.prevTerms} and params ${JSON.stringify(ftsQ.params)}`);
         this.setBusySearching(true); // visual indication of search running
         ftsQ.send().then(mStore => {
@@ -133,7 +138,7 @@ export class FTSHandler {
     }
 
     displayMatches() {
-        if (this.matchesStore.isEmpty()) {
+        if (this.matchesStore.matches.length == 0) {
             this.setStatus(`Search term did not return any results. Your search term is ${this.prevTerms.join(' ')}.`); //todo
             return;
         }
@@ -206,10 +211,30 @@ export class FTSHandler {
     changeScript() {
         PT_REFRESH($('#fts-area'));
     }
-    checkInit() {
-        new FTSQuery(FTSQT.initData).send();
+    async checkInit() {
+        if (FTSRunLocally) {
+            await new FTSQuery('init-data').send();
+        }
     }
 
 }
 
-//export const ftsHander = new FTSHandler();
+/**
+ * Used when the FTS query is run on a remote server
+ */
+const FTSServerURLEndpoint = 'nodejs/fts-query/';
+class RemoteFTSQuery {
+    constructor(obj) {
+        this.type = obj.type;
+        this.terms = obj.terms;
+        this.params = obj.params;
+    }
+    async send() {
+        const queryObj = { type: this.type, terms: this.terms, params: this.params };
+        const responseObj = await $.post(FTSServerURLEndpoint, JSON.stringify(queryObj));
+        if (responseObj.error) {
+            throw new Error(responseObj.error);
+        }
+        return responseObj;
+    }
+}
