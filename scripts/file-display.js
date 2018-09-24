@@ -36,12 +36,14 @@ export class FileDisplay {
             }
             this.refresh();
             this.linkHandler.openAndHighlightLine(this.lineToOpen);
-            this.linkHandler.openHighlightedLines(); //if HitHighlighter has marked any hits
+            if (this.highlight.words) this.linkHandler.openHighlightedLines();
         };
         oReq.send();
     }
     registerClicks() {
         this.root.on('click', 'n.click', e => Note.showNoteBox(e))
+        .on('click', 'abbr', e => Note.showAbbrBox(e))
+        .on('click', 'pb', e => PageTag.showPageTagBox(e))
         .on('click', '[tt] .line-text', e => {
             const div = $(e.currentTarget).parent();
             this.openTitleDiv(div);
@@ -54,6 +56,7 @@ export class FileDisplay {
         lines.filter('[tt]').toggleClass('open', div.hasClass('open'));
     }
     scrollToDiv(div) {
+        if (!div) return;
         this.root.scrollTop(this.root.scrollTop() + div.position().top);
     }
     changeScript() {

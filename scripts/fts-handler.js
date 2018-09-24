@@ -7,7 +7,6 @@
 
 import { UT, PT, PT_REFRESH, appSettings } from './settings.js';
 import { TextProcessor } from './pali-script.js';
-import { vManager } from './pitaka-tabs.js';
 import { PitakaTree } from "./pitaka-tree.js";
 import { TSH, SearchFilter, TSE } from "./search-common.js";
 
@@ -67,11 +66,9 @@ export class FTSHandler {
         });
         $('#fts-match-info').on('click', 'i.name', e => this.openResult(e));
     }
-    performSearch(e) {
-        e.stopPropagation();
-        vManager.showPane('fts');
+    performSearch(searchBarVal) {
         // multiple spaces by 1 space, other non-regex chars removed by tokenizer also removed (so user can directly copy paste terms)
-        const termStr = $('.search-bar').val().trim().replace(/\s+/g, ' ').replace(/[\d\,!;"‘’“”–<>=\:]/g, '');
+        const termStr = searchBarVal.replace(/\s+/g, ' ').replace(/[\d\,!;"‘’“”–<>=\:]/g, '');
         if (termStr.length < this.settings.minQueryLength) {
             this.setStatus(`Please enter some more characters to start the searching. Minimum: ${this.settings.minQueryLength}`); //todo string res
             return;
@@ -222,7 +219,7 @@ export class FTSHandler {
 /**
  * Used when the FTS query is run on a remote server
  */
-const FTSServerURLEndpoint = 'nodejs/fts-query/';
+const FTSServerURLEndpoint = 'https://tipitaka.app/nodejs/fts-query/';
 class RemoteFTSQuery {
     constructor(obj) {
         this.type = obj.type;

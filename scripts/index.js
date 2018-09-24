@@ -1,5 +1,6 @@
-import 'babel-polyfill'; // for internet explorer - use when bundling for production
+//import 'babel-polyfill'; // for internet explorer - use when bundling for production
 
+import { getScriptForCode } from './pali-script.js';
 import { appSettings, LangHelper, UT } from './settings.js';
 import { PitakaTabs, vManager } from './pitaka-tabs.js';
 import { PitakaTree } from './pitaka-tree.js';
@@ -8,8 +9,6 @@ import { TSH } from "./search-common.js";
 import { TitleSearch, bookmarks } from './title-search.js';
 import { FTSHandler } from './fts-handler.js';
 import { Util } from './util.js';
-
-
 
 const appTree = new PitakaTree($('.pitaka-tree'));
 const appTabs = new PitakaTabs($('.text-section'), appTree);
@@ -21,8 +20,7 @@ appTree.initialize(appTabs).done(function() {
 const titleSearch = new TitleSearch($('#search-area'), appTree, appTabs);
 const ftsHandler = new FTSHandler();
 TSH.init().then(() => {
-//titleSearch.init().then(() => {
-    $('.search-bar').on('keyup compositionend', e => ftsSelected ?  ftsHandler.performSearch(e) : titleSearch.performSearch(e)); 
+    $('.search-bar').on('keyup compositionend', e => performSearch(e)); 
     $('.search-bar').focus(e => ftsSelected ? vManager.showPane('fts') : vManager.showPane('search'));
     titleSearch.init();
     bookmarks.init(appTree, appTabs);
@@ -31,12 +29,27 @@ TSH.init().then(() => {
     console.error(`Title Search Index init failed with error ${err}`);
 });
 
+function performSearch(e) {
+    if (e) e.stopPropagation();
+    const searchBarVal = $('.search-bar').val().trim();
+    if (ftsSelected) {
+        vManager.showPane('fts');
+        ftsHandler.performSearch(searchBarVal);
+    } else {
+        vManager.showPane('search');
+        titleSearch.performSearch(searchBarVal);
+    }
+    const inputScript = getScriptForCode(searchBarVal ? searchBarVal.charCodeAt(0) : 0);
+    $('.search-bar').attr('script', inputScript);
+}
+
 // whether to do fts or title search
 let ftsSelected = false; // not put in settings - instead user should select on each restart (for perf)
 // ftsHandler.checkInit(); // todo remove in prod
 function setFtsSelected(state) {
     $('#fts-select-button').toggleClass('active', state).children().toggleClass('fal', !state).toggleClass('fas', state);
     if (ftsSelected = state) ftsHandler.checkInit();
+    performSearch();
 }
 $('#fts-select-button').click(e => setFtsSelected(!ftsSelected));
 

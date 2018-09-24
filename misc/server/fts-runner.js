@@ -57,7 +57,7 @@ const DEL = Object.freeze({
     files: 3,
     freqs: 4,
 });
-class DictionaryLoader extends DataLoader {
+class WordListLoader extends DataLoader {
     constructor(url, name) {
         super(url, name);
         this.searchCache = new Map(); // results cache for matching indexes for terms
@@ -218,7 +218,7 @@ class MatchStore extends FTSResponse {
             // get word info for each matched word(ind) to be sent to the 
             match[0].forEach(ind => {
                 if (!this.wordInfo[ind]) {
-                    const entry = dictLoader.data[ind];
+                    const entry = wordLoader.data[ind];
                     this.wordInfo[ind] = [ entry[DEL.word], entry[DEL.total], entry[DEL.files].length ]; // total-freq and #files are not really needed
                 }
             })
@@ -240,17 +240,17 @@ class FTSRunner {
 
     async checkDataLoaded(query) {
         console.log('start loading fts data');
-        await Promise.all([dictLoader.load(), offLoader.load()]); // load in parallel
+        await Promise.all([wordLoader.load(), offLoader.load()]); // load in parallel
         return new FTSResponse(query);
     }
     getWordCombinations(indexList, file, params) {
         // for each term find the words that occur in the given file
-        const filteredIL = indexList.map(indexes => indexes.filter(ind => dictLoader.data[ind][DEL.files].indexOf(file) >= 0));
+        const filteredIL = indexList.map(indexes => indexes.filter(ind => wordLoader.data[ind][DEL.files].indexOf(file) >= 0));
         // for each term create [word(ind/token), offset] pairs within the file
         const WOList = filteredIL.map(indexes => {
             let termWOs = [];
             indexes.forEach(ind => {
-                const fileInd = dictLoader.data[ind][DEL.files].indexOf(file);
+                const fileInd = wordLoader.data[ind][DEL.files].indexOf(file);
                 termWOs = termWOs.concat(offLoader.data[ind][fileInd].map(offset => [ind, offset]));
             });
             return termWOs.sort((a, b) => b[1] - a[1]); // sort by offset
@@ -311,10 +311,10 @@ class FTSRunner {
 
     getMatches(query) { // at this point all the data is loaded
         let timer = new Date();
-        const indexList = query.terms.map(term => dictLoader.getMatchingIndexes(term, query.params.exactWord));
+        const indexList = query.terms.map(term => wordLoader.getMatchingIndexes(term, query.params.exactWord));
 
         // get files for each term and intersect to find files that have all terms
-        const fileList = indexList.map(indexes => dictLoader.getFiles(indexes, query.params.filter)); // array of sets
+        const fileList = indexList.map(indexes => wordLoader.getFiles(indexes, query.params.filter)); // array of sets
         const files = this.intersectFiles(fileList, query.terms);
 
         this.checkQueryExplosion(query.terms, files, indexList); // throws if (num files) x (num indexes) is too big for a term
@@ -334,13 +334,13 @@ class FTSRunner {
 
 const useNode = true;
 
-const dictLoader = new DictionaryLoader('./static/json/dict-all.txt', 'dict');
+const wordLoader = new WordListLoader('./static/json/dict-all.txt', 'dict');
 const offLoader = new OffsetsLoader('./static/json/pos-all.txt', 'offsets');
 
 const ftsRunner = new FTSRunner();
 
 //export { FTSQT, FTSQuery, FTSResponse, MatchStore, ftsRunner };
-module.exports = {FTSQuery, ftsRunner};
+module.exports = {FTSQuery, ftsRunner, wordLoader, DataLoader, DEL};
 
 const FTSRunTests = false;
 if (useNode && FTSRunTests) {

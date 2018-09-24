@@ -18,24 +18,9 @@ i { font-style: normal; }
     align-items: center;
 }
 
-#menu-list {
-    position: absolute; 
-    z-index: 9999; 
-    display: none; 
-    text-align: left;
-    background-color: lightsalmon;
-    box-shadow: -8px 9px 42px 8px rgba(0,0,0,0.19);
-}
-.menu-list-item {
-    font-size: 1rem;
-    display: block;
-    padding: 5pt 8pt 5pt 5pt;
-    color: black;
-    text-decoration: none;
-}
-.menu-list-item:hover {
-    background-color: white;
-}
+#menu-list { position: absolute; z-index: 9999; display: none; text-align: left; background-color: lightsalmon; box-shadow: -8px 9px 42px 8px rgba(0,0,0,0.19); }
+.menu-list-item { font-size: 1rem; display: block; padding: 5pt 8pt 5pt 5pt; color: black; text-decoration: none; }
+.menu-list-item:hover { background-color: white; }
 
 #search-bar-div {
     display: flex;
@@ -51,10 +36,11 @@ i { font-style: normal; }
     flex: 1 1;
     font-size: 1.25rem;
     margin: 2pt 1pt 2pt 1pt;
-    padding: 5px 5px 5px 5px;
+    padding: 0.33rem 0.33rem 0.33rem 0.33rem;
     border: 1px solid lightsalmon;
     max-width: 350pt;
     min-width: 70pt;
+    max-height: 1.4rem;
 }
 
 a.button {
@@ -68,13 +54,9 @@ a.button {
     cursor: pointer;
     display: inline-block;
 }
-a.button:hover {
-    background-color: lightsalmon;
-}
-a.button:active, a.button.pressed {
-    background-color: gray;
-    box-shadow: none;
-}
+
+a.button:hover { background-color: lightsalmon; }
+a.button:active, a.button.pressed { background-color: gray; box-shadow: none; }
 
 #settings-area h1 { color: brown; font-size: 1.5rem;}
 #settings-area h2 { color: rgb(253, 94, 36); font-size: 1.25rem;}

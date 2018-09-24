@@ -128,6 +128,11 @@ class ViewManager {
                 $('.pitaka-tree-container').animate({width: 'hide'}, 250);
             }
         });
+        $('dialog').click(e => { // clicking on the dialog (or backdrop) closes the dialog
+            if ($(e.target).is('dialog')) {
+                e.target.close('cancelled');
+            }
+        });
     }
 }
 

@@ -1,5 +1,5 @@
-import { Script } from './pali-script.js';
-import { appSettings, stringResources, UT } from './settings.js';
+import { Script, TextProcessor } from './pali-script.js';
+import { appSettings, stringResources, UT, PT } from './settings.js';
 import { PitakaTree } from './pitaka-tree.js';
 import { Util } from './util.js';
 
@@ -9,9 +9,48 @@ const pageTagNames = new Map([
     ['V', 'VRI'],
     ['P', 'PTS']
 ]);
-const digitZero = '0०๐໐၀០'; // distinct chars from the 0 line in pali specials
-const isUniversalZero = (num) => digitZero.indexOf(num) != -1;
-const stripLeadingZeros = (str) => str.replace(new RegExp(`^[${digitZero}]+`, 'g'), ''); 
+
+const abbreviations_si = new Map([ // converted from the roman ones below
+    ["අ", "අඞ්ගුත්තරනිකායපාලි"],
+    ["අට්ඨ", "අට්ඨකථා"],
+    ["චූළනි", "චූළනිද්දෙසපාලි"],
+    ["දී", "දීඝනිකායපාලි"],
+    ["ඉතිවු", "ඉතිවුත්තකපාලි"],
+    ["ජා", "ජාතකපාලි"],
+    ["කං", [{ UT: 'Cambodian Edition' }] ],
+    ["ක", [{ UT: 'Cambodian Edition' }] ],
+    ["ඛු", "ඛුද්දකනිකායපාලි"],
+    ["ම", "මජ්ඣිමනිකායපාලි"],
+    ["මහානි", "මහානිද්දෙසපාලි"],
+    ["මහාව", "මහාවංස"],
+    ["මොග", "මොග්ගල්ලානබ්යාකරණං (?)"],
+    ["මු", "මූල (?)"],
+    ["නි", "නිකාය"],
+    ["ප", "පටිසම්භිදාමග්ගපාලි/ පට්ඨානපාලි"],
+    ["පී", [{ UT: 'Pali Text Society Edition' }] ],
+    ["පෙ", "පෙතවත්ථුපාලි/ පෙටකොපදෙසපාලි / පෙය්යාල"],
+    ["පු", "පුග්ගලපඤ්ඤත්තිපාලි"],
+    ["පාචි", "පාචිත්තියපාලි"],
+    ["පාරා", "පාරාජිකකණ්ඩපාලි"],
+    ["රූ", "රූපාවචර(?)"],
+    ["සං", "සංයුත්තනිකායපාලි"],
+    ["සී", [{ UT: 'Sri Lankan Edition' }] ],
+    ["ස්‍යා", [{ UT: 'Thai Edition' }] ],
+    ["සු", "සුත්තපිටක/ සුත්තං (?)"],
+    ["ථෙරගා", "ථෙරගාථාපාලි"],
+    ["උදා", "උදානපාලි"],
+    ["වි", "විමානවත්ථුපාලි"],
+    ["විසුද්ධි", "විසුද්ධිමග්ග"],
+    ["ටී", "ටීකා"],
+    ["වා අස්ස", [
+        { PT: '“තස්ස එවං අයොනිසො මනසිකරොතො ඡන්නං දිට්ඨීනං අඤ්ඤතරා දිට්ඨි උප්පජ්ජති. ‘අත්ථි මෙ අත්තා’ති වා අස්ස, සච්චතො ථෙතතො දිට්ඨි උප්පජ්ජති; ‘නත්ථි මෙ අත්තා’ති වා අස්ස සච්චතො ථෙතතො දිට්ඨි උප්පජ්ජති; (මජ්ඣිමනිකාය, මූලපණ්ණාසපාලි, 1.11).'},
+        { UT: 'Here vā= or, an indeclinable and a conjunction. Assa= tassa= to him/ his. In some editions a sandhi is made as vā+assa= vāssa.'}]
+    ],
+]);
+
+//const digitZero = '0०๐໐၀០'; // distinct chars from the 0 line in pali specials
+//const isUniversalZero = (num) => digitZero.indexOf(num) != -1;
+//const stripLeadingZeros = (str) => str.replace(new RegExp(`^[${digitZero}]+`, 'g'), ''); 
 
 export class PageTag {
     static render(span) {
@@ -22,26 +61,35 @@ export class PageTag {
         }
     }
     static getPageTagDisplay(pb) {
-        let tag, page;
+        const [tagS, tagL, book, page] = PageTag.decodeAttr(pb);
+        if (appSettings.get('pageTagFormat') == 'click') {
+            pb.text('¶').addClass('click');
+        } else if (appSettings.get('pageTagFormat') == 'short') {
+            pb.text(`[${tagS}: ${book}.${page}]`);
+        } else {
+            pb.html(`[<i>${tagL}</i> ${book}.${page}]`);
+        }
+        pb.addClass(tagS);
+    }
+    static showPageTagBox(e) {
+        const pb = $(e.currentTarget);
+        const [tagS, tagL, book, page] = PageTag.decodeAttr(pb);
+        
+        $('#pagetag-book').text(book).parent().toggle(book ? true : false);
+        $('#pagetag-page').text(page);
+        $('#pagetag-edition').text(tagL);
+        Util.showDialog('pagetag-dialog', '', pb);
+    }
+    static decodeAttr(pb) {
+        let tag, pbAttrVal;
         for(let entry of pageTagNames) {
-            if (page = pb.attr(entry[0])) {
+            if (pbAttrVal = pb.attr(entry[0])) {
                 tag = entry;
                 break;
             }
         }
-        page = page.split('.');
-        //const book = isUniversalZero(page[0]) ? '' : `${page[0]}.`;
-        const book = page[0] ? `${page[0]}.` : '';
-        if (appSettings.get('pageTagFormat') == 'click') {
-            pb.text('¶').addClass('click');
-        } else if (appSettings.get('pageTagFormat') == 'short') {
-            //pb.text(`[${tag[0]}: ${book}${stripLeadingZeros(page[1])}]`);
-            pb.text(`[${tag[0]}: ${book}${page[1]}]`);
-        } else {
-            //pb.html(`[<i>${tag[1]}</i> ${book}${stripLeadingZeros(page[1])}]`);
-            pb.html(`[<i>${tag[1]}</i> ${book}${page[1]}]`);
-        }
-        pb.addClass(tag[0]);
+        let [book, page] = pbAttrVal.split('.');
+        return [tag[0], tag[1], book, page];
     }
 }
 
@@ -54,13 +102,44 @@ export class Note {
                 $(n).attr('text', $(n).text()).empty().addClass('click');
             });
         } else { // inline
-            span.children('n').each((_1, n) => $(n).text(`[${$(n).text()}]`));
+            span.children('n').each((_1, n) => $(n).html(`[${ Note.noteTextToHtml($(n).text()) }]`));
         }
     }
-    
+    static noteTextToHtml(text) {
+        return text.replace(/([^\s\(]+?[·॰])/g, `<abbr>$1</abbr>`);
+    }
+    static showAbbrBox(e) {
+        const abbr = $(e.currentTarget);
+        const targetScript = abbr.parents('[script]').attr('script');
+        let siAbbr = TextProcessor.convertFrom(abbr.text().slice(0, -1), targetScript);
+        siAbbr = TextProcessor.beautify(siAbbr, Script.SI); // since the convertFrom above does not do the beautification
+        const abbrText = abbreviations_si.get(siAbbr);
+        if (!abbrText) {
+            console.error(`Could not find the abbreviation for the abbr ${siAbbr}`);
+            return;
+        }
+        let itemsToShow = [];
+        if (typeof abbrText != 'string') { // for each item in the list create an element
+            itemsToShow = abbrText.map(abbrItem => {
+                if (abbrItem['PT']) return Note.getAbbrFromPT(abbrItem['PT'], targetScript);
+                if (abbrItem['UT']) return UT(abbrItem['UT']);
+            });
+        } else {
+            itemsToShow.push(Note.getAbbrFromPT(abbrText, targetScript))
+        }
+        Util.showDialog('abbreviations-dialog', itemsToShow, abbr);
+    }
+    static getAbbrFromPT(abbrText, targetScript) {
+        return $('<i/>').addClass('PT').attr('script', targetScript)
+            .text(TextProcessor.convert(abbrText, targetScript));
+    }
+
     static showNoteBox(e) {
         const note = $(e.currentTarget);
-        alert(note.attr('text'));
+        const newNote = $('<n/>').addClass('PT').attr('script', note.parents('[script]').attr('script'))
+            .html(Note.noteTextToHtml(note.attr('text')));
+        Util.showDialog('generic-dialog', newNote, note);
+        newNote.on('click', 'abbr', e => Note.showAbbrBox(e));
     }
 }
 
@@ -241,3 +320,42 @@ export class HitHighlighter {
         return dataStr;
     }
 }
+
+// the original roman abbreviations list from VRI
+const abbreviations_ro = new Map([
+    ['a', 'aṅguttaranikāyapāli'],
+    ['aṭṭha', 'aṭṭhakathā'],
+    ['cūḷani', 'cūḷaniddesapāli'],
+    ['dī', 'dīghanikāyapāli'],
+    ['itivu', 'itivuttakapāli'],
+    ['jā', 'jātakapāli'],
+    ['kaṃ', [{ UT: 'Cambodian Edition' }] ],
+    ['ka', [{ UT: 'Cambodian Edition' }] ],
+    ['khu', 'khuddakanikāyapāli'],
+    ['ma', 'majjhimanikāyapāli'],
+    ['mahāni', 'mahāniddesapāli'],
+    ['mahāva', 'mahāvaṃsa'],
+    ['moga', 'moggallānabyākaraṇaṃ (?)'],
+    ['mu', 'mūla (?)'],
+    ['ni', 'nikāya'],
+    ['pa', 'paṭisambhidāmaggapāli/ paṭṭhānapāli'],
+    ['pī', [{ UT: 'Pali Text Society Edition' }] ],
+    ['pe', 'petavatthupāli/ peṭakopadesapāli / peyyāla'],
+    ['pu', 'puggalapaññattipāli'],
+    ['pāci', 'pācittiyapāli'],
+    ['pārā', 'pārājikakaṇḍapāli'],
+    ['rū', 'rūpāvacara(?)'],
+    ['saṃ', 'saṃyuttanikāyapāli'],
+    ['sī', [{ UT: 'Sri Lankan Edition' }] ],
+    ['su', 'suttapiṭaka/ suttaṃ (?)'],
+    ['syā', [{ UT: 'Thai Edition' }] ],
+    ['theragā', 'theragāthāpāli'],
+    ['udā', 'udānapāli'],
+    ['vi', 'vimānavatthupāli'],
+    ['visuddhi', 'visuddhimagga'],
+    ['ṭī', 'ṭīkā'],
+    ['vā assa', [
+        { PT: '“Tassa evaṃ ayoniso manasikaroto channaṃ diṭṭhīnaṃ aññatarā diṭṭhi uppajjati. ‘Atthi me attā’ti vā assa, saccato thetato diṭṭhi uppajjati; ‘natthi me attā’ti vā assa saccato thetato diṭṭhi uppajjati; (majjhimanikāya, mūlapaṇṇāsapāli, page 1.11).'},
+        { UT: 'Here vā= or, an indeclinable and a conjunction. Assa= tassa= to him/ his. In some editions a sandhi is made as vā+assa= vāssa.'}]
+    ],
+]);

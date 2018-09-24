@@ -49,11 +49,8 @@ export class TitleSearch {
         appTree.openBranch(fileId);
     }
 
-    performSearch(e) {
-        e.stopPropagation();
-        vManager.showPane('search');
-    
-        const query = TextProcessor.convertFromMixed($('.search-bar').val()); // convert to sinhala here
+    performSearch(searchBarVal) {    
+        const query = TextProcessor.convertFromMixed(searchBarVal); // convert to sinhala here
         if (query == this.searchPrevQuery) { return; }
     
         $('#search-results', this.root).empty();

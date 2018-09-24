@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="./static/text-styles.css?v=1" />
     <link rel="stylesheet" href="./static/fontawesome/all.min.css?v=1"/>
     <link rel="stylesheet" href="./static/search.css?v=1"/>
+    <link rel="stylesheet" href="./static/dialog-polyfill.css"/>
     
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -59,12 +60,12 @@
         </div>
         <div id="search-bar-div">
             <a id="columns-button" class="button"><i class="far fa-columns action"></i> <i class="ss-hide UT" lang="en">Columns</i></a>
-            <input class="search-bar" type="text" placeholder=" Search">
+            <input class="search-bar PT" type="text" placeholder=" Search">
             <a id="fts-select-button" class="button"><i class="fal fa-search action"></i></a>
             <!--<span id="fts-select-button" class="fa-stack fa-1x"><i class="fal fa-square-full fa-stack-1x" style="font-size: 2.1rem;"></i><i class="fal fa-search fa-stack-1x"></i></span>-->
             <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
             <a id="text-view-button" class="button"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
-            <a id="bookmarks-button" class="button"><i id="bookmarks-count"></i> <i class="fas fa-star" style="color: gold;"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
+            <a id="bookmarks-button" class="button"><i id="bookmarks-count" class="ss-hide"></i> <i class="fas fa-star" style="color: gold;"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
             
             <div id="menu-list" style="right: 0; top: 0;">
                 <a class="menu-list-item" href="./static/offline.html"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
@@ -100,11 +101,11 @@
         </div>
 
         <div id="search-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
+            <div id="search-filter"></div>
             <div align="center">
                 <span id="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
-                <a id="search-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Results</i></a>
+                <a id="search-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
             </div>
-            <div id="search-filter"></div>
             <div id="search-results"></div>
         </div>
 
@@ -117,8 +118,8 @@
                 <span class="option" hide="exactPhrase"><i class="UT" lang="en">Word Distance</i><input id="input-word-distance" type="text" value="10"></span>
             </div>
             <div align="center">
-                <span id="fts-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
-                <a id="fts-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Show/Hide Filter</i></a>
+                <span id="fts-status"><i class="UT" lang="en">Type the search term in the box above</i></span>
+                <a id="fts-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
             </div>
             <div style="display: flex; flex-direction: row; flex-wrap: nowrap; height: 100%;">
                 <div id="fts-match-list" style="flex: 1 1 0; overflow-y: auto;"></div>
@@ -127,11 +128,11 @@
         </div>
 
         <div id="bookmarks-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
-            <div align="center">
-                <span id="bookmarks-status"><i class="UT" lang="en">You have no bookmarks saved. Click the star icon to save to bookmarks.</i></span>
-                <a id="bookmarks-filter-button" class="button"><i class="far fa-filter"></i> <i class="UT" lang="en">Filter Bookmarks</i></a>
-            </div>
             <div id="bookmarks-filter"></div>
+            <div align="center">
+                <span id="bookmarks-status"><i class="UT" lang="en">No bookmarks saved. Click the Star icon to save to bookmarks.</i></span>
+                <a id="bookmarks-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
+            </div>
             <div id="bookmarks-list"></div>
         </div>
 
@@ -143,11 +144,20 @@
     </div>
 </div>
 
+<dialog id="generic-dialog"></dialog>
+<dialog id="abbreviations-dialog"></dialog>
+<dialog id="pagetag-dialog">
+    <div><span id="pagetag-edition"></span> <i class="UT" lang="en">Edition</i></div>
+    <div><i class="UT" lang="en">Book</i> :  <span id="pagetag-book"></span></div>
+    <div><i class="UT" lang="en">Page</i> :  <span id="pagetag-page"></span></div>
+</dialog>
+
 <div id="toast"></div>
 
 <script src="./scripts/3rdparty/jquery-3.3.1.min.js"></script>
 <script src="./scripts/3rdparty/lz-string.min.js"></script>
 <script src="./scripts/3rdparty/clipboard.min.js"></script>
+<script src="./scripts/3rdparty/dialog-polyfill.js"></script>
 
 <script src="./scripts/index.js?v=1" type="module"></script>
 <!--use webpack (npm run build) to build this and uncomment for production-->

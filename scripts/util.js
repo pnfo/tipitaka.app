@@ -29,4 +29,16 @@ export class Util {
         if (val[3].c) option.addClass(val[3].c);
         return option;
     }
+    static showDialog(dialogId, elemToAppend = '', elemToHighlight = '') {
+        const dialog = $('#' + dialogId);
+        dialogPolyfill.registerDialog(dialog[0]);
+        if (elemToAppend) dialog.empty().append(elemToAppend);
+        if (elemToHighlight) {
+            elemToHighlight.addClass('highlighted');
+            dialog.on('close', e => elemToHighlight.removeClass('highlighted'));
+        }
+        // Now dialog acts like a native <dialog>.
+        dialog[0].showModal();
+        return dialog;
+    }
 }

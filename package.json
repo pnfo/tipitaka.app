@@ -5,7 +5,11 @@
   "private": true,
   "babel": {
     "presets": [
-      "env"
+      ["env", {
+        "targets": {
+          "node": "current"
+        }
+      }]
     ]
   },
   "scripts": {

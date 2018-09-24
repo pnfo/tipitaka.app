@@ -231,12 +231,12 @@ function swap_e_o(text, script, rendType = '') {
     } else if (script == Script.LAOS) {
         return text.replace(/([ກ-ຮ])([ເໂ])/g, '$2$1');
     }
-    console.error(`Unsupported script ${script} for swap_e_o method.`);
+    throw new Error(`Unsupported script ${script} for swap_e_o method.`);
 }
-// to be used when converting from
+// to be used when converting from - this is done after convert_from to prevent conflict with ඔ(โอ)
 function un_swap_e_o(text, script) { 
-    if (script == Script.THAI) return text.replace(/([เโ])([ก-ฮ])/g, '$2$1'); 
-    if (script == Script.LAOS) return text.replace(/([ເໂ])([ກ-ຮ])/g, '$2$1');
+    if (script == Script.THAI || script == Script.LAOS) return text.replace(/([ෙො])([ක-ෆ])/g, '$2$1'); 
+    throw new Error(`Unsupported script ${script} for un_swap_e_o method.`);
 }
 /* zero-width joiners - replace both ways
 ['\u200C', ''], // ZWNJ (remove) not in sinh (or deva?)
@@ -301,8 +301,6 @@ const un_beautify_func = {
     [Script.SI] : [cleanup_zwj],
     [Script.HI] : [cleanup_zwj],   // original deva script (from tipitaka.org) text has zwj
     [Script.RO]: [un_capitalize],
-    [Script.THAI]: [un_swap_e_o],
-    [Script.LAOS]: [un_swap_e_o],
     [Script.MY]: [un_beautify_mymr],
     [Script.TIBT]: [un_beautify_tibet],
 }
@@ -365,6 +363,8 @@ const convert_from_func = {
     [Script.SI] : [],
     [Script.RO] : [convert_from_w_v, fix_m_below, remove_a],
     [Script.CYRL] : [convert_from_w_v, remove_a],
+    [Script.THAI] : [convert_from, un_swap_e_o], // un_swap has to be done after conversion - conflicts with ඔ
+    [Script.LAOS] : [convert_from, un_swap_e_o],
 }
 
 function convert_to(text, script) {
@@ -414,7 +414,7 @@ class TextProcessor {
         for(let i = 0; i < mixedText.length; i++) {
             const newScript = getScriptForCode(mixedText.charCodeAt(i));
             if (newScript != curScript || (i == mixedText.length - 1)) { // make sure to process the last run
-                //console.log(`process run: "${run}", i: ${i}, script: ${curScript}`);
+                console.log(`process run: "${run}", i: ${i}, script: ${curScript}`);
                 output += this.convertFrom(run, curScript);
                 curScript = newScript;
                 run = mixedText.charAt(i);
