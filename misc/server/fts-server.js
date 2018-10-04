@@ -32,7 +32,7 @@ async function postRespond(req, res, next) {
         jsonRes = { query: ms.query, wordInfo: ms.wordInfo, matches: ms.matches, stats: ms.stats };
     } catch (err) {
         console.error(`Sending error response: ${err}`);
-        jsonRes = { error: err.toString() };
+        jsonRes = { error: err.message };
     }
     res.send(jsonRes);
     next();

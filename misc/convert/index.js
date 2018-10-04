@@ -1,4 +1,4 @@
-import { Script, paliScriptInfo, TextProcessor, getScriptForCode } from '../../scripts/pali-script.js';
+import { Script, paliScriptInfo, TextProcessor, getScriptForCode } from '../../scripts/pali-script.mjs';
 import { Util } from '../../scripts/util.js';
     
 // populating the settings pane

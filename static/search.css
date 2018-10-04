@@ -12,7 +12,7 @@
 .search-result i.child { font-weight: bold;    color: darkred;}
 .search-result i.name:hover { cursor: pointer;    text-decoration: underline;}
 
-.filter-table td { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; }
+.filter-table td { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; word-break: break-word;}
 .filter-table td:hover { background-color: antiquewhite; }
 .filter-table td::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f0c8"; padding-right: 5pt; }
 .filter-table td.checked::before { content: "\f14a"; }

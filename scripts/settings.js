@@ -1,13 +1,29 @@
+import {Script, paliScriptInfo, TextProcessor } from './pali-script.mjs';
 
-import {Script, paliScriptInfo, TextProcessor } from './pali-script.js';
-
-const Language = Object.freeze({
+export const Language = Object.freeze({
     SI: 'si',
-    EN: 'en'
+    EN: 'en',
+    CHINESE: 'ch',
+    HI: 'hi',
+    INDO: 'in',
+    BUR: 'my',
+    THAI: 'th',
 });
+
 const uiLanguageList = new Map([
-    [Language.SI, ['', 'සිංහල', [], {f: 'sl_flag.png'} ]],
-    [Language.EN, ['', 'English', [], {f: 'uk_flag.png'} ]],
+    [Language.SI, ['Sinhala', 'සිංහල', [], {f: 'sl_flag.png', t: true} ]],
+    [Language.EN, ['English', 'English', [], {f: 'uk_flag.png', t: true} ]],
+    [Language.CHINESE, ['Chinese', '汉语', [], {f: 'china_flag.png'} ]],
+    [Language.HI, ['Hindi', 'हिन्दी', [], {f: 'in_flag.png'} ]],
+    [Language.INDO, ['Indonesian', 'baˈhasa indoneˈsia', [], {f: 'indonesia_flag.png'} ]],
+    [Language.BUR, ['Burmese', 'မြန်မာဘာသာ', [], {f: 'my_flag.png'} ]],
+    [Language.THAI, ['Thai', 'ภาษาไทย', [], {f: 'th_flag.png'} ]],
+]);
+
+const dictLaunchList = new Map([
+    ['none', ['Do Not Show', '<i class="far fa-eye-slash"/>']],
+    ['click', ['Show On Click', '<i class="fal fa-mouse-pointer"></i>']],
+    ['hover', ['Show On Hover', '<i class="far fa-bullseye"></i>']]
 ]);
 
 const footnoteFormatList = new Map([
@@ -40,13 +56,17 @@ const defaultSettings = { // to be used when not found in local storage
     uiLanguage: Language.EN,
     tabViewFormat: 'tabbed',
     ftsSelected: false,
+    dictList: ['en-buddhadatta'],
+    dictLaunchMethod: 'click',
 };
+
 class AppSettings {
     constructor() {
         this.settings = {};
         this.loadFromStorage();
         this.paliScriptList = paliScriptInfo;
         this.uiLanguageList = uiLanguageList;
+        this.dictLaunchList = dictLaunchList;
         this.footnoteFormatList = footnoteFormatList;
         this.pageTagFormatList = pageTagFormatList;
         this.textSizeList = textSizeList;
@@ -71,6 +91,7 @@ class AppSettings {
             this.settings['paliScript'] = Script.SI; // todo take this from GPS
         }
         this.loadDefaults();
+        console.log(this.settings);
     }
     
     // try to determine from browser or ip address
@@ -84,67 +105,80 @@ class AppSettings {
 // for dynamically created UT elements
 export const stringResources = {
     'copy-link': 'Link has been copied to the clipboard. You can now paste it.',
+    'enter-more-characters': 'Please enter minimun XXX characters to start the searching.',
+    'fts-search-term-one-char': 'Each of the search terms must have at least one character.',
+    'fts-too-many-results-found': 'XXX results found. First YYY results shown.',
+    'fts-range-word-distance': 'Allowed Range for word distance 1 - 99.',
+    'too-many-results-found': 'Too many results found. First XXX of results shown.',
+    'number-of-results-found': 'XXX results found for your search term.',
+    'no-results-found': 'Search term XXX did not return any results.',
+    'number-of-bookmarks': 'There are XXX bookmarks matching your filter.',
+    'no-bookmarks': 'You have no bookmarks saved. Click the star icon to save to bookmarks.',
 };
 // based on the uiLanguage selected - store the translations
 let currentTranslations = new Map();
 export class LangHelper {
-    static extractLanguageStrings(lang) {
+    static async extractLanguageStrings(lang) {
         // copy over the entries from the current translation
-        LangHelper.loadTranslation(lang).then(function() {
-            const translations = new Map(data_trans);
-            $('i.UT').each((i, ut) => {
-                const enText = $(ut).attr('lang') == Language.EN ? $(ut).text().trim() : $(ut).attr('en-text');
-                if (!translations.has(enText)) {
-                    translations.set(enText, ''); // new translation needed
-                }
-            });
-            Object.entries(stringResources).forEach(([_1, enText]) => {
-                if (!translations.has(enText)) {
-                    translations.set(enText, ''); // new translation needed
-                }
-            });
-            const logPhrases = [];
-            translations.forEach((trans, enText) => logPhrases.push(enText, trans));
-            console.log(logPhrases.join('\r\n'));
+        await LangHelper.loadTranslation(lang);
+
+        const translations = new Map(data_trans);
+        $('i.UT').each((i, ut) => {
+            const enText = $(ut).attr('lang') == Language.EN ? $(ut).text().trim() : $(ut).attr('en-text');
+            if (!translations.has(enText)) {
+                translations.set(enText, ''); // new translation needed
+            }
         });
+        Object.entries(stringResources).forEach(([_1, enText]) => {
+            if (!translations.has(enText)) {
+                translations.set(enText, ''); // new translation needed
+            }
+        });
+        const logPhrases = [];
+        translations.forEach((trans, enText) => logPhrases.push(enText, trans));
+        console.log(logPhrases.join('\r\n'));
     }
 
-    static loadTranslation(lang) {
+    static async loadTranslation(lang) {
         const scriptFile = `./scripts/translations/${lang}_trans.js`;
-        return $.getScript( scriptFile, function( data, textStatus, jqxhr ) {
+        await $.getScript( scriptFile, function( data, textStatus, jqxhr ) {
             console.log(`Translation script with data length ${data.length} was loaded from file ${scriptFile}. 
                 Status '${textStatus}:${jqxhr.status}`); // Data returned
         });
     }
-    static changeTranslation(lang) {
+    static async changeTranslation(lang) {
         console.log(`changing UI language to ${lang}`);
         if (lang == Language.EN) { // no need to load translations
+            currentTranslations.clear(); // 
             $('i.UT').each((_1, ut) => $(ut).text($(ut).attr('en-text') || $(ut).text().trim())).attr('lang', lang);
             return;
         }
-        LangHelper.loadTranslation(lang).then(function() { // if not 'en' load translations
-            currentTranslations = new Map(data_trans);
-            $('i.UT').each((_1, ut) => {
-                const enText = $(ut).attr('en-text') || $(ut).text().trim();
-                if (!enText) {
-                    console.error(`UT found with empty en-text ${$(ut)}`);
-                }
-                if (currentTranslations.has(enText)) {
-                    $(ut).attr('en-text', enText).attr('lang', lang).text(currentTranslations.get(enText));
-                } else {
-                    // leave as-is in english
-                    $(ut).attr('lang', Language.EN);
-                }
-            });
+        await LangHelper.loadTranslation(lang); // if not 'en' load translations
+        currentTranslations = new Map(data_trans.filter(pair => pair[1]));
+        $('i.UT').each((_1, ut) => {
+            const enText = $(ut).attr('en-text') || $(ut).text().trim();
+            if (!enText) {
+                console.error(`UT found with empty en-text ${$(ut)}`);
+            }
+            if (currentTranslations.has(enText)) {
+                $(ut).attr('en-text', enText).attr('lang', lang).text(currentTranslations.get(enText));
+                // bug here - text params will not be replaced
+            } else {
+                // leave as-is in english
+                $(ut).attr('lang', Language.EN);
+            }
         });
     }
 }
 
 // create a new translated text string based on the current ui language
-export function UT(enText) {
-    const translated = currentTranslations.get(enText);
-    const ut = $('<i/>').addClass('UT').attr('en-text', enText).attr('lang', translated ? appSettings.get('uiLanguage') : Language.EN);
-    return ut.text(translated || enText);
+export function UT(enText, param1 = '', param2 = '') {
+    enText = stringResources[enText] || enText;
+    const translated = appSettings.get('uiLanguage') != Language.EN ? currentTranslations.get(enText) : '';
+    const finalText = (translated || enText).replace('XXX', param1).replace('YYY', param2); // if XXX occurs
+    const ut = $('<i/>').addClass('UT').attr('en-text', enText)
+        .attr('lang', translated ? appSettings.get('uiLanguage') : Language.EN);
+    return ut.text(finalText);
 }
 
 /**
@@ -164,6 +198,6 @@ export function PT_REFRESH(root) {
     });
 }
 
-//setTimeout(Language.extractLanguageStrings, 1000, 'si');
-//Language.changeTranslation('si');
+//setTimeout(() => LangHelper.extractLanguageStrings('si'), 1000);
+
 export const appSettings = new AppSettings();

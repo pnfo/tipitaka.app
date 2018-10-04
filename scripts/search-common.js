@@ -71,7 +71,7 @@ export class SearchFilter {
     }
     render() {
         this.table = $('<table/>').addClass('filter-table').appendTo(this.root);
-        console.log(this.topParentsInfo);
+        //console.log(this.topParentsInfo);
         [0, 1, 2].forEach(row => {
             const tr = $('<tr/>').attr('row', row).appendTo(this.table);
             [0, 1, 2].forEach(column => {

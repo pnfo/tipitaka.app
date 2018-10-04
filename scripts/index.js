@@ -1,14 +1,15 @@
 //import 'babel-polyfill'; // for internet explorer - use when bundling for production
 
-import { getScriptForCode } from './pali-script.js';
+import { getScriptForCode } from './pali-script.mjs';
 import { appSettings, LangHelper, UT } from './settings.js';
-import { PitakaTabs, vManager } from './pitaka-tabs.js';
+import { PitakaTabs } from './pitaka-tabs.js';
 import { PitakaTree } from './pitaka-tree.js';
 import { LinkHandler } from './note-tag.js';
 import { TSH } from "./search-common.js";
 import { TitleSearch, bookmarks } from './title-search.js';
 import { FTSHandler } from './fts-handler.js';
-import { Util } from './util.js';
+import { Util, vManager } from './util.js';
+import { dictHandler } from './dictionary.js';
 
 const appTree = new PitakaTree($('.pitaka-tree'));
 const appTabs = new PitakaTabs($('.text-section'), appTree);
@@ -20,7 +21,7 @@ appTree.initialize(appTabs).done(function() {
 const titleSearch = new TitleSearch($('#search-area'), appTree, appTabs);
 const ftsHandler = new FTSHandler();
 TSH.init().then(() => {
-    $('.search-bar').on('keyup compositionend', e => performSearch(e)); 
+    $('.search-bar').on('input', e => performSearch(e)); //keyup compositionend
     $('.search-bar').focus(e => ftsSelected ? vManager.showPane('fts') : vManager.showPane('search'));
     titleSearch.init();
     bookmarks.init(appTree, appTabs);
@@ -74,18 +75,26 @@ paliScriptSelect.on('click', '.option', e => {
 
 // UI Language related
 appSettings.uiLanguageList.forEach((val, lang) => {
-    Util.createLanguageSelectOption(lang, val).appendTo($('#ui-lang-select'));
+    if (val[3].t) { // only if the translation available
+        Util.createLanguageSelectOption(lang, val).appendTo($('#ui-lang-select'));
+    }
 });
 $('#ui-lang-select').on('click', '.option', e => {
     appSettings.set('uiLanguage', $(e.currentTarget).attr('value'));
     LangHelper.changeTranslation(appSettings.get('uiLanguage'));
 }).children(`[value=${appSettings.get('uiLanguage')}]`).addClass('active');
 
+// Dictionary Related
+dictHandler.dictionaryList.forEach((info, dictName) => 
+    Util.createDictionarySelectOption(dictName, info, appSettings.uiLanguageList.get(info[0])).appendTo('#dictionary-select'));
+$('#dictionary-select').on('click', '.check', e => dictHandler.dictionaryListChanged(e))
+    .children(appSettings.get('dictList').map(dict => `[value=${dict}]`).join(',') || 'none').addClass('active');
+
 function changeTextSize(size) {
     $('html').css('font-size', `${size}px`);
 }
 
-function populateFormatSelect(formatList, select, settingName, onChangeCallback) {
+function populateFormatSelect(formatList, select, settingName, onChangeCallback = '') {
     formatList.forEach((format, val) => {
         const span = $('<span/>').append(UT(format[0]));
         const example = $(format[1]).addClass('example');
@@ -93,21 +102,21 @@ function populateFormatSelect(formatList, select, settingName, onChangeCallback)
     });
     select.on('click', '.option', e => {
         const val = appSettings.set(settingName, $(e.currentTarget).attr('value'));
-        onChangeCallback(val);
+        if (onChangeCallback) onChangeCallback(val);
     }).children(`[value=${appSettings.get(settingName)}]`).addClass('active');
 }
+populateFormatSelect(appSettings.dictLaunchList, $('#dictionary-launch-select'), 'dictLaunchMethod');
 populateFormatSelect(appSettings.footnoteFormatList, $('#footnote-format-select'), 'footnoteFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'), 'pageTagFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.textSizeList, $('#text-size-select'), 'textSize', changeTextSize);
 
-$('.custom-radio').on('click', '.option', e => {
+$('.custom-radio').on('click', '.option:not(.check)', e => {
     $(e.currentTarget).addClass('active').siblings().removeClass('active');
     if (appTabs.getNumTabs()) { // only if there are text tabs to show
         vManager.showPane('back'); // go back
     }
 });
-
-$('#columns-button').click(e => appTabs.switchView());
+$('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('active'));
 
 // apply initial settings
 LangHelper.changeTranslation(appSettings.get('uiLanguage'));

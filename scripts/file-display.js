@@ -1,6 +1,6 @@
-import { TextProcessor } from './pali-script.js';
+import { TextProcessor } from './pali-script.mjs';
 import { appSettings } from './settings.js';
-import { PageTag, Note, Collection, LinkHandler, HitHighlighter } from './note-tag.js';
+import { PageTag, Note, Collection, LinkHandler, HitHighlighter, WordDisplay } from './note-tag.js';
 import { bookmarks } from './title-search.js';
 
 function Uint16ArrayToString(u16Arr) {
@@ -19,11 +19,12 @@ export class FileDisplay {
         this.fileId = fileId;
         this.collection = new Collection(collObj, this.root, this.fileId, appTabs);
         this.linkHandler = new LinkHandler(this);
+        this.wordDisplay = new WordDisplay(this);
         this.lineToOpen = highlight.lineToOpen || 0;
         this.highlight = highlight;
         this.data = ''; // raw text in sinhala script
         this.script = appSettings.get('paliScript'); // per tab script
-        this.registerClicks();
+        this.registerEvents();
     }
     load() {
         const oReq = new XMLHttpRequest();
@@ -34,17 +35,17 @@ export class FileDisplay {
             if (this.highlight.words) {
                 this.data = HitHighlighter.markOffsets(this.data, this.highlight);
             }
+            this.data = this.wordDisplay.markWords(this.data);
             this.refresh();
             this.linkHandler.openAndHighlightLine(this.lineToOpen);
             if (this.highlight.words) this.linkHandler.openHighlightedLines();
         };
         oReq.send();
     }
-    registerClicks() {
-        this.root.on('click', 'n.click', e => Note.showNoteBox(e))
-        .on('click', 'abbr', e => Note.showAbbrBox(e))
-        .on('click', 'pb', e => PageTag.showPageTagBox(e))
-        .on('click', '[tt] .line-text', e => {
+    registerEvents() {
+        Note.registerEvents(this);
+        PageTag.registerEvents(this);
+        this.root.on('click', '[tt] .line-text', e => {
             const div = $(e.currentTarget).parent();
             this.openTitleDiv(div);
             this.scrollToDiv(div);

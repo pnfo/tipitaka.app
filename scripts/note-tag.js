@@ -1,7 +1,8 @@
-import { Script, TextProcessor } from './pali-script.js';
+import { Script, TextProcessor } from './pali-script.mjs';
 import { appSettings, stringResources, UT, PT } from './settings.js';
 import { PitakaTree } from './pitaka-tree.js';
-import { Util } from './util.js';
+import { Util, JDialog } from './util.js';
+import { dictHandler } from './dictionary.js';
 
 const pageTagNames = new Map([
     ['T', 'Thai'],
@@ -53,6 +54,9 @@ const abbreviations_si = new Map([ // converted from the roman ones below
 //const stripLeadingZeros = (str) => str.replace(new RegExp(`^[${digitZero}]+`, 'g'), ''); 
 
 export class PageTag {
+    static registerEvents(fd) {
+        fd.root.on('click', 'pb', e => PageTag.showPageTagBox(e));
+    }
     static render(span) {
         if (appSettings.get('pageTagFormat') == 'none') {
             span.children('pb').remove();
@@ -94,6 +98,11 @@ export class PageTag {
 }
 
 export class Note {
+    static registerEvents(fd) {
+        fd.root.on('click', 'n.click', e => Note.showNoteBox(e, fd.script))
+            .on('click', 'abbr', e => Note.showAbbrBox(e, fd.script));
+    }
+    
     static render(span) {
         if (appSettings.get('footnoteFormat') == 'none') {
             span.children('n').remove();
@@ -108,9 +117,8 @@ export class Note {
     static noteTextToHtml(text) {
         return text.replace(/([^\s\(]+?[·॰])/g, `<abbr>$1</abbr>`);
     }
-    static showAbbrBox(e) {
+    static showAbbrBox(e, targetScript) {
         const abbr = $(e.currentTarget);
-        const targetScript = abbr.parents('[script]').attr('script');
         let siAbbr = TextProcessor.convertFrom(abbr.text().slice(0, -1), targetScript);
         siAbbr = TextProcessor.beautify(siAbbr, Script.SI); // since the convertFrom above does not do the beautification
         const abbrText = abbreviations_si.get(siAbbr);
@@ -134,12 +142,13 @@ export class Note {
             .text(TextProcessor.convert(abbrText, targetScript));
     }
 
-    static showNoteBox(e) {
+    static showNoteBox(e, script) {
+        console.log(script);
         const note = $(e.currentTarget);
-        const newNote = $('<n/>').addClass('PT').attr('script', note.parents('[script]').attr('script'))
+        const newNote = $('<n/>').addClass('PT').attr('script', script)
             .html(Note.noteTextToHtml(note.attr('text')));
         Util.showDialog('generic-dialog', newNote, note);
-        newNote.on('click', 'abbr', e => Note.showAbbrBox(e));
+        newNote.on('click', 'abbr', e => Note.showAbbrBox(e, script));
     }
 }
 
@@ -190,7 +199,7 @@ export class LinkHandler {
                 return link;
             }
         });
-        clipb.on('success', e => Util.showToast(UT(stringResources['copy-link'])));
+        clipb.on('success', e => Util.showToast(UT('copy-link')));
     }
     registerClicks() {
         /*this.root.on('click', '.share-icon', e => {
@@ -318,6 +327,66 @@ export class HitHighlighter {
         });
         console.log(`TagLocations marked: ${tagsMarked} spcCount2: ${spcCount2}`);
         return dataStr;
+    }
+}
+
+export class WordDisplay {
+    constructor(fileDisplay) {
+        this.fileDisplay = fileDisplay;
+        this.root = this.fileDisplay.root;
+        this.registerClicks();
+        this.settings = { hoverDelay: 500 };
+        this.hoverTimer = null;
+    }
+    registerClicks() {
+        this.root.on('mouseenter', 'w', e => this.registerShowInfo(e, 'hover'))
+        .on('mouseleave', 'w', e => {
+            if (this.hoverTimer) clearTimeout(this.hoverTimer);
+            this.closeInfoBox();
+        }).on('click', 'w', e => this.registerShowInfo(e, 'click'));
+    }
+    registerShowInfo(e, eventType) {
+        if (appSettings.get('dictLaunchMethod') != eventType) return; // not show on this event
+        if (!dictHandler.activeDicts.size) return; // no dicts selected by user
+        if (this.dictDlg && this.dictDlg.isOpen) return; // prevent new dialogs if one is already shown
+        const wElem = $(e.currentTarget);
+        if (wElem.parents('[tt]').length) return;
+        if (this.hoverTimer) clearTimeout(this.hoverTimer);
+        if (eventType == 'hover') {
+            this.hoverTimer = setTimeout(() => this.showInfoBox(wElem), this.settings.hoverDelay);
+        } else {
+            this.showInfoBox(wElem);
+        }
+    }
+    showInfoBox(wElem, inputVal = '') {
+        const word = inputVal || wElem.text();
+        dictHandler.searchWord(word, this.fileDisplay.script).then(entries => {
+            // if have entries directly display them, otherwise show an edit box with the text
+            if (entries.length) {
+                const table = $('<div/>').append(entries).css('padding', '0.33rem');
+                if (this.dictDlg) this.dictDlg.close();
+                this.dictDlg = new JDialog(wElem, wElem, {'max-width': 400, top: '100%'}).show(table, this.root);
+                if (table.width() > 380) { // hack
+                    $('.dict-row', table).css('white-space', 'normal');
+                }
+            } else if (!this.wordEditDlg || !this.wordEditDlg.isOpen) { // do not show the editbox a second time
+                const inputBox = $('<input/>').addClass('PT').attr('type', 'text').val(wElem.text())
+                    .attr('script', this.fileDisplay.script).css('padding', '0.33rem');
+                this.wordEditDlg = new JDialog(wElem, wElem, {bottom: '100%'}).show(inputBox, this.root);
+                inputBox.focus().on('input', e => inputBox.val() ? this.showInfoBox(wElem, inputBox.val()) : '');
+            }
+            
+        }).catch(err => {
+            console.error(`Error searching word ${word} : ${err}`);
+        });
+    }
+    closeInfoBox() {
+        if (this.dictDlg && this.dictDlg.isOpen) this.dictDlg.close();
+        if (this.wordEditDlg && this.wordEditDlg.isOpen) this.wordEditDlg.close();
+    }
+    // will be called after markOffsets above if any
+    markWords(dataStr) {
+        return dataStr.replace(/([ം-ෟ]+)/g, `<w>$1</w>`); // (?!॰) sinhala range not followed by abbre sign
     }
 }
 

@@ -59,18 +59,18 @@
             <i id="menu-toggle" class="far fa-bars tipright"> <i class="ss-hide UT" lang="en">Menu</i></i>
         </div>
         <div id="search-bar-div">
-            <a id="columns-button" class="button"><i class="far fa-columns action"></i> <i class="ss-hide UT" lang="en">Columns</i></a>
+            <a id="columns-button" class="button"></a>
             <input class="search-bar PT" type="text" placeholder=" Search">
             <a id="fts-select-button" class="button"><i class="fal fa-search action"></i></a>
             <!--<span id="fts-select-button" class="fa-stack fa-1x"><i class="fal fa-square-full fa-stack-1x" style="font-size: 2.1rem;"></i><i class="fal fa-search fa-stack-1x"></i></span>-->
-            <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
             <a id="text-view-button" class="button"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
-            <a id="bookmarks-button" class="button"><i id="bookmarks-count" class="ss-hide"></i> <i class="fas fa-star" style="color: gold;"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
+            <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
+            <a id="bookmarks-button" class="button"><i id="bookmarks-count" class="ss-hide"></i> <i class="fas fa-star" style="color: rgb(228, 167, 0);"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
             
             <div id="menu-list" style="right: 0; top: 0;">
-                <a class="menu-list-item" href="./static/offline.html"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
+                <a class="menu-list-item" id="offline-software-menu-item"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
                 <a class="menu-list-item" href="https://tipitaka.app/misc/convert"><i class="far fa-language fa-fw" style="color: green;"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
-                <a class="menu-list-item" href="./static/about.html"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
+                <a class="menu-list-item" id="about-menu-item"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
                 <a class="menu-list-item" href="./static/help.html"><i class="far fa-question-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">Help</i></a>
                 <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: blue;" class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
             </div>
@@ -83,12 +83,18 @@
         </div>
 
         <div id="settings-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
-            <h1><i class="far fa-wrench"></i> <i class="UT" lang="en">Settings</i></h1>
-            <h2><i class="far fa-globe-asia"></i> <i class="UT" lang="en">Select User Interface Language</i></h2>
+            <!--<h1><i class="far fa-wrench"></i> <i class="UT" lang="en">Settings</i></h1>-->
+            <h2><i class="far fa-globe-asia"></i> <i class="UT" lang="en">Select User Interface Language</i><i class="help-button" sec="lang-select"></i></h2>
             <div id="ui-lang-select" class="custom-radio"></div>
 
-            <h2><i class="far fa-language"></i> <i class="UT" lang="en">Select Pali Text Display Script</i></h2>
+            <h2><i class="far fa-language"></i> <i class="UT" lang="en">Select Pali Text Display Script</i><i class="help-button" sec="script-select"></i></h2>
             <div id="pali-script-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-books"></i> <i class="UT" lang="en">Select Dictionaries</i><i class="help-button" sec="dict-select"></i></h2>
+            <div id="dictionary-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-book-reader"></i> <i class="UT" lang="en">Dictionary Launch Method</i><i class="help-button" sec="dict-launch"></i></h2>
+            <div id="dictionary-launch-select" class="custom-radio"></div>
             
             <h2><i class="far fa-comment"></i> <i class="UT" lang="en">Footnotes Format</i></h2>
             <div id="footnote-format-select" class="custom-radio"></div>
@@ -100,17 +106,18 @@
             <div id="text-size-select" class="custom-radio"></div>
         </div>
 
-        <div id="search-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
-            <div id="search-filter"></div>
+        <div id="search-area" class="top-pane" style="flex: 1 1 auto; display: flex; flex-direction: column;">
+            <div id="search-filter" style="display: none;"></div>
             <div align="center">
                 <span id="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
                 <a id="search-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
+                <i class="help-button" sec="title-search"></i>
             </div>
-            <div id="search-results"></div>
+            <div id="search-results" style="flex: 1 1 auto; overflow-y: auto;"></div>
         </div>
 
-        <div id="fts-area" class="top-pane" style="flex: 1 1 auto;">
-            <div id="fts-filter"></div>
+        <div id="fts-area" class="top-pane" style="flex: 1 1 auto; display: flex; flex-direction: column;">
+            <div id="fts-filter" style="display: none;"></div>
             <div id="fts-options">
                 <span class="option check-box checked" param="exactWord"><i class="UT" lang="en">Exact Word</i></span>
                 <span class="option check-box checked" param="exactPhrase"><i class="UT" lang="en">Exact Phrase</i></span>
@@ -118,22 +125,24 @@
                 <span class="option" hide="exactPhrase"><i class="UT" lang="en">Word Distance</i><input id="input-word-distance" type="text" value="10"></span>
             </div>
             <div align="center">
-                <span id="fts-status"><i class="UT" lang="en">Type the search term in the box above</i></span>
+                <span id="fts-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
                 <a id="fts-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
+                <i class="help-button" sec="fts-search"></i>
             </div>
-            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; height: 100%;">
+            <div style="flex: 1 1 auto; display: flex; flex-direction: row; flex-wrap: nowrap; min-height: 0px; height: 100%;">
                 <div id="fts-match-list" style="flex: 1 1 0; overflow-y: auto;"></div>
                 <div id="fts-match-info" style="flex: 1 1 0; overflow-y: auto;"></div>
             </div>
         </div>
 
-        <div id="bookmarks-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
-            <div id="bookmarks-filter"></div>
+        <div id="bookmarks-area" class="top-pane" style="flex: 1 1 auto;  display: flex; flex-direction: column;">
+            <div id="bookmarks-filter" style="display: none;"></div>
             <div align="center">
                 <span id="bookmarks-status"><i class="UT" lang="en">No bookmarks saved. Click the Star icon to save to bookmarks.</i></span>
                 <a id="bookmarks-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
+                <i class="help-button" sec="bookmarks"></i>
             </div>
-            <div id="bookmarks-list"></div>
+            <div id="bookmarks-list" style="overflow-y: auto;"></div>
         </div>
 
         <div id="text-view-area" class="text-section top-pane" style="flex: 1 1 auto; position: relative; display: flex; flex-direction: column;">
@@ -158,6 +167,7 @@
 <script src="./scripts/3rdparty/lz-string.min.js"></script>
 <script src="./scripts/3rdparty/clipboard.min.js"></script>
 <script src="./scripts/3rdparty/dialog-polyfill.js"></script>
+<script src="./scripts/3rdparty/dexie.js"></script>
 
 <script src="./scripts/index.js?v=1" type="module"></script>
 <!--use webpack (npm run build) to build this and uncomment for production-->

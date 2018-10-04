@@ -6,7 +6,7 @@
 "use strict";
 
 import { UT, PT, PT_REFRESH, appSettings } from './settings.js';
-import { TextProcessor } from './pali-script.js';
+import { TextProcessor } from './pali-script.mjs';
 import { PitakaTree } from "./pitaka-tree.js";
 import { TSH, SearchFilter, TSE } from "./search-common.js";
 
@@ -54,7 +54,7 @@ export class FTSHandler {
         $('#input-word-distance').change(() => {
             const dist = Number($('#input-word-distance').val());
             if (dist <= 0 || dist >= 100) {
-                this.setStatus(`Allowed Range for word distance 1 - 99.`);
+                this.setStatus(UT('fts-range-word-distance'));
             } else {
                 this.options.wordDistance = dist;
                 this.scheduleSearchIndex();
@@ -70,7 +70,8 @@ export class FTSHandler {
         // multiple spaces by 1 space, other non-regex chars removed by tokenizer also removed (so user can directly copy paste terms)
         const termStr = searchBarVal.replace(/\s+/g, ' ').replace(/[\d\,!;"‘’“”–<>=\:]/g, '');
         if (termStr.length < this.settings.minQueryLength) {
-            this.setStatus(`Please enter some more characters to start the searching. Minimum: ${this.settings.minQueryLength}`); //todo string res
+            this.setStatus(UT('enter-more-characters', this.settings.minQueryLength));
+            //this.setStatus(`Please enter minimun XXX characters to start the searching. Minimum: ${this.settings.minQueryLength}`); //todo string res
             return;
         }
         
@@ -86,7 +87,7 @@ export class FTSHandler {
     }
     checkTerms(terms) {
         if (!terms || !terms.length || !terms.every(t => /[අ-ෆ]/.exec(t)) ) { // each term should have at least one sinhala char (conso, indept vowel)
-            this.setStatus(`Each of the search terms must have at least one character.`);
+            this.setStatus(UT('fts-search-term-one-char'));
             return false;
         }
         return true;
@@ -112,6 +113,7 @@ export class FTSHandler {
             this.displayMatches();
         }).catch(reject => {
             this.setBusySearching(false);
+            this.setStatus(UT(reject.message));
             console.error(reject);
         });
     }
@@ -136,7 +138,7 @@ export class FTSHandler {
 
     displayMatches() {
         if (this.matchesStore.matches.length == 0) {
-            this.setStatus(`Search term did not return any results. Your search term is ${this.prevTerms.join(' ')}.`); //todo
+            this.setStatus(UT('no-results-found', this.prevTerms.join(' ')));
             return;
         }
         $('#fts-match-list').append(this.matchesStore.matches.map(([indexes, freq, fileAr, numFiles], matchInd) => {
@@ -150,9 +152,9 @@ export class FTSHandler {
             return entryDiv;
         }));
         if (this.matchesStore.matches.length < this.settings.maxMatches) {
-            this.setStatus(`The number of entries found for your search term ${this.matchesStore.matches.length}`);
+            this.setStatus(UT('number-of-results-found', this.matchesStore.matches.length));
         } else {
-            this.setStatus(`Number of results found ${this.matchesStore.stats.considered}. Number of results shown ${this.settings.maxMatches}`);
+            this.setStatus(UT('fts-too-many-results-found', this.matchesStore.stats.considered, this.settings.maxMatches));
         }
         this.displayInfo(0);
     }
@@ -202,8 +204,8 @@ export class FTSHandler {
         this.scheduleSearchIndex();
     }
 
-    setStatus(text) {
-        $('#fts-status', this.root).empty().append(UT(text));
+    setStatus(tElem) {
+        $('#fts-status', this.root).empty().append(tElem);
     }
     changeScript() {
         PT_REFRESH($('#fts-area'));

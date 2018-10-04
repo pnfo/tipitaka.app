@@ -50,17 +50,22 @@
 
 .UT[lang=en] { font-family: 'roman'; }
 .UT[lang=si] { font-family: 'sinhala';}
+.UT[lang=ch] { font-family: 'roman';} /* TODO need a chinese font */
+.UT[lang=hi] { font-family: 'devanagari';}
+.UT[lang=in] { font-family: 'roman';}
+.UT[lang=th] { font-family: 'thai'; font-size: 1.5rem; }
+.UT[lang=my] { font-family: 'myanmar';}
 
 .PT[script=si],.tab-content[script=si] { font-family: 'sinhala'; }
 .PT[script=hi],.tab-content[script=hi] { font-family: 'devanagari'; }
 .PT[script=ro],.tab-content[script=ro] { font-family: 'roman'; }
-.PT[script=th],.tab-content[script=th] { font-family: 'thai'; font-size: 150%; }
+.PT[script=th],.tab-content[script=th] { font-family: 'thai'; font-size: 1.5rem; }
 .PT[script=lo],.tab-content[script=lo] { font-family: 'lao'; line-height: 170%; /*font-size: 125%;*/ }
 .PT[script=my],.tab-content[script=my] { font-family: 'myanmar'; }
 .PT[script=km],.tab-content[script=km] { font-family: 'khmer'; }
 .PT[script=be],.tab-content[script=be] { font-family: 'bengali'; }
 .PT[script=gm],.tab-content[script=gm] { font-family: 'gurmukhi'; }
-.PT[script=tt],.tab-content[script=tt] { font-family: 'tai tham'; }
+.PT[script=tt],.tab-content[script=tt] { font-family: 'tai tham'; font-size: 1.5rem; }
 .PT[script=gj],.tab-content[script=gj] { font-family: 'gujarati'; }
 .PT[script=te],.tab-content[script=te] { font-family: 'telugu'; }
 .PT[script=ka],.tab-content[script=ka] { font-family: 'kannada'; }

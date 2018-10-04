@@ -1,8 +1,8 @@
 "use strict";
-import { TextProcessor } from "./pali-script.js";
+import { TextProcessor } from "./pali-script.mjs";
 import { PT, PT_REFRESH, UT, appSettings } from "./settings.js";
 import { PitakaTree } from "./pitaka-tree.js";
-import { vManager } from "./pitaka-tabs.js";
+import { vManager } from "./util.js";
 import { TSH, SearchFilter, TSE } from "./search-common.js";
 
 export class TitleSearch {
@@ -56,7 +56,7 @@ export class TitleSearch {
         $('#search-results', this.root).empty();
         this.searchPrevQuery = query;
         if (query.length < this.settings.minQueryLength) {
-            this.setStatus(`Please enter some more characters to start the searching. Minimum: ${this.settings.minQueryLength}`); //todo string res
+            this.setStatus(UT('enter-more-characters', this.settings.minQueryLength));
         } else {
             console.log(`starting the search with query ${query}`);
             const results = this.searchIndex(query);
@@ -87,14 +87,14 @@ export class TitleSearch {
         this.searchCache.set(query, results); //Add results to cache
         return results;
     }
-    setStatus(text) {
-        $('#search-status', this.root).empty().append(UT(text));
+    setStatus(tElem) {
+        $('#search-status', this.root).empty().append(tElem);
     }
     displayResults(results) {
         const resultsDiv = $('#search-results', this.root).empty();
     
         if (!results) {
-            this.setStatus('Your search term did not return any results. Please try another term.'); //todo
+            this.setStatus(UT('no-results-found', this.searchPrevQuery));
             return;
         }
         // add results
@@ -102,9 +102,9 @@ export class TitleSearch {
         
         resultsDiv.show();
         if (results.length < this.settings.maxResults) {
-            this.setStatus(`The number of entries found for your search term ${results.length}`);
+            this.setStatus(UT('number-of-results-found', results.length));
         } else {
-            this.setStatus(`Too many results found. Number of results shown ${this.settings.maxResults}`);
+            this.setStatus(UT('too-many-results-found', this.settings.maxResults)); 
         }
     }
     changeScript() {
@@ -187,7 +187,7 @@ class Bookmarks {
     renderBookmarks() {
         const resultsDiv = $('#bookmarks-list').empty();
         if (!Object.keys(this.list).length) {
-            this.setStatus('You have no bookmarks saved. Click the star icon to save to bookmarks.');
+            this.setStatus(UT('no-bookmarks'));
             return;
         }
 
@@ -199,7 +199,7 @@ class Bookmarks {
             }
         });
         resultsDiv.append(TitleSearch.createResultsList(indexes));
-        this.setStatus(`The number of bookmarks found matching your filter ${indexes.length}`);
+        this.setStatus(UT('number-of-bookmarks', indexes.length));
     }
     checkFilter(entry) {
         return this.filterParents.length == TSH.topParentsInfo.length || this.filterParents.indexOf(entry[TSE.parents][0]) >= 0;
@@ -209,8 +209,8 @@ class Bookmarks {
         appSettings.set('bookmarks-filter', this.filterParents);
         this.renderBookmarks();
     }
-    setStatus(text) {
-        $('#bookmarks-status').empty().append(UT(text));
+    setStatus(tElem) {
+        $('#bookmarks-status').empty().append(tElem);
     }
     changeScript() {
         PT_REFRESH($('#bookmarks-area'));

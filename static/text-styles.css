@@ -7,7 +7,7 @@ body {
     -webkit-font-smoothing: antialiased !important;
 }
 
-.tab-contents { position: relative; min-height: 0px; display: flex; flex-direction: row; flex-wrap: nowrap; height: 100%;}
+.tab-contents { position: relative; min-height: 0px; display: flex; flex-direction: row; flex-wrap: nowrap; height: 100%; word-break: break-word; }
 .tab-content { overflow: auto; height: 100%; padding: 0.3rem 0.6rem 0.3rem 0.6rem; flex: 1 1 0; position: relative; border-right: 1px solid lightgray;}
 .tab-content[view=tabbed]:not(.active) { display: none; }
 
@@ -20,7 +20,7 @@ body {
 .tab-head .head-label {text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;  max-width: 5rem; display: inline-block;}
 .tab-head[view=columns] .head-label {max-width: 10rem;}
 .tab-head.active .head-label {max-width: 10rem;}
-.tab-head .coll-icon {padding-right: 5pt; font-family: 'noto ro serif'; color: rgb(252, 76, 7); }
+.tab-head .coll-icon {padding-right: 5pt; font-family: 'roman'; color: rgb(252, 76, 7); }
 .tab-head .coll-icon.A {color: blue;}
 .tab-head .coll-icon.T {color: green}
 .tab-head .coll-icon.E {color: darkgoldenrod}
@@ -30,7 +30,7 @@ body {
 
 
 .coll-buttons { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: row; font-size: 1rem;}
-.coll-button { font-family: 'noto ro serif'; color: rgb(252, 76, 7); background-color: white; cursor: pointer; width: 2rem; height: 2rem; line-height: 2rem; border: 1px solid black;}
+.coll-button { font-family: 'roman'; color: rgb(252, 76, 7); background-color: white; cursor: pointer; width: 2rem; height: 2rem; line-height: 2rem; border: 1px solid black;}
 .coll-button:hover {font-weight: bold; font-size: 1.5rem;}
 .coll-button.A {color: blue; background-color: rgb(212, 234, 241);}
 .coll-button.T {color: green; background-color: lightyellow;}
@@ -38,7 +38,7 @@ body {
 
 n {color: blue;} /* note can appear in dialog too */
 n.click {cursor: pointer;}
-n.click::before { font-family: "Font Awesome 5 Pro"; font-weight: 400;  content: "\f069"; font-size: 10pt;}
+n.click::before { font-family: "Font Awesome 5 Pro"; font-weight: 400;  content: "\f069"; font-size: 0.8rem;}
 n.click:hover::before { font-weight: 900;}
 n abbr {cursor: pointer;}
 n abbr:hover {text-decoration: underline;}
@@ -50,8 +50,20 @@ n abbr:hover {text-decoration: underline;}
 .text-section pb {cursor: pointer;}
 .text-section pb:hover {text-decoration: underline;}
 
+
 .text-section f { background-color: yellow; }
 .text-section f.active { background-color: greenyellow; }
+
+
+.text-section w:hover { color: red; }
+.dict-row { white-space: nowrap; text-align: left; }
+.dict-row:hover { background-color: wheat; }
+.dict-word,.dict-meaning,.dict-name { font-size: 0.8rem; font-weight: normal; }
+.dict-name { color: green; padding-right: 0.2rem; font-family: 'roman'; cursor: pointer; }
+.dict-word { color: darkblue; padding-right: 0.5rem; font-weight: bold; }
+.dict-meaning { color: black; }
+.dict-desc { padding: 0.2rem; min-width: 5rem; }
+
 
 .tab-content > div { padding-top: 2pt; padding-bottom: 2pt;}
 /* namothassa line if exists */
@@ -90,24 +102,24 @@ n abbr:hover {text-decoration: underline;}
 /* old styles below - remove */
 
 
-.text-section .span-links { position: absolute; cursor: pointer; color: lightgray; background-color: white; z-index: 99; padding: 0px 5px 0px 5px;}
+/* .text-section .span-links { position: absolute; cursor: pointer; color: lightgray; background-color: white; z-index: 99; padding: 0px 5px 0px 5px;}
 .text-section .span-links .fa:hover { color: lightcoral; }
 
 .text-section span.note { color: blue; }
 .text-section span.bold { font-weight: bold; }
 .text-section span.paranum { font-weight: normal; float: left; }
 .text-section span.paranum::after { font-weight: bold; content: "."; }
-.text-section .bld { font-weight: bold; }
+.text-section .bld { font-weight: bold; } */
 
 /*.text-section .hangnum { margin-bottom: -0.75cm; text-indent: 2em; }*/
-/* Namo tassa, and nitthita -- no unique structural distinction */
-.text-section .centered { text-align:center; }
+/*Namo tassa, and nitthita -- no unique structural distinction */
+/* .text-section .centered { text-align:center; } */
 
-.text-section .nikaya { font-size: 23pt; text-align:center; font-weight: bold; margin: 7px 0px 7px 0px;}
+/* .text-section .nikaya { font-size: 23pt; text-align:center; font-weight: bold; margin: 7px 0px 7px 0px;}
 .text-section .book { font-size: 20pt; text-align:center; font-weight: bold; margin: 7px 0px 7px 0px;}
-.text-section .specialcaption { font-size: 17pt; text-align: center; font-weight: bold } /* used for pannasaka bhagaya*/
+.text-section .specialcaption { font-size: 17pt; text-align: center; font-weight: bold }  used for pannasaka bhagaya*/
 
-.text-section div.chapter { text-align:center; margin: 5px 0px 5px 0px; }
+/*.text-section div.chapter { text-align:center; margin: 5px 0px 5px 0px; }
 .text-section span.chapter { font-size: 17pt; font-weight: bold; color: darkgoldenrod; }
 
 .text-section div.title { text-align:center; margin: 5px 0px 5px 0px; }
@@ -115,19 +127,19 @@ n abbr:hover {text-decoration: underline;}
 
 .text-section div.subhead { text-align:center; margin: 5px 0px 5px 0px;}
 .text-section span.subhead { font-size: 13pt; cursor: pointer; font-weight: bold;}
-.text-section span.subhead.sc_collapsed {color: #5423DB; }
+.text-section span.subhead.sc_collapsed {color: #5423DB; } */
 /*.text-section span.subhead.sc_collapsed::before {content: "+  "; color: blue;}*/
 
-.text-section div.subsubhead { text-align:center; font-weight: bold;  margin: 3px 0px 3px 0px;}
+/* .text-section div.subsubhead { text-align:center; font-weight: bold;  margin: 3px 0px 3px 0px;}
 
 .text-section .paragraph {padding-top: 5px; padding-bottom: 5px; display: table; width: 100%;}
 
-.text-section .bodytext { text-indent: 1em; text-align:justify; font-weight: normal;}
+.text-section .bodytext { text-indent: 1em; text-align:justify; font-weight: normal;} */
 
 /* Gatha line */
-.text-section .gatha { margin-bottom: 0em; margin-left: 4em; text-align:left; font-weight: normal;}
+/* .text-section .gatha { margin-bottom: 0em; margin-left: 4em; text-align:left; font-weight: normal;}
 .text-section .gathalast { margin-bottom: 0.5cm; margin-left: 4em; text-align:left; font-weight: normal;}
 
 .text-section .ending { text-align:center; }
 .text-section .udana { font-style: italic; }
-.text-section .namothassa { font-style: italic; text-align: center }
+.text-section .namothassa { font-style: italic; text-align: center } */
