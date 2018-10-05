@@ -99,6 +99,8 @@ div.menu-item-dialog {
 
 .help-button::before { font-family: "Font Awesome 5 Pro"; font-weight: 300; content: "\f059"; padding: 5pt; font-size: 1rem; color: darkgreen;}
 .help-button:hover::before { cursor: help; font-weight: 900; }
+#help-area i { padding: 0rem 0.3rem 0rem 0.3rem; color: rgb(175, 65, 2); }
+#help-area h2 { text-align: center; color: darkred; }
 
 .action-icon { font-size: 0.8rem; cursor: pointer; padding-left: 5pt; color: lightblue;}
 .share-icon { font-weight: 400; }

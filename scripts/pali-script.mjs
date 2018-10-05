@@ -213,14 +213,14 @@ function beautify_common(text, script, rendType = '') {
 }
 // for roman text only
 function capitalize(text, script, rendType = '') {
-    // the adding of <w> tags around the words before the beautification makes it harder
+    // the adding of <w> tags around the words before the beautification makes it harder - (?:<w>)? added
     text = text.replace(/^((?:<w>)?\S)/g, (_1, p1) => { // begining of a line
         return p1.toUpperCase();
     });
-    text = text.replace(/([\.\?]\s<w>)(\S)/g, (_1, p1, p2) => { // beginning of sentence
+    text = text.replace(/([\.\?]\s(?:<w>)?)(\S)/g, (_1, p1, p2) => { // beginning of sentence
         return `${p1}${p2.toUpperCase()}`;
     });
-    return text.replace(/([\u201C‘]<w>)(\S)/g, (_1, p1, p2) => { // starting from a quote
+    return text.replace(/([\u201C‘](?:<w>)?)(\S)/g, (_1, p1, p2) => { // starting from a quote
         return `${p1}${p2.toUpperCase()}`;
     });
 }

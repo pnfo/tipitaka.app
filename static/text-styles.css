@@ -21,7 +21,7 @@ body {
 .tab-head[view=columns] .head-label {max-width: 10rem;}
 .tab-head.active .head-label {max-width: 10rem;}
 .tab-head .coll-icon {padding-right: 5pt; font-family: 'roman'; color: rgb(252, 76, 7); }
-.tab-head .coll-icon.A {color: blue;}
+.tab-head .coll-icon.A {color: darkblue;}
 .tab-head .coll-icon.T {color: green}
 .tab-head .coll-icon.E {color: darkgoldenrod}
 .tab-head.active .coll-icon {font-weight: bold; }
@@ -32,7 +32,7 @@ body {
 .coll-buttons { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: row; font-size: 1rem;}
 .coll-button { font-family: 'roman'; color: rgb(252, 76, 7); background-color: white; cursor: pointer; width: 2rem; height: 2rem; line-height: 2rem; border: 1px solid black;}
 .coll-button:hover {font-weight: bold; font-size: 1.5rem;}
-.coll-button.A {color: blue; background-color: rgb(212, 234, 241);}
+.coll-button.A {color: darkblue; background-color: rgb(212, 234, 241);}
 .coll-button.T {color: green; background-color: lightyellow;}
 
 

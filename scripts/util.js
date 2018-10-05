@@ -129,6 +129,7 @@ const vmTopPaneInfo = new Map([
     ['search', ['#search-area', '.search-bar']],
     ['fts', ['#fts-area', '.search-bar']],
     ['bookmarks', ['#bookmarks-area', '#bookmarks-button']],
+    ['help', ['#help-area', '']],
 ]);
 class ViewManager {
     constructor() {
@@ -143,7 +144,7 @@ class ViewManager {
         $('.top-pane-status').removeClass('selected');
         const info = vmTopPaneInfo.get(pane);
         $(info[0]).show();
-        $(info[1]).addClass('selected');
+        if (info[1]) $(info[1]).addClass('selected');
         /*if (pane == 'text') $('#text-view-area').show();
         else if (pane == 'settings') $('#settings-area').show();
         else if (pane == 'search') $('#search-area').show();
@@ -169,7 +170,7 @@ class ViewManager {
             e.stopPropagation();
         });
         $('body').mousedown(function() {
-            $('#menu-list').animate({height: 'hide'}, 350);
+            $('#menu-list').animate({height: 'hide'}, 250);
             if ($('.pitaka-tree-container').css('position') == 'absolute') { // hide the tree if it is overlapping
                 $('.pitaka-tree-container').animate({width: 'hide'}, 250);
             }
@@ -179,22 +180,26 @@ class ViewManager {
                 e.target.close('cancelled');
             }
         });
-        $('#about-menu-item').click(e => {
-            const text = `This is free software built and distributed as a Dhamma donation.<br>
-            Text is obtained from the VRI website. <br>
-            <a href="mailto:path.nirvana@gmail.com">Contact the developer of this software.</a>`; // make string resource
-            Util.showDialog('generic-dialog', $('<div/>').addClass('menu-item-dialog UT').html(text));
+        $('.help-button').click(e => this.loadHelp(e));
+        $('#help-menu-item,#about-menu-item,#offline-software-menu-item').click(e => {
+            this.loadHelp(e);
+            $('#menu-list').animate({height: 'hide'}, 250);
         });
-        $('#offline-software-menu-item').click(e => {
-            const text = `Offline software for all platforms are coming soon. <br>
-            Please visit here often or subscribe to our Facebook page for updates.`; // make string resource
-            Util.showDialog('generic-dialog', $('<div/>').addClass('menu-item-dialog UT').html(text));
-        });
-        $('.help-button').click(e => {
-            const section = (e.currentTarget).attr('sec');
-            // load help page to pane and then show the pane
-            
-        });
+    }
+    async loadHelp(e = null) {
+        // load help page to pane and then show the pane
+        const areaDiv = $('#help-area');
+        if (!areaDiv.children().length) { // only if not loaded already
+            const html = await $.get('./static/help.html');
+            areaDiv.html(html);
+            $('i', areaDiv).each((_i, icon) => $(icon).addClass('fa-fw'));
+        }
+        this.showPane('help');
+        if (e) {
+            const section = $(e.currentTarget).attr('sec');
+            const sectionDiv = $(`[sec=${section}]`, areaDiv);
+            areaDiv.scrollTop(areaDiv.scrollTop() + sectionDiv.position().top);
+        }
     }
 }
 

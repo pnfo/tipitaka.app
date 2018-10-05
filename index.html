@@ -32,7 +32,7 @@
                 position: absolute;
                 display: none;
                 height: 100%;
-                max-width: 100%;
+                max-width: 80%;
                 -webkit-box-shadow: 8px 9px 42px 8px rgba(0,0,0,0.19);
                 -moz-box-shadow: 8px 9px 42px 8px rgba(0,0,0,0.19);
                 box-shadow: 8px 9px 42px 8px rgba(0,0,0,0.19);
@@ -54,9 +54,9 @@
 
     <div style="flex: 0 0 auto;">
         <div class="title-bar">
-            <i id="tree-toggle" class="far fa-sitemap"> <i class="ss-hide UT" lang="en">Tree View</i></i>
+            <i id="tree-toggle" class="far fa-sitemap"> <i class="ss-hide UT" lang="en">Tree View</i></i><i class="help-button ss-hide" sec="tree-view"></i>
             <div style="flex: 1 1; text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;"><i class="UT" lang="en">Chaṭṭha Saṅgāyana Tipiṭaka</i></div>
-            <i id="menu-toggle" class="far fa-bars tipright"> <i class="ss-hide UT" lang="en">Menu</i></i>
+            <i id="menu-toggle" class="far fa-bars"> <i class="ss-hide UT" lang="en">Menu</i></i>
         </div>
         <div id="search-bar-div">
             <a id="columns-button" class="button"></a>
@@ -68,10 +68,10 @@
             <a id="bookmarks-button" class="button"><i id="bookmarks-count" class="ss-hide"></i> <i class="fas fa-star" style="color: rgb(228, 167, 0);"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
             
             <div id="menu-list" style="right: 0; top: 0;">
-                <a class="menu-list-item" id="offline-software-menu-item"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
+                <a class="menu-list-item" id="offline-software-menu-item" sec="offline-software"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
                 <a class="menu-list-item" href="https://tipitaka.app/misc/convert"><i class="far fa-language fa-fw" style="color: green;"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
-                <a class="menu-list-item" id="about-menu-item"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
-                <a class="menu-list-item" href="./static/help.html"><i class="far fa-question-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">Help</i></a>
+                <a class="menu-list-item" id="about-menu-item" sec="about-us"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
+                <a class="menu-list-item" id="help-menu-item" sec="help"><i class="far fa-question-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">Help</i></a>
                 <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: blue;" class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
             </div>
         </div>
@@ -96,13 +96,13 @@
             <h2><i class="far fa-book-reader"></i> <i class="UT" lang="en">Dictionary Launch Method</i><i class="help-button" sec="dict-launch"></i></h2>
             <div id="dictionary-launch-select" class="custom-radio"></div>
             
-            <h2><i class="far fa-comment"></i> <i class="UT" lang="en">Footnotes Format</i></h2>
+            <h2><i class="far fa-comment"></i> <i class="UT" lang="en">Footnotes Format</i><i class="help-button" sec="footnotes-select"></i></h2>
             <div id="footnote-format-select" class="custom-radio"></div>
 
-            <h2><i class="far fa-book"></i> <i class="UT" lang="en">Page Tags Format</i></h2>
+            <h2><i class="far fa-book"></i> <i class="UT" lang="en">Page Tags Format</i><i class="help-button" sec="pagetags-select"></i></h2>
             <div id="pagetag-format-select" class="custom-radio"></div>
 
-            <h2><i class="far fa-font"></i> <i class="UT" lang="en">Text Size</i></h2>
+            <h2><i class="far fa-font"></i> <i class="UT" lang="en">Text Size</i><i class="help-button" sec="text-size-select"></i></h2>
             <div id="text-size-select" class="custom-radio"></div>
         </div>
 
@@ -150,6 +150,8 @@
             <div class="tab-contents"></div>
         </div>
 
+        <div id="help-area" class="top-pane" style="flex: 1 1 auto; overflow: auto; text-align: left; padding: 1rem;"></div>
+
     </div>
 </div>
 
@@ -167,11 +169,11 @@
 <script src="./scripts/3rdparty/lz-string.min.js"></script>
 <script src="./scripts/3rdparty/clipboard.min.js"></script>
 <script src="./scripts/3rdparty/dialog-polyfill.js"></script>
-<script src="./scripts/3rdparty/dexie.js"></script>
+<script src="./scripts/3rdparty/dexie.min.js"></script>
 
-<script src="./scripts/index.js?v=1" type="module"></script>
+<!--<script src="./scripts/index.js?v=1" type="module"></script>-->
 <!--use webpack (npm run build) to build this and uncomment for production-->
-<!--<script src="./bundle.js"></script>-->
+<script src="./bundle.js"></script>
 
 <!--Remove the browser sync code below for production
 <script id="__bs_script__">//<![CDATA[

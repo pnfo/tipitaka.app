@@ -163,7 +163,7 @@ export class Collection {
     registerClicks() {
         this.root.on('click', '.coll-button', e => {
             const newT = PitakaTree.filterCollection(this.collObj, $(e.currentTarget).attr('na'));
-            console.log(newT);
+            //console.log(newT);
             this.tabs.newTab(newT[2], newT[1], this.collObj);
         }); /*.parent().scroll(e => {
             this.buttons.css('top', this.root.parent().scrollTop() + 10);
