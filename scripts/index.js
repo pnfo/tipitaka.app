@@ -121,3 +121,5 @@ $('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('ac
 // apply initial settings
 LangHelper.changeTranslation(appSettings.get('uiLanguage'));
 changeTextSize(appSettings.get('textSize'));
+
+$('#nav-bar-placeholder').css('height', $('#nav-bar').height());

@@ -5,6 +5,7 @@
  */
 
 "use strict";
+import fs from 'fs'; // require can not be used with mjs
 const isRegExp = (term) => /[\[\]\\\^\$\.\|\?\*\+\(\)]/g.exec(term); 
 
 class DataLoader {
@@ -21,10 +22,10 @@ class DataLoader {
         let dataStr;
         try {
             if (useNode) {
-                const fs = require('fs');
-                const util = require('util');
-                const readFile = util.promisify(fs.readFile);
-                dataStr = await readFile(this.dataUrl, {encoding: 'utf-8'});
+                //const fs = require('fs');
+                //const util = require('util');
+                //const readFile = util.promisify(fs.readFile);
+                dataStr = await fs.promises.readFile(this.dataUrl, {encoding: 'utf-8'});
                 console.log(dataStr.length);
             } else {
                 dataStr = await $.get(this.dataUrl);
@@ -339,8 +340,8 @@ const offLoader = new OffsetsLoader('./static/json/pos-all.txt', 'offsets');
 
 const ftsRunner = new FTSRunner();
 
-//export { FTSQT, FTSQuery, FTSResponse, MatchStore, ftsRunner };
-module.exports = {FTSQuery, ftsRunner, wordLoader, DataLoader, DEL};
+export { FTSQuery, ftsRunner, wordLoader, WordListLoader, DataLoader, DEL };
+//module.exports = {FTSQuery, ftsRunner, wordLoader, DataLoader, DEL};
 
 const FTSRunTests = false;
 if (useNode && FTSRunTests) {

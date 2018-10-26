@@ -223,12 +223,14 @@ export class LinkHandler {
         this.fileDisplay.scrollToDiv(lineDiv);
     }
     openDivToShowLine(lineDiv) {
-        const rendType = lineDiv.attr('class').split(' ')[0];
+        // get the title div previous to the para
+        const titleDiv = lineDiv.is('[tt]') ? lineDiv : lineDiv.prevAll('[tt]').first();
+        /*const rendType = lineDiv.attr('class').split(' ')[0];
         let titleDiv = lineDiv;
         if ($.inArray(rendType, ['bod', 'gax', 'gae']) >= 0) { // para
             titleDiv = lineDiv.prevAll('[tt]').first(); // get the title div previous to the para
-        }
-        if (!titleDiv.hasClass('open')) {
+        }*/
+        if (titleDiv && !titleDiv.hasClass('open')) {
             this.fileDisplay.openTitleDiv(titleDiv);
         }
     }

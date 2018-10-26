@@ -13,10 +13,10 @@ export class PitakaTabs {
         this.activeTabId = ''; // keep track of active tab
         this.heads = $('div.tab-heads', this.root);
         this.contents = $('div.tab-contents', this.root);
-        this.setTCView(appSettings.get('tabViewFormat')); // default view 
-        this.registerClicks();
+        this.setTCView(appSettings.get('tabViewFormat')); // default view
+        this.registerEvents();
     }
-    registerClicks() {
+    registerEvents() {
         this.heads.on('click', '.tab-head', e => {
             this.showTab($(e.currentTarget).attr('tab-id'));
         });

@@ -148,6 +148,7 @@ export class LangHelper {
     }
     static async changeTranslation(lang) {
         console.log(`changing UI language to ${lang}`);
+        $('#help-area').empty().attr('lang', lang); // clear help area
         if (lang == Language.EN) { // no need to load translations
             currentTranslations.clear(); // 
             $('i.UT').each((_1, ut) => $(ut).text($(ut).attr('en-text') || $(ut).text().trim())).attr('lang', lang);

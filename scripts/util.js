@@ -73,6 +73,19 @@ export class Util {
         }
         return res;
     }
+    static toggleFullScreen(enter) {
+        var doc = window.document;
+        var docEl = doc.documentElement;
+      
+        var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+        var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+      
+        if (enter && !doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+          requestFullScreen.call(docEl);
+        } else if (!enter) {
+          cancelFullScreen.call(doc);
+        }
+    }
 }
 
 export class JDialog {
@@ -145,11 +158,6 @@ class ViewManager {
         const info = vmTopPaneInfo.get(pane);
         $(info[0]).show();
         if (info[1]) $(info[1]).addClass('selected');
-        /*if (pane == 'text') $('#text-view-area').show();
-        else if (pane == 'settings') $('#settings-area').show();
-        else if (pane == 'search') $('#search-area').show();
-        else if (pane == 'bookmarks') $('#bookmarks-area').show();
-        else if (pane == 'fts') $('#fts-area').show();*/
         this.prevPane = this.curPane;
         this.curPane = pane;
     }
@@ -190,7 +198,7 @@ class ViewManager {
         // load help page to pane and then show the pane
         const areaDiv = $('#help-area');
         if (!areaDiv.children().length) { // only if not loaded already
-            const html = await $.get('./static/help.html');
+            const html = await $.get(`./static/help-${areaDiv.attr('lang')}.html`);
             areaDiv.html(html);
             $('i', areaDiv).each((_i, icon) => $(icon).addClass('fa-fw'));
         }

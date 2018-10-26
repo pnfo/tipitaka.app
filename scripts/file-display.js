@@ -24,6 +24,7 @@ export class FileDisplay {
         this.highlight = highlight;
         this.data = ''; // raw text in sinhala script
         this.script = appSettings.get('paliScript'); // per tab script
+        this.prevScrollPos = 0; // for hiding navbar
         this.registerEvents();
     }
     load() {
@@ -49,7 +50,25 @@ export class FileDisplay {
             const div = $(e.currentTarget).parent();
             this.openTitleDiv(div);
             this.scrollToDiv(div);
-        }).on('click', '.hangnum,.titnum', e => this.collection.renderOnClick(e));
+        }).on('click', '.hangnum,.titnum', e => this.collection.renderOnClick(e))
+        .scroll(e => { // auto hide the navbar on scroll down
+            const curPos = $(e.currentTarget).scrollTop();
+            const shift = curPos - this.prevScrollPos;
+            if (this.prevScrollPos && shift)
+                this.adjustTitleBarScroll(shift);
+            this.prevScrollPos = curPos;
+        });
+    }
+    adjustTitleBarScroll(shift) {
+        const top = $('#nav-bar').offset().top;
+        let newTop;
+        if (shift > 0) {
+            newTop = Math.max(top - shift, -$('#nav-bar').outerHeight());
+        } else {
+            newTop = Math.min(top - shift, 0);
+        }
+        $('#nav-bar').css('top', newTop);
+        $('#nav-bar-placeholder').css('height', $('#nav-bar').outerHeight() + newTop);
     }
     openTitleDiv(div) { // can be static too
         const lines = div.toggleClass('open').nextUntil(`[tt|=${div.attr('tt')}]`);

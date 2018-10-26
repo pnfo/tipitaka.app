@@ -72,6 +72,7 @@ div.menu-item-dialog {
     z-index: 100;
     /*top: 100%;*/
     left: 0;
+    text-indent: 0rem; /*undo any indent */
 }
 
 .top-pane-status.selected { background-color: rgb(253, 215, 184); }

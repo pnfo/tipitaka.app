@@ -1,7 +1,7 @@
 {
   "name": "cst",
   "version": "1.0.0",
-  "description": "chatta sangayana tipitaka",
+  "description": "Chatta Sangayana Tipitaka",
   "private": true,
   "babel": {
     "presets": [
@@ -18,7 +18,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tokenizer": "babel-node ./dev/tokenizer.js",
-    "build": "webpack"
+    "build": "webpack",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "main": "misc/electron-main.js",
+  
+  "build": {
+    "appId": "tipitaka.app",
+    "files": [
+      "index.html",
+      "misc/electron-main.js"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +37,8 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
+    "electron": "^3.0.5",
+    "electron-builder": "^20.28.4",
     "jsdom": "^11.11.0",
     "vkbeautify": "^0.99.3",
     "webpack": "^4.16.4",
@@ -34,6 +46,7 @@
   },
   "dependencies": {
     "jquery": "^3.3.1",
-    "restify": "^7.2.1"
+    "restify": "^7.2.1",
+    "wunsch": "^1.0.2"
   }
 }

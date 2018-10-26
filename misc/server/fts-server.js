@@ -1,7 +1,9 @@
 "use strict";
 
-var restify = require('restify');
-const FR = require('./fts-runner.js');
+//var restify = require('restify');
+//const FR = require('./fts-runner.js');
+import restify from 'restify';
+import {FTSQuery, ftsRunner} from './fts-runner.mjs';
 
 /*async function respond(req, res, next) {
     console.log(`Received request with query ${req.params.query}`);
@@ -26,9 +28,9 @@ async function postRespond(req, res, next) {
 
     let jsonRes;
     try {
-        const query = new FR.FTSQuery(JSON.parse(req.body));
+        const query = new FTSQuery(JSON.parse(req.body));
         query.checkQuery(); // will throw on error
-        const ms = await FR.ftsRunner.runQuery(query);
+        const ms = await ftsRunner.runQuery(query);
         jsonRes = { query: ms.query, wordInfo: ms.wordInfo, matches: ms.matches, stats: ms.stats };
     } catch (err) {
         console.error(`Sending error response: ${err}`);
@@ -53,7 +55,7 @@ server.listen(8080, function() {
 });
 
 // wait for init data and then register routes
-new FR.FTSQuery({type: 'init-data'}).send().then(res => {
+new FTSQuery({type: 'init-data'}).send().then(res => {
     //server.get('/fts-query/', respond);
     server.post('/fts-query/', postRespond);
     //server.head('/fts-query/:query', respond);

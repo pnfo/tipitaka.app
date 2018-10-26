@@ -82,8 +82,8 @@ const specials = [
     ['ඊ', 'ई', 'ī', 'อี', 'ອີ', 'ဤ', 'ឦ', 'ঈ', 'ਈ', '\u1A4E', 'ઈ', 'ఈ', 'ಈ', 'ഈ', '𑀈', 'ཨཱི', 'ий'],
     ['උ', 'उ', 'u', 'อุ', 'ອຸ', 'ဥ', 'ឧ', 'উ', 'ਉ', '\u1A4F', 'ઉ', 'ఉ', 'ಉ', 'ഉ', '𑀉', 'ཨུ', 'у'], 
     ['ඌ', 'ऊ', 'ū', 'อู', 'ອູ', 'ဦ', 'ឩ', 'ঊ', 'ਊ', '\u1A50', 'ઊ', 'ఊ', 'ಊ', 'ഊ', '𑀊', 'ཨཱུ', 'уу'],
-    ['එ', 'ए', 'e', 'เอ', 'ເອ', 'ဧ', 'ឯ', 'এ', 'ਏ', '\u1A51', 'એ', 'ఏ', 'ಏ', 'ഏ', '𑀏', 'ཨེ', 'з'],
-    ['ඔ', 'ओ', 'o', 'โอ', 'ໂອ', 'ဩ', 'ឱ', 'ও', 'ਓ', '\u1A52', 'ઓ', 'ఓ', 'ಓ', 'ഓ', '𑀑', 'ཨོ', 'о'],
+    ['එ', 'ए', 'e', 'อเ', 'ອເ', 'ဧ', 'ឯ', 'এ', 'ਏ', '\u1A51', 'એ', 'ఏ', 'ಏ', 'ഏ', '𑀏', 'ཨེ', 'з'],
+    ['ඔ', 'ओ', 'o', 'อโ', 'ອໂ', 'ဩ', 'ឱ', 'ও', 'ਓ', '\u1A52', 'ઓ', 'ఓ', 'ಓ', 'ഓ', '𑀑', 'ཨོ', 'о'],
     // various signs  
     ['ං', 'ं', 'ṁ', '\u0E4D', '\u0ECD', 'ံ', 'ំ', 'ং', 'ਂ', '\u1A74', 'ં', 'ం', 'ಂ', 'ം', '𑀁', '\u0F7E', 'м̣'], // niggahita - anusawara
     // visarga - not in pali but deva original text has it (thai/lao/tt - not found. using the closest equivalent per wikipedia)
@@ -234,9 +234,13 @@ function swap_e_o(text, script, rendType = '') {
     }
     throw new Error(`Unsupported script ${script} for swap_e_o method.`);
 }
-// to be used when converting from - this is done after convert_from to prevent conflict with ඔ(โอ)
+// to be used when converting from
 function un_swap_e_o(text, script) { 
-    if (script == Script.THAI || script == Script.LAOS) return text.replace(/([ෙො])([ක-ෆ])/g, '$2$1'); 
+    if (script == Script.THAI) {
+        return text.replace(/([เโ])([ก-ฮ])/g, '$2$1'); 
+    } else if (script == Script.LAOS) {
+        return text.replace(/([ເໂ])([ກ-ຮ])/g, '$2$1');
+    }
     throw new Error(`Unsupported script ${script} for un_swap_e_o method.`);
 }
 /* zero-width joiners - replace both ways
@@ -302,6 +306,8 @@ const un_beautify_func = {
     [Script.SI] : [cleanup_zwj],
     [Script.HI] : [cleanup_zwj],   // original deva script (from tipitaka.org) text has zwj
     [Script.RO]: [un_capitalize],
+    [Script.THAI]: [un_swap_e_o],
+    [Script.LAOS]: [un_swap_e_o],
     [Script.MY]: [un_beautify_mymr],
     [Script.TIBT]: [un_beautify_tibet],
 }
@@ -364,8 +370,6 @@ const convert_from_func = {
     [Script.SI] : [],
     [Script.RO] : [convert_from_w_v, fix_m_below, remove_a],
     [Script.CYRL] : [convert_from_w_v, remove_a],
-    [Script.THAI] : [convert_from, un_swap_e_o], // un_swap has to be done after conversion - conflicts with ඔ
-    [Script.LAOS] : [convert_from, un_swap_e_o],
 }
 
 function convert_to(text, script) {
