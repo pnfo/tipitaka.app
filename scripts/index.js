@@ -8,7 +8,7 @@ import { LinkHandler } from './note-tag.js';
 import { TSH } from "./search-common.js";
 import { TitleSearch, bookmarks } from './title-search.js';
 import { FTSHandler } from './fts-handler.js';
-import { Util, vManager } from './util.js';
+import { Util, vManager, JDialog } from './util.js';
 import { dictHandler } from './dictionary.js';
 
 const appTree = new PitakaTree($('.pitaka-tree'));
@@ -46,10 +46,15 @@ function performSearch(e) {
 
 // whether to do fts or title search
 let ftsSelected = false; // not put in settings - instead user should select on each restart (for perf)
-// ftsHandler.checkInit(); // todo remove in prod
-function setFtsSelected(state) {
+// ftsHandler.checkInit();
+async function setFtsSelected(state) {
+    if (ftsSelected = state) {
+        const lDlg = new JDialog($('#fts-select-button'), '').show(
+            $('<div/>').addClass('loading-dlg').append(UT('fts-loading')));
+        await ftsHandler.checkInit();
+        lDlg.close();
+    }
     $('#fts-select-button').toggleClass('active', state).children().toggleClass('fal', !state).toggleClass('fas', state);
-    if (ftsSelected = state) ftsHandler.checkInit();
     performSearch();
 }
 $('#fts-select-button').click(e => setFtsSelected(!ftsSelected));

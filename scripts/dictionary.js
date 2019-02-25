@@ -99,7 +99,7 @@ class DictionaryHandler {
         } else {
             // show loading dialog, and try loading the dict
             const lDlg = new JDialog($(e.currentTarget), '').show(
-                $('<div/>').addClass('dict-loading').append(UT('Loading dictionary...')));
+                $('<div/>').addClass('loading-dlg').append(UT('dictionary-loading')));
             this.loadDictionary(dictName).then(() => {
                 lDlg.close(); // clear dialog
                 this.activeDicts.add(dictName);

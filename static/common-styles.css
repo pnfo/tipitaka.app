@@ -96,7 +96,7 @@ div.menu-item-dialog {
 .custom-radio .check.active span::before { content: "\f14a"; }
 .custom-radio .check:not(.active):hover span::before { content: "\f0c8";  font-weight: 400; }
 
-.dict-loading { padding: 0.5rem; }
+.loading-dlg { padding: 0.5rem; font-size: 1rem; color: black;}
 
 .help-button::before { font-family: "Font Awesome 5 Pro"; font-weight: 300; content: "\f059"; padding: 5pt; font-size: 1rem; color: darkgreen;}
 .help-button:hover::before { cursor: help; font-weight: 900; }

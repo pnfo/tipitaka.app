@@ -10,8 +10,8 @@ import { TextProcessor } from './pali-script.mjs';
 import { PitakaTree } from "./pitaka-tree.js";
 import { TSH, SearchFilter, TSE } from "./search-common.js";
 
-const FTSRunLocally = false; // uncomment the following when run locally
-//import { FTSQuery } from './fts-runner.js';
+const FTSRunLocally = true; // uncomment the following when run locally
+import { FTSQuery } from './fts-runner.mjs';
 
 // 10 top parents file names start with this regex - add ^ to the front
 const fileNameFilter = ['1', 'abcde', '2', '3', 'fghij', '4', '5', 'klmno', '6', 'pqrstuvwxy'];
@@ -212,7 +212,7 @@ export class FTSHandler {
     }
     async checkInit() {
         if (FTSRunLocally) {
-            await new FTSQuery('init-data').send();
+            await new FTSQuery({type: 'init-data'}).send();
         }
     }
 

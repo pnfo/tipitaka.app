@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dhammachakka Generator</title>
+    <meta name="description" content="Create dhamma chakka for profile logo design">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" href="../../static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../../static/favicon.ico" type="image/x-icon">
+    <!-- Load the Paper.js library -->
+    <script type="text/javascript" src="paper-full.min.js"></script>
+    <!-- Define inlined PaperScript associate it with myCanvas -->
+    <script type="text/paperscript" src="chakka.js" canvas="myCanvas"></script>
+    <script type="text/javascript">
+        function downloadCanvas() {
+            var link = document.getElementById('link');
+            link.setAttribute('download', 'dhammachakka.png');
+            link.setAttribute('href', myCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+            link.click();
+        }
+    </script>
+    <style>
+        input {
+            font-size: 20px;
+            margin: 10px;
+        }
+        html, body {
+            width: 100%;
+            height: 100%; 
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 100%; text-align:center;">
+        <h1>Dhammachakka Generator</h1>
+        <h3>Refresh the page until a design you like appears. Then Download.</h3>
+        <div>
+            <input type="button" value="Refresh" onClick="window.location.reload()">
+            <input type="button" value="Download" onClick="downloadCanvas()">
+        </div>
+        <canvas id="myCanvas" resize style="width: 666px; height: 666px;"></canvas>
+        <h3>These designs are based on the dhammachakka appearing on Asoka Pillar. <a href="https://en.wikipedia.org/wiki/Ashoka_Chakra">Wikipedia</a>. It contains 24 spokes and also appears in the Flag of India. (C) 2019 Tipitaka.app</h3>
+        <a id="link"></a>
+    </div>
+</body>
+</html>

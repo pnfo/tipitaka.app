@@ -114,6 +114,8 @@ export const stringResources = {
     'no-results-found': 'Search term XXX did not return any results.',
     'number-of-bookmarks': 'There are XXX bookmarks matching your filter.',
     'no-bookmarks': 'You have no bookmarks saved. Click the star icon to save to bookmarks.',
+    'dictionary-loading': 'Dictionary Loading...',
+    'fts-loading': 'Full Text Search Loading. Please wait...',
 };
 // based on the uiLanguage selected - store the translations
 let currentTranslations = new Map();

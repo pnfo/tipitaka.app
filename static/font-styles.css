@@ -10,7 +10,7 @@
 @font-face { src: url('./fonts/THSarabun.ttf') format('truetype'); font-weight: normal; font-family: 'thai'; }
 @font-face { src: url('./fonts/THSarabun-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'thai'; }
 
-@font-face { src: url('./fonts/LaoPaliAlpha-Light.woff') format('truetype'); font-weight: normal; font-family: 'lao'; }
+@font-face { src: url('./fonts/Lanexang\ Mon2.woff') format('truetype'); font-weight: normal; font-family: 'lao'; }
 @font-face { src: url('./fonts/LaoPaliAlpha-Regular.woff') format('truetype'); font-weight: bold; font-family: 'lao'; }
 
 @font-face { src: url('./fonts/mm3-multi-os(16-08-2011).ttf') format('truetype'); font-weight: normal; font-family: 'myanmar'; }
