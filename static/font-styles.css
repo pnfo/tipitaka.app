@@ -7,14 +7,14 @@
 @font-face { src: url('./fonts/NotoSerif-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'roman'; }
 @font-face { src: url('./fonts/NotoSerif-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'roman'; }
 
-@font-face { src: url('./fonts/THSarabun.ttf') format('truetype'); font-weight: normal; font-family: 'thai'; }
-@font-face { src: url('./fonts/THSarabun-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'thai'; }
+@font-face { src: url('./fonts/thai/THSarabunNew.ttf') format('truetype'); font-weight: normal; font-family: 'thai'; }
+@font-face { src: url('./fonts/thai/THSarabunNew-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'thai'; }
 
-@font-face { src: url('./fonts/Lanexang\ Mon2.woff') format('truetype'); font-weight: normal; font-family: 'lao'; }
-@font-face { src: url('./fonts/LaoPaliAlpha-Regular.woff') format('truetype'); font-weight: bold; font-family: 'lao'; }
+@font-face { src: url('./fonts/lao/LaoPaliAlpha-Light.woff') format('truetype'); font-weight: normal; font-family: 'lao'; }
+@font-face { src: url('./fonts/lao/LaoPaliAlpha-Regular.woff') format('truetype'); font-weight: bold; font-family: 'lao'; }
 
-@font-face { src: url('./fonts/mm3-multi-os(16-08-2011).ttf') format('truetype'); font-weight: normal; font-family: 'myanmar'; }
-@font-face { src: url('./fonts/mm3-multi-os(16-08-2011).ttf') format('truetype'); font-weight: bold; font-family: 'myanmar'; }
+@font-face { src: url('./fonts/myanmar/mm3-multi-os(16-08-2011).ttf') format('truetype'); font-weight: normal; font-family: 'myanmar'; }
+@font-face { src: url('./fonts/myanmar/mm3-multi-os(16-08-2011).ttf') format('truetype'); font-weight: bold; font-family: 'myanmar'; }
 
 @font-face { src: url('./fonts/NotoSerifKhmer-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'khmer'; }
 @font-face { src: url('./fonts/NotoSerifKhmer-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'khmer'; }
@@ -25,8 +25,8 @@
 @font-face { src: url('./fonts/NotoSansGurmukhi-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'gurmukhi'; }
 @font-face { src: url('./fonts/NotoSansGurmukhi-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'gurmukhi'; }
 
-@font-face { src: url('./fonts/LN\ Hariphunchai.woff') format('truetype'); font-weight: normal; font-family: 'tai tham'; }
-@font-face { src: url('./fonts/LN\ Hariphunchai.woff') format('truetype'); font-weight: bold; font-family: 'tai tham'; }
+@font-face { src: url('./fonts/lanna/Tai\ Tham\ LN2.otf') format('truetype'); font-weight: normal; font-family: 'tai tham'; }
+@font-face { src: url('./fonts/lanna/Tai\ Tham\ LN2.otf') format('truetype'); font-weight: bold; font-family: 'tai tham'; }
 
 @font-face { src: url('./fonts/NotoSerifGujarati-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'gujarati'; }
 @font-face { src: url('./fonts/NotoSerifGujarati-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'gujarati'; }
@@ -42,8 +42,8 @@
 
 @font-face { src: url('./fonts/NotoSansBrahmi-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'brahmi'; }
 
-@font-face { src: url('./fonts/DDC_Uchen.ttf') format('truetype'); font-weight: normal; font-family: 'tibetan'; }
-@font-face { src: url('./fonts/NotoSansTibetan-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'tibetan'; }
+@font-face { src: url('./fonts/tibetian/NotoSansTibetan-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'tibetan'; }
+@font-face { src: url('./fonts/tibetian/NotoSansTibetan-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'tibetan'; }
 
 @font-face { src: url('./fonts/NotoSerif-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'cyrillic'; }
 @font-face { src: url('./fonts/NotoSerif-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'cyrillic'; }

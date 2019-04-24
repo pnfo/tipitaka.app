@@ -6,16 +6,17 @@ import { Util, JHoverDialog, JDialog } from './util.js';
 
 /** change the version when a new dict is available so the old one will be deleted and the new one loaded */
 const dictionaryList = new Map([
-    ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', {s: 'SC', v: 1, d: 'SuttaCentral Chinese Dictionary'}]],
-    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', {s: 'BU', v: 1}]],
-    ['en-vri', [Language.EN, 'VRI English', {s: 'VR', v: 1}]],
-    ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 1}]],
-    ['in-suttacentral', [Language.INDO, 'SC Indonesian', {s: 'SC', v: 1}]],
-    ['my-u-hau-sein', [Language.BUR, 'U Hau Sein', {s: 'HS', v: 1}]],
-    ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', {s: 'BU', v: 1, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය'}] ],
-    ['si-sumangala', [Language.SI, 'මඩිතියවෙල සුමඞ්ගල', {s: 'MS', v: 2, d: 'මඩිතියවෙල සිරි සුමඞ්ගල හිමි, පාලි-සිංහල ශබ්දකෝෂය'}] ],
-    ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', {s: 'SU', v: 1}] ],
-    ['th-thaiware', [Language.THAI, 'Thai Ware', {s: 'TW', v: 1}] ],
+    ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', {s: 'SC', v: 2, d: 'SuttaCentral Chinese Dictionary', o: 'Projector'}]],
+    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', {s: 'BU', v: 2, o: 'Projector'}]],
+    ['en-vri', [Language.EN, 'VRI English', {s: 'VR', v: 2, o: 'cst windows software'}]],
+    ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 2, o: 'cst windows software'}]],
+    ['in-suttacentral', [Language.INDO, 'SC Indonesian', {s: 'SC', v: 2, o: 'Projector'}]],
+    ['my-u-hau-sein', [Language.BUR, 'U Hoke Sein', {s: 'HS', v: 3, o: 'pced stardict'}]],
+    ['my-23-vol', [Language.BUR, '23 Vol', {s: '23', v: 2, o: 'pced stardict'}]],
+    ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', {s: 'BU', v: 2, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය'}] ],
+    ['si-sumangala', [Language.SI, 'මඩිතියවෙල සුමඞ්ගල', {s: 'MS', v: 3, d: 'මඩිතියවෙල සිරි සුමඞ්ගල හිමි, පාලි-සිංහල ශබ්දකෝෂය'}] ],
+    ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', {s: 'SU', v: 2, o: 'Ven Buja'}] ],
+    ['th-thaiware', [Language.THAI, 'Thai Ware', {s: 'TW', v: 2, o: 'tware windows software'}] ],
 ]);
 
 /** Loading and searching a single dictionary */
@@ -27,9 +28,12 @@ class Dictionary {
         this.dataLoading = false; // prevent multiple loads
 
         this.db = new Dexie(this.dbName);
-        this.db.version(this.dbVersion).stores({
-            dict: '++id,word'
-        });
+        // dexie requires specifing the schema for all the old versions of the db too
+        for (let version = 1; version <= this.dbVersion; version++) {
+            this.db.version(version).stores({
+                dict: '++id,word'
+            });
+        }
     }
     async load() {
         const dbSize = await this.db.dict.count();
@@ -154,7 +158,7 @@ class DictionaryHandler {
 export const dictHandler = new DictionaryHandler();
 
 const abbr_en_buddhadatta = new Map([
-    ['a. hay adj.', 'Adjective'],
+    ['adj.', 'Adjective'],
     ['abs.', 'Absolutive'],
     ['ad.', 'Adverb'],
     ['aor.', 'Aorist'],
@@ -174,8 +178,8 @@ const abbr_en_buddhadatta = new Map([
     ['pass', 'Passive'],
     ['act.', 'Active'],
     ['pp.', 'Past participle'],
-    ['pr. p.', 'Present participle'],
-    ['pt. p.', 'Potential participle'],
+    ['pr.p.', 'Present participle'],
+    ['pt.p.', 'Potential participle'],
     ['prep.', 'Preposition'],
     ['pret.', 'Preterit verb'],
     ['3', 'Of the three genders'],
