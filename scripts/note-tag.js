@@ -218,7 +218,7 @@ export class LinkHandler {
         const lineDiv = this.root.children(`[line-ind=${lineToOpen}]`).first();
         if (!lineDiv) return; // non-existant line-ind
 
-        lineDiv.css('background-color', 'lightyellow'); // highlight
+        lineDiv.addClass('highlighted-line'); //css('background-color', 'lightyellow'); // highlight
         this.openDivToShowLine(lineDiv);
         this.fileDisplay.scrollToDiv(lineDiv);
     }
@@ -236,7 +236,7 @@ export class LinkHandler {
     }
     openHighlightedLines() {
         let smallestLineInd = 1e10; // a big number
-        this.root.find('f').parents('[line-ind]').each((_1, lineDiv) => {
+        this.root.find('found').parents('[line-ind]').each((_1, lineDiv) => {
             this.openDivToShowLine($(lineDiv));
             smallestLineInd = Math.min($(lineDiv).attr('line-ind'), smallestLineInd);
         });
@@ -277,7 +277,7 @@ export class HitHighlighter {
      * Three step process to mark the offset locations in the text in fileDisplay
      * 1) insert a special character to the beginnings of words
      * 2) run the tokenizer with the same settings and mark the locations of special chars which has a hit
-     * 3) add the <f> tag to locations in the original text which have marked special chars
+     * 3) add the <found> tag to locations in the original text which have marked special chars
      */
     static markOffsets(dataStr, highlight) {
         // NOTE: tokenizer code below that compute the offsets should match exactly with the tokenizer in dev
@@ -323,7 +323,7 @@ export class HitHighlighter {
             if (tagLocations.has(spcCount2 - 1)) {
                 tagsMarked++;
                 const tagData = tagLocations.get(spcCount2 - 1);
-                return `<f oi="${tagData[0]}" ti="${tagData[1]}">${p1}</f>`;
+                return `<found oi="${tagData[0]}" ti="${tagData[1]}">${p1}</found>`;
             }
             return p1; // remove the un-necessary (un-marked) special char
         });
@@ -372,7 +372,7 @@ export class WordDisplay {
                     $('.dict-row', table).css('white-space', 'normal');
                 }
             } else if (!this.wordEditDlg || !this.wordEditDlg.isOpen) { // do not show the editbox a second time
-                const inputBox = $('<input/>').addClass('PT').attr('type', 'text').val(wElem.text())
+                const inputBox = $('<input/>').addClass('PT type-word').attr('type', 'text').val(wElem.text())
                     .attr('script', this.fileDisplay.script).css('padding', '0.33rem');
                 this.wordEditDlg = new JDialog(wElem, wElem, {bottom: '100%'}).show(inputBox, this.root);
                 inputBox.focus().on('input', e => inputBox.val() ? this.showInfoBox(wElem, inputBox.val()) : '');

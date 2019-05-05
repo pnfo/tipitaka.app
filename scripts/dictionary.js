@@ -6,17 +6,27 @@ import { Util, JHoverDialog, JDialog } from './util.js';
 
 /** change the version when a new dict is available so the old one will be deleted and the new one loaded */
 const dictionaryList = new Map([
-    ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', {s: 'SC', v: 2, d: 'SuttaCentral Chinese Dictionary', o: 'Projector'}]],
-    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', {s: 'BU', v: 2, o: 'Projector'}]],
+    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', {s: 'BU', v: 2, o: 'Projector', n: 20970}]],
+    ['en-nyanatiloka', [Language.EN, 'Nyanatiloka Buddhist', {s: 'ND', v: 1, d: 'Buddhist Dictionary by Ven Nyanatiloka', o: 'pced stardict'}]],
+    ['en-pts', [Language.EN, 'PTS', {s: 'PS', v: 1, d: 'Pali Text Society Dictionary', o: 'dpr'}]],
+    ['en-dppn', [Language.EN, 'Proper Names', {s: 'PN', v: 1, d: 'Pali Proper Names by G P Malalasekera', o: 'dpr'}]],
     ['en-vri', [Language.EN, 'VRI English', {s: 'VR', v: 2, o: 'cst windows software'}]],
-    ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 2, o: 'cst windows software'}]],
-    ['in-suttacentral', [Language.INDO, 'SC Indonesian', {s: 'SC', v: 2, o: 'Projector'}]],
-    ['my-u-hau-sein', [Language.BUR, 'U Hoke Sein', {s: 'HS', v: 3, o: 'pced stardict'}]],
+    ['en-critical', [Language.EN, 'Critical PD', {s: 'CR', v: 1, o: 'extracted from https://cpd.uni-koeln.de/'}]],
+    ['my-u-hoke-sein', [Language.BUR, 'U Hoke Sein', {s: 'HS', v: 3, o: 'pced stardict', n: 60695}]], 
     ['my-23-vol', [Language.BUR, '23 Vol', {s: '23', v: 2, o: 'pced stardict'}]],
     ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', {s: 'BU', v: 2, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය'}] ],
     ['si-sumangala', [Language.SI, 'මඩිතියවෙල සුමඞ්ගල', {s: 'MS', v: 3, d: 'මඩිතියවෙල සිරි සුමඞ්ගල හිමි, පාලි-සිංහල ශබ්දකෝෂය'}] ],
+    ['th-etipitaka', [Language.THAI, 'E-Tipitaka', {s: 'ET', v: 2, o: 'e tipitaka windows software'}] ],
     ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', {s: 'SU', v: 2, o: 'Ven Buja'}] ],
     ['th-thaiware', [Language.THAI, 'Thai Ware', {s: 'TW', v: 2, o: 'tware windows software'}] ],
+    ['th-dhamma-cheti-1', [Language.THAI, 'กิริยากิตก์ฉบับธรรมเจดีย์', {s: 'DC1', v: 1, o: 'online pdf', n: 5922}] ],
+    ['th-dhamma-cheti-2', [Language.THAI, 'กิริยาอาขยาตฉบับธรรมเจดีย์', {s: 'DC2', v: 1, o: 'online pdf', n: 4272}] ],
+    ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', {s: 'SC', v: 2, d: 'SuttaCentral Chinese Dictionary', o: 'Projector'}]],
+    ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 2, o: 'cst windows software'}]],
+    ['in-suttacentral', [Language.INDO, 'SC Indonesian', {s: 'SC', v: 2, o: 'Projector'}]],
+    ['es-marco', [Language.ES, 'Marco A', {s: 'ES', v: 1, o: 'SuttaCentral'}]],
+    ['pt-marco', [Language.PT, 'Marco A', {s: 'PT', v: 1, o: 'SuttaCentral'}]],
+    ['kh-glossary', [Language.KM, 'Glossary App', {s: 'GA', v: 1, o: 'Pali-Khmer Glossary Windows App v1.0', n: 14391}]],
 ]);
 
 /** Loading and searching a single dictionary */
@@ -39,7 +49,7 @@ class Dictionary {
         const dbSize = await this.db.dict.count();
         if (dbSize > 0 || this.dataLoading) { // loaded or already loading
             console.log(`dictionary ${this.dbName}:${this.dbVersion} already in IDB size: ${dbSize}`);
-            return;  
+            return true;  
         }
         this.dataLoading = true;
         try {
@@ -50,11 +60,13 @@ class Dictionary {
                 return {word, meaning};
             }));
         } catch (err) {
-            throw new Error(`Failed to load the ${this.dbName} from ${this.dataUrl}. ${err}`);
+            console.error(`Failed to load the ${this.dbName} from ${this.dataUrl}. ${err}`);
+            return false;
         }
         
         console.log(`${this.dbName}:${this.dbVersion} loaded to IDB size: ${await this.db.dict.count()}`);
         this.dataLoading = false;
+        return true;
     }
 
     async searchWord(word) {
@@ -71,8 +83,7 @@ class Dictionary {
     }
 }
 
-//export const sumangala = new Dictionary('si-sumangala', '1', './static/dicts/si-sumangala.json');
-//sumangala.load(); // load to IDB if not loaded already
+
 const maxIDBResults = 10;
 const dictDataFileFolder = './static/dicts';
 /** Loading searching dictionaries based on the user input */
@@ -80,18 +91,27 @@ class DictionaryHandler {
     constructor() {
         this.dictionaryList = dictionaryList;
         this.loadedDicts = new Map();
-        this.activeDicts = new Set(appSettings.get('dictList'));
-        this.activeDicts.forEach(dict => this.loadDictionary(dict));
+        this.activeDicts = new Set(appSettings.get('dictList')); 
+        Array.from(this.activeDicts).forEach(dict => this.loadDictionary(dict)); // creating a new array since we will mutate activeDicts
         this.registerEvents(); // for events on the results view
     }
 
     /* Load dict if not already loaded */
     async loadDictionary(dictName) {
-        if (this.loadedDicts.has(dictName)) return; //already loaded 
-        const dictInfo = this.dictionaryList.get(dictName);
-        const newDict = new Dictionary(dictName, dictInfo[2].v, `${dictDataFileFolder}/${dictName}.json`);
-        await newDict.load();
-        this.loadedDicts.set(dictName, newDict);
+        if (this.loadedDicts.has(dictName)) return true; //already loaded
+        if (this.dictionaryList.has(dictName)) { 
+            const dictInfo = this.dictionaryList.get(dictName);
+            const newDict = new Dictionary(dictName, dictInfo[2].v, `${dictDataFileFolder}/${dictName}.json`);
+            if (await newDict.load()) {
+                this.loadedDicts.set(dictName, newDict);
+                return true;
+            }
+        }
+        // not found (in case dict name changes) or if load failed (e.g. dict file not found)
+        this.activeDicts.delete(dictName);
+        appSettings.set('dictList', Array.from(this.activeDicts));
+        console.log(`deleted ${dictName} which failed to load. New list ${appSettings.get('dictList')}`);
+        return false;
     }
 
     dictionaryListChanged(e) {
@@ -120,6 +140,7 @@ class DictionaryHandler {
     async searchWord(word, script) {
         word = TextProcessor.convertFrom(word, script); // convert to sinhala before searching
         //console.log(`searching for word ${word}`);
+        console.log(Array.from(this.activeDicts));
         const activeDictsAr = Array.from(this.activeDicts);
         const matchesAr = await Promise.all(activeDictsAr.map(
             dictName => this.loadedDicts.get(dictName).searchWord(word)

@@ -8,10 +8,10 @@ dialog {
   height: -webkit-fit-content;
   height: fit-content;
   margin: auto;
-  border: solid;
+  border: solid 2px var(--border-color);
   padding: 1em;
-  background: white;
-  color: black;
+  background: var(--special-bcolor);
+  color: var(--main-color);
   display: block;
 }
 

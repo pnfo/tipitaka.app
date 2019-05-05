@@ -1,11 +1,11 @@
 /**
  * backend for the full text search - this would load the word(dict) and offset data files and search the data files
  * according to the query passed in by the user. 
- * This code would run on the server or locally in case of offline apps.
+ * This code would run on the server (FTSUseNode) or locally (browser) in case of offline apps.
  */
 
 "use strict";
-//import fs from 'fs'; // require can not be used with mjs
+//import fs from 'fs'; // require can not be used with mjs - uncomment if FTSUseNode
 const isRegExp = (term) => /[\[\]\\\^\$\.\|\?\*\+\(\)]/g.exec(term); 
 
 class DataLoader {

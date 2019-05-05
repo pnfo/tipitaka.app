@@ -1,41 +1,44 @@
 
 #search-area { margin: 0.3rem; }
 
-#search-status { font-style: italic; color: darkblue; padding: 0.3rem; }
+#search-status { font-style: italic; color: var(--special-color); padding: 0.3rem; }
 
-#search-results { width: 100%; background-color: white; }
-#search-results .search-result:nth-child(even) { background-color: whitesmoke; }
+#search-results { width: 100%; }
+#search-results .search-result:nth-child(even) { background-color: var(--special-bcolor) }
 
-.search-result { padding: 0.2rem 0.3rem 0.2rem 0.3rem; border-top: 1px dashed wheat; text-align: left; word-break: break-word;}
-.search-result:hover { background: lightgoldenrodyellow; }
-.search-result i.parent { color: darkgreen;}
-.search-result i.child { font-weight: bold;    color: darkred;}
-.search-result i.name:hover { cursor: pointer;    text-decoration: underline;}
+.search-result { padding: 0.2rem 0.3rem 0.2rem 0.3rem; border-top: 1px dashed var(--border-color); text-align: left; word-break: break-word;}
+.search-result:hover { background-color: var(--hover-bcolor); }
+.search-result i.parent { color: var(--main-color); }
+.search-result i.child { font-weight: bold; color: var(--heading-color); }
+.search-result i.name:hover { cursor: pointer; text-decoration: underline;}
+.search-result i.arrow { color: var(--special-color); }
 
-.filter-table td { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; word-break: break-word;}
-.filter-table td:hover { background-color: antiquewhite; }
+.filter-table td { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; word-break: break-word; border: 0.5px solid var(--main-bcolor); }
+.filter-table td:hover { background-color: var(--hover-bcolor); border-color: var(--border-color); }
 .filter-table td::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f0c8"; padding-right: 5pt; }
 .filter-table td.checked::before { content: "\f14a"; }
 
 #fts-area.busy-searching { color: lightgray; }
 
-#fts-select-button { color:lightgrey; font-weight: 300; }
-#fts-select-button:hover { background-color: white; }
-#fts-select-button.active { color: rgb(231, 10, 10); background-color: lightsalmon; }
+#fts-select-button { color: var(--icon-color); font-weight: 300; }
+#fts-select-button:hover { background-color: var(--hover-bcolor); }
+#fts-select-button.active { color: rgb(231, 10, 10); background-color: var(--special-bcolor); }
 
 #fts-options { padding-top: 0.25rem }
-#fts-options .option { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; }
+#fts-options .option { cursor: pointer; padding: 0.2rem 0.4rem 0.2rem 0.4rem; border: 0.5px solid var(--main-bcolor); }
 #fts-options .option.hidden { visibility: hidden; }
-#fts-options .option:hover { background-color: antiquewhite; }
+#fts-options .option:hover { background-color: var(--hover-bcolor); border-color: var(--border-color); }
 #fts-options .check-box::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f0c8"; padding-right: 5pt; }
 #fts-options .check-box.checked::before { content: "\f14a"; }
-#input-word-distance { border: 1px solid lightsalmon; max-width: 2rem; min-width: 2rem; margin-left: 0.4rem; }
+#input-word-distance { border: 1px solid var(--border-color); max-width: 2rem; min-width: 2rem; margin-left: 0.4rem; 
+    background-color: var(--main-bcolor); color: var(--main-color); }
 
 #fts-match-list .total-freq { padding: 0.5rem; }
 #fts-match-list .count-files { padding: 0.5rem; }
 #fts-match-list .token { padding: 0.5rem; }
-#fts-match-list .search-result { cursor: pointer; color: darkgray;}
-#fts-match-list .search-result.selected { background-color: floralwhite; color: darkred; }
+#fts-match-list .search-result { cursor: pointer; background-color: var(--special-bcolor); }
+#fts-match-list .search-result:hover { background-color: var(--main-bcolor); }
+#fts-match-list .search-result.selected { background-color: var(--main-bcolor); color: var(--special-color); }
 
-#fts-match-info { background-color: floralwhite; }
+#fts-match-info { background-color: var(--main-bcolor); }
 #fts-match-info .count-files { padding: 0.5rem; }

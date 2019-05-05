@@ -4,8 +4,10 @@
     min-width: 14rem;
     top: 0;
     left: 0;
-    background-color: whitesmoke;
+    background-color: var(--main-bcolor);
     z-index: 4;
+    border-right: 1px solid var(--border-color);
+    height: 100%;
 }
 
 .pitaka-tree {
@@ -36,27 +38,21 @@
     padding: 0 0 0 20px;
     white-space: nowrap;
 }
-.pitaka-tree a:hover {
-    background-color: silver;
-	font-weight: bold;
-}
-.pitaka-tree a:active {
-    background-color: lavender;
-}
+.pitaka-tree a:hover { background-color: var(--hover-bcolor); font-weight: bold; }
+.pitaka-tree a:active { font-weight: normal; }
 
 .pitaka-tree a:before {
     font-family: "Font Awesome 5 Pro"; 
     font-weight: 400; 
     content: "\f15c";
     padding-right: 5px;
-    color: rgb(252, 125, 7);
 }
-.pitaka-tree #tree-att a:before { color:darkblue; }
-.pitaka-tree #tree-tik a:before { color: green; }
-.pitaka-tree #tree-e a:before {color: darkgoldenrod}
-.pitaka-tree a:hover::before {
-    font-weight: 900;
-}
+.pitaka-tree #tree-mul a:before { color:var(--mula-color); }
+.pitaka-tree #tree-att a:before { color:var(--atta-color); }
+.pitaka-tree #tree-tik a:before { color: var(--tika-color); }
+.pitaka-tree #tree-e a:before { color: var(--anya-color); }
+
+.pitaka-tree a:hover::before { font-weight: 900; }
 
 .pitaka-tree li.parent > a:before {
     content: "\f07b";

@@ -45,16 +45,14 @@
             }
         }
         @media screen and (max-width: 600pt) {
-            .ss-hide {
-                display: none;
-            }
+            .ss-hide { display: none;  }
         }
         @media screen and (max-height: 600pt) {
-            #nav-bar { position: absolute; }
-            #nav-bar-placeholder { display: block; }
+            .short-screen-hide { display: none; }
         }
         @media screen and (min-height: 600pt) {
-            #nav-bar-placeholder { display: none; }
+            /*#nav-bar-placeholder { display: none; }
+            .short-screen-show { display: none; }*/
         }
     </style>
 </head>
@@ -62,33 +60,34 @@
 
 <div align="center" style="margin:0 auto; height: 100%; display: flex; flex-direction: column; width: 100%;">
 
-    <nav id="nav-bar" style="width: 100%;">
-        <nav class="title-bar">
-            <i id="tree-toggle" class="far fa-sitemap"> <i class="ss-hide UT" lang="en">Tree View</i></i><i class="help-button ss-hide" sec="tree-view"></i>
-            <div style="flex: 1 1; text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;"><i class="UT" lang="en">Chaṭṭha Saṅgāyana Tipiṭaka</i></div>
-            <i id="menu-toggle" class="far fa-bars"> <i class="ss-hide UT" lang="en">Menu</i></i>
-        </nav>
-        <nav id="search-bar-div">
-            <a id="columns-button" class="button"></a>
-            <input class="search-bar PT" type="text" placeholder=" Search">
-            <a id="fts-select-button" class="button"><i class="fal fa-search action"></i></a>
-            <!--<span id="fts-select-button" class="fa-stack fa-1x"><i class="fal fa-square-full fa-stack-1x" style="font-size: 2.1rem;"></i><i class="fal fa-search fa-stack-1x"></i></span>-->
-            <a id="text-view-button" class="button"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
-            <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
-            <a id="bookmarks-button" class="button"><i id="bookmarks-count" class="ss-hide"></i> <i class="fas fa-star" style="color: rgb(228, 167, 0);"></i> <i class="ss-hide UT" lang="en">Starred</i></a>
-            
-            <div id="menu-list" style="right: 0; top: 0;">
-                <a class="menu-list-item" id="offline-software-menu-item" sec="offline-software"><i class="far fa-download fa-fw" style="color: blue;"></i> <i class="UT" lang="en">Offline Software</i></a>
-                <a class="menu-list-item" href="misc/convert"><i class="far fa-language fa-fw" style="color: green;"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
-                <a class="menu-list-item" id="about-menu-item" sec="about-us"><i class="far fa-info-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">About Us</i></a>
-                <a class="menu-list-item" id="help-menu-item" sec="help"><i class="far fa-question-circle fa-fw" style="color: darkgreen;"></i> <i class="UT" lang="en">Help</i></a>
-                <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: blue;" class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
+    <nav id="nav-bar" style="width: 100%; max-width: 100%;">
+        <nav class="title-bar short-screen-hide">
+            <div id="title-bar-text" style="flex: 1 1; text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;">
+                <!--<i class="PT" lang="ro">Chaṭṭha Saṅgāyana Tipiṭaka</i>-->
             </div>
         </nav>
+        <nav id="search-bar-div">
+            <a id="tree-toggle" class="button"><i class="far fa-sitemap action"></i> <i class="ss-hide UT" lang="en">Tree View</i></a>
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center; flex-flow: row nowrap; overflow: auto;">
+                <input class="search-bar PT" type="text" placeholder=" Search">
+                <a id="fts-select-button" class="button"><i class="fal fa-search action"></i></a>
+                <a id="text-view-button" class="button"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
+                <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
+            </div>
+            <a id="menu-toggle" class="button"><i class="far fa-bars"></i> <i class="ss-hide UT" lang="en">Menu</i></a>    
+        </nav>
     </nav>
-    <div id="nav-bar-placeholder" style="flex: 0 0 auto; height: 0px;"></div>
 
     <div id="contents-area" style="flex: 1 1 auto; display: flex; flex-flow: row nowrap; position: relative; min-height: 0px; height: 100%" >
+        <div id="menu-list" style="right: 0; top: 0;">
+            <a class="menu-list-item" id="bookmarks-button"><i class="fas fa-star" style="color: rgb(228, 167, 0);"></i> <i id="bookmarks-count"></i> <i class="UT" lang="en">Starred</i></a>
+            <a class="menu-list-item" id="offline-software-menu-item" sec="offline-software"><i class="far fa-download fa-fw"></i> <i class="UT" lang="en">Offline Software</i></a>
+            <a class="menu-list-item" href="misc/convert"><i class="far fa-language fa-fw"></i> <i class="UT" lang="en">Pali Script Converter</i></a>
+            <a class="menu-list-item" id="about-menu-item" sec="about-us"><i class="far fa-info-circle fa-fw"></i> <i class="UT" lang="en">About Us</i></a>
+            <a class="menu-list-item" id="help-menu-item" sec="help"><i class="far fa-question-circle fa-fw"></i> <i class="UT" lang="en">Help</i></a>
+            <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: var(--icon-color);" class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
+        </div>
+
         <div class="pitaka-tree-container" style="flex: 1 1 auto;">
             <div class="pitaka-tree"></div>
         </div>
@@ -111,6 +110,12 @@
 
             <h2><i class="far fa-book"></i> <i class="UT" lang="en">Page Tags Format</i><i class="help-button" sec="pagetags-select"></i></h2>
             <div id="pagetag-format-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-palette"></i> <i class="UT" lang="en">Color Theme</i><i class="help-button" sec="color-theme-select"></i></h2>
+            <div id="color-theme-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-folders"></i> <i class="UT" lang="en">Multi File Display</i><i class="help-button" sec="tab-view-select"></i></h2>
+            <div id="tab-view-select" class="custom-radio"></div>
 
             <h2><i class="far fa-font"></i> <i class="UT" lang="en">Text Size</i><i class="help-button" sec="text-size-select"></i></h2>
             <div id="text-size-select" class="custom-radio"></div>
@@ -183,9 +188,9 @@
 <script src="./scripts/3rdparty/dialog-polyfill.js"></script>
 <script src="./scripts/3rdparty/dexie.min.js"></script>
 
-<!--<script src="./scripts/index.js?v=1" type="module"></script>-->
+<script src="./scripts/index.js?v=1" type="module"></script>
 <!--use webpack (npm run build) to build this and uncomment for production-->
-<script src="./bundle.js"></script>
+<!--<script src="./bundle.js"></script>-->
 
 <!-- Electron Insert this line after script imports -->
 <script>if (window.module) module = window.module;</script>

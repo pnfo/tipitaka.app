@@ -1,91 +1,91 @@
-/*
-  Tipitaka stylesheet for Unicode Sinhala encoding.
-*/
-body {
-    /*text-shadow: 1px 1px 1px rgba(0,0,0,0.005);*/
-    text-rendering: optimizeLegibility !important;
-    -webkit-font-smoothing: antialiased !important;
-}
+
 
 .tab-contents { position: relative; min-height: 0px; display: flex; flex-direction: row; flex-wrap: nowrap; height: 100%; word-break: break-word; }
-.tab-content { overflow: auto; height: 100%; padding: 0.3rem 0.6rem 0.3rem 0.6rem; flex: 1 1 0; position: relative; border-right: 1px solid lightgray;}
-.tab-content[view=tabbed]:not(.active) { display: none; }
+.tab-content { overflow: auto; height: 100%; padding: 0.3rem 0.6rem 0.3rem 0.6rem; flex: 1 1 0; position: relative; border-right: 1px solid var(--border-color) }
+.tab-content:not([view=columns]):not(.active) { display: none; }
 
-.tab-heads { display: flex; flex-direction: row; flex-wrap: wrap; background-color: lightgray; flex-shrink: 0;}
-.tab-heads[view=columns] {flex-wrap: nowrap;}
-.tab-head { cursor: pointer; padding: 0.5rem 1rem 0.5rem 1rem; border-right: 1px solid black; display: flex; align-items: center; justify-content: center;}
-.tab-head[view=columns] { flex: 1 1 0; }
-.tab-head.active { background-color: white; color: black; font-weight: 900;}
+.tab-heads { display: flex; flex-direction: row; flex-wrap: wrap; background-color: var(--special-bcolor); flex-shrink: 0;}
+.tab-heads[view=columns] { flex-wrap: nowrap; }
+.tab-heads[view=disabled] { display: none; }
+.tab-head { cursor: pointer; padding: 0.5rem 1rem 0.5rem 1rem; border-right: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;}
+.tab-head[view=columns] { flex: 1 1 0; background-color: var(--main-bcolor); color: var(--main-color); font-weight: 900; }
+.tab-head.active { background-color: var(--main-bcolor); color: var(--main-color); font-weight: 900; }
 
 .tab-head .head-label {text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;  max-width: 5rem; display: inline-block;}
-.tab-head[view=columns] .head-label {max-width: 10rem;}
+.tab-head[view=columns] .head-label { max-width: 10rem;}
 .tab-head.active .head-label {max-width: 10rem;}
-.tab-head .coll-icon {padding-right: 5pt; font-family: 'roman'; color: rgb(252, 76, 7); }
-.tab-head .coll-icon.A {color: darkblue;}
-.tab-head .coll-icon.T {color: green}
-.tab-head .coll-icon.E {color: darkgoldenrod}
-.tab-head.active .coll-icon {font-weight: bold; }
+.tab-head .coll-icon { padding-right: 5pt; font-family: 'roman'; }
+.tab-head .coll-icon.M {color: var(--mula-color); }
+.tab-head .coll-icon.A {color: var(--atta-color); }
+.tab-head .coll-icon.T {color: var(--tika-color); }
+.tab-head .coll-icon.E {color: var(--anya-color); }
+.tab-head.active .coll-icon { font-weight: bold; }
 .tab-head .close-icon { padding-left: 0.5rem; }
 .tab-head .close-icon:hover { color: red; font-weight: 900;}
 
 
 .coll-buttons { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: row; font-size: 1rem;}
-.coll-button { font-family: 'roman'; color: rgb(252, 76, 7); background-color: white; cursor: pointer; width: 2rem; height: 2rem; line-height: 2rem; border: 1px solid black;}
+.coll-button { font-family: 'roman'; cursor: pointer; width: 2rem; height: 2rem; line-height: 2rem; border: 1px solid black; background-color: var(--special-bcolor); }
 .coll-button:hover {font-weight: bold; font-size: 1.5rem;}
-.coll-button.A {color: darkblue; background-color: rgb(212, 234, 241);}
-.coll-button.T {color: green; background-color: lightyellow;}
+.coll-button.M {color: var(--mula-color); }
+.coll-button.A {color: var(--atta-color); }
+.coll-button.T {color: var(--tika-color); }
 
 
-n {color: blue;} /* note can appear in dialog too */
-n.click {cursor: pointer;}
+/* MAIN TEXT */
+
+n { color: var(--special-color); } /* note can appear in dialog too */
+n.click { cursor: pointer;}
 n.click::before { font-family: "Font Awesome 5 Pro"; font-weight: 400;  content: "\f069"; font-size: 0.8rem;}
 n.click:hover::before { font-weight: 900;}
 n abbr {cursor: pointer;}
-n abbr:hover {text-decoration: underline;}
-.highlighted {background-color: yellow}; /* highlight pb, note and abbr when dialog is open */
-.text-section pb.T {color: darkblue;}
-.text-section pb.P {color:darkred;}
-.text-section pb.M {color: rgb(167, 126, 23);}
-.text-section pb.V {color: rgb(81, 119, 81);}
-.text-section pb {cursor: pointer;}
-.text-section pb:hover {text-decoration: underline;}
+n abbr:hover { text-decoration: underline; }
+.highlighted { background-color: var(--highlight-bcolor); } /* highlight pb, note and abbr when dialog is open */
+pb { cursor: pointer; }
+pb.T { color: var(--mula-color); }
+pb.P { color: var(--atta-color); }
+pb.M { color: var(--tika-color); }
+pb.V { color: var(--anya-color); }
+pb:hover {text-decoration: underline;}
 
+/** full text search results **/
+found { background-color: var(--highlight-bcolor); }
+found.active { background-color: greenyellow; } /* not used */
 
-.text-section f { background-color: yellow; }
-.text-section f.active { background-color: greenyellow; }
-
-
-.text-section w:hover { color: red; }
+/* dictionary related */
+w:hover { color: var(--special-color); }
 .dict-row { white-space: nowrap; text-align: left; }
-.dict-row:hover { background-color: wheat; }
+.dict-row:hover { background-color: var(--hover-bcolor); }
 .dict-word,.dict-meaning,.dict-name { font-size: 0.8rem; font-weight: normal; }
-.dict-name { color: green; padding-right: 0.2rem; font-family: 'roman'; cursor: pointer; }
-.dict-word { color: darkblue; padding-right: 0.5rem; font-weight: bold; }
-.dict-meaning { color: black; }
+.dict-name { color: var(--icon-color); padding-right: 0.2rem; font-family: 'roman'; cursor: pointer; }
+.dict-word { color: var(--special-color); padding-right: 0.5rem; font-weight: bold; }
+.dict-meaning { color: var(--main-color); }
+.dict-meaning i { font-style: italic; }  /* meanings can have rich html */
 .dict-desc { padding: 0.2rem; min-width: 5rem; }
-
+input.type-word { background-color: var(--main-bcolor); color: var(--main-color); border-color: var(--border-color); }
 
 .tab-content > div { padding-top: 2pt; padding-bottom: 2pt;}
 /* namothassa line if exists */
-.tab-content > div:first-child.cen { font-style: italic; color: darkred}
+.tab-content > div:first-child.cen { font-style: italic; color: var(--special-color); }
 
-.hangnum,.titnum { padding-right: 0.7rem; font-weight: bold; color: darkred;}
+.hangnum,.titnum { padding-right: 0.7rem; font-weight: bold; color: var(--special-color); }
 .hangnum { min-width: 4rem; display: inline-block;}
 .hangnum.long { font-size: smaller; padding-top: 0.1rem;}
 
 
-.text-section .nik { font-size: 1.8em; font-weight: bold; margin: 7px 0px 7px 0px;}
-.text-section .boo { font-size: 1.6em; font-weight: bold; margin: 7px 0px 7px 0px;}
+.nik { font-size: 1.8em; font-weight: bold; margin: 7px 0px 7px 0px;}
+.boo { font-size: 1.6em; font-weight: bold; margin: 7px 0px 7px 0px;}
 /* title lines */
-.text-section .cha { font-size: 1.4em; font-weight: bold; color: darkgoldenrod; margin: 5px 0px 5px 0px; }
-.text-section .tit { font-size: 1.25em; font-weight: bold; color: rgb(158, 66, 12); margin: 5px 0px 5px 0px; }
-.text-section .sub { font-size: 1.1em; font-weight: bold; margin: 5px 0px 5px 0px;}
+.cha { font-size: 1.4em; font-weight: bold; color: var(--heading-color); margin: 5px 0px 5px 0px; }
+.tit { font-size: 1.25em; font-weight: bold; color: var(--heading-color); margin: 5px 0px 5px 0px; }
+.sub { font-size: 1.1em; font-weight: bold; margin: 5px 0px 5px 0px;}
 
-.text-section div[tt]:not(.open)::before { content: "\f063"; font-family: "Font Awesome 5 Pro"; font-weight: 400; font-size: 1rem; padding-right: 10pt; color: blue; transition: 0.25s;}
-.text-section div[tt]:not(.open):hover::before { content: "\f354"; color: red; font-weight: 900;}
-.text-section div[tt] {cursor: pointer;}
+div[tt]:not(.open)::before { content: "\f063"; font-family: "Font Awesome 5 Pro"; font-weight: 400; font-size: 1rem; padding-right: 10pt; color: var(--icon-color); transition: 0.25s;}
+div[tt]:not(.open):hover::before { content: "\f354"; color: red; font-weight: 900;}
+div[tt] {cursor: pointer;}
+.highlighted-line { background-color: var(--special-bcolor); }
 
-.text-section .ssh { font-weight: bold;  margin: 3px 0px 3px 0px;}
+.ssh { font-weight: bold;  margin: 3px 0px 3px 0px;}
 
 /* content lines */
 .text-section .bod { text-align: justify;  }

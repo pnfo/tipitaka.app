@@ -247,12 +247,19 @@ function un_swap_e_o(text, script) {
 }
 // in thai pali these two characters have special glyphs (using the encoding used in the THSarabunNew Font)
 function beautify_thai(text, script) {
+    text = text.replace(/\u0E34\u0E4D/g, '\u0E36'); // 'iṃ' has a single unicode in thai 
     text = text.replace(/ญ/g, '\uF70F');
     return text.replace(/ฐ/g, '\uF700');
 }
-function un_beautify_thai(text, script) {
+function un_beautify_thai(text, script) { 
+    text = text.replace(/ฎ/g, 'ฏ'); // sometimes people use ฎ instead of the correct ฏ which is used in the tipitaka
+    text = text.replace(/\u0E36/g, '\u0E34\u0E4D'); // 'iṃ' has a single unicode in thai which is split into two here
     text = text.replace(/\uF70F/g, 'ญ');
     return text.replace(/\uF700/g, 'ฐ');
+}
+function un_beautify_khmer(text, script) {
+    text = text.replace(/\u17B9/g, '\u17B7\u17C6'); // 'iṃ' has a single unicode in khmer which is split into two here
+    return text.replace(/\u17D1/g, '\u17D2'); // end of word virama is different in khmer
 }
 /* zero-width joiners - replace both ways
 ['\u200C', ''], // ZWNJ (remove) not in sinh (or deva?)
@@ -319,6 +326,7 @@ const un_beautify_func = {
     [Script.RO]: [un_capitalize],
     [Script.THAI]: [un_beautify_thai, un_swap_e_o],
     [Script.LAOS]: [un_swap_e_o],
+    [Script.KM]: [un_beautify_khmer],
     [Script.MY]: [un_beautify_mymr],
     [Script.TIBT]: [un_beautify_tibet],
 }

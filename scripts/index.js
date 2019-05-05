@@ -1,7 +1,7 @@
 //import 'babel-polyfill'; // for internet explorer - use when bundling for production
 
 import { getScriptForCode } from './pali-script.mjs';
-import { appSettings, LangHelper, UT } from './settings.js';
+import { appSettings, LangHelper, UT, PT, PT_REFRESH } from './settings.js';
 import { PitakaTabs } from './pitaka-tabs.js';
 import { PitakaTree } from './pitaka-tree.js';
 import { LinkHandler } from './note-tag.js';
@@ -75,6 +75,7 @@ paliScriptSelect.on('click', '.option', e => {
     titleSearch.changeScript(); // results, status and filters
     bookmarks.changeScript(); // bookmarks and filters
     ftsHandler.changeScript(); // results, status and filters
+    PT_REFRESH($('#title-bar-text'));
 }).children(`[value=${appSettings.get('paliScript')}]`).addClass('active');
 
 
@@ -98,6 +99,9 @@ $('#dictionary-select').on('click', '.check', e => dictHandler.dictionaryListCha
 function changeTextSize(size) {
     $('html').css('font-size', `${size}px`);
 }
+function changeColorTheme(bodyClass) {
+    $('body').attr('class', bodyClass); // replace all classes with this class
+}
 
 function populateFormatSelect(formatList, select, settingName, onChangeCallback = '') {
     formatList.forEach((format, val) => {
@@ -113,7 +117,9 @@ function populateFormatSelect(formatList, select, settingName, onChangeCallback 
 populateFormatSelect(appSettings.dictLaunchList, $('#dictionary-launch-select'), 'dictLaunchMethod');
 populateFormatSelect(appSettings.footnoteFormatList, $('#footnote-format-select'), 'footnoteFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'), 'pageTagFormat', appTabs.changeTextFormat.bind(appTabs));
+populateFormatSelect(appSettings.colorThemeList, $('#color-theme-select'), 'colorTheme', changeColorTheme);
 populateFormatSelect(appSettings.textSizeList, $('#text-size-select'), 'textSize', changeTextSize);
+populateFormatSelect(appSettings.tabViewList, $('#tab-view-select'), 'tabViewFormat', appTabs.setTCView.bind(appTabs));
 
 $('.custom-radio').on('click', '.option:not(.check)', e => {
     $(e.currentTarget).addClass('active').siblings().removeClass('active');
@@ -126,5 +132,7 @@ $('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('ac
 // apply initial settings
 LangHelper.changeTranslation(appSettings.get('uiLanguage'));
 changeTextSize(appSettings.get('textSize'));
+changeColorTheme(appSettings.get('colorTheme'));
+$('#title-bar-text').append(PT('ඡට්ඨ සංගායනා තිපිටක'));
 
 $('#nav-bar-placeholder').css('height', $('#nav-bar').height());

@@ -50,16 +50,16 @@ export class FileDisplay {
             const div = $(e.currentTarget).parent();
             this.openTitleDiv(div);
             this.scrollToDiv(div);
-        }).on('click', '.hangnum,.titnum', e => this.collection.renderOnClick(e))
-        .scroll(e => { // auto hide the navbar on scroll down
+        }).on('click', '.hangnum,.titnum', e => this.collection.renderOnClick(e));
+        /*.scroll(e => { // auto hide the navbar on scroll down
             const curPos = $(e.currentTarget).scrollTop();
             const shift = curPos - this.prevScrollPos;
             if (this.prevScrollPos && shift)
                 this.adjustTitleBarScroll(shift);
             this.prevScrollPos = curPos;
-        });
+        });*/
     }
-    adjustTitleBarScroll(shift) {
+    /*adjustTitleBarScroll(shift) {
         const top = $('#nav-bar').offset().top;
         let newTop;
         if (shift > 0) {
@@ -69,7 +69,7 @@ export class FileDisplay {
         }
         $('#nav-bar').css('top', newTop);
         $('#nav-bar-placeholder').css('height', $('#nav-bar').outerHeight() + newTop);
-    }
+    }*/
     openTitleDiv(div) { // can be static too
         const lines = div.toggleClass('open').nextUntil(`[tt|=${div.attr('tt')}]`);
         lines.filter(':not([tt])').toggle(div.hasClass('open'));

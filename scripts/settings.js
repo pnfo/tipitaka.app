@@ -8,6 +8,8 @@ export const Language = Object.freeze({
     INDO: 'in',
     BUR: 'my',
     THAI: 'th',
+    ES: 'es', // spanish
+    PT: 'pt', // portuguese
 });
 
 const uiLanguageList = new Map([
@@ -18,6 +20,9 @@ const uiLanguageList = new Map([
     [Language.INDO, ['Indonesian', 'baˈhasa indoneˈsia', [], {f: 'indonesia_flag.png'} ]],
     [Language.BUR, ['Burmese', 'မြန်မာဘာသာ', [], {f: 'my_flag.png'} ]],
     [Language.THAI, ['Thai', 'ภาษาไทย', [], {f: 'th_flag.png'} ]],
+    [Language.KM, ['Khmer', 'ភាសាខ្មែរ', [], {f: 'kh_flag.png'} ]],
+    [Language.ES, ['Spanish', 'Español', [], {f: 'es_flag.png'} ]],
+    [Language.PT, ['Portuguese', 'Português', [], {f: 'pt_flag.png'} ]],
 ]);
 
 const dictLaunchList = new Map([
@@ -49,10 +54,22 @@ const textSizeList = new Map([
     ['32', ['XXL', '<i style="font-size: 24px">Aa</i>']],
 ]);
 
+const colorThemeList = new Map([
+    ['light', ['Light', '<i class="fal fa-lightbulb-on"/>']],
+    ['dark', ['Dark', '<i class="fal fa-lightbulb-slash"/>']],
+]);
+
+const tabViewList = new Map([
+    ['disabled', ['Single', '<i class="far fa-folder"/>']],
+    ['tabbed', ['Tab View', '<i class="far fa-folders"/>']],
+    ['columns', ['Columns', '<i class="far fa-columns"/>']],
+]);
+
 const defaultSettings = { // to be used when not found in local storage
     footnoteFormat: 'inline',
     pageTagFormat: 'click',
     textSize: '16',
+    colorTheme: 'dark',
     uiLanguage: Language.EN,
     tabViewFormat: 'tabbed',
     ftsSelected: false,
@@ -70,6 +87,8 @@ class AppSettings {
         this.footnoteFormatList = footnoteFormatList;
         this.pageTagFormatList = pageTagFormatList;
         this.textSizeList = textSizeList;
+        this.colorThemeList = colorThemeList;
+        this.tabViewList = tabViewList;
     }
     // functions to read/write to local storage and change
     set(prop, value) {
@@ -114,6 +133,8 @@ export const stringResources = {
     'no-results-found': 'Search term XXX did not return any results.',
     'number-of-bookmarks': 'There are XXX bookmarks matching your filter.',
     'no-bookmarks': 'You have no bookmarks saved. Click the star icon to save to bookmarks.',
+    'bookmark-added': 'Bookmark added',
+    'bookmark-deleted': 'Bookmark deleted',
     'dictionary-loading': 'Dictionary Loading...',
     'fts-loading': 'Full Text Search Loading. Please wait...',
 };

@@ -2,7 +2,7 @@
 import { TextProcessor } from "./pali-script.mjs";
 import { PT, PT_REFRESH, UT, appSettings } from "./settings.js";
 import { PitakaTree } from "./pitaka-tree.js";
-import { vManager } from "./util.js";
+import { vManager, Util } from "./util.js";
 import { TSH, SearchFilter, TSE } from "./search-common.js";
 
 export class TitleSearch {
@@ -124,7 +124,7 @@ export class TitleSearch {
             const entryDiv = $('<div/>').addClass('search-result').attr('index', v);
             entry[TSE.parents].forEach(p => {
                 PT(TSH.data[p][TSE.name]).addClass('parent name').attr('index', p).appendTo(entryDiv);
-                $('<i/>').text(' » ').appendTo(entryDiv);
+                $('<i/>').addClass('arrow').text(' » ').appendTo(entryDiv);
             });
             PT(entry[TSE.name]).addClass('child name').attr('index', v).appendTo(entryDiv);
             bookmarks.getIcon(entry[TSE.file], entry[TSE.lineInd]).appendTo(entryDiv);
@@ -162,10 +162,12 @@ class Bookmarks {
                 icon.removeClass('saved');
                 delete this.list[key];
                 console.log(`bookmark ${key} deleted`);
+                Util.showToast(UT('bookmark-deleted'));
             } else {
                 icon.addClass('saved');
                 this.list[key] = Date.now();
                 console.log(`bookmark ${key} added`);
+                Util.showToast(UT('bookmark-added'));
             }
             localStorage.setItem('bookmarks', JSON.stringify(this.list));
             this.updateCount();

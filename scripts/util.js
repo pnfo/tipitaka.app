@@ -12,7 +12,7 @@ export class Util {
     static showToast(toastMsg) {
         var toast = $('#toast').html(toastMsg).fadeIn(300);
         // After 3 seconds, remove the show class from DIV
-        setTimeout(function(){ toast.fadeOut(); }, 3000);
+        setTimeout(function(){ toast.fadeOut(); }, 2000);
     }
 
     static getParameterByName(name, defVal) {
@@ -141,7 +141,7 @@ const vmTopPaneInfo = new Map([
     ['settings', ['#settings-area', '#settings-button']],
     ['search', ['#search-area', '.search-bar']],
     ['fts', ['#fts-area', '.search-bar']],
-    ['bookmarks', ['#bookmarks-area', '#bookmarks-button']],
+    ['bookmarks', ['#bookmarks-area', '']],
     ['help', ['#help-area', '']],
 ]);
 class ViewManager {
@@ -160,6 +160,7 @@ class ViewManager {
         if (info[1]) $(info[1]).addClass('selected');
         this.prevPane = this.curPane;
         this.curPane = pane;
+        this.hideOverlappingContainers();
     }
     registerEvents() {
         $('#settings-button').click(e => this.showPane('settings'));
@@ -177,12 +178,7 @@ class ViewManager {
         $('#menu-list, .pitaka-tree-container').mousedown(function(e) {
             e.stopPropagation();
         });
-        $('body').mousedown(function() {
-            $('#menu-list').animate({height: 'hide'}, 250);
-            if ($('.pitaka-tree-container').css('position') == 'absolute') { // hide the tree if it is overlapping
-                $('.pitaka-tree-container').animate({width: 'hide'}, 250);
-            }
-        });
+        $('body').mousedown(e => this.hideOverlappingContainers());
         $('dialog').click(e => { // clicking on the dialog (or backdrop) closes the dialog
             if ($(e.target).is('dialog')) {
                 e.target.close('cancelled');
@@ -191,8 +187,14 @@ class ViewManager {
         $('.help-button').click(e => this.loadHelp(e));
         $('#help-menu-item,#about-menu-item,#offline-software-menu-item').click(e => {
             this.loadHelp(e);
-            $('#menu-list').animate({height: 'hide'}, 250);
+            this.hideOverlappingContainers();
         });
+    }
+    hideOverlappingContainers() { // hide tree and menulist
+        $('#menu-list').animate({height: 'hide'}, 250);
+        if ($('.pitaka-tree-container').css('position') == 'absolute') { // hide the tree if it is overlapping
+            $('.pitaka-tree-container').animate({width: 'hide'}, 250);
+        }
     }
     async loadHelp(e = null) {
         // load help page to pane and then show the pane

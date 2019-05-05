@@ -24,10 +24,12 @@ export class PitakaTabs {
             this.removeTab($(e.currentTarget).parent().attr('tab-id'));
             e.stopPropagation();
         });
-        $('#columns-button').click(e => this.switchTCView());
     }
     showTab(tabId) {
         if (!this.tabs.has(tabId)) return false;
+        if (this.curTCView == 'disabled' && this.activeTabId) {
+            this.removeTab(this.activeTabId);
+        }
         this.tabs.forEach(tab => tab.forEach(elem => elem.removeClass('active')));
         this.tabs.get(tabId).forEach(elem => elem.addClass('active'));
         this.activeTabId = tabId;
@@ -75,19 +77,16 @@ export class PitakaTabs {
         const cls = collection.n.find(val => val[2] == fileId)[0].charAt(0).toUpperCase();
         return $('<span/>').addClass(cls).addClass('coll-icon').text(cls);
     }
-    switchTCView() {
-        const newView = (this.curTCView == 'tabbed') ? 'columns' : 'tabbed';
-        appSettings.set('tabViewFormat', newView);
-        this.setTCView(newView);
-    }
     setTCView(newView) {
         this.curTCView = newView;
+        if (newView == 'disabled') {
+            this.tabs.forEach((_1, tabId) => { if (tabId != this.activeTabId) this.removeTab(tabId);  });
+        }
         $('.tab-content,.tab-head').add(this.heads, this.contents).attr('view', this.curTCView);
-        const iconClass = newView == 'tabbed' ? 'fa-columns' : 'fa-folders';
-        const buttonText = newView == 'tabbed' ? 'Columns' : 'Tabs'; // TODO string res
-        $('#columns-button').empty().append($('<i/>').addClass(`far fa-fw ${iconClass}`))
-            .append(UT(buttonText).addClass('ss-hide').css('padding-left', '4pt'));
     }
+    /*getNewTabId() { // if multi view is disabled replace the active tab
+        return this.curTCView == 'disabled' ? this.activeTabId : `id-${Math.floor(Math.random() * 1000000)}`;
+    }*/
 }
 const getNewTabId = () => `id-${Math.floor(Math.random() * 1000000)}`;
 
