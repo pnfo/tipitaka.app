@@ -1,8 +1,8 @@
 import { Script, TextProcessor } from './pali-script.mjs';
-import { appSettings, stringResources, UT, PT } from './settings.js';
+import { appSettings, UT } from './settings.js';
 import { PitakaTree } from './pitaka-tree.js';
 import { Util, JDialog } from './util.js';
-import { dictHandler } from './dictionary.js';
+import { dictClient } from './dict-client.js';
 
 const pageTagNames = new Map([
     ['T', 'Thai'],
@@ -284,7 +284,8 @@ export class HitHighlighter {
 
         // remove all punctuation marks, digits, ascii range, danda
         // remove notes too - seaching exact matches over the notes
-        const tokenizerFilterRegex =
+        // TODO move to a common location
+        const tokenizerFilterRegex = 
         /<n>.+?<\/n>|[\u0964\u0965\u0970]|[A-Za-z0-9\.\?\,!;'"‘’“”–<>=\:\\\/\[\]\+\(\)]/g;
         // new lines … and - also used to split the words
         // § is used inside the <note> sometimes 
@@ -332,6 +333,7 @@ export class HitHighlighter {
     }
 }
 
+// this class is not used anymore
 export class WordDisplay {
     constructor(fileDisplay) {
         this.fileDisplay = fileDisplay;
@@ -349,7 +351,7 @@ export class WordDisplay {
     }
     registerShowInfo(e, eventType) {
         if (appSettings.get('dictLaunchMethod') != eventType) return; // not show on this event
-        if (!dictHandler.activeDicts.size) return; // no dicts selected by user
+        if (!dictClient.activeDicts.size) return; // no dicts selected by user
         if (this.dictDlg && this.dictDlg.isOpen) return; // prevent new dialogs if one is already shown
         const wElem = $(e.currentTarget);
         if (wElem.parents('[tt]').length) return;
@@ -362,10 +364,10 @@ export class WordDisplay {
     }
     showInfoBox(wElem, inputVal = '') {
         const word = inputVal || wElem.text();
-        dictHandler.searchWord(word, this.fileDisplay.script).then(entries => {
+        dictClient.searchWordInline(word, this.fileDisplay.script).then(entries => {
             // if have entries directly display them, otherwise show an edit box with the text
             if (entries.length) {
-                const table = $('<div/>').append(entries).css('padding', '0.33rem');
+                const table = $('<div/>').append(entries).css('padding', '0.33rem').addClass('dict-inline');
                 if (this.dictDlg) this.dictDlg.close();
                 this.dictDlg = new JDialog(wElem, wElem, {'max-width': 400, top: '100%'}).show(table, this.root);
                 if (table.width() > 380) { // hack
@@ -386,9 +388,9 @@ export class WordDisplay {
         if (this.dictDlg && this.dictDlg.isOpen) this.dictDlg.close();
         if (this.wordEditDlg && this.wordEditDlg.isOpen) this.wordEditDlg.close();
     }
-    // will be called after markOffsets above if any
+    // create words - will be called after markOffsets above if any
     markWords(dataStr) {
-        return dataStr.replace(/([ം-ෟ]+)/g, `<w>$1</w>`); // (?!॰) sinhala range not followed by abbre sign
+        return dataStr.replace(/([ം-ෟ]+)/g, `<w>$1</w>`); // (?!॰) consescutive sinhala range
     }
 }
 

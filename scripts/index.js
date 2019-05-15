@@ -1,15 +1,16 @@
 //import 'babel-polyfill'; // for internet explorer - use when bundling for production
 
 import { getScriptForCode } from './pali-script.mjs';
-import { appSettings, LangHelper, UT, PT, PT_REFRESH } from './settings.js';
+import { appSettings, LangHelper, UT, PT, PT_REFRESH, SearchType } from './settings.js';
 import { PitakaTabs } from './pitaka-tabs.js';
 import { PitakaTree } from './pitaka-tree.js';
 import { LinkHandler } from './note-tag.js';
-import { TSH } from "./search-common.js";
+import { titleStorage } from "./search-common.js";
 import { TitleSearch, bookmarks } from './title-search.js';
-import { FTSHandler } from './fts-handler.js';
-import { Util, vManager, JDialog } from './util.js';
-import { dictHandler } from './dictionary.js';
+import { FTSClient } from './fts-client.js';
+import { Util, vManager } from './util.js';
+import { dictClient } from './dict-client.js';
+import { paliAnalysis } from './pali-analysis.js';
 
 const appTree = new PitakaTree($('.pitaka-tree'));
 const appTabs = new PitakaTabs($('.text-section'), appTree);
@@ -18,46 +19,63 @@ appTree.initialize(appTabs).done(function() {
     LinkHandler.initClipboard();
     LinkHandler.tryStartupLocation(appTree, appTabs);
 });
-const titleSearch = new TitleSearch($('#search-area'), appTree, appTabs);
-const ftsHandler = new FTSHandler();
-TSH.init().then(() => {
+const titleSearch = new TitleSearch(appTree, appTabs);
+const ftsClient = new FTSClient();
+titleStorage.init().then(() => {
     $('.search-bar').on('input', e => performSearch(e)); //keyup compositionend
-    $('.search-bar').focus(e => ftsSelected ? vManager.showPane('fts') : vManager.showPane('search'));
+    $('.search-bar').focus(e => showSearchPane());
     titleSearch.init();
     bookmarks.init(appTree, appTabs);
-    ftsHandler.init(appTree, appTabs);
+    ftsClient.init(appTree, appTabs);
 }).catch(err => {
     console.error(`Title Search Index init failed with error ${err}`);
 });
 
+/*function searchTypeToPane(searchType) {
+    if (searchType == SearchType.DICT) return 'dict';
+    if (searchType == SearchType.FTS) return 'fts';
+    return 'title-search'; // title
+}*/
+function showSearchPane() {
+    const prop = appSettings.searchTypeProp[appSettings.get('searchType')];
+    vManager.showPane(prop.pane);
+}
 function performSearch(e) {
     if (e) e.stopPropagation();
     const searchBarVal = $('.search-bar').val().trim();
-    if (ftsSelected) {
-        vManager.showPane('fts');
-        ftsHandler.performSearch(searchBarVal);
-    } else {
-        vManager.showPane('search');
+    showSearchPane();
+    const searchType = appSettings.get('searchType');
+    if (searchType == SearchType.FTS) {
+        ftsClient.performSearch(searchBarVal);
+    } else if (searchType == SearchType.TITLE) {
         titleSearch.performSearch(searchBarVal);
+    } else {
+        dictClient.performSearch(searchBarVal); //(searchType == SearchType.DICT)
     }
     const inputScript = getScriptForCode(searchBarVal ? searchBarVal.charCodeAt(0) : 0);
     $('.search-bar').attr('script', inputScript);
 }
 
-// whether to do fts or title search
-let ftsSelected = false; // not put in settings - instead user should select on each restart (for perf)
-// ftsHandler.checkInit();
-async function setFtsSelected(state) {
-    if (ftsSelected = state) {
-        const lDlg = new JDialog($('#fts-select-button'), '').show(
-            $('<div/>').addClass('loading-dlg').append(UT('fts-loading')));
-        await ftsHandler.checkInit();
-        lDlg.close();
-    }
-    $('#fts-select-button').toggleClass('active', state).children().toggleClass('fal', !state).toggleClass('fas', state);
+function setNextSearchType(e) {
+    const nextType = appSettings.searchTypeProp[appSettings.get('searchType')].next;
+    setSearchType(nextType);
+    appSettings.set('searchType', nextType);
     performSearch();
 }
-$('#fts-select-button').click(e => setFtsSelected(!ftsSelected));
+function setSearchType(type) {
+    const prop = appSettings.searchTypeProp[type];
+    $('#search-type-button .type-icon').attr('class', 'type-icon ' + prop.iconClass);
+    $('.search-bar').attr('placeholder', ' ' + prop.placeholder);
+}
+$('#search-type-button').click(e => setNextSearchType(e));
+const lookupCallback = (word, type) => { // callback to set the search lookup from within pali analaysis window
+    console.log(`Loading lookup for ${word}, ${type}`);
+    setSearchType(type);
+    appSettings.set('searchType', type);
+    $('.search-bar').val(word);
+    performSearch();
+};
+paliAnalysis.init(vManager, dictClient, lookupCallback);
 
 // populating the settings pane
 // Pali Script Changing
@@ -74,7 +92,8 @@ paliScriptSelect.on('click', '.option', e => {
     appTabs.changeScript(); // check the script of active tab only
     titleSearch.changeScript(); // results, status and filters
     bookmarks.changeScript(); // bookmarks and filters
-    ftsHandler.changeScript(); // results, status and filters
+    ftsClient.changeScript(); // results, status and filters
+    dictClient.changeScript(); // results, status
     PT_REFRESH($('#title-bar-text'));
 }).children(`[value=${appSettings.get('paliScript')}]`).addClass('active');
 
@@ -91,9 +110,9 @@ $('#ui-lang-select').on('click', '.option', e => {
 }).children(`[value=${appSettings.get('uiLanguage')}]`).addClass('active');
 
 // Dictionary Related
-dictHandler.dictionaryList.forEach((info, dictName) => 
-    Util.createDictionarySelectOption(dictName, info, appSettings.uiLanguageList.get(info[0])).appendTo('#dictionary-select'));
-$('#dictionary-select').on('click', '.check', e => dictHandler.dictionaryListChanged(e))
+dictClient.dictionaryList.forEach((info, dictName) => 
+    Util.createDictionarySelectOption(dictName, info, appSettings.uiLanguageList.get(info[0])).appendTo('.dictionary-select'));
+$('.dictionary-select').on('click', '.check', e => dictClient.dictionaryListChanged(e))
     .children(appSettings.get('dictList').map(dict => `[value=${dict}]`).join(',') || 'none').addClass('active');
 
 function changeTextSize(size) {
@@ -128,11 +147,14 @@ $('.custom-radio').on('click', '.option:not(.check)', e => {
     }
 });
 $('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('active'));
+// launch pali analysis
+$(document).on('click', '.pali-analysis,w', e => paliAnalysis.showWindow(e));
 
 // apply initial settings
 LangHelper.changeTranslation(appSettings.get('uiLanguage'));
 changeTextSize(appSettings.get('textSize'));
 changeColorTheme(appSettings.get('colorTheme'));
 $('#title-bar-text').append(PT('ඡට්ඨ සංගායනා තිපිටක'));
+setSearchType(appSettings.get('searchType'));
 
-$('#nav-bar-placeholder').css('height', $('#nav-bar').height());
+//$('#nav-bar-placeholder').css('height', $('#nav-bar').height());

@@ -43,7 +43,12 @@
   },
   "dependencies": {
     "jquery": "^3.3.1",
+    "node-pre-gyp": "^0.13.0",
+    "open": "^6.2.0",
+    "pkg": "^4.3.8",
     "restify": "^7.2.1",
+    "rollup": "^1.11.3",
+    "sqlite3": "^4.0.7",
     "wunsch": "^1.0.2"
   }
 }

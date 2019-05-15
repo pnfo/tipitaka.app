@@ -12,6 +12,18 @@ export const Language = Object.freeze({
     PT: 'pt', // portuguese
 });
 
+export const SearchType = Object.freeze({
+    TITLE: 'title',
+    FTS: 'fts',
+    DICT: 'dict',
+});
+
+const searchTypeProp = Object.freeze({
+    [SearchType.TITLE]: { pane: 'title-search', placeholder: 'Search Sutta Titles', next: SearchType.FTS, iconClass: 'far fa-heading fa-fw' }, 
+    [SearchType.FTS]: { pane: 'fts', placeholder: 'Full Text Search', next: SearchType.DICT, iconClass: 'far fa-file-alt fa-fw' }, 
+    [SearchType.DICT]: { pane: 'dict', placeholder: 'Dictionary Search', next: SearchType.TITLE, iconClass: 'far fa-books fa-fw' }, 
+});
+
 const uiLanguageList = new Map([
     [Language.SI, ['Sinhala', 'සිංහල', [], {f: 'sl_flag.png', t: true} ]],
     [Language.EN, ['English', 'English', [], {f: 'uk_flag.png', t: true} ]],
@@ -29,6 +41,11 @@ const dictLaunchList = new Map([
     ['none', ['Do Not Show', '<i class="far fa-eye-slash"/>']],
     ['click', ['Show On Click', '<i class="fal fa-mouse-pointer"></i>']],
     ['hover', ['Show On Hover', '<i class="far fa-bullseye"></i>']]
+]);
+
+const analysisStyleList = new Map([
+    ['top', []],
+    ['bottom', []]
 ]);
 
 const footnoteFormatList = new Map([
@@ -66,6 +83,7 @@ const tabViewList = new Map([
 ]);
 
 const defaultSettings = { // to be used when not found in local storage
+    searchType: SearchType.FTS,
     footnoteFormat: 'inline',
     pageTagFormat: 'click',
     textSize: '16',
@@ -75,15 +93,18 @@ const defaultSettings = { // to be used when not found in local storage
     ftsSelected: false,
     dictList: ['en-buddhadatta'],
     dictLaunchMethod: 'click',
+    analysisStyle: 'bottom',
 };
 
 class AppSettings {
     constructor() {
         this.settings = {};
         this.loadFromStorage();
+        this.searchTypeProp = searchTypeProp;
         this.paliScriptList = paliScriptInfo;
         this.uiLanguageList = uiLanguageList;
         this.dictLaunchList = dictLaunchList;
+        this.analysisStyleList = analysisStyleList;
         this.footnoteFormatList = footnoteFormatList;
         this.pageTagFormatList = pageTagFormatList;
         this.textSizeList = textSizeList;
@@ -135,8 +156,8 @@ export const stringResources = {
     'no-bookmarks': 'You have no bookmarks saved. Click the star icon to save to bookmarks.',
     'bookmark-added': 'Bookmark added',
     'bookmark-deleted': 'Bookmark deleted',
-    'dictionary-loading': 'Dictionary Loading...',
-    'fts-loading': 'Full Text Search Loading. Please wait...',
+    //'dictionary-loading': 'Dictionary Loading...',
+    //'fts-loading': 'Full Text Search Loading. Please wait...',
 };
 // based on the uiLanguage selected - store the translations
 let currentTranslations = new Map();

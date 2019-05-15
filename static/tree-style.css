@@ -47,8 +47,8 @@
     content: "\f15c";
     padding-right: 5px;
 }
-.pitaka-tree #tree-mul a:before { color:var(--mula-color); }
-.pitaka-tree #tree-att a:before { color:var(--atta-color); }
+.pitaka-tree #tree-mul a:before { color: var(--mula-color); }
+.pitaka-tree #tree-att a:before { color: var(--atta-color); }
 .pitaka-tree #tree-tik a:before { color: var(--tika-color); }
 .pitaka-tree #tree-e a:before { color: var(--anya-color); }
 

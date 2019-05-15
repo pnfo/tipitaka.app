@@ -3,15 +3,15 @@ import { TextProcessor } from "./pali-script.mjs";
 import { PT, PT_REFRESH, UT, appSettings } from "./settings.js";
 import { PitakaTree } from "./pitaka-tree.js";
 import { vManager, Util } from "./util.js";
-import { TSH, SearchFilter, TSE } from "./search-common.js";
+import { titleStorage, SearchFilter, TSE, SearchPane } from "./search-common.js";
 
-export class TitleSearch {
-    constructor(root, tree, tabs) {
-        this.root = root;
+export class TitleSearch extends SearchPane {
+    constructor(tree, tabs) {
+        super($('#title-search-area'), $('#title-search-status'));
         this.tree = tree;
         this.tabs = tabs;
         
-        this.searchPrevQuery = "";
+        this.prevQuerySinh = "";
         this.searchCache = new Map();
     
         this.settings = {
@@ -22,26 +22,26 @@ export class TitleSearch {
     init() {
         this.filterParents = appSettings.get('title-search-filter');
         if (!this.filterParents) {
-            this.filterParents = TSH.topParentsInfo.slice(0, -1).map(ar => ar[0]); // defaults
+            this.filterParents = titleStorage.topParentsInfo.slice(0, -1).map(ar => ar[0]); // defaults
             appSettings.set('title-search-filter', this.filterParents);
         }
-        this.filter = new SearchFilter($('#search-filter'), TSH.topParentsInfo, this.filterParents, this);
+        this.filter = new SearchFilter($('#title-search-filter'), titleStorage.topParentsInfo, this.filterParents, this);
 
         // register search related click events
         this.registerClicks();
         // update the UI to indicate data has finished loading
-        console.log(`search index loaded with length ${TSH.data.length}`);
+        console.log(`search index loaded with length ${titleStorage.data.length}`);
     }
 
     registerClicks() {
         //$('.search-bar').on('keyup compositionend', e => this.performSearch(e)); // TODO: give focus to the search bar on page load
-        $('#search-filter-button').click(e => $('#search-filter').slideToggle('fast'));
+        $('#title-search-filter-button').click(e => $('#title-search-filter').slideToggle('fast'));
         // clicking on a result opens it up in the tabs
-        $('#search-results').on('click', 'i.name', e => TitleSearch.openResult(e, this.tree, this.tabs));
+        $('#title-search-results').on('click', 'i.name', e => TitleSearch.openResult(e, this.tree, this.tabs));
     }
 
     static openResult(e, appTree, appTabs) {
-        const entry = TSH.data[$(e.currentTarget).attr('index')];
+        const entry = titleStorage.data[$(e.currentTarget).attr('index')];
         const fileId = entry[TSE.file];
         const coll = appTree.getCollection(fileId);
         const newT = PitakaTree.filterCollection(coll, fileId);
@@ -49,24 +49,23 @@ export class TitleSearch {
         appTree.openBranch(fileId);
     }
 
-    performSearch(searchBarVal) {    
-        const query = TextProcessor.convertFromMixed(searchBarVal); // convert to sinhala here
-        if (query == this.searchPrevQuery) { return; }
-    
-        $('#search-results', this.root).empty();
-        this.searchPrevQuery = query;
-        if (query.length < this.settings.minQueryLength) {
-            this.setStatus(UT('enter-more-characters', this.settings.minQueryLength));
-        } else {
-            console.log(`starting the search with query ${query}`);
-            const results = this.searchIndex(query);
-            this.displayResults(results); // display the results
-        }        
+    performSearch(searchBarVal) {
+        const query = SearchPane.normalizeSearchTerm(searchBarVal);
+        const querySinh = TextProcessor.convertFromMixed(query); // convert to sinhala here
+        if (!this.checkMinQueryLength(querySinh)) return;
+        if (querySinh == this.prevQuerySinh) { return; }
+        this.prevQuerySinh = querySinh;
+        this.prevQuery = query;
+
+        $('#title-search-results', this.root).empty();
+        console.log(`starting the search with query ${this.prevQuerySinh}`);
+        const results = this.searchIndex(this.prevQuerySinh);
+        this.displayResults(results); // display the results
     }
 
     checkQuery(entry, queryReg) {
         return queryReg.exec(entry[TSE.name]) && 
-            (this.filterParents.length == TSH.topParentsInfo.length || this.filterParents.indexOf(entry[TSE.parents][0]) >= 0);
+            (this.filterParents.length == titleStorage.topParentsInfo.length || this.filterParents.indexOf(entry[TSE.parents][0]) >= 0);
     }
     searchIndex(query) {
         //Check if we've searched for this term before - make sure to clear cache when filters change
@@ -75,11 +74,11 @@ export class TitleSearch {
             console.log(`Results for query ${query} found in cache of length ${results.length}`);
             return results;
         }
-
-        const queryReg = new RegExp(query, "i");
+        // make regex from wildcard
+        const queryReg = new RegExp(query.replace(/%/g, '.*').replace(/_/g, '.'), "i");
         const results = [];
-        for (let i = 0; i < TSH.data.length; i++) {
-            if (this.checkQuery(TSH.data[i], queryReg)) results.push(i);
+        for (let i = 0; i < titleStorage.data.length; i++) {
+            if (this.checkQuery(titleStorage.data[i], queryReg)) results.push(i);
             if (results.length >= this.settings.maxResults) break;
         }
         console.log(`Search for ${query} in index found ${results.length} hits`);
@@ -87,14 +86,12 @@ export class TitleSearch {
         this.searchCache.set(query, results); //Add results to cache
         return results;
     }
-    setStatus(tElem) {
-        $('#search-status', this.root).empty().append(tElem);
-    }
+
     displayResults(results) {
-        const resultsDiv = $('#search-results', this.root).empty();
+        const resultsDiv = $('#title-search-results', this.root).empty();
     
-        if (!results) {
-            this.setStatus(UT('no-results-found', this.searchPrevQuery));
+        if (!results.length) {
+            this.setStatus(UT('no-results-found', this.prevQuery));
             return;
         }
         // add results
@@ -107,23 +104,21 @@ export class TitleSearch {
             this.setStatus(UT('too-many-results-found', this.settings.maxResults)); 
         }
     }
-    changeScript() {
-        PT_REFRESH(this.root);
-    }
+
     filterChanged(newFilter) {
         this.filterParents = newFilter;
         appSettings.set('title-search-filter', this.filterParents);
         console.log(newFilter);
         this.searchCache.clear(); // empty the cache
-        const results = this.searchIndex(this.searchPrevQuery);
+        const results = this.searchIndex(this.prevQuerySinh);
         this.displayResults(results); // display the results
     }
     static createResultsList(results) {
         return results.map(v => {
-            const entry = TSH.data[v];
+            const entry = titleStorage.data[v];
             const entryDiv = $('<div/>').addClass('search-result').attr('index', v);
             entry[TSE.parents].forEach(p => {
-                PT(TSH.data[p][TSE.name]).addClass('parent name').attr('index', p).appendTo(entryDiv);
+                PT(titleStorage.data[p][TSE.name]).addClass('parent name').attr('index', p).appendTo(entryDiv);
                 $('<i/>').addClass('arrow').text(' » ').appendTo(entryDiv);
             });
             PT(entry[TSE.name]).addClass('child name').attr('index', v).appendTo(entryDiv);
@@ -148,11 +143,11 @@ class Bookmarks {
 
         this.filterParents = appSettings.get('bookmarks-filter');
         if (!this.filterParents) {
-            this.filterParents = TSH.topParentsInfo.map(ar => ar[0]);  // defaults - all
+            this.filterParents = titleStorage.topParentsInfo.map(ar => ar[0]);  // defaults - all
             appSettings.set('bookmarks-filter', this.filterParents);
         }
         
-        this.filter = new SearchFilter($('#bookmarks-filter'), TSH.topParentsInfo, this.filterParents, this);
+        this.filter = new SearchFilter($('#bookmarks-filter'), titleStorage.topParentsInfo, this.filterParents, this);
     }
     registerClicks() { // save-icon click
         $('body').on('click', 'i.save-icon', e => {
@@ -194,7 +189,7 @@ class Bookmarks {
         }
 
         const indexes = [];
-        TSH.data.forEach(entry => {
+        titleStorage.data.forEach(entry => {
             const key = `${entry[TSE.file]},${entry[TSE.lineInd]}`;
             if (this.list[key] && this.checkFilter(entry)) {
                 indexes.push(entry[TSE.id]);
@@ -204,7 +199,7 @@ class Bookmarks {
         this.setStatus(UT('number-of-bookmarks', indexes.length));
     }
     checkFilter(entry) {
-        return this.filterParents.length == TSH.topParentsInfo.length || this.filterParents.indexOf(entry[TSE.parents][0]) >= 0;
+        return this.filterParents.length == titleStorage.topParentsInfo.length || this.filterParents.indexOf(entry[TSE.parents][0]) >= 0;
     }
     filterChanged(newFilter) {
         this.filterParents = newFilter;

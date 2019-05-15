@@ -58,7 +58,7 @@
 </head>
 <body>
 
-<div align="center" style="margin:0 auto; height: 100%; display: flex; flex-direction: column; width: 100%;">
+<div style="margin:0 auto; height: 100%; display: flex; flex-direction: column; width: 100%; text-align: center">
 
     <nav id="nav-bar" style="width: 100%; max-width: 100%;">
         <nav class="title-bar short-screen-hide">
@@ -67,12 +67,12 @@
             </div>
         </nav>
         <nav id="search-bar-div">
-            <a id="tree-toggle" class="button"><i class="far fa-sitemap action"></i> <i class="ss-hide UT" lang="en">Tree View</i></a>
+            <a id="tree-toggle" class="button"><i class="far fa-sitemap"></i> <i class="ss-hide UT" lang="en">Tree View</i></a>
             <div style="flex: 1; display: flex; justify-content: center; align-items: center; flex-flow: row nowrap; overflow: auto;">
                 <input class="search-bar PT" type="text" placeholder=" Search">
-                <a id="fts-select-button" class="button"><i class="fal fa-search action"></i></a>
+                <a id="search-type-button" class="button"><i class="fal fa-search ss-hide"></i> <i class="type-icon"></i></a>
                 <a id="text-view-button" class="button"><i class="far fa-book-open"></i> <i class="ss-hide UT" lang="en">Text</i></a>
-                <a id="settings-button" class="button"><i class="far fa-wrench action"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
+                <a id="settings-button" class="button"><i class="far fa-wrench"></i> <i class="ss-hide UT" lang="en">Settings</i></a>
             </div>
             <a id="menu-toggle" class="button"><i class="far fa-bars"></i> <i class="ss-hide UT" lang="en">Menu</i></a>    
         </nav>
@@ -92,7 +92,7 @@
             <div class="pitaka-tree"></div>
         </div>
 
-        <div id="settings-area" class="top-pane" style="flex: 1 1 auto; overflow-y: auto;">
+        <div id="settings-area" class="top-pane" style="overflow-y: auto;">
             <h2><i class="far fa-globe-asia"></i> <i class="UT" lang="en">Select User Interface Language</i><i class="help-button" sec="lang-select"></i></h2>
             <div id="ui-lang-select" class="custom-radio"></div>
 
@@ -100,7 +100,7 @@
             <div id="pali-script-select" class="custom-radio"></div>
 
             <h2><i class="far fa-books"></i> <i class="UT" lang="en">Select Dictionaries</i><i class="help-button" sec="dict-select"></i></h2>
-            <div id="dictionary-select" class="custom-radio"></div>
+            <div class="dictionary-select custom-radio"></div>
 
             <h2><i class="far fa-book-reader"></i> <i class="UT" lang="en">Dictionary Launch Method</i><i class="help-button" sec="dict-launch"></i></h2>
             <div id="dictionary-launch-select" class="custom-radio"></div>
@@ -121,26 +121,27 @@
             <div id="text-size-select" class="custom-radio"></div>
         </div>
 
-        <div id="search-area" class="top-pane" style="flex: 1 1 auto; display: flex; flex-direction: column;">
-            <div id="search-filter" style="display: none;"></div>
-            <div align="center">
-                <span id="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
-                <a id="search-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
+        <div id="title-search-area" class="top-pane">
+            <div id="title-search-filter" class="filter-container"></div>
+            <div>
+                <span id="title-search-status" class="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
+                <a id="title-search-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
                 <i class="help-button" sec="title-search"></i>
             </div>
-            <div id="search-results" style="flex: 1 1 auto; overflow-y: auto;"></div>
+            <div id="title-search-results" style="flex: 1 1 auto; overflow-y: auto;"></div>
         </div>
 
-        <div id="fts-area" class="top-pane" style="flex: 1 1 auto; display: flex; flex-direction: column;">
-            <div id="fts-filter" style="display: none;"></div>
+        <div id="fts-area" class="top-pane">
+            <div id="fts-filter" class="filter-container"></div>
             <div id="fts-options">
+                <span class="option check-box checked" param="sortByBook"><i class="UT" lang="en">Sort By Book</i></span>
                 <span class="option check-box checked" param="exactWord"><i class="UT" lang="en">Exact Word</i></span>
-                <span class="option check-box checked" param="exactPhrase"><i class="UT" lang="en">Exact Phrase</i></span>
-                <span class="option check-box checked" param="matchOrder" hide="exactPhrase"><i class="UT" lang="en">Match Order</i></span>
-                <span class="option" hide="exactPhrase"><i class="UT" lang="en">Word Distance</i><input id="input-word-distance" type="text" value="10"></span>
+                <span class="option check-box checked hidden" param="exactPhrase"><i class="UT" lang="en">Exact Phrase</i></span>
+                <span class="option check-box checked hidden" param="matchOrder" hide="exactPhrase"><i class="UT" lang="en">Match Order</i></span>
+                <span class="option hidden" hide="exactPhrase"><i class="UT" lang="en">Word Distance</i><input id="input-word-distance" type="text" value="10"></span>
             </div>
-            <div align="center">
-                <span id="fts-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
+            <div>
+                <span id="fts-status" class="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
                 <a id="fts-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
                 <i class="help-button" sec="fts-search"></i>
             </div>
@@ -150,22 +151,32 @@
             </div>
         </div>
 
-        <div id="bookmarks-area" class="top-pane" style="flex: 1 1 auto;  display: flex; flex-direction: column;">
-            <div id="bookmarks-filter" style="display: none;"></div>
-            <div align="center">
-                <span id="bookmarks-status"><i class="UT" lang="en">You have no bookmarks saved. Click the star icon to save to bookmarks.</i></span>
+        <div id="dict-area" class="top-pane">
+            <div id="dict-filter" class="dictionary-select custom-radio" style="display: none;"></div>
+            <div>
+                <span id="dict-status" class="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
+                <a id="dict-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Dictionary List</i></a>
+                <i class="help-button" sec="dict-search"></i>
+            </div>
+            <div id="dict-results" style="flex: 1 1 auto; overflow-y: auto;"></div>
+        </div>
+
+        <div id="bookmarks-area" class="top-pane">
+            <div id="bookmarks-filter" class="filter-container"></div>
+            <div>
+                <span id="bookmarks-status" class="search-status"><i class="UT" lang="en">You have no bookmarks saved. Click the star icon to save to bookmarks.</i></span>
                 <a id="bookmarks-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Show/Hide Filter</i></a>
                 <i class="help-button" sec="bookmarks"></i>
             </div>
             <div id="bookmarks-list" style="overflow-y: auto;"></div>
         </div>
 
-        <div id="text-view-area" class="text-section top-pane" style="flex: 1 1 auto; position: relative; display: flex; flex-direction: column;">
+        <div id="text-view-area" class="text-section top-pane" style="position: relative;">
             <div class="tab-heads"></div>
             <div class="tab-contents"></div>
         </div>
 
-        <div id="help-area" class="top-pane UT" style="flex: 1 1 auto; overflow: auto; text-align: left; padding: 1rem;"></div>
+        <div id="help-area" class="top-pane UT" style="overflow: auto; text-align: left; padding: 1rem;"></div>
 
     </div>
 </div>
@@ -190,7 +201,7 @@
 
 <script src="./scripts/index.js?v=1" type="module"></script>
 <!--use webpack (npm run build) to build this and uncomment for production-->
-<!--<script src="./bundle.js"></script>-->
+<!--<script src="./scripts/bundle.js"></script>-->
 
 <!-- Electron Insert this line after script imports -->
 <script>if (window.module) module = window.module;</script>

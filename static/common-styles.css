@@ -81,6 +81,7 @@ a.button {
 a.button:hover { background-color: var(--hover-bcolor);  }
 /*a.button:active, a.button.pressed { background-color: lightgrey; box-shadow: none; }*/
 
+.top-pane { flex: 1 1 auto; display: flex; flex-direction: column; }
 .top-pane-status.selected { background-color: var(--special-bcolor); }
 
 /*#settings-area h1 { color: brown; font-size: 1.5rem;}*/

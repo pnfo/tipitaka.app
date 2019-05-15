@@ -50,7 +50,7 @@ export class PitakaTabs {
         const tabId = getNewTabId();
         const ptTitle = PT(title.replace(/^[\(\)\d+\s\-\.]+/, ''));
         const headLabel = $('<span/>').append(ptTitle).addClass('head-label');
-        const closeIcon = $('<span/>').addClass('close-icon far fa-times');
+        const closeIcon = $('<span/>').addClass('close-icon far fa-times fa-fw');
         const collIcon = PitakaTabs.getCollIcon(fileId, collection);
         const headDiv = $('<div/>').addClass('tab-head').append(collIcon, headLabel, closeIcon).appendTo(this.heads);
         const contentDiv = $('<div/>').addClass('tab-content').appendTo(this.contents);

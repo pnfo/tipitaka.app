@@ -1,5 +1,5 @@
 "use strict";
-import { PT } from "./settings.js";
+import { PT, UT, PT_REFRESH } from "./settings.js";
 
 // store the data in local browser cache - will be available even after browser restart
 class TitleStorageHelper {
@@ -79,7 +79,7 @@ export class SearchFilter {
                 this.renderCheckBox(info[TSE.id], info[TSE.name], row, column).appendTo(tr);
             });
         });
-        const anya = this.renderCheckBox(this.topParentsInfo[9][TSE.id], this.topParentsInfo[9][TSE.name], 3, 0).attr('colspan', 3);
+        const anya = this.renderCheckBox(this.topParentsInfo[9][TSE.id], this.topParentsInfo[9][TSE.name], 3, 0).attr('colspan', 1);
         $('<tr/>').attr('row', 3).append(anya).appendTo(this.table);
     }
     renderCheckBox(id, label, row, column) {
@@ -100,7 +100,10 @@ export class SearchFilter {
     }
 }
 
-// search index fields - copied from the title-search-index.js
+// 10 top parents file names start with this regex - add ^ to the front
+export const fileNameFilter = ['1', 'abcde', '2', '3', 'fghij', '4', '5', 'klmno', '6', 'pqrstuvwxy'];
+
+// search index fields - copied from the title-search-index.json
 export const TSE = Object.freeze({
     id: 0,
     name: 1,
@@ -111,4 +114,32 @@ export const TSE = Object.freeze({
 });
 
 const currentTitleIndexVer = '2.0';
-export const TSH = new TitleStorageHelper('title-index', './static/json/title-search-index.json', currentTitleIndexVer);
+export const titleStorage = new TitleStorageHelper('title-index', './static/json/title-search-index.json', currentTitleIndexVer);
+
+export class SearchPane {
+    constructor(root, status) {
+        this.root = root;
+        this.status = status;
+    }
+    setBusySearching(isSet) {
+        this.root.toggleClass('busy-searching', isSet);
+    }
+    setStatus(tElem, className = '') {
+        this.status.empty().append(tElem).attr('class', `search-status ${className}`);
+    }
+    changeScript() {
+        PT_REFRESH(this.root);
+    }
+    static normalizeSearchTerm(searchBarVal) {
+        // multiple spaces by 1 space, other non-wild chars removed by tokenizer also removed (so user can directly copy paste terms)
+        // allowed wild chars % and _ (sqlite LIKE query)
+        return searchBarVal.replace(/\s+/g, ' ').replace(/[\d\,\.\*!;"‘’“”–<>=\:\[\]¶\(\)]/g, '');
+    }
+    checkMinQueryLength(wordSinh) {
+        if ((wordSinh.match(/[අ-ෆ]/g)||[]).length < this.settings.minQueryLength) { // count the number of consos
+            this.setStatus(UT('enter-more-characters', this.settings.minQueryLength));
+            return false;
+        }
+        return true;
+    }
+}

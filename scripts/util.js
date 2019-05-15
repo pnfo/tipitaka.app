@@ -50,29 +50,6 @@ export class Util {
         return dialog;
     }
 
-    /**
-     * edit distance between two strings - copied from the below url
-     https://gist.github.com/andrei-m/982927/0efdf215b00e5d34c90fdc354639f87ddc3bd0a5#gistcomment-586471 
-     */
-    static levenshtein(a, b) { 
-        let tmp;
-        if (a.length === 0) { return b.length; }
-        if (b.length === 0) { return a.length; }
-        if (a.length > b.length) { tmp = a; a = b; b = tmp; }
-    
-        let i, j, res, alen = a.length, blen = b.length, row = Array(alen);
-        for (i = 0; i <= alen; i++) { row[i] = i; }
-    
-        for (i = 1; i <= blen; i++) {
-            res = i;
-            for (j = 1; j <= alen; j++) {
-                tmp = row[j - 1];
-                row[j - 1] = res;
-                res = b[i - 1] === a[j - 1] ? tmp : Math.min(tmp + 1, Math.min(res + 1, row[j] + 1));
-            }
-        }
-        return res;
-    }
     static toggleFullScreen(enter) {
         var doc = window.document;
         var docEl = doc.documentElement;
@@ -139,8 +116,9 @@ export class JHoverDialog {
 const vmTopPaneInfo = new Map([
     ['text', ['#text-view-area', '#text-view-button']],
     ['settings', ['#settings-area', '#settings-button']],
-    ['search', ['#search-area', '.search-bar']],
-    ['fts', ['#fts-area', '.search-bar']],
+    ['title-search', ['#title-search-area', '#search-type-button']],
+    ['fts', ['#fts-area', '#search-type-button']],
+    ['dict', ['#dict-area', '#search-type-button']],
     ['bookmarks', ['#bookmarks-area', '']],
     ['help', ['#help-area', '']],
 ]);
@@ -161,6 +139,10 @@ class ViewManager {
         this.prevPane = this.curPane;
         this.curPane = pane;
         this.hideOverlappingContainers();
+    }
+    // gets the root element for the given pane
+    getPaneRoot(pane) {
+        return vmTopPaneInfo.get(pane)[0];
     }
     registerEvents() {
         $('#settings-button').click(e => this.showPane('settings'));

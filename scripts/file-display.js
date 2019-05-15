@@ -19,7 +19,7 @@ export class FileDisplay {
         this.fileId = fileId;
         this.collection = new Collection(collObj, this.root, this.fileId, appTabs);
         this.linkHandler = new LinkHandler(this);
-        this.wordDisplay = new WordDisplay(this);
+        //this.wordDisplay = new WordDisplay(this);
         this.lineToOpen = highlight.lineToOpen || 0;
         this.highlight = highlight;
         this.data = ''; // raw text in sinhala script
@@ -36,7 +36,7 @@ export class FileDisplay {
             if (this.highlight.words) {
                 this.data = HitHighlighter.markOffsets(this.data, this.highlight);
             }
-            this.data = this.wordDisplay.markWords(this.data);
+            this.data = this.data.replace(/([ം-ෟ]+)/g, `<w>$1</w>`); // (?!॰) consescutive sinhala range //this.wordDisplay.markWords(this.data);
             this.refresh();
             this.linkHandler.openAndHighlightLine(this.lineToOpen);
             if (this.highlight.words) this.linkHandler.openHighlightedLines();
