@@ -88,21 +88,34 @@ a.button:hover { background-color: var(--hover-bcolor);  }
 #settings-area h2 { color: var(--heading-color); font-size: 1.1rem; margin: 1.5rem 0rem 0.2rem 0rem; }
 #settings-area h2 .far { color: var(--icon-color); }
 .custom-radio { position: relative; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;}
-.custom-radio .option { cursor: pointer; padding: 3pt; border: 1px solid var(--border-color); margin: 1pt; transition: 0.3s; display: flex;  align-items: center;}
+.custom-radio .name::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; padding-right: 5pt; font-size: 1rem; }
+.custom-radio .option,.custom-radio .group { cursor: pointer; padding: 3pt; border: 1px solid var(--border-color); margin: 1pt; transition: 0.3s; display: flex;  align-items: center; background-color: var(--main-bcolor); }
 .custom-radio .option.active { background-color: var(--special-bcolor); }
-.custom-radio .option span::before  { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f111"; padding-right: 5pt; font-size: 1rem;}
-.custom-radio .option.active span::before {font-weight: 900; }
-.custom-radio .option:not(.active):hover { background-color: var(--hover-bcolor); }
-.custom-radio .option:not(.active):hover span::before { content: "\f192";  font-weight: 400; }
-.custom-radio .option img { height: 30px; vertical-align: middle; padding-left: 3pt; mix-blend-mode: multiply; }
-.dark .custom-radio .option img { filter: saturate(50%); mix-blend-mode: screen; }
+.custom-radio .option .name::before  { content: "\f111"; }
+.custom-radio .option.active .name::before {font-weight: 900; }
+.custom-radio .option:hover { background-color: var(--hover-bcolor); }
+.custom-radio .option:hover .name::before { content: "\f192";  font-weight: 400; }
+.custom-radio img { height: 30px; vertical-align: middle; padding-left: 3pt; mix-blend-mode: multiply; }
+.dark .custom-radio img { filter: saturate(50%); mix-blend-mode: screen; }
 .custom-radio .option .example { padding-left: 5pt; color: var(--icon-color); font-size: smaller; }
 .custom-radio .option.beta-script { color: rgb(138, 138, 138); }
 .custom-radio .option.larger { font-size: larger; }
 
-.custom-radio .check span::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; content: "\f0c8"; padding-right: 5pt; font-size: 1rem; }
-.custom-radio .check.active span::before { content: "\f14a"; }
-.custom-radio .check:not(.active):hover span::before { content: "\f0c8";  font-weight: 400; }
+/* option check boxes */
+.custom-radio .check .name::before { content: "\f0c8"; }
+.custom-radio .check.active .name::before { content: "\f14a"; font-weight: 900; }
+.custom-radio .check:hover .name::before { content: "\f14a";  font-weight: 400; }
+
+/* option groups */
+.custom-radio .group { position: relative; }
+.custom-radio .group.active { background-color: var(--special-bcolor); }
+.custom-radio .group > .name { text-transform: capitalize; font-weight: bold; }
+.custom-radio .group > .name::before { content: "\f0a9"; }
+.custom-radio .group.open > .name::before { content: "\f0a8"; }
+.custom-radio .group.active > .name::before { font-weight: 900; }
+.custom-radio .group:hover { background-color: var(--hover-bcolor); }
+.custom-radio .group:hover .name::before { font-weight: 900; }
+.custom-radio .option[group]:not(.open) { display: none; }
 
 .loading-dlg { padding: 0.5rem; font-size: 1rem; color: var(--main-color); }
 

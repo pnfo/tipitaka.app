@@ -8,7 +8,7 @@ import { LinkHandler } from './note-tag.js';
 import { titleStorage } from "./search-common.js";
 import { TitleSearch, bookmarks } from './title-search.js';
 import { FTSClient } from './fts-client.js';
-import { Util, vManager } from './util.js';
+import { Util, vManager, GroupedOptions, GroupedCheckOptions } from './util.js';
 import { dictClient } from './dict-client.js';
 import { paliAnalysis } from './pali-analysis.js';
 
@@ -31,11 +31,6 @@ titleStorage.init().then(() => {
     console.error(`Title Search Index init failed with error ${err}`);
 });
 
-/*function searchTypeToPane(searchType) {
-    if (searchType == SearchType.DICT) return 'dict';
-    if (searchType == SearchType.FTS) return 'fts';
-    return 'title-search'; // title
-}*/
 function showSearchPane() {
     const prop = appSettings.searchTypeProp[appSettings.get('searchType')];
     vManager.showPane(prop.pane);
@@ -80,14 +75,9 @@ paliAnalysis.init(vManager, dictClient, lookupCallback);
 // populating the settings pane
 // Pali Script Changing
 const paliScriptSelect = $('#pali-script-select');
-appSettings.paliScriptList.forEach((val, lang) => {
-    Util.createLanguageSelectOption(lang, val).appendTo(paliScriptSelect);
-});
-paliScriptSelect.on('click', '.option', e => {
-    const option = $(e.currentTarget);
-    //if (appSettings.paliScript == option.attr('value')) return; // no change
-    console.log(`Pali script changing from ${appSettings.get('paliScript')} to ${option.attr('value')}`);
-    appSettings.set('paliScript', option.attr('value'));
+function onPaliScriptChange(newVal) {
+    console.log(`Pali script changing from ${appSettings.get('paliScript')} to ${newVal}`);
+    appSettings.set('paliScript', newVal);
     appTree.changeScript(); // all tree item text updated
     appTabs.changeScript(); // check the script of active tab only
     titleSearch.changeScript(); // results, status and filters
@@ -95,8 +85,9 @@ paliScriptSelect.on('click', '.option', e => {
     ftsClient.changeScript(); // results, status and filters
     dictClient.changeScript(); // results, status
     PT_REFRESH($('#title-bar-text'));
-}).children(`[value=${appSettings.get('paliScript')}]`).addClass('active');
-
+}
+new GroupedOptions(paliScriptSelect, onPaliScriptChange)
+    .render(appSettings.paliScriptList, appSettings.get('paliScript'));
 
 // UI Language related
 appSettings.uiLanguageList.forEach((val, lang) => {
@@ -107,13 +98,16 @@ appSettings.uiLanguageList.forEach((val, lang) => {
 $('#ui-lang-select').on('click', '.option', e => {
     appSettings.set('uiLanguage', $(e.currentTarget).attr('value'));
     LangHelper.changeTranslation(appSettings.get('uiLanguage'));
+    $(e.currentTarget).addClass('active').siblings().removeClass('active');
 }).children(`[value=${appSettings.get('uiLanguage')}]`).addClass('active');
 
 // Dictionary Related
-dictClient.dictionaryList.forEach((info, dictName) => 
+/*dictClient.dictionaryList.forEach((info, dictName) => 
     Util.createDictionarySelectOption(dictName, info, appSettings.uiLanguageList.get(info[0])).appendTo('.dictionary-select'));
 $('.dictionary-select').on('click', '.check', e => dictClient.dictionaryListChanged(e))
-    .children(appSettings.get('dictList').map(dict => `[value=${dict}]`).join(',') || 'none').addClass('active');
+    .children(appSettings.get('dictList').map(dict => `[value=${dict}]`).join(',') || 'none').addClass('active');*/
+new GroupedCheckOptions($('.dictionary-select'), dict => dictClient.dictionaryListChanged(dict), appSettings.uiLanguageList)
+    .render(dictClient.dictionaryList, appSettings.get('dictList'));
 
 function changeTextSize(size) {
     $('html').css('font-size', `${size}px`);
@@ -124,29 +118,33 @@ function changeColorTheme(bodyClass) {
 
 function populateFormatSelect(formatList, select, settingName, onChangeCallback = '') {
     formatList.forEach((format, val) => {
-        const span = $('<span/>').append(UT(format[0]));
+        const span = $('<span/>').append(UT(format[0])).addClass('name');
         const example = $(format[1]).addClass('example');
         $('<div/>').addClass('option').append(span, example).attr('value', val).appendTo(select);
     });
     select.on('click', '.option', e => {
         const val = appSettings.set(settingName, $(e.currentTarget).attr('value'));
         if (onChangeCallback) onChangeCallback(val);
-    }).children(`[value=${appSettings.get(settingName)}]`).addClass('active');
+        $(e.currentTarget).addClass('active').siblings().removeClass('active');
+        if (appTabs.getNumTabs()) { // only if there are text tabs to show
+            vManager.showPane('back'); // go back
+        }
+    }).children(`[value=${appSettings.get(settingName)}]`).addClass('active'); // initial set
 }
-populateFormatSelect(appSettings.dictLaunchList, $('#dictionary-launch-select'), 'dictLaunchMethod');
-populateFormatSelect(appSettings.footnoteFormatList, $('#footnote-format-select'), 'footnoteFormat', appTabs.changeTextFormat.bind(appTabs));
-populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'), 'pageTagFormat', appTabs.changeTextFormat.bind(appTabs));
+//populateFormatSelect(appSettings.dictLaunchList, $('#dictionary-launch-select'), 'dictLaunchMethod');
 populateFormatSelect(appSettings.colorThemeList, $('#color-theme-select'), 'colorTheme', changeColorTheme);
 populateFormatSelect(appSettings.textSizeList, $('#text-size-select'), 'textSize', changeTextSize);
 populateFormatSelect(appSettings.tabViewList, $('#tab-view-select'), 'tabViewFormat', appTabs.setTCView.bind(appTabs));
+populateFormatSelect(appSettings.footnoteFormatList, $('#footnote-format-select'), 'footnoteFormat', appTabs.changeTextFormat.bind(appTabs));
+populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'), 'pageTagFormat', appTabs.changeTextFormat.bind(appTabs));
 
-$('.custom-radio').on('click', '.option:not(.check)', e => {
+/*$('.custom-radio').on('click', '.option:not(.check)', e => {
     $(e.currentTarget).addClass('active').siblings().removeClass('active');
     if (appTabs.getNumTabs()) { // only if there are text tabs to show
         vManager.showPane('back'); // go back
     }
-});
-$('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('active'));
+});*/
+//$('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('active'));
 // launch pali analysis
 $(document).on('click', '.pali-analysis,w', e => paliAnalysis.showWindow(e));
 

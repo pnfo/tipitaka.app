@@ -334,7 +334,7 @@ export class HitHighlighter {
 }
 
 // this class is not used anymore
-export class WordDisplay {
+/*export class WordDisplay {
     constructor(fileDisplay) {
         this.fileDisplay = fileDisplay;
         this.root = this.fileDisplay.root;
@@ -392,9 +392,10 @@ export class WordDisplay {
     markWords(dataStr) {
         return dataStr.replace(/([ം-ෟ]+)/g, `<w>$1</w>`); // (?!॰) consescutive sinhala range
     }
-}
+}*/
 
 // the original roman abbreviations list from VRI
+// not used - just for reference
 const abbreviations_ro = new Map([
     ['a', 'aṅguttaranikāyapāli'],
     ['aṭṭha', 'aṭṭhakathā'],

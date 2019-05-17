@@ -1,6 +1,6 @@
 import { TextProcessor } from './pali-script.mjs';
 import { appSettings } from './settings.js';
-import { PageTag, Note, Collection, LinkHandler, HitHighlighter, WordDisplay } from './note-tag.js';
+import { PageTag, Note, Collection, LinkHandler, HitHighlighter } from './note-tag.js';
 import { bookmarks } from './title-search.js';
 
 function Uint16ArrayToString(u16Arr) {

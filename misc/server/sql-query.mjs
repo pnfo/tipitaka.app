@@ -27,7 +27,7 @@ export class SqliteDB {
     // gets the first result
     async loadOne(sql, params) {
         const row = await (isAndroid ? Android.get(sql, params) : this.getAsync(sql, params));
-        return [this.parseRow(row)];
+        return row ? [this.parseRow(row)] : [];
     }
     // gets all that matches
     async loadAll(sql, params) {

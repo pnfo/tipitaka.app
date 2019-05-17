@@ -30,7 +30,7 @@ const uiLanguageList = new Map([
     [Language.CHINESE, ['Chinese', '汉语', [], {f: 'china_flag.png'} ]],
     [Language.HI, ['Hindi', 'हिन्दी', [], {f: 'in_flag.png'} ]],
     [Language.INDO, ['Indonesian', 'baˈhasa indoneˈsia', [], {f: 'indonesia_flag.png'} ]],
-    [Language.BUR, ['Burmese', 'မြန်မာဘာသာ', [], {f: 'my_flag.png'} ]],
+    [Language.BUR, ['Burmese', 'ဗမာစာ', [], {f: 'my_flag.png'} ]],
     [Language.THAI, ['Thai', 'ภาษาไทย', [], {f: 'th_flag.png'} ]],
     [Language.KM, ['Khmer', 'ភាសាខ្មែរ', [], {f: 'kh_flag.png'} ]],
     [Language.ES, ['Spanish', 'Español', [], {f: 'es_flag.png'} ]],
@@ -128,7 +128,7 @@ class AppSettings {
             this.paliScriptSource = 'storage';
         } else {
             this.paliScriptSource = 'default';
-            this.settings['paliScript'] = Script.SI; // todo take this from GPS
+            this.settings['paliScript'] = Script.RO; // todo take this from GPS
         }
         this.loadDefaults();
         console.log(this.settings);

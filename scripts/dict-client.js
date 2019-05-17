@@ -10,24 +10,28 @@ import { SearchPane } from './search-common.js';
 
 /** change the version when a new dict is available so the old one will be deleted and the new one loaded */
 const dictionaryList = new Map([
-    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', {s: 'BU', v: 2, o: 'Projector', n: 20970}]],
-    ['en-nyanatiloka', [Language.EN, 'Nyanatiloka Buddhist', {s: 'ND', v: 1, d: 'Buddhist Dictionary by Ven Nyanatiloka', o: 'pced stardict'}]],
-    ['en-pts', [Language.EN, 'PTS', {s: 'PS', v: 1, d: 'Pali Text Society Dictionary', o: 'dpr'}]],
-    ['en-dppn', [Language.EN, 'Proper Names', {s: 'PN', v: 1, d: 'Pali Proper Names by G P Malalasekera', o: 'dpr'}]],
-    ['en-vri', [Language.EN, 'VRI English', {s: 'VR', v: 2, o: 'cst windows software'}]],
-    ['en-critical', [Language.EN, 'Critical PD', {s: 'CR', v: 1, o: 'extracted from https://cpd.uni-koeln.de/'}]],
-    ['my-u-hoke-sein', [Language.BUR, 'U Hoke Sein', {s: 'HS', v: 3, o: 'pced stardict', n: 60695}]], 
-    ['my-23-vol', [Language.BUR, '23 Vol', {s: '23', v: 2, o: 'pced stardict'}]],
-    ['my-android', [Language.BUR, 'Android App', {s: 'AA', v: 1, o: 'Pali Myanmar Dictionary Android App'}]],
-    ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', {s: 'BU', v: 2, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය'}] ],
-    ['si-sumangala', [Language.SI, 'මඩිතියවෙල සුමඞ්ගල', {s: 'MS', v: 3, d: 'මඩිතියවෙල සිරි සුමඞ්ගල හිමි, පාලි-සිංහල ශබ්දකෝෂය'}] ],
-    ['th-etipitaka', [Language.THAI, 'E-Tipitaka', {s: 'ET', v: 2, o: 'e tipitaka windows software'}] ],
-    ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', {s: 'SU', v: 2, o: 'Ven Buja'}] ],
-    ['th-thaiware', [Language.THAI, 'Thai Ware', {s: 'TW', v: 2, o: 'tware windows software'}] ],
-    ['th-dhamma-cheti-1', [Language.THAI, 'กิริยากิตก์ฉบับธรรมเจดีย์', {s: 'DC1', v: 1, o: 'online pdf', n: 5922}] ],
-    ['th-dhamma-cheti-2', [Language.THAI, 'กิริยาอาขยาตฉบับธรรมเจดีย์', {s: 'DC2', v: 1, o: 'online pdf', n: 4272}] ],
+    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', {s: 'BU', v: 2, o: 'Projector', n: 20970, g: true}]],
+    ['en-nyanatiloka', [Language.EN, 'Nyanatiloka Buddhist', {s: 'ND', v: 1, d: 'Buddhist Dictionary by Ven Nyanatiloka', o: 'pced stardict', g: true}]],
+    ['en-pts', [Language.EN, 'PTS', {s: 'PS', v: 1, d: 'Pali Text Society Dictionary', o: 'dpr', g: true}]],
+    ['en-dppn', [Language.EN, 'Proper Names', {s: 'PN', v: 1, d: 'Pali Proper Names by G P Malalasekera', o: 'dpr', g: true}]],
+    ['en-vri', [Language.EN, 'VRI English', {s: 'VR', v: 2, o: 'cst windows software', g: 'English', n: 13508}]],
+    ['en-critical', [Language.EN, 'Critical PD', {s: 'CR', v: 1, o: 'extracted from https://cpd.uni-koeln.de/', n: 29669, g: true}]],
+    
+    ['my-u-hoke-sein', [Language.BUR, 'U Hoke Sein', {s: 'HS', v: 3, o: 'pced stardict', n: 60695, g: true}]], 
+    ['my-23-vol', [Language.BUR, '23 Vol', {s: '23', v: 2, o: 'pced stardict', g: true}]],
+    ['my-android', [Language.BUR, 'Android App', {s: 'AA', v: 1, o: 'Pali Myanmar Dictionary Android App', g: true}]],
+    
+    ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', {s: 'BU', v: 2, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය', g: true}] ],
+    ['si-sumangala', [Language.SI, 'මඩිතියවෙල සුමඞ්ගල', {s: 'MS', v: 3, d: 'මඩිතියවෙල සිරි සුමඞ්ගල හිමි, පාලි-සිංහල ශබ්දකෝෂය', g: true}] ],
+    
+    ['th-etipitaka', [Language.THAI, 'E-Tipitaka', {s: 'ET', v: 2, o: 'e tipitaka windows software', g: true}] ],
+    ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', {s: 'SU', v: 2, o: 'Ven Buja', g: true}] ],
+    ['th-thaiware', [Language.THAI, 'Thai Ware', {s: 'TW', v: 2, o: 'tware windows software', g: true}] ],
+    ['th-dhamma-cheti-1', [Language.THAI, 'กิริยากิตก์ฉบับธรรมเจดีย์', {s: 'DC1', v: 1, o: 'online pdf', n: 5922, g: true}] ],
+    ['th-dhamma-cheti-2', [Language.THAI, 'กิริยาอาขยาตฉบับธรรมเจดีย์', {s: 'DC2', v: 1, o: 'online pdf', n: 4272, g: true}] ],
+    
     ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', {s: 'SC', v: 2, d: 'SuttaCentral Chinese Dictionary', o: 'Projector'}]],
-    ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 2, o: 'cst windows software'}]],
+    ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 2, o: 'cst windows software', n: 16183}]],
     ['in-suttacentral', [Language.INDO, 'SC Indonesian', {s: 'SC', v: 2, o: 'Projector'}]],
     ['es-marco', [Language.ES, 'Marco A', {s: 'ES', v: 1, o: 'SuttaCentral'}]],
     ['pt-marco', [Language.PT, 'Marco A', {s: 'PT', v: 1, o: 'SuttaCentral'}]],
@@ -53,8 +57,8 @@ export class DictionaryClient extends SearchPane {
         this.registerEvents(); // for events on the results view
     }
 
-    dictionaryListChanged(e) {
-        const dictName = $(e.currentTarget).attr('value');
+    dictionaryListChanged(dictName) {
+        //const dictName = $(e.currentTarget).attr('value');
         if (this.activeDicts.has(dictName)) {
             this.activeDicts.delete(dictName);
             appSettings.set('dictList', Array.from(this.activeDicts));
@@ -64,6 +68,7 @@ export class DictionaryClient extends SearchPane {
             appSettings.set('dictList', Array.from(this.activeDicts));
             console.log(`Dictionary ${dictName} added. New List: ${appSettings.get('dictList')}`);
         }
+        this.scheduleSearchIndex();
     }
 
     performSearch(searchBarVal) {

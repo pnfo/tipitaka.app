@@ -14,8 +14,8 @@ import { titleStorage, SearchFilter, TSE, fileNameFilter, SearchPane } from "./s
 
 export class FTSClient extends SearchPane {
     constructor() {
-        super($('fts-area'), $('fts-status'));
-        this.prevTerms = [];
+        super($('#fts-area'), $('#fts-status'));
+        this.prevTermsSinh = [];
         this.matchesStore = null;
         this.settings = {
             minQueryLength: 2,
@@ -67,19 +67,20 @@ export class FTSClient extends SearchPane {
         // allowed wild chars % and _ (sqlite LIKE query)
         const termStr = SearchPane.normalizeSearchTerm(searchBarVal);
         
-        const termsSinh = TextProcessor.convertFromMixed(termStr); // convert to sinhala here
-        if (!this.checkMinQueryLength(termsSinh)) return;
-        const terms = termsSinh.split(' ')
+        const termsStrSinh = TextProcessor.convertFromMixed(termStr); // convert to sinhala here
+        if (!this.checkMinQueryLength(termsStrSinh)) return;
+        const terms = termsStrSinh.split(' ')
         if (!this.checkTerms(terms)) return;
 
         $('.option[param=exactPhrase]').toggleClass('hidden', terms.length < 2); // this option enabled only if there are more than 1 terms
         $('.option[hide=exactPhrase]').toggleClass('hidden', this.options.exactPhrase || terms.length < 2);
         
         //this.options.wordDistance = Math.max(terms.length, this.options.wordDistance);
-        if (terms.length == this.prevTerms.length && terms.every((term, i) => this.prevTerms[i] == term)) {
+        if (terms.length == this.prevTermsSinh.length && terms.every((term, i) => this.prevTermsSinh[i] == term)) {
             return; // same as prev - check array equal
         }
-        this.prevTerms = terms;
+        this.prevTermsSinh = terms;
+        this.prevTermsStr = termStr; // for ui display purposes
 
         this.scheduleSearchIndex();
     }
@@ -96,24 +97,24 @@ export class FTSClient extends SearchPane {
         this.requestTimer = setTimeout(() => this.searchIndex(), this.settings.searchDelay);
     }
 
-    searchIndex() { // send the query to do the search
-        if (!this.checkTerms(this.prevTerms)) return; // changing filter/options at the very beginning
+    async searchIndex() { // send the query to do the search
+        if (!this.checkTerms(this.prevTermsSinh)) return; // changing filter/options at the very beginning
         $('#fts-match-list,#fts-match-info').empty();
 
-        const query = {type: 'fts', terms: this.prevTerms, params: this.getQueryParams() };
+        const query = {type: 'fts', terms: this.prevTermsSinh, params: this.getQueryParams() };
         const ftsQ = new FTSQuery(query);
         console.log(`sending query with terms ${query.terms} and params ${JSON.stringify(query.params)}`);
         this.setBusySearching(true); // visual indication of search running
-        ftsQ.runQuery().then(mStore => {
-            this.matchesStore = mStore;
-            console.log(`received mstore with ${mStore.matches.length} matches and ${Object.keys(mStore.wordInfo).length} words`);
-            this.setBusySearching(false); // clear visual indication
-            this.displayMatches();
-        }).catch(reject => {
-            this.setBusySearching(false);
-            this.setStatus(UT(reject.message));
+        const response = await ftsQ.runQuery();
+        this.setBusySearching(false); // clear visual indication
+        if (response.error) {
+            this.setStatus(UT(response.error), 'error-status'); // some server error
             console.error(reject);
-        });
+            return false;
+        }
+        this.matchesStore = response;
+        console.log(`received mstore with ${response.matches.length} matches and ${Object.keys(response.wordInfo).length} words`);
+        this.displayMatches();
     }
 
     getQueryParams() {
@@ -132,7 +133,7 @@ export class FTSClient extends SearchPane {
 
     displayMatches() {
         if (this.matchesStore.matches.length == 0) {
-            this.setStatus(UT('no-results-found', this.prevTerms.join(' ')));
+            this.setStatus(UT('no-results-found', this.prevTermsStr));
             return;
         }
         $('#fts-match-list').append(this.matchesStore.matches.map(([indexes, freq, fileAr, numFiles], matchInd) => {
@@ -205,10 +206,6 @@ class FTSQuery {
         this.query = query;
     }
     async runQuery() {
-        const responseObj = await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
-        if (responseObj.error) {
-            throw new Error(responseObj.error);
-        }
-        return responseObj;
+        return await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
     }
 }

@@ -1,5 +1,93 @@
 "use strict";
 
+const paliScriptGroups = new Map([
+    ['other', ['Other']],
+    ['indian', ['Indian']],
+]);
+export class GroupedOptions {
+    constructor(root, changeCallback) {
+        this.root = root;
+        this.changeCallback = changeCallback;
+    }
+    render(infoList, initialVal) {
+        this.renderOptions(infoList, this.root);
+        this.makeOptionActive(this.getOptionForValue(initialVal)); //initial set
+        this.registerEvents();
+    }
+    registerEvents() {
+        this.root.on('click', '.option', e => {
+            const option = $(e.currentTarget);
+            this.makeOptionActive(option);
+            this.changeCallback(option.attr('value'));
+        }).on('click', '.group', e => {
+            const group = $(e.currentTarget).toggleClass('open');
+            this.root.find(`.option[group=${group.attr('group')}]`).toggleClass('open');
+        }).on('mouseenter', '.group', e => {
+            this.root.find(`.option[group=${$(e.currentTarget).attr('group')}]`).css('background-color', 'var(--hover-bcolor)');
+        }).on('mouseleave', '.group', e => {
+            this.root.find(`.option[group=${$(e.currentTarget).attr('group')}]`).css('background-color', '');
+        });
+    }
+    getOptionForValue(val) {
+        return this.root.find(`[value="${val}"]`);
+    }
+    makeOptionActive(option) {
+        this.root.find('.option,.group').removeClass('active open');
+        const gName = option.addClass('active').attr('group');
+        if (gName) this.root.find(`.group[group=${gName}]`).addClass('active');
+    }
+    createGroupIfNotExist(group) {
+        let groupElem = this.root.children(`.group[group="${group}"]`);
+        if (groupElem.length) return;
+        groupElem = Util.createLanguageSelectOption(group, ['', group, [], {} ]);
+        groupElem.addClass('group').removeClass('option').attr('group', group).appendTo(this.root);
+    }
+    renderOptions(infoList) {
+        infoList.forEach((info, lang) => {
+            if (info[3].g) {
+                this.createGroupIfNotExist(info[3].g);
+            }
+            Util.createLanguageSelectOption(lang, info).appendTo(this.root);
+        });
+    }
+}
+export class GroupedCheckOptions extends GroupedOptions {
+    constructor(...args) { 
+        super(...args);
+        this.langList = args[2];
+        //console.log(args);
+    }
+    getOptionForValue(valueAr) {
+        return this.root.children(valueAr.map(dict => `[value=${dict}]`).join(',') || 'none');
+    }
+    makeOptionActive(optionAr) {
+        optionAr.get().forEach(option => {
+            const gName = $(option).addClass('active').attr('group');    
+            if (gName) this.root.find(`.group[group=${gName}]`).addClass('active');
+        });
+    }
+    createGroupIfNotExist(info, langInfo) {
+        let groupElem = this.root.children(`.group[group="${langInfo[0]}"]`);
+        if (!groupElem.length) {
+            this.createDictionarySelectOption('', [info[0], langInfo[1], {g: true}], langInfo)
+                .addClass('group').appendTo(this.root);
+        }
+    }
+    renderOptions(infoList) {
+        infoList.forEach((info, dict) => {
+            const langInfo = this.langList.get(info[0]);
+            if (info[2].g) this.createGroupIfNotExist(info, langInfo);
+            this.createDictionarySelectOption(dict, info, langInfo).appendTo(this.root).addClass('check option');
+        });
+    }
+    createDictionarySelectOption(value, info, langInfo) {
+        const span = $('<span/>').addClass('UT name').text(info[1]).attr('lang', info[0]);
+        const img = langInfo[3].f ? $('<img/>').attr('src', `./static/images/${langInfo[3].f}`) : '';
+        const option = $('<div/>').append(span, img).attr('value', value);
+        if (info[2].g) option.attr('group', langInfo[0]);
+        return option;
+    }
+}
 export class Util {
     static copyText(copyText) {
         const el = document.createElement('textarea');
@@ -21,19 +109,16 @@ export class Util {
             results = regex.exec(location.search);
         return results === null ? defVal : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
+    static capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
     static createLanguageSelectOption(lang, info, flagFolder = './static/images/') {
-        const span = $('<span/>').addClass('UT').text(info[1]).attr('lang', lang);
+        const span = $('<span/>').addClass('UT name').text(info[1]).attr('lang', lang);
         const img = info[3].f ? $('<img/>').attr('src', `${flagFolder}${info[3].f}`) : '';
         const option = $('<div/>').addClass('option').append(span, img).attr('value', lang);
         if (info[3].c) option.addClass(info[3].c);
-        return option;
-    }
-
-    static createDictionarySelectOption(dict, info, langInfo) {
-        const span = $('<span/>').addClass('UT').text(info[1]).attr('lang', info[0]);
-        const img = langInfo[3].f ? $('<img/>').attr('src', `./static/images/${langInfo[3].f}`) : '';
-        const option = $('<div/>').addClass('check option').append(span, img).attr('value', dict);
+        if (info[3].g) option.attr('group', info[3].g);
         return option;
     }
 
