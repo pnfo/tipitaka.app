@@ -109,7 +109,7 @@ export class FTSClient extends SearchPane {
         this.setBusySearching(false); // clear visual indication
         if (response.error) {
             this.setStatus(UT(response.error), 'error-status'); // some server error
-            console.error(reject);
+            console.error(response.error);
             return false;
         }
         this.matchesStore = response;

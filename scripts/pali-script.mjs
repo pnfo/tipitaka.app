@@ -447,7 +447,7 @@ class TextProcessor {
                 run += mixedText.charAt(i);
             }
         }
-        console.log(`convert from mixed: "${mixedText}" => "${output}"`);
+        //console.log(`convert from mixed: "${mixedText}" => "${output}"`);
         return output;
     }
 }

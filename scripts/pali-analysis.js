@@ -1,6 +1,7 @@
 "use script";
 
 import { appSettings, LangHelper, UT, PT, PT_REFRESH, SearchType } from './settings.js';
+import { TextProcessor } from './pali-script.mjs';
 
 class PaliAnalysis {
     constructor() {
@@ -16,28 +17,33 @@ class PaliAnalysis {
     async showWindow(wordEvent) {
         const target = $(wordEvent.currentTarget);
         const pane = this.vManager.curPane;
-        this.closeWindow(pane);  // close any existing windows on this pane
         const newWindow = await this.createAnalysisWindow(target.text(), pane);
-        $(this.vManager.getPaneRoot(pane)).append(newWindow);
-        this.openWindows.set(pane, [newWindow, target]);
-        target.addClass('highlighted').get(0).scrollIntoView({block: 'center'});
-        this.registerClicks(newWindow);
+        this.closeWindow(pane);  // close any existing windows on this pane
+        this.openWindow(pane, newWindow, target);
     }
+
     async createAnalysisWindow(word, pane) {
-        const wordElem = PT(word).addClass('word');// $(`<span class="word PT">${word}</span>`);//.addClass('word').text(text);
+        const wordElem = PT(TextProcessor.convertFromMixed(word)).addClass('word');// $(`<span class="word PT">${word}</span>`);//.addClass('word').text(text);
         const lookupIcons = Object.entries(appSettings.searchTypeProp).map(([type, prop]) => {
             return $(`<i class="${prop.iconClass} lookup-icon" word="${word}" type="${type}"></i>`);
         });
         const closeIcon = $('<i class="far fa-times-circle close-icon"></i>').attr('pane', pane);
         const headerRow = $('<div/>').addClass('header').append(lookupIcons, wordElem, closeIcon); 
         
-        const breakup = $('<div/>').addClass('breakup').text('breakup - coming soon');
+        const entries = await this.dictClient.searchWordInline(word);
+        const breakup = $('<div/>').addClass('breakups').html(entries.breakups)
         const declension = $('<div/>').addClass('declension').text('declension - coming soon');
-        const dictEntries = await this.dictClient.searchWordInline(word);
-        const dictElem = $('<div/>').append(dictEntries).addClass('dict-inline');
+        const dictElem = $('<div/>').addClass('dict-inline').html(entries.matches);
         
         return $('<div/>').addClass('analysis-window').addClass(appSettings.get('analysisStyle'))
             .append(headerRow, breakup, declension, dictElem);
+    }
+
+    openWindow(pane, newWindow, target) {
+        $(this.vManager.getPaneRoot(pane)).append(newWindow);
+        this.openWindows.set(pane, [newWindow, target]);
+        target.addClass('highlighted').get(0).scrollIntoView({block: 'center'});
+        this.registerClicks(newWindow);
     }
     closeWindow(pane) {
         if (this.openWindows.has(pane)) {
@@ -47,6 +53,7 @@ class PaliAnalysis {
             this.openWindows.delete(pane);
         }
     }
+    
     registerClicks(window) {
         window.on('click', '.lookup-icon', e => {
             const icon = $(e.currentTarget);

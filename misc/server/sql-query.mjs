@@ -7,6 +7,8 @@
 export const isAndroid = false; // determines how to access the sqlite dbs (through webview in android or read sqlite files in node)
 // if true comment the line below
 import sqlite3 from 'sqlite3';
+import path from 'path';
+let sqliteRootFolder = '';
 
 // extending classes that query data should implement the parseRow() function
 export class SqliteDB {
@@ -14,7 +16,7 @@ export class SqliteDB {
         this.file = file;
         if (!isAndroid) {
             this.mode = isWrite ? (sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE) : sqlite3.OPEN_READONLY;
-            this.db = new sqlite3.Database(file, this.mode, err => {
+            this.db = new sqlite3.Database(path.join(sqliteRootFolder, file), this.mode, err => {
                 if (err) {
                     console.error(`Failed to open ${file}. ${err.message}`);
                     throw err;
@@ -23,6 +25,12 @@ export class SqliteDB {
         } else {
             this.db = Android.openDb(dbFile);
         }
+    }
+    static setRootFolder(folder) {
+        sqliteRootFolder = folder;
+    }
+    parseRow(row) { // should be overridden in subclasses 
+        return row;
     }
     // gets the first result
     async loadOne(sql, params) {

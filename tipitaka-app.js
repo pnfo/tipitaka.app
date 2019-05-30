@@ -4,9 +4,12 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var restify = _interopDefault(require('restify'));
 var open = _interopDefault(require('open'));
+var colors = _interopDefault(require('colors'));
 var path = _interopDefault(require('path'));
 var fs = _interopDefault(require('fs'));
 var sqlite3 = _interopDefault(require('sqlite3'));
+
+let sqliteRootFolder = '';
 
 // extending classes that query data should implement the parseRow() function
 class SqliteDB {
@@ -14,7 +17,7 @@ class SqliteDB {
         this.file = file;
         {
             this.mode = isWrite ? (sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE) : sqlite3.OPEN_READONLY;
-            this.db = new sqlite3.Database(file, this.mode, err => {
+            this.db = new sqlite3.Database(path.join(sqliteRootFolder, file), this.mode, err => {
                 if (err) {
                     console.error(`Failed to open ${file}. ${err.message}`);
                     throw err;
@@ -22,10 +25,16 @@ class SqliteDB {
             });
         }
     }
+    static setRootFolder(folder) {
+        sqliteRootFolder = folder;
+    }
+    parseRow(row) { // should be overridden in subclasses 
+        return row;
+    }
     // gets the first result
     async loadOne(sql, params) {
         const row = await (this.getAsync(sql, params));
-        return [this.parseRow(row)];
+        return row ? [this.parseRow(row)] : [];
     }
     // gets all that matches
     async loadAll(sql, params) {
@@ -93,41 +102,6 @@ const TipitakaQueryType = Object.freeze({
     DICT: 'dict',
     TOKEN: 'token', // for future
 });
-const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
-
-class TipitakaQuery {
-    constructor(query) {
-        this.query = query;
-        this.checkQuery();
-    }
-    async runQuery() {
-        const responseObj = await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
-        if (responseObj.error) {
-            throw new Error(responseObj.error);
-        }
-        return responseObj;
-        
-        /*if (runServerLocally) { // do locally - in the case of android or running in server
-            switch(this.query.type) {
-                case TipitakaQueryType.FTS:
-                    const ms = await ftsServer.runQuery(this.query);
-                    return { query: ms.query, wordInfo: ms.wordInfo, matches: ms.matches, stats: ms.stats };
-                case TipitakaQueryType.DICT:
-                    const matches = await dictServer.runQuery(this.query);
-                    return { query: this.query, matches: matches };
-                default:
-                    throw Error(`Unhandled query type ${this.query.type}`);
-            }
-        } else { // running in browser
-            
-        }*/
-    }
-    checkQuery() {
-        if (!this.query.type) {
-            throw Error(`Query type can not be empty.`);
-        }
-    }
-}
 
 
 
@@ -315,12 +289,13 @@ class MatchStore {
         });
     }
     finalize(dataList) {
-        this.matches = this.matches.sort((a, b) => b[1] - a[1]).slice(0, this.query.params.maxMatches);
+        this.matches = this.matches.sort((a, b) => b[1] - a[1]).slice(0, this.query.params.maxMatches); // matches sorted by the freq
 
         this.matches.forEach(match => {
             // sort the file offsets and cutoff
             match[2] = Object.keys(match[2]).map(file => [file, match[2][file], match[2][file].length])
-                .sort((a, b) => b[2] - a[2]).slice(0, this.query.params.maxFiles);
+                .sort((a, b) => this.query.params.sortByBook ? sortByBookThenFreq(a, b) : b[2] - a[2]) // sort by book or by num offsets
+                .slice(0, this.query.params.maxFiles);
             // get word info for each matched word(ind) to be sent to the client
             match[0].forEach((ind, termI) => {
                 if (!this.wordInfo[ind]) {
@@ -332,12 +307,19 @@ class MatchStore {
         this.stats = { 'considered': this.matchesMap.size, 'returned': this.matches.length };
     }
 }
+const fileNameStarts = [ // order of books - [vin, su ,abhi] and [m, a, t, anya]
+    ['1'], ['a','b','c','d','e'], ['2'], ['3'], ['f','g','h','i','j'], ['4'], ['5'], ['k','l','m','n','o'], ['6'], ['p','q','r','s','t','u','v','w','x','y']
+];
+const fileNameStartsIndex = file => fileNameStarts.findIndex(ar => ar.indexOf(file.charAt(0)) != -1);
+const sortByBookThenFreq = (a, b) => {
+    const difInd = fileNameStartsIndex(a[0]) - fileNameStartsIndex(b[0]);
+    return difInd != 0 ? difInd : b[2] - a[2];
+};
 
 let ftsServer;
-class FTSQuery extends TipitakaQuery {
+class FTSQuery {
     constructor(query) {
-        query.type = TipitakaQueryType.FTS;
-        super(query);
+        this.query = query;
     }
     async runQuery() {
         ftsServer = ftsServer || new FTSServer(); // create if not already created
@@ -345,7 +327,6 @@ class FTSQuery extends TipitakaQuery {
         return { query: ms.query, wordInfo: ms.wordInfo, matches: ms.matches, stats: ms.stats };
     }
     checkQuery() {
-        super.checkQuery();
         const { type, terms, params } = this.query; // destructure object
         if (!terms || !terms.length || terms.some(t => !t)) throw new Error(`Query terms all or some empty`);
         terms.forEach(term => {
@@ -375,7 +356,7 @@ class DictionaryDb extends SqliteDB {
     }
     async searchWord(word) {
         if (!this.isLoaded) return []; // dict failed to load - possible dict name change
-        const exactMatches = await this.loadAll('SELECT rowid, word, meaning FROM dictionary WHERE word = ?', [word]);
+        const exactMatches = await this.loadAll('SELECT rowid, word, meaning FROM dictionary WHERE word LIKE ?', [word]);
         if (exactMatches.length) {
             return exactMatches;
         }
@@ -389,7 +370,7 @@ class DictionaryDb extends SqliteDB {
 
 
 const maxResults = 100;
-const dictDataFileFolder = './static/dicts';
+const dictDataFileFolder = 'static/dicts';
 
 /** Loading searching dictionaries based on the user input */
 class DictionaryServer {
@@ -410,7 +391,7 @@ class DictionaryServer {
     }
 
     async runQuery(query) { // query has (sinh)word, dictlist, limit
-        console.log(`searching for word ${query.word} in dictionaries ${query.dictionaries}`);
+        console.log(`searching for word ${query.word} in dictionaries ${query.dictionaries} limit ${query.limit}`);
         // try loading specified dictionaries if not loaded
         query.dictionaries.forEach(dictName => {
             if (!this.loadedDicts.has(dictName)) {
@@ -420,29 +401,44 @@ class DictionaryServer {
         const matchesAr = await Promise.all(query.dictionaries.map(
             dictName => this.loadedDicts.get(dictName).searchWord(query.word)
         ));
-        const matches = [];
+        let matches = [];
         query.dictionaries.forEach((dictName, i) => matches.push(...matchesAr[i].map(match => { 
             match.dictName = dictName;
             match.distance = levenshtein(match.word, query.word);
             return match; 
         })));
         // sort by edit distance to the input word
-        matches.sort((a, b) =>  a.distance - b.distance);
-        console.log(matches);
-        return matches.splice(Math.min(maxResults, query.limit));
+        matches.sort((a, b) =>  a.distance - b.distance).splice(Math.min(maxResults, query.limit));
+        return matches;
     }
 }
 
-let dictServer;
-class DictionaryQuery extends TipitakaQuery {
+class BreakupServer {
+    constructor() {
+        this.db = new SqliteDB('static/db/breakups.db', false);
+    }
+    async runQuery(query) {
+        const exactBreakups = await this.db.loadAll('SELECT rowid, word, type, origin, breakstr FROM breakup WHERE word = ?', [query.word]);
+        if (exactBreakups.length) {
+            return exactBreakups;
+        }
+        const stripEnd = query.word.replace(/[\u0DCA-\u0DDF\u0D82\u0D83]$/g, '');
+        return await this.db.loadAll('SELECT rowid, word, type, origin, breakstr FROM breakup WHERE word = ?', [stripEnd]);
+    }
+}
+
+let dictServer, breakupServer;
+class DictionaryQuery {
     constructor(query) {
-        query.type = TipitakaQueryType.DICT;
-        super(query);
+        this.query = query;
     }
     async runQuery() {
         dictServer = dictServer || new DictionaryServer(); // create if not already created
-        const matches = await dictServer.runQuery(this.query);
-        return { query: this.query, matches: matches };
+        breakupServer = breakupServer || new BreakupServer(); // create if not already created
+
+        const [matches, breakups] = await Promise.all([dictServer.runQuery(this.query), breakupServer.runQuery(this.query)]);
+        console.log(`Returning dict results of length ${matches.length} for the word ${this.query.word}`);
+        return { query: this.query, matches, breakups };
     }
     checkQuery() {
         super.checkQuery();
@@ -488,7 +484,8 @@ function checkDir(dir, ind) {
     return false;
 }
 const dirname = checkDirList.find(checkDir);
-console.log(`Serving static files from ${dirname}`);
+SqliteDB.setRootFolder(dirname); // on macos absolute path to the db file is needed to open them
+console.log(colors.yellow(`Serving static files from ${dirname}`));
 
 
 async function postRespond(req, res, next) {
@@ -527,6 +524,7 @@ function startRestify() {
     server.use(restify.plugins.gzipResponse());
     server.listen(8080, function() {
         console.log('%s listening at %s', server.name, server.url);
+        console.log(colors.green('Open this URL in your browser \nhttp://127.0.0.1:8080/'));
     });
     
     // register routes
@@ -545,7 +543,10 @@ async function sleep(ms) {
 
 async function start() {
     // opens the browser with the local url
-    await open('http://127.0.0.1:8080/');
+    if (process.argv[2] != '--no-open') { // in linux this results in an error
+        await open('http://127.0.0.1:8080/');  // uncomment when building offline apps
+    }
+    
     await sleep(1000); // make sure the open finishes even if startRestify fails because the server is already running
     startRestify();
 }

@@ -37,11 +37,11 @@ const uiLanguageList = new Map([
     [Language.PT, ['Portuguese', 'Português', [], {f: 'pt_flag.png'} ]],
 ]);
 
-const dictLaunchList = new Map([
+/*const dictLaunchList = new Map([
     ['none', ['Do Not Show', '<i class="far fa-eye-slash"/>']],
     ['click', ['Show On Click', '<i class="fal fa-mouse-pointer"></i>']],
     ['hover', ['Show On Hover', '<i class="far fa-bullseye"></i>']]
-]);
+]);*/
 
 const analysisStyleList = new Map([
     ['top', []],
@@ -84,15 +84,16 @@ const tabViewList = new Map([
 
 const defaultSettings = { // to be used when not found in local storage
     searchType: SearchType.FTS,
-    footnoteFormat: 'inline',
+    footnoteFormat: 'click',
     pageTagFormat: 'click',
     textSize: '16',
     colorTheme: 'dark',
+    paliScript: Script.RO,
     uiLanguage: Language.EN,
     tabViewFormat: 'tabbed',
     ftsSelected: false,
     dictList: ['en-buddhadatta'],
-    dictLaunchMethod: 'click',
+    //dictLaunchMethod: 'click',
     analysisStyle: 'bottom',
 };
 
@@ -103,7 +104,7 @@ class AppSettings {
         this.searchTypeProp = searchTypeProp;
         this.paliScriptList = paliScriptInfo;
         this.uiLanguageList = uiLanguageList;
-        this.dictLaunchList = dictLaunchList;
+        //this.dictLaunchList = dictLaunchList;
         this.analysisStyleList = analysisStyleList;
         this.footnoteFormatList = footnoteFormatList;
         this.pageTagFormatList = pageTagFormatList;
@@ -120,18 +121,17 @@ class AppSettings {
     get(prop) {
         return this.settings[prop];
     }
-    loadFromStorage() {
+    async loadFromStorage() {
         const settingsStr = localStorage.getItem('settings');
         this.settings = settingsStr ? JSON.parse(settingsStr) : {};
 
         if (this.settings['paliScript']) {
-            this.paliScriptSource = 'storage';
+            this.localeSource = 'storage';
         } else {
-            this.paliScriptSource = 'default';
-            this.settings['paliScript'] = Script.RO; // todo take this from GPS
+            this.localeSource = 'gps';
         }
         this.loadDefaults();
-        console.log(this.settings);
+        console.log(`Settings loaded from storage ${JSON.stringify(this.settings)}`);
     }
     
     // try to determine from browser or ip address
@@ -140,7 +140,31 @@ class AppSettings {
             if (!this.settings[key]) this.settings[key] = defaultSettings[key]; 
         });
     }
+    
+    async setGPSCountryInfo() {
+        const response = await $.getJSON('https://ipinfo.io?token=2632ab35d5f487');
+        console.log(`Got location info from GPS ${JSON.stringify(response)}`);
+        const countryCode = response.country;
+        console.log(`Setting the pali script and ui language based on the country code ${countryCode}`);
+        return [ countryToPaliScript.get(countryCode) || Script.RO, countryToUiLanguage.get(countryCode) || Language.EN ];
+    }
 }
+
+const countryToPaliScript = new Map([
+    ['LK', Script.SI],
+    ['IN', Script.HI],
+    ['TH', Script.THAI],
+    ['LA', Script.LAOS],
+    ['MM', Script.MY],
+    ['KH', Script.KM],
+    ['BD', Script.BENG],
+    ['RU', Script.CYRL],
+]);
+
+const countryToUiLanguage = new Map([
+    ['LK', Language.SI],
+    ['TH', Language.EN], // update when translations available 
+]);
 
 // for dynamically created UT elements
 export const stringResources = {
@@ -159,14 +183,13 @@ export const stringResources = {
     //'dictionary-loading': 'Dictionary Loading...',
     //'fts-loading': 'Full Text Search Loading. Please wait...',
 };
+
 // based on the uiLanguage selected - store the translations
 let currentTranslations = new Map();
 export class LangHelper {
     static async extractLanguageStrings(lang) {
         // copy over the entries from the current translation
-        await LangHelper.loadTranslation(lang);
-
-        const translations = new Map(data_trans);
+        const translations = await LangHelper.loadTranslation(lang);//        new Map(data_trans);
         $('i.UT').each((i, ut) => {
             const enText = $(ut).attr('lang') == Language.EN ? $(ut).text().trim() : $(ut).attr('en-text');
             if (!translations.has(enText)) {
@@ -180,15 +203,19 @@ export class LangHelper {
         });
         const logPhrases = [];
         translations.forEach((trans, enText) => logPhrases.push(enText, trans));
+        console.log(`Copy the lines below to a new text file for language ${lang}`);
         console.log(logPhrases.join('\r\n'));
     }
 
     static async loadTranslation(lang) {
-        const scriptFile = `./scripts/translations/${lang}_trans.js`;
-        await $.getScript( scriptFile, function( data, textStatus, jqxhr ) {
-            console.log(`Translation script with data length ${data.length} was loaded from file ${scriptFile}. 
-                Status '${textStatus}:${jqxhr.status}`); // Data returned
-        });
+        const jsonLines = [];
+        try {
+            const lines = (await $.get(`./static/translations/${lang}.txt`)).split('\r\n');
+            for (let i = 0; i < lines.length; i+=2) {
+                jsonLines.push([lines[i].trim(), lines[i+1].trim()]);
+            }
+        } catch (e) { console.log(e); }
+        return new Map(jsonLines);
     }
     static async changeTranslation(lang) {
         console.log(`changing UI language to ${lang}`);
@@ -198,14 +225,13 @@ export class LangHelper {
             $('i.UT').each((_1, ut) => $(ut).text($(ut).attr('en-text') || $(ut).text().trim())).attr('lang', lang);
             return;
         }
-        await LangHelper.loadTranslation(lang); // if not 'en' load translations
-        currentTranslations = new Map(data_trans.filter(pair => pair[1]));
+        currentTranslations = await LangHelper.loadTranslation(lang); // if not 'en' load translations - new Map(data_trans.filter(pair => pair[1]));
         $('i.UT').each((_1, ut) => {
             const enText = $(ut).attr('en-text') || $(ut).text().trim();
             if (!enText) {
                 console.error(`UT found with empty en-text ${$(ut)}`);
             }
-            if (currentTranslations.has(enText)) {
+            if (currentTranslations.get(enText)) { // has and not empty
                 $(ut).attr('en-text', enText).attr('lang', lang).text(currentTranslations.get(enText));
                 // bug here - text params will not be replaced
             } else {
@@ -243,6 +269,6 @@ export function PT_REFRESH(root) {
     });
 }
 
-//setTimeout(() => LangHelper.extractLanguageStrings('si'), 1000);
+//setTimeout(() => LangHelper.extractLanguageStrings('th'), 1000);
 
 export const appSettings = new AppSettings();

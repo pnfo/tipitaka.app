@@ -1,23 +1,25 @@
 "use strict";
 
-const paliScriptGroups = new Map([
+/*const paliScriptGroups = new Map([
     ['other', ['Other']],
     ['indian', ['Indian']],
-]);
+]);*/
 export class GroupedOptions {
     constructor(root, changeCallback) {
         this.root = root;
         this.changeCallback = changeCallback;
     }
     render(infoList, initialVal) {
+        //this.currentVal = initialVal;
         this.renderOptions(infoList, this.root);
-        this.makeOptionActive(this.getOptionForValue(initialVal)); //initial set
+        //console.log(initialVal);
+        this.updateOptionActive(this.getOptionForValue(initialVal)); //initial set
         this.registerEvents();
     }
     registerEvents() {
         this.root.on('click', '.option', e => {
             const option = $(e.currentTarget);
-            this.makeOptionActive(option);
+            this.updateOptionActive(option);
             this.changeCallback(option.attr('value'));
         }).on('click', '.group', e => {
             const group = $(e.currentTarget).toggleClass('open');
@@ -31,7 +33,7 @@ export class GroupedOptions {
     getOptionForValue(val) {
         return this.root.find(`[value="${val}"]`);
     }
-    makeOptionActive(option) {
+    updateOptionActive(option) {
         this.root.find('.option,.group').removeClass('active open');
         const gName = option.addClass('active').attr('group');
         if (gName) this.root.find(`.group[group=${gName}]`).addClass('active');
@@ -55,15 +57,16 @@ export class GroupedCheckOptions extends GroupedOptions {
     constructor(...args) { 
         super(...args);
         this.langList = args[2];
-        //console.log(args);
     }
     getOptionForValue(valueAr) {
         return this.root.children(valueAr.map(dict => `[value=${dict}]`).join(',') || 'none');
     }
-    makeOptionActive(optionAr) {
+    updateOptionActive(optionAr) {
         optionAr.get().forEach(option => {
-            const gName = $(option).addClass('active').attr('group');    
-            if (gName) this.root.find(`.group[group=${gName}]`).addClass('active');
+            const gName = $(option).toggleClass('active').attr('group');    
+            //console.log(this.root.find(`.group[group=${gName}]`));
+            if (gName) this.root.find(`.group[group=${gName}]`) // check if there is an active option in this group
+                    .toggleClass('active', this.root.find(`.option.active[group=${gName}]`).length > 0);
         });
     }
     createGroupIfNotExist(info, langInfo) {

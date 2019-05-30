@@ -49,39 +49,39 @@ pb.V { color: var(--anya-color); }
 pb:hover {text-decoration: underline;}
 
 /** full text search results **/
-found { background-color: var(--highlight-bcolor); }
-found.active { background-color: greenyellow; } /* not used */
+.tab-content found { background-color: var(--highlight-bcolor); }
+.tab-content found.active { background-color: greenyellow; } /* not used */
 
 .tab-content > div { padding-top: 2pt; padding-bottom: 2pt;}
 /* namothassa line if exists */
 .tab-content > div:first-child.cen { font-style: italic; color: var(--special-color); }
 
-.hangnum,.titnum { padding-right: 0.7rem; font-weight: bold; color: var(--special-color); }
-.hangnum { min-width: 4rem; display: inline-block;}
-.hangnum.long { font-size: smaller; padding-top: 0.1rem;}
+.tab-content .hangnum,.titnum { padding-right: 0.7rem; font-weight: bold; color: var(--special-color); }
+.tab-content .hangnum { min-width: 4rem; display: inline-block;}
+.tab-content .hangnum.long { font-size: smaller; padding-top: 0.1rem;}
 
 
-.nik { font-size: 1.8em; font-weight: bold; margin: 7px 0px 7px 0px;}
-.boo { font-size: 1.6em; font-weight: bold; margin: 7px 0px 7px 0px;}
+.tab-content .nik { font-size: 1.8em; font-weight: bold; margin: 7px 0px 7px 0px;}
+.tab-content .boo { font-size: 1.6em; font-weight: bold; margin: 7px 0px 7px 0px;}
 /* title lines */
-.cha { font-size: 1.4em; font-weight: bold; color: var(--heading-color); margin: 5px 0px 5px 0px; }
-.tit { font-size: 1.25em; font-weight: bold; color: var(--heading-color); margin: 5px 0px 5px 0px; }
-.sub { font-size: 1.1em; font-weight: bold; margin: 5px 0px 5px 0px;}
+.tab-content .cha { font-size: 1.4em; font-weight: bold; color: var(--heading-color); margin: 5px 0px 5px 0px; }
+.tab-content .tit { font-size: 1.25em; font-weight: bold; color: var(--heading-color); margin: 5px 0px 5px 0px; }
+.tab-content .sub { font-size: 1.1em; font-weight: bold; margin: 5px 0px 5px 0px;}
 
-div[tt]:not(.open)::before { content: "\f063"; font-family: "Font Awesome 5 Pro"; font-weight: 400; font-size: 1rem; padding-right: 10pt; color: var(--icon-color); transition: 0.25s;}
-div[tt]:not(.open):hover::before { content: "\f354"; color: red; font-weight: 900;}
-div[tt] {cursor: pointer;}
-.highlighted-line { background-color: var(--special-bcolor); }
+.tab-content div[tt]:not(.open)::before { content: "\f063"; font-family: "Font Awesome 5 Pro"; font-weight: 400; font-size: 1rem; padding-right: 10pt; color: var(--icon-color); transition: 0.25s;}
+.tab-content div[tt]:not(.open):hover::before { content: "\f354"; color: red; font-weight: 900;}
+.tab-content div[tt] {cursor: pointer;}
+.tab-content .highlighted-line { background-color: var(--special-bcolor); }
 
-.ssh { font-weight: bold;  margin: 3px 0px 3px 0px;}
+.tab-content .ssh { font-weight: bold;  margin: 3px 0px 3px 0px;}
 
 /* content lines */
-.text-section .bod { text-align: justify;  }
-.text-section .gax { margin-bottom: 0rem; text-align:left;}
-.text-section .gae { margin-bottom: 0.5rem; text-align:left;}
+.tab-content .bod { text-align: justify;  }
+.tab-content .gax { margin-bottom: 0rem; text-align:left;}
+.tab-content .gae { margin-bottom: 0.5rem; text-align:left;}
 
-.text-section .ind { text-indent: 2rem; margin-left: 3rem; text-align: justify; } /*indent*/
-.text-section .uni { } /*unindented*/
+.tab-content .ind { text-indent: 2rem; margin-left: 3rem; text-align: justify; } /*indent*/
+.tab-content .uni { } /*unindented*/
 
 
 

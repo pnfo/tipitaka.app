@@ -18,7 +18,7 @@ const dictionaryList = new Map([
     ['en-critical', [Language.EN, 'Critical PD', {s: 'CR', v: 1, o: 'extracted from https://cpd.uni-koeln.de/', n: 29669, g: true}]],
     
     ['my-u-hoke-sein', [Language.BUR, 'U Hoke Sein', {s: 'HS', v: 3, o: 'pced stardict', n: 60695, g: true}]], 
-    ['my-23-vol', [Language.BUR, '23 Vol', {s: '23', v: 2, o: 'pced stardict', g: true}]],
+    ['my-23-vol', [Language.BUR, 'Abhidhāna', {s: 'AB', v: 2, o: 'pced stardict', g: true}]],
     ['my-android', [Language.BUR, 'Android App', {s: 'AA', v: 1, o: 'Pali Myanmar Dictionary Android App', g: true}]],
     
     ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', {s: 'BU', v: 2, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය', g: true}] ],
@@ -94,17 +94,17 @@ export class DictionaryClient extends SearchPane {
 
     async searchWord() {
         this.setBusySearching(true); // visual indication of search running
-        const matches = await this.queryWord(this.prevWordSinh, this.settings.maxMatches);
+        const response = await this.queryWord(this.prevWordSinh, this.settings.maxMatches);
         this.setBusySearching(false);
-        if (matches) {
-            this.displayMatches(matches);
+        if (response) { // in case server error
+            this.displayResponse(response);
         }
     }
 
     async searchWordInline(word) {
         word = TextProcessor.convertFromMixed(word); // convert to sinhala before searching
-        const matches = await this.queryWord(word, this.settings.maxMatchesInline);
-        return this.renderMatches(matches);
+        const response = await this.queryWord(word, this.settings.maxMatchesInline);
+        return { matches: this.renderMatches(response.matches), breakups: this.renderBreakups(response.breakups) };
     }
 
     /* search the active dicts */
@@ -119,22 +119,16 @@ export class DictionaryClient extends SearchPane {
             return false;
         }
         console.log(`received ${response.matches.length} matches for word ${word}`);
-        return response.matches;
+        return response;
     }
 
-    displayMatches(matches) {
-        const matchesDiv = $('#dict-results', this.root).empty();
-    
-        if (!matches.length) {
+    displayResponse(response) {
+        $('#dict-results', this.root).html(this.renderMatches(response.matches));
+        $('#word-breakup', this.root).html(this.renderBreakups(response.breakups));
+        if (!response.matches.length) {
             this.setStatus(UT('no-results-found', this.prevWord));
-            return;
-        }
-        // add results
-        matchesDiv.append(this.renderMatches(matches));
-        
-        matchesDiv.show();
-        if (matches.length < this.settings.maxMatches) {
-            this.setStatus(UT('number-of-results-found', matches.length));
+        } else if (response.matches.length < this.settings.maxMatches) {
+            this.setStatus(UT('number-of-results-found', response.matches.length));
         } else {
             this.setStatus(UT('too-many-results-found', this.settings.maxMatches)); 
         }
@@ -148,6 +142,16 @@ export class DictionaryClient extends SearchPane {
             const sWord = PT(match.word).addClass('dict-cell dict-word pali-analysis');//$('<span/>').addClass('dict-cell dict-word PT pali-analysis').text(TextProcessor.convert(match.word, script)).attr('script', script);
             const sMeaning = $('<span/>').addClass('dict-cell dict-meaning UT').html(match.meaning).attr('lang', dictInfo[0]);
             return $('<div/>').append(sDict, sWord, sMeaning).addClass('dict-row');
+        });
+    }
+    renderBreakups(breakups) {
+        return breakups.map(breakup => {
+            const word = PT(breakup.word).addClass('word pali-analysis');
+            const type = PT(breakup.type).addClass('type');
+            const subs = $('<span/>').addClass('subs').html(JSON.parse(breakup.breakstr).map(sub => {
+                return $('<span/>').addClass('sub').html(PT(sub[0])).attr('similarity', sub[1]); // TODO
+            }));
+            return $('<div/>').append(word, type, subs).addClass('row');
         });
     }
 

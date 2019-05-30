@@ -107,7 +107,6 @@ a.button:hover { background-color: var(--hover-bcolor);  }
 .custom-radio .check:hover .name::before { content: "\f14a";  font-weight: 400; }
 
 /* option groups */
-.custom-radio .group { position: relative; }
 .custom-radio .group.active { background-color: var(--special-bcolor); }
 .custom-radio .group > .name { text-transform: capitalize; font-weight: bold; }
 .custom-radio .group > .name::before { content: "\f0a9"; }
@@ -118,6 +117,9 @@ a.button:hover { background-color: var(--hover-bcolor);  }
 .custom-radio .option[group]:not(.open) { display: none; }
 
 .loading-dlg { padding: 0.5rem; font-size: 1rem; color: var(--main-color); }
+
+.download-software-list img { height: 40px; filter: invert(95%); margin: 2px; }
+.dark .download-software-list img { filter: invert(12%); }
 
 .help-button::before { font-family: "Font Awesome 5 Pro"; font-weight: 300; content: "\f059"; padding: 5pt; font-size: 1rem; color: var(--icon-color); }
 .help-button:hover::before { cursor: help; font-weight: 900; }

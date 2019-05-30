@@ -84,22 +84,33 @@ function onPaliScriptChange(newVal) {
     bookmarks.changeScript(); // bookmarks and filters
     ftsClient.changeScript(); // results, status and filters
     dictClient.changeScript(); // results, status
-    PT_REFRESH($('#title-bar-text'));
+    PT_REFRESH($('#title-bar-text,.analysis-window'));
+    if (appTabs.getNumTabs()) { // only if there are text tabs to show
+        vManager.showPane('back'); // go back
+    }
 }
 new GroupedOptions(paliScriptSelect, onPaliScriptChange)
     .render(appSettings.paliScriptList, appSettings.get('paliScript'));
 
 // UI Language related
+const uiLanguageSelect = $('#ui-lang-select');
 appSettings.uiLanguageList.forEach((val, lang) => {
     if (val[3].t) { // only if the translation available
-        Util.createLanguageSelectOption(lang, val).appendTo($('#ui-lang-select'));
+        Util.createLanguageSelectOption(lang, val).appendTo(uiLanguageSelect);
     }
 });
-$('#ui-lang-select').on('click', '.option', e => {
+uiLanguageSelect.on('click', '.option', e => {
     appSettings.set('uiLanguage', $(e.currentTarget).attr('value'));
     LangHelper.changeTranslation(appSettings.get('uiLanguage'));
     $(e.currentTarget).addClass('active').siblings().removeClass('active');
 }).children(`[value=${appSettings.get('uiLanguage')}]`).addClass('active');
+
+if (appSettings.localeSource == 'gps') { // take this from GPS
+    appSettings.setGPSCountryInfo().then(([newScript, newLang]) => { // values changed based on GPS
+        paliScriptSelect.children(`[value=${newScript}]`).click();
+        uiLanguageSelect.children(`[value=${newLang}]`).click();
+    }).catch(e => console.err(`Request to get gps country failed. ${e}`)); 
+} 
 
 // Dictionary Related
 /*dictClient.dictionaryList.forEach((info, dictName) => 
@@ -145,8 +156,8 @@ populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'),
     }
 });*/
 //$('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('active'));
-// launch pali analysis
-$(document).on('click', '.pali-analysis,w', e => paliAnalysis.showWindow(e));
+// launch pali analysis - clicking on sutta names should not open
+$(document).on('click', '.pali-analysis,.bod w,.gax w,.gae w', e => paliAnalysis.showWindow(e));
 
 // apply initial settings
 LangHelper.changeTranslation(appSettings.get('uiLanguage'));

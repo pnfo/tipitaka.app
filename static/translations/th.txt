@@ -1,0 +1,115 @@
+Tree View
+
+Text
+
+Settings
+
+Menu
+
+Starred
+
+Offline Software
+
+Pali Script Converter
+
+About Us
+
+Help
+
+Facebook Page
+
+Select User Interface Language
+
+Select Pali Text Display Script
+
+Color Theme
+
+Light
+
+Dark
+
+Multi File Display
+
+Single
+
+Tab View
+
+Columns
+
+Text Size
+
+Smallest
+
+Smaller
+
+Medium
+
+Larger
+
+Largest
+
+XL
+
+XXL
+
+Footnotes Format
+
+Do Not Show
+
+Show On Click
+
+Show Inline
+
+Page Tags Format
+
+Short Name
+
+Full Name
+
+Download Offline Software
+
+For searching type the search term in the box above
+
+Show/Hide Filter
+
+Sort By Book
+
+Exact Word
+
+Exact Phrase
+
+Match Order
+
+Word Distance
+
+Select Dictionaries
+
+You have no bookmarks saved. Click the star icon to save to bookmarks.
+
+Edition
+
+Book
+
+Page
+
+Link has been copied to the clipboard. You can now paste it.
+
+Please enter minimun XXX characters to start the searching.
+
+Each of the search terms must have at least one character.
+
+XXX results found. First YYY results shown.
+
+Allowed Range for word distance 1 - 99.
+
+Too many results found. First XXX of results shown.
+
+XXX results found for your search term.
+
+Search term XXX did not return any results.
+
+There are XXX bookmarks matching your filter.
+
+Bookmark added
+
+Bookmark deleted

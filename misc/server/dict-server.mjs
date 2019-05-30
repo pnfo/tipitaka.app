@@ -15,7 +15,7 @@ class DictionaryDb extends SqliteDB {
     }
     async searchWord(word) {
         if (!this.isLoaded) return []; // dict failed to load - possible dict name change
-        const exactMatches = await this.loadAll('SELECT rowid, word, meaning FROM dictionary WHERE word = ?', [word]);
+        const exactMatches = await this.loadAll('SELECT rowid, word, meaning FROM dictionary WHERE word LIKE ?', [word]);
         if (exactMatches.length) {
             return exactMatches;
         }
@@ -29,7 +29,7 @@ class DictionaryDb extends SqliteDB {
 
 
 const maxResults = 100;
-const dictDataFileFolder = './static/dicts';
+const dictDataFileFolder = 'static/dicts';
 
 /** Loading searching dictionaries based on the user input */
 export class DictionaryServer {
@@ -72,16 +72,32 @@ export class DictionaryServer {
     }
 }
 
-let dictServer;
+class BreakupServer {
+    constructor() {
+        this.db = new SqliteDB('static/db/breakups.db', false);
+    }
+    async runQuery(query) {
+        const exactBreakups = await this.db.loadAll('SELECT rowid, word, type, origin, breakstr FROM breakup WHERE word = ?', [query.word]);
+        if (exactBreakups.length) {
+            return exactBreakups;
+        }
+        const stripEnd = query.word.replace(/[\u0DCA-\u0DDF\u0D82\u0D83]$/g, '');
+        return await this.db.loadAll('SELECT rowid, word, type, origin, breakstr FROM breakup WHERE word = ?', [stripEnd]);
+    }
+}
+
+let dictServer, breakupServer;
 export class DictionaryQuery {
     constructor(query) {
         this.query = query;
     }
     async runQuery() {
         dictServer = dictServer || new DictionaryServer(); // create if not already created
-        const matches = await dictServer.runQuery(this.query);
+        breakupServer = breakupServer || new BreakupServer(); // create if not already created
+
+        const [matches, breakups] = await Promise.all([dictServer.runQuery(this.query), breakupServer.runQuery(this.query)]);
         console.log(`Returning dict results of length ${matches.length} for the word ${this.query.word}`);
-        return { query: this.query, matches: matches };
+        return { query: this.query, matches, breakups };
     }
     checkQuery() {
         super.checkQuery();

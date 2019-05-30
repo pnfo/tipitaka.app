@@ -79,5 +79,11 @@ w:hover { color: var(--special-color); }
 .analysis-window.top { top: 0; height: 25%;  }
 .analysis-window .close-icon:hover { color: red; font-weight: 900; }
 .analysis-window .header { display: flex; flex-direction: row; align-items: center; }
-.analysis-window .word { flex: 1 1 auto; text-align: left; padding-left: 1rem; }
+.analysis-window .header .word { flex: 1 1 auto; text-align: left; padding-left: 1rem; }
 .analysis-window .dict-row { font-size: 0.8rem; }
+
+.breakups { text-align: left; padding: 0.2rem 1rem 0.2rem 1rem; }
+.analysis-window .breakups { font-size: 0.8rem; padding: 0rem; }
+.breakups .word { color: var(--special-color); padding-right: 0.5rem; font-weight: bold; }
+.breakups .type { padding-right: 0.5rem; font-weight: bold; }
+.breakups .sub { padding-right: 0.5rem; }

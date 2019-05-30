@@ -99,8 +99,8 @@
             <h2><i class="far fa-language"></i> <i class="UT" lang="en">Select Pali Text Display Script</i><i class="help-button" sec="script-select"></i></h2>
             <div id="pali-script-select" class="custom-radio"></div>
 
-            <h2><i class="far fa-books"></i> <i class="UT" lang="en">Select Dictionaries</i><i class="help-button" sec="dict-select"></i></h2>
-            <div class="dictionary-select custom-radio"></div>
+            <!--<h2><i class="far fa-books"></i> <i class="UT" lang="en">Select Dictionaries</i><i class="help-button" sec="dict-select"></i></h2>
+            <div class="dictionary-select custom-radio"></div>-->
 
             <!--<h2><i class="far fa-book-reader"></i> <i class="UT" lang="en">Dictionary Launch Method</i><i class="help-button" sec="dict-launch"></i></h2>
             <div id="dictionary-launch-select" class="custom-radio"></div>-->
@@ -119,6 +119,13 @@
 
             <h2><i class="far fa-book"></i> <i class="UT" lang="en">Page Tags Format</i><i class="help-button" sec="pagetags-select"></i></h2>
             <div id="pagetag-format-select" class="custom-radio"></div>
+
+            <h2><i class="far fa-download"></i> <i class="UT" lang="en">Download Offline Software</i><i class="help-button" sec="offline-software"></i></h2>
+            <div class="download-software-list">
+                <a href="https://drive.google.com/open?id=1Mu7ka0ImXZ7E_0KBLwTShmhbqp8XojMY" target="_blank"><img src="static/images/windows.png"></a>
+                <a href="https://drive.google.com/open?id=1LFt78RB2DeCb-NwiZOr3qln0dv8ctAuq" target="_blank"><img src="static/images/macos2.png"></a>
+                <a href="https://drive.google.com/open?id=12QL3kWoHFwQfVGjobAIJPRNz7xD5LioZ" target="_blank"><img src="static/images/linux.png"></a>
+            </div>
         </div>
 
         <div id="title-search-area" class="top-pane">
@@ -152,12 +159,13 @@
         </div>
 
         <div id="dict-area" class="top-pane">
-            <div id="dict-filter" class="dictionary-select custom-radio" style="display: none;"></div>
+            <div id="dict-filter" class="dictionary-select custom-radio"></div>
             <div>
                 <span id="dict-status" class="search-status"><i class="UT" lang="en">For searching type the search term in the box above</i></span>
-                <a id="dict-filter-button" class="button"><i class="far fa-filter"></i> <i class="ss-hide UT" lang="en">Dictionary List</i></a>
+                <a id="dict-filter-button" class="button"><i class="far fa-books"></i> <i class="ss-hide UT" lang="en">Select Dictionaries</i></a>
                 <i class="help-button" sec="dict-search"></i>
             </div>
+            <div id="word-breakup" class="breakups"></div>
             <div id="dict-results" style="flex: 1 1 auto; overflow-y: auto;"></div>
         </div>
 

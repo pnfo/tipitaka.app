@@ -3,13 +3,16 @@
 // how to make an executable from the server
 // npx rollup tipitaka-app.mjs --file tipitaka-app.js --format cjs
 // rollup is needed since pkg does not support new ES Modules yet
+
 // rm tipitaka-app.exe; npx pkg -t win --output tipitaka-app.exe tipitaka-app.js
 // npx pkg -t macos --output tipitaka-app-mac tipitaka-app.js
-// linux was compiled on the Ubuntu machine (copy over the tipitaka-app.js file)
+
+// for linux need to pass in a special param since open does not work in linux
 // npx pkg -t linux --output tipitaka-app-linux tipitaka-app.js
+// pm2 start ./tipitaka-app-linux -- --no-open (run in pm2 at tipitaka.app)
 
 // run locally for debugging
-// node --experimental-modules tipitaka-app.mjs
+// node --experimental-modules tipitaka-app.mjs --no-open
 
 // get a copy of the required pre built native modules - sqlite3
 //./node_modules/.bin/node-pre-gyp install --directory=./node_modules/sqlite3 --target_platform=linux win32 or darwin
@@ -17,11 +20,13 @@
 
 import restify from 'restify';
 import open from 'open';
+import colors from 'colors';
 import path from 'path';
 import fs from 'fs';
 import { TipitakaQueryType } from './misc/server/sql-query.mjs';
 import { FTSQuery } from './misc/server/fts-server.mjs';
 import { DictionaryQuery } from './misc/server/dict-server.mjs';
+import { SqliteDB } from './misc/server/sql-query.mjs';
 
 // this gives the script directory or the binary directory in both of the cases above
 const checkDirList = [process.cwd(), path.dirname(process.execPath), path.dirname(process.argv[1])]
@@ -34,7 +39,8 @@ function checkDir(dir, ind) {
     return false;
 }
 const dirname = checkDirList.find(checkDir);
-console.log(`Serving static files from ${dirname}`);
+SqliteDB.setRootFolder(dirname); // on macos absolute path to the db file is needed to open them
+console.log(colors.yellow(`Serving static files from ${dirname}`));
 
 
 async function postRespond(req, res, next) {
@@ -73,6 +79,7 @@ function startRestify() {
     server.use(restify.plugins.gzipResponse());
     server.listen(8080, function() {
         console.log('%s listening at %s', server.name, server.url);
+        console.log(colors.green('Open this URL in your browser \nhttp://127.0.0.1:8080/'));
     });
     
     // register routes
@@ -91,7 +98,10 @@ async function sleep(ms) {
 
 async function start() {
     // opens the browser with the local url
-    await open('http://127.0.0.1:8080/');
+    if (process.argv[2] != '--no-open') { // in linux this results in an error
+        await open('http://127.0.0.1:8080/');  // uncomment when building offline apps
+    }
+    
     await sleep(1000); // make sure the open finishes even if startRestify fails because the server is already running
     startRestify();
 }

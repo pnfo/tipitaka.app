@@ -252,9 +252,10 @@ export class LinkHandler {
         if (!params) return false;
         let [fileId, lineId, spt] = params;
 
-        if (spt && Script[spt] && appSettings.paliScriptSource == 'default') {
+        // TODO script from url is ignored at this point - script is either from storage or gps
+        /*if (spt && Script[spt] && appSettings.paliScriptSource == 'gps-or-url') {
             appSettings.set('paliScript', spt); // if user has selected a script before do not override
-        }
+        }*/
 
         if (!$.isNumeric(lineId)) {
             lineId = 0;
