@@ -1,116 +1,177 @@
-Tree View
-ผังรูปต้นไม้
+﻿Tree View
+มุมมองแบบต้นไม้ (full translation)
+แผนผังรูปต้นไม้  (substitute)
+ผังรูปต้นไม้ (short substitute)
+
 Text
 ข้อความ
+อักษร
+
 Settings
 การตั้งค่า
+ตั้งค่า
+
 Menu
 เมนู
+
 Starred
 ติดดาว
+
 Offline Software
 ซอฟต์แวร์ออฟไลน์
+
 Pali Script Converter
 ปริวรรตอักษรปาฬิ
+
 About Us
 เกี่ยวกับเรา
+
 Help
 ตัวช่วย
+
 Facebook Page
 หน้าเฟสบุค
+
 Select User Interface Language
 เลือกภาษาใข้งาน
+
 Select Pali Text Display Script
 เลือกการแสดงอักษรปาฬิ
+
 Color Theme
 ธีมสี
+
 Light
 สว่าง
+
 Dark
 มืด
+
 Multi File Display
 การแสดงหลายไฟล์
+
 Single
 อันเดียว
+
 Tab View
 แป้นมอง
+
 Columns
 คอลัมน์
+
 Text Size
 ขนาดตัวอักษร
+
 Smallest
 เล็กที่สุด
+
 Smaller
 เล็กกว่า
+
 Medium
 กลาง
+
 Larger
 ใหญ่กว่า
+
 Largest
 ใหญ่ที่สุด
+
 XL
-XL
+XL=เอ็กซ์แอล
+
 XXL
-XXL
+XXL=เอ็กซ์เอ็กซ์แอล
+
 Footnotes Format
 รูปแบบเชิงอรรถ
+
 Do Not Show
 ไม่แสดง
+
 Show On Click
 แสดงเมื่อคลิก
+
 Show Inline
 แสดงในแถว
+
 Page Tags Format
 รูปแบบต่อท้ายหน้า
+
 Short Name
 ชื่อย่อ
+
 Full Name
 ชื่อเต็ม
+
 Download Offline Software
 ดาวน์โหลดซอฟต์แวร์ออฟไลน์
+
 For searching type the search term in the box above
 สำหรับการค้นหา พิมพ์คำที่จะค้นหาในช่องด้านบน
+
 Show/Hide Filter
 แสดง / ซ่อนตัวคัดกรอง
+
 Sort By Book
 เรียงตามหนังสือ
+
 Exact Word
 คำจริง
+
 Exact Phrase
 วลีจริง
+
 Match Order
 ตรงกับคำสั่ง
+
 Word Distance
 ระยะห่างคำ
+
 Select Dictionaries
 เลือกพจนานุกรม
+
 You have no bookmarks saved. Click the star icon to save to bookmarks.
 คุณไม่มีบุ๊คมาร์คที่บันทึกไว้ คลิกที่ไอคอนรูปดาวเพื่อบันทึกลงในบุ๊คมาร์ค
+
 Edition
 ฉบับ
+
 Book
 หนังสือ
+
 Page
 หน้า
+
 Link has been copied to the clipboard. You can now paste it.
 ลิงก์ถูกคัดลอกไปยังคลิปบอร์ดแล้ว คุณสามารถวางได้แล้ว
+
 Please enter minimun XXX characters to start the searching.
 โปรดป้อนอักขระขั้นต่ำ XXX ตัว เพื่อเริ่มการค้นหา
+
 Each of the search terms must have at least one character.
 คำที่จะค้นหาแต่ละคำต้องมีอักขระอย่างน้อยหนึ่งตัว
+
 XXX results found. First YYY results shown.
 พบผลลัพธ์  XXX รายการ แสดงผลลัพธ์ YYY รายการแรก
+
 Allowed Range for word distance 1 - 99.
 อนุญาตช่วงระยะห่างของคำ 1 - 99
+
 Too many results found. First XXX of results shown.
 พบผลลัพธ์มากเกินไป แสดงผลลัพธ์  XXX รายการแรก
+
 XXX results found for your search term.
 พบผลลัพธ์  XXX รายการ สำหรับการค้นหาของคุณ
+
 Search term XXX did not return any results.
 การค้นหา XXX ไม่พบค่าผลลัพธ์ใด ๆ
+
 There are XXX bookmarks matching your filter.
 มีบุ๊คมาร์ค XXX ที่ตรงกับตัวคัดกรองของคุณ
+
 Bookmark added
 เพิ่มบุ๊คมาร์คแล้ว
+
 Bookmark deleted
 ลบบุ๊คมาร์คแล้ว

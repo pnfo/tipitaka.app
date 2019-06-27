@@ -9,8 +9,19 @@ import { UT, PT, PT_REFRESH, appSettings } from './settings.js';
 import { TextProcessor } from './pali-script.mjs';
 import { PitakaTree } from "./pitaka-tree.js";
 import { titleStorage, SearchFilter, TSE, fileNameFilter, SearchPane } from "./search-common.js";
-//import { TipitakaQuery, TipitakaQueryType, isAndroid } from './sql-query.mjs';
-//import { FTSQuery } from './fts-server.mjs'; // used only if isAndroid is true
+
+// incase of android uncomment the line below and comment out the query class below that
+import { FTSQuery } from '../misc/server/fts-server.mjs';
+
+/*const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
+class FTSQuery {
+    constructor(query) {
+        this.query = query;
+    }
+    async runQuery() {
+        return await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
+    }
+}*/
 
 export class FTSClient extends SearchPane {
     constructor() {
@@ -197,15 +208,5 @@ export class FTSClient extends SearchPane {
         appSettings.set('fts-search-filter', this.filterParents);
         console.log(`fts filter changing to ${this.filterParents}`);
         this.scheduleSearchIndex();
-    }
-}
-
-const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
-class FTSQuery {
-    constructor(query) {
-        this.query = query;
-    }
-    async runQuery() {
-        return await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
     }
 }

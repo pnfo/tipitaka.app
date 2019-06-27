@@ -7,7 +7,7 @@
 
 "use strict";
 
-import { SqliteDB, TipitakaQuery, TipitakaQueryType } from './sql-query.mjs';
+import { SqliteDB } from './sql-query.mjs';
 //const isRegExp = (term) => /[\[\]\\\^\$\.\|\?\*\+\(\)]/g.exec(term); 
 
 // entry/row fields and the correspoinding column names in the sqlite db
@@ -22,6 +22,7 @@ const DEL = Object.freeze({
 
 class TokenLoader extends SqliteDB {
     parseRow(row) {
+        //console.log(JSON.stringify(row));
         const entry = [ row.rowid - 1, row.token, Number(row.freq), row.files.split(','), [] ];
         row.offsetstr.split(',').forEach(fileOffsets => {
             entry[DEL.offsets].push(fileOffsets.split(':').map(o => Number(o)));
@@ -214,8 +215,13 @@ export class FTSQuery {
     }
     async runQuery() {
         ftsServer = ftsServer || new FTSServer(); // create if not already created
-        const ms = await ftsServer.runQuery(this.query);
-        return { query: ms.query, wordInfo: ms.wordInfo, matches: ms.matches, stats: ms.stats };
+        try {
+            const ms = await ftsServer.runQuery(this.query);
+            return { query: ms.query, wordInfo: ms.wordInfo, matches: ms.matches, stats: ms.stats };
+        } catch (err) {
+            console.error(`Sending error response: ${err}`);
+            return { error: err.message };
+        }
     }
     checkQuery() {
         const { type, terms, params } = this.query; // destructure object

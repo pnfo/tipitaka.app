@@ -5,8 +5,18 @@ import { Language, appSettings, UT, PT } from './settings.js';
 import { JHoverDialog } from './util.js';
 import { SearchPane } from './search-common.js';
 
-//import { TipitakaQuery, TipitakaQueryType, isAndroid } from './sql-query.mjs';
-//import { DictionaryQuery } from './dict-server.mjs';
+// incase of android uncomment the line below and comment out the query class below that
+import { DictionaryQuery } from '../misc/server/dict-server.mjs';
+
+/*const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
+class DictionaryQuery {
+    constructor(query) {
+        this.query = query;
+    }
+    async runQuery() {
+        return await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
+    }
+}*/
 
 /** change the version when a new dict is available so the old one will be deleted and the new one loaded */
 const dictionaryList = new Map([
@@ -174,13 +184,3 @@ export class DictionaryClient extends SearchPane {
 }
 
 export const dictClient = new DictionaryClient();
-
-const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
-class DictionaryQuery {
-    constructor(query) {
-        this.query = query;
-    }
-    async runQuery() {
-        return await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
-    }
-}

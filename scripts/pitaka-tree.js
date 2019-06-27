@@ -3,7 +3,7 @@
  */
 import { PT, PT_REFRESH } from './settings.js';
 
-const treeJsonFileURL = '../static/json/full-tree.json';
+const treeJsonFileURL = './static/json/full-tree.json';
 
 class PitakaTree {
     constructor(elem) {
@@ -25,7 +25,7 @@ class PitakaTree {
             console.log(`Tree loaded. num collections: ${this.collections.length}, num fileIds: ${Object.keys(this.fileIdToColl).length}`);
             //$(this).children('ul').children('li:nth-child(2)').children('a').click(); // expand sutta nikaya by default
         }).fail(function(d, textStatus, error) {
-            console.error("getJSON failed, status: " + textStatus + ", error: "+error);
+            console.error("getJSON failed, status: " + textStatus + ", error: " + error);
         });
     }
     /*getFilesForParent() {

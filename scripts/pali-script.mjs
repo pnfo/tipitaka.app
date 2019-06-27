@@ -164,6 +164,10 @@ function beautify_sinh(text, script, rendType = '') {
     // change joiners before U+0DBA Yayanna and U+0DBB Rayanna to Virama + ZWJ
     return text.replace(/\u0DCA([\u0DBA\u0DBB])/g, '\u0DCA\u200D$1');
 }
+function un_beautify_sinh(text) { // long vowels replaced by short vowels as sometimes people type long vowels by mistake
+    text = text.replace(/ඒ/g, 'එ').replace(/ඕ/g, 'ඔ');
+    return text.replace(/ේ/g, 'ෙ').replace(/ෝ/g, 'ො');
+}
 function beautify_mymr(text, script, rendType = '') { // new unicode 5.1 spec https://www.unicode.org/notes/tn11/UTN11_3.pdf 
     text = text.replace(/[,;]/g, '၊'); // comma/semicolon -> single line
     text = text.replace(/[\u2026\u0964\u0965]+/g, '။'); // ellipsis/danda/double danda -> double line
@@ -321,7 +325,7 @@ const beautify_func = {
 // when converting from another script, have to unbeautify before converting
 const un_beautify_func_default = [];
 const un_beautify_func = {
-    [Script.SI] : [cleanup_zwj],
+    [Script.SI] : [cleanup_zwj, un_beautify_sinh],
     [Script.HI] : [cleanup_zwj],   // original deva script (from tipitaka.org) text has zwj
     [Script.RO]: [un_capitalize],
     [Script.THAI]: [un_beautify_thai, un_swap_e_o],

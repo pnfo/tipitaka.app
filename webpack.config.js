@@ -2,7 +2,7 @@ module.exports = {
     entry: "./scripts/index.js",
     output: {
         path: __dirname + "/scripts",
-        filename: "bundle.js"
+        filename: "../scripts-prod/webpack-bundle.js"
     },
     module: {
         rules: [

@@ -25,8 +25,8 @@
 @font-face { src: url('./fonts/NotoSansGurmukhi-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'gurmukhi'; }
 @font-face { src: url('./fonts/NotoSansGurmukhi-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'gurmukhi'; }
 
-@font-face { src: url('./fonts/lanna/Hariphunchai4.woff') format('truetype'); font-weight: normal; font-family: 'tai tham'; }
-@font-face { src: url('./fonts/lanna/Hariphunchai4.woff') format('truetype'); font-weight: bold; font-family: 'tai tham'; }
+@font-face { src: url('./fonts/lanna/Hariphunchai.otf') format('truetype'); font-weight: normal; font-family: 'tai tham'; }
+@font-face { src: url('./fonts/lanna/Hariphunchai.otf') format('truetype'); font-weight: bold; font-family: 'tai tham'; }
 
 @font-face { src: url('./fonts/NotoSerifGujarati-Regular.ttf') format('truetype'); font-weight: normal; font-family: 'gujarati'; }
 @font-face { src: url('./fonts/NotoSerifGujarati-Bold.ttf') format('truetype'); font-weight: bold; font-family: 'gujarati'; }

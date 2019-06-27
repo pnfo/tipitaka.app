@@ -46,22 +46,17 @@ console.log(colors.yellow(`Serving static files from ${dirname}`));
 async function postRespond(req, res, next) {
     console.log(`Received request with query ${req.body}`);
 
-    let jsonRes;
-    try {
-        const query = JSON.parse(req.body);
-        let tQuery;
-        if (query.type == TipitakaQueryType.FTS) {
-            tQuery = new FTSQuery(query);
-        } else if (query.type == TipitakaQueryType.DICT) {
-            tQuery = new DictionaryQuery(query);
-        } else {
-            throw Error(`Unhandled query type ${query.type}`);
-        }
-        jsonRes = await tQuery.runQuery();
-    } catch (err) {
-        console.error(`Sending error response: ${err}`);
-        jsonRes = { error: err.message };
+    const query = JSON.parse(req.body);
+    let tQuery;
+    if (query.type == TipitakaQueryType.FTS) {
+        tQuery = new FTSQuery(query);
+    } else if (query.type == TipitakaQueryType.DICT) {
+        tQuery = new DictionaryQuery(query);
+    } else {
+        res.send({ error: `Unhandled query type ${query.type}`});
+        return;
     }
+    const jsonRes = await tQuery.runQuery();
     res.send(jsonRes);
     next();
 }
@@ -98,7 +93,7 @@ async function sleep(ms) {
 
 async function start() {
     // opens the browser with the local url
-    if (process.argv[2] != '--no-open') { // in linux this results in an error
+    if (process.argv[2] != 'no-open') { // in linux this results in an error
         await open('http://127.0.0.1:8080/');  // uncomment when building offline apps
     }
     

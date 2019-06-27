@@ -18,17 +18,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tokenizer": "babel-node ./dev/tokenizer.js",
-    "build": "webpack",
-    "postinstall": "electron-builder install-app-deps"
+    "build": "webpack"
   },
-  "main": "misc/electron-main.js",
-  "build": {
-    "appId": "tipitaka.app",
-    "files": [
-      "index.html",
-      "misc/electron-main.js"
-    ]
-  },
+
   "author": "",
   "license": "ISC",
   "devDependencies": {

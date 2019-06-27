@@ -1,14 +1,21 @@
 "use strict"
 /**
  * Load sqlite dbs and serve queries coming to it
- * 
+ * sqlite will run in either in node or in android - isAndroid flag and the imports have to be set manually
  */
 
-export const isAndroid = false; // determines how to access the sqlite dbs (through webview in android or read sqlite files in node)
-// if true comment the line below
-import sqlite3 from 'sqlite3';
-import path from 'path';
-let sqliteRootFolder = '';
+const isAndroid = true; // determines how to access the sqlite dbs (through webview in android or read sqlite files in node)
+// if true comment out the 2 lines below which import node includes
+//import sqlite3 from 'sqlite3';
+//import path from 'path';
+let sqliteRootFolder = '';  // add extra base url in macos
+
+if (Android) {
+    const dbVersions = {
+        'my-23-vol': 1,
+    };
+    Android.initDbVersions(JSON.stringify(dbVersions));
+}
 
 // extending classes that query data should implement the parseRow() function
 export class SqliteDB {
@@ -23,10 +30,11 @@ export class SqliteDB {
                 }
             });
         } else {
-            this.db = Android.openDb(dbFile);
+            // need to copy the db from assets folder before it can be opened
+            this.db = Android.openDb(file); // this will return version+filename
         }
     }
-    static setRootFolder(folder) {
+    static setRootFolder(folder) { // add extra base url in macos
         sqliteRootFolder = folder;
     }
     parseRow(row) { // should be overridden in subclasses 
@@ -34,16 +42,19 @@ export class SqliteDB {
     }
     // gets the first result
     async loadOne(sql, params) {
-        const row = await (isAndroid ? Android.get(sql, params) : this.getAsync(sql, params));
+        if (isAndroid) { // load one or all, both the same for Android
+            return this.loadAll(sql, params);
+        }
+        const row = await this.getAsync(sql, params);
         return row ? [this.parseRow(row)] : [];
     }
     // gets all that matches
     async loadAll(sql, params) {
-        const rows = await (isAndroid ? Android.all(sql, params) : this.allAsync(sql, params));
+        const rows = await (isAndroid ? JSON.parse(Android.all(this.db, sql, params)) : this.allAsync(sql, params));
         return rows.map(row => this.parseRow(row));
     }
 
-    async runAsync(sql) {
+    /*async runAsync(sql) { // not used - if used should implement for Android
         return new Promise((resolve, reject) => {
             this.db.run(sql, function (err, row) {
                 if (err) {
@@ -55,10 +66,10 @@ export class SqliteDB {
             });
         });
     }
-    run(...args) {
+    run(...args) { // not used
         this.db.run(...args);
         return this;
-    }
+    }*/
     async getAsync(sql, params) {
         return new Promise((resolve, reject) => {
             this.db.get(sql, params, (err, row) => {
@@ -92,10 +103,6 @@ export class SqliteDB {
     }
 }
 
-"use strict";
-
-
-
 //export const runServerLocally = true; // start servers and point the queries locally (1 = node & android, 0 = browser/web)
 /**
  * FTSQuery and result sets - interface with the client
@@ -105,8 +112,10 @@ export const TipitakaQueryType = Object.freeze({
     DICT: 'dict',
     TOKEN: 'token', // for future
 });
-const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
 
+// TODO this class is actually not needed 
+/*
+const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
 export class TipitakaQuery {
     constructor(query) {
         this.query = query;
@@ -119,7 +128,7 @@ export class TipitakaQuery {
         }
         return responseObj;
         
-        /*if (runServerLocally) { // do locally - in the case of android or running in server
+        if (runServerLocally) { // do locally - in the case of android or running in server
             switch(this.query.type) {
                 case TipitakaQueryType.FTS:
                     const ms = await ftsServer.runQuery(this.query);
@@ -132,7 +141,7 @@ export class TipitakaQuery {
             }
         } else { // running in browser
             
-        }*/
+        }
     }
     checkQuery() {
         if (!this.query.type) {
@@ -140,7 +149,7 @@ export class TipitakaQuery {
         }
     }
 }
-
+*/
 
 
 

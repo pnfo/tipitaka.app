@@ -1,6 +1,6 @@
 "use strict";
 
-import { SqliteDB, TipitakaQuery, TipitakaQueryType } from './sql-query.mjs';
+import { SqliteDB } from './sql-query.mjs';
 
 /** Loading and searching a single dictionary */
 class DictionaryDb extends SqliteDB {
@@ -94,10 +94,14 @@ export class DictionaryQuery {
     async runQuery() {
         dictServer = dictServer || new DictionaryServer(); // create if not already created
         breakupServer = breakupServer || new BreakupServer(); // create if not already created
-
-        const [matches, breakups] = await Promise.all([dictServer.runQuery(this.query), breakupServer.runQuery(this.query)]);
-        console.log(`Returning dict results of length ${matches.length} for the word ${this.query.word}`);
-        return { query: this.query, matches, breakups };
+        try {
+            const [matches, breakups] = await Promise.all([dictServer.runQuery(this.query), breakupServer.runQuery(this.query)]);
+            console.log(`Returning dict results of length ${matches.length} for the word ${this.query.word}`);
+            return { query: this.query, matches, breakups };
+        } catch (err) {
+            console.error(`Sending error response: ${err}`);
+            return { error: err.message };
+        }
     }
     checkQuery() {
         super.checkQuery();
