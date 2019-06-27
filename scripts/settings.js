@@ -31,7 +31,7 @@ const uiLanguageList = new Map([
     [Language.HI, ['Hindi', 'हिन्दी', [], {f: 'in_flag.png'} ]],
     [Language.INDO, ['Indonesian', 'baˈhasa indoneˈsia', [], {f: 'indonesia_flag.png'} ]],
     [Language.BUR, ['Burmese', 'ဗမာစာ', [], {f: 'my_flag.png'} ]],
-    [Language.THAI, ['Thai', 'ภาษาไทย', [], {f: 'th_flag.png'} ]],
+    [Language.THAI, ['Thai', 'ภาษาไทย', [], {f: 'th_flag.png', t: true} ]],
     [Language.KM, ['Khmer', 'ភាសាខ្មែរ', [], {f: 'kh_flag.png'} ]],
     [Language.ES, ['Spanish', 'Español', [], {f: 'es_flag.png'} ]],
     [Language.PT, ['Portuguese', 'Português', [], {f: 'pt_flag.png'} ]],
@@ -163,7 +163,7 @@ const countryToPaliScript = new Map([
 
 const countryToUiLanguage = new Map([
     ['LK', Language.SI],
-    ['TH', Language.EN], // update when translations available 
+    ['TH', Language.THAI],
 ]);
 
 // for dynamically created UT elements
