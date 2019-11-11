@@ -4,18 +4,20 @@
  * sqlite will run in either in node or in android - isAndroid flag and the imports have to be set manually
  */
 
-const isAndroid = true; // determines how to access the sqlite dbs (through webview in android or read sqlite files in node)
+export const isAndroid = true; // determines how to access the sqlite dbs (through webview in android or read sqlite files in node)
 // if true comment out the 2 lines below which import node includes
 //import sqlite3 from 'sqlite3';
 //import path from 'path';
-let sqliteRootFolder = '';  // add extra base url in macos
 
 if (Android) {
-    const dbVersions = {
+    const dbVersions = { // updated dbs need to be marked here for update in android side
         'my-23-vol': 1,
     };
     Android.initDbVersions(JSON.stringify(dbVersions));
+    Android.openDb('static/db/dict-all.db'); // force download the big fts db at the beginning
 }
+
+let sqliteRootFolder = '';  // add extra base url in macos
 
 // extending classes that query data should implement the parseRow() function
 export class SqliteDB {
@@ -50,8 +52,17 @@ export class SqliteDB {
     }
     // gets all that matches
     async loadAll(sql, params) {
-        const rows = await (isAndroid ? JSON.parse(Android.all(this.db, sql, params)) : this.allAsync(sql, params));
+        const rows = await (isAndroid ? this.androidGet(sql, params) : this.allAsync(sql, params));
         return rows.map(row => this.parseRow(row));
+    }
+    androidGet(sql, params) {
+        try {
+            const jsonStr = Android.all(this.db, sql, params);
+            return JSON.parse(jsonStr);
+        } catch (err) {
+            console.error(err);
+            throw new Error("Please wait until database copy finished. Then search again.");
+        }
     }
 
     /*async runAsync(sql) { // not used - if used should implement for Android

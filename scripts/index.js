@@ -1,5 +1,3 @@
-//import 'babel-polyfill'; // for internet explorer - use when bundling for production
-
 import { getScriptForCode } from './pali-script.mjs';
 import { appSettings, LangHelper, UT, PT, PT_REFRESH, SearchType } from './settings.js';
 import { PitakaTabs } from './pitaka-tabs.js';
@@ -112,11 +110,6 @@ if (appSettings.localeSource == 'gps') { // take this from GPS
     }).catch(e => console.err(`Request to get gps country failed. ${e}`)); 
 } 
 
-// Dictionary Related
-/*dictClient.dictionaryList.forEach((info, dictName) => 
-    Util.createDictionarySelectOption(dictName, info, appSettings.uiLanguageList.get(info[0])).appendTo('.dictionary-select'));
-$('.dictionary-select').on('click', '.check', e => dictClient.dictionaryListChanged(e))
-    .children(appSettings.get('dictList').map(dict => `[value=${dict}]`).join(',') || 'none').addClass('active');*/
 new GroupedCheckOptions($('.dictionary-select'), dict => dictClient.dictionaryListChanged(dict), appSettings.uiLanguageList)
     .render(dictClient.dictionaryList, appSettings.get('dictList'));
 
@@ -124,7 +117,7 @@ function changeTextSize(size) {
     $('html').css('font-size', `${size}px`);
 }
 function changeColorTheme(bodyClass) {
-    $('body').attr('class', bodyClass); // replace all classes with this class
+    $(':root').attr('class', bodyClass); // replace all classes with this class
 }
 
 function populateFormatSelect(formatList, select, settingName, onChangeCallback = '') {
@@ -142,20 +135,13 @@ function populateFormatSelect(formatList, select, settingName, onChangeCallback 
         }
     }).children(`[value=${appSettings.get(settingName)}]`).addClass('active'); // initial set
 }
-//populateFormatSelect(appSettings.dictLaunchList, $('#dictionary-launch-select'), 'dictLaunchMethod');
+
 populateFormatSelect(appSettings.colorThemeList, $('#color-theme-select'), 'colorTheme', changeColorTheme);
 populateFormatSelect(appSettings.textSizeList, $('#text-size-select'), 'textSize', changeTextSize);
 populateFormatSelect(appSettings.tabViewList, $('#tab-view-select'), 'tabViewFormat', appTabs.setTCView.bind(appTabs));
 populateFormatSelect(appSettings.footnoteFormatList, $('#footnote-format-select'), 'footnoteFormat', appTabs.changeTextFormat.bind(appTabs));
 populateFormatSelect(appSettings.pageTagFormatList, $('#pagetag-format-select'), 'pageTagFormat', appTabs.changeTextFormat.bind(appTabs));
 
-/*$('.custom-radio').on('click', '.option:not(.check)', e => {
-    $(e.currentTarget).addClass('active').siblings().removeClass('active');
-    if (appTabs.getNumTabs()) { // only if there are text tabs to show
-        vManager.showPane('back'); // go back
-    }
-});*/
-//$('.custom-radio').on('click', '.check', e => $(e.currentTarget).toggleClass('active'));
 // launch pali analysis - clicking on sutta names should not open
 $(document).on('click', '.pali-analysis,.bod w,.gax w,.gae w', e => paliAnalysis.showWindow(e));
 
@@ -165,5 +151,3 @@ changeTextSize(appSettings.get('textSize'));
 changeColorTheme(appSettings.get('colorTheme'));
 $('#title-bar-text').append(PT('ඡට්ඨ සංගායනා තිපිටක'));
 setSearchType(appSettings.get('searchType'));
-
-//$('#nav-bar-placeholder').css('height', $('#nav-bar').height());

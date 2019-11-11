@@ -29,7 +29,7 @@ export class FileDisplay {
     }
     load() {
         const oReq = new XMLHttpRequest();
-        oReq.open('GET', `../static/text/${this.fileId}.txt`, true);
+        oReq.open('GET', `./static/text/${this.fileId}.txt`, true);
         oReq.responseType = "arraybuffer";
         oReq.onload = (oEvent) => {
             this.data = Uint16ArrayToString(new Uint16Array(oReq.response));

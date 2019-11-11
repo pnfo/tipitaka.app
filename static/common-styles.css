@@ -7,7 +7,7 @@ html, body {
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
 }
-body {
+:root {
     --main-color: black;
     --main-bcolor: rgb(243, 243, 243);
     --special-color: darkred;
@@ -28,7 +28,7 @@ body {
     color: var(--main-color); 
     background-color: var(--main-bcolor);
 }
-body.dark { /* dark mode variables */
+:root.dark { /* dark mode variables */
     --main-color: white;
     --main-bcolor: rgb(51, 51, 51);
     --special-color: rgb(173, 216, 250);
@@ -81,20 +81,21 @@ a.button {
 a.button:hover { background-color: var(--hover-bcolor);  }
 /*a.button:active, a.button.pressed { background-color: lightgrey; box-shadow: none; }*/
 
-.top-pane { flex: 1 1 auto; display: flex; flex-direction: column; }
+.top-pane { width: 100%; overflow-y: auto; } /* flex: 1 1 auto; display: flex; flex-direction: column; }*/
 .top-pane-status.selected { background-color: var(--special-bcolor); }
 
 /*#settings-area h1 { color: brown; font-size: 1.5rem;}*/
 #settings-area h2 { color: var(--heading-color); font-size: 1.1rem; margin: 1.5rem 0rem 0.2rem 0rem; }
 #settings-area h2 .far { color: var(--icon-color); }
-.custom-radio { position: relative; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;}
+.custom-radio { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; }
 .custom-radio .name::before { font-family: "Font Awesome 5 Pro"; font-weight: 400; padding-right: 5pt; font-size: 1rem; }
-.custom-radio .option,.custom-radio .group { cursor: pointer; padding: 3pt; border: 1px solid var(--border-color); margin: 1pt; transition: 0.3s; display: flex;  align-items: center; background-color: var(--main-bcolor); }
+.custom-radio .option,.custom-radio .group { cursor: pointer; padding: 3pt; border: 1px solid var(--border-color); margin: 1pt; transition: 0.3s; 
+    display: flex;  align-items: center; background-color: var(--main-bcolor); }
 .custom-radio .option.active { background-color: var(--special-bcolor); }
 .custom-radio .option .name::before  { content: "\f111"; }
-.custom-radio .option.active .name::before {font-weight: 900; }
+.custom-radio .option.active .name::before { font-weight: 900; }
 .custom-radio .option:hover { background-color: var(--hover-bcolor); }
-.custom-radio .option:hover .name::before { content: "\f192";  font-weight: 400; }
+/*.custom-radio .option:hover .name::before { content: "\f192";  font-weight: 400; }*/
 .custom-radio img { height: 30px; vertical-align: middle; padding-left: 3pt; mix-blend-mode: multiply; }
 .dark .custom-radio img { filter: saturate(50%); mix-blend-mode: screen; }
 .custom-radio .option .example { padding-left: 5pt; color: var(--icon-color); font-size: smaller; }
@@ -104,7 +105,7 @@ a.button:hover { background-color: var(--hover-bcolor);  }
 /* option check boxes */
 .custom-radio .check .name::before { content: "\f0c8"; }
 .custom-radio .check.active .name::before { content: "\f14a"; font-weight: 900; }
-.custom-radio .check:hover .name::before { content: "\f14a";  font-weight: 400; }
+/*.custom-radio .check:hover .name::before { content: "\f14a";  font-weight: 400; } hover is not clean on touch devices */
 
 /* option groups */
 .custom-radio .group.active { background-color: var(--special-bcolor); }

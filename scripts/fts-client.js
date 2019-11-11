@@ -12,6 +12,8 @@ import { titleStorage, SearchFilter, TSE, fileNameFilter, SearchPane } from "./s
 
 // incase of android uncomment the line below and comment out the query class below that
 import { FTSQuery } from '../misc/server/fts-server.mjs';
+import { isAndroid } from '../misc/server/sql-query.mjs';
+if (isAndroid) console.log('Android is on');
 
 /*const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
 class FTSQuery {

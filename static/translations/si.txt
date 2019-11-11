@@ -1,9 +1,9 @@
 Chaṭṭha Saṅgāyana Tipiṭaka
 ඡට්ඨ සංගායනා ත්‍රිපිටකය
 Settings
-සැකසුම්
+
 Text
-අන්තර්ගතය
+විවෘත කළ පිටු
 Offline Software
 අන්තර්ජාලය අනවශ්‍ය මෘදුකාංග
 Pali Script Converter

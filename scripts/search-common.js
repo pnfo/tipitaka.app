@@ -122,7 +122,9 @@ export class SearchPane {
         this.status = status;
     }
     setBusySearching(isSet) {
-        this.root.toggleClass('busy-searching', isSet);
+        if (isSet) this.root.append($('<div/>').addClass('busy-searching').append($('<i/>').addClass('fas fa-spinner fa-pulse')));
+        else this.root.children('.busy-searching').remove();
+        //this.root.toggleClass('busy-searching', isSet);
     }
     setStatus(tElem, className = '') {
         this.status.empty().append(tElem).attr('class', `search-status ${className}`);

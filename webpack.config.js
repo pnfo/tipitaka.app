@@ -1,16 +1,32 @@
 module.exports = {
-    entry: "./scripts/index.js",
+    entry: ["@babel/polyfill", "./scripts/index.js"],
     output: {
-        path: __dirname + "/scripts",
-        filename: "../scripts-prod/webpack-bundle.js"
+        path: __dirname + "/scripts-prod",
+        filename: "webpack-bundle.js"
     },
     module: {
         rules: [
             {
-              test: /\.js$/,
+              test: /\.m?js$/,
               exclude: /(node_modules|bower_components)/,
               use: {
-                loader: 'babel-loader'
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        [
+                          '@babel/preset-env', {
+                            "targets": {
+                              "node": "current",
+                              "chrome": 30
+                            },
+                            loose: true, 
+                            modules: false
+                          }
+                        ]
+                    ],
+                    sourceType: 'unambiguous',
+                    plugins: ["@babel/plugin-transform-spread"]
+                }
               }
             }
           ]
