@@ -1,5 +1,5 @@
 module.exports = {
-    entry: "./index.js",
+    entry: ["@babel/polyfill", "./index.js"],
     output: {
         path: __dirname,
         filename: "bundle.js"
@@ -10,7 +10,23 @@ module.exports = {
               test: /\.m?js$/,
               exclude: /(node_modules|bower_components)/,
               use: {
-                loader: 'babel-loader'
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        [
+                          '@babel/preset-env', {
+                            "targets": {
+                              "node": "current",
+                              "chrome": 30
+                            },
+                            loose: true, 
+                            modules: false
+                          }
+                        ]
+                    ],
+                    sourceType: 'unambiguous',
+                    plugins: ["@babel/plugin-transform-spread"]
+                }
               }
             }
           ]

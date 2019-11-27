@@ -1,5 +1,6 @@
 import { Script, paliScriptInfo, TextProcessor, getScriptForCode } from '../../scripts/pali-script.mjs';
-import { Util } from '../../scripts/util.js';
+import { appSettings } from '../../scripts/settings.js';
+import { Util, GroupedOptions } from '../../scripts/util.js';
     
 // populating the settings pane
 // Pali Script Changing
@@ -8,7 +9,18 @@ let selectedScript = localStorage.getItem(localStorageKey) || Script.RO; // defa
 $('#box2').attr('script', selectedScript);
 
 const paliScriptSelect = $('#pali-script-select');
-paliScriptInfo.forEach((val, lang) => {
+
+function onPaliScriptChange(newVal) {
+    selectedScript = newVal;
+    console.log(`Pali script changing to ${newVal}`);
+    localStorage.setItem(localStorageKey, newVal); // set to storage for next time
+    $('#box2').attr('script', newVal);
+    runConvert();
+}
+new GroupedOptions(paliScriptSelect, onPaliScriptChange, '../../static/images/')
+    .render(appSettings.paliScriptList, appSettings.get('paliScript'));
+
+/*paliScriptInfo.forEach((val, lang) => {
     Util.createLanguageSelectOption(lang, val, '../../static/images/').appendTo(paliScriptSelect);
 });
 paliScriptSelect.on('click', '.option', e => {
@@ -20,7 +32,7 @@ paliScriptSelect.on('click', '.option', e => {
     localStorage.setItem(localStorageKey, selectedScript); // set to storage for next time
     $('#box2').attr('script', selectedScript);
     runConvert();
-}).children(`[value=${selectedScript}]`).addClass('active');
+}).children(`[value=${selectedScript}]`).addClass('active');*/
 
 $('#box1').on('change input paste keyup', e => {
     // try to set PT script - best effort
@@ -40,13 +52,10 @@ $('#copy-button').click(e => {
     Util.showToast(`Your text in ${paliScriptInfo.get(selectedScript)[0]} script has been copied to the clipboard. You can now paste it.`);
 });
 
-$('#menu-toggle').mousedown(function (e) {
+$('.title-bar').mousedown(function (e) {
     $('#menu-list').animate({height: 'toggle'}, 200);
     e.stopPropagation();
+    return false;
 });
-$('#menu-list').mousedown(function(e) {
-    e.stopPropagation();
-});
-$('body').mousedown(function() {
-    $('#menu-list').animate({height: 'hide'}, 350);
-});
+$('#menu-list').mousedown(e => e.stopPropagation());
+$('body').mousedown(e => $('#menu-list').animate({height: 'hide'}, 350));

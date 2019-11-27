@@ -9,7 +9,7 @@ export const isAndroid = true; // determines how to access the sqlite dbs (throu
 //import sqlite3 from 'sqlite3';
 //import path from 'path';
 
-if (Android) {
+if (isAndroid) {
     const dbVersions = { // updated dbs need to be marked here for update in android side
         'my-23-vol': 1,
     };
@@ -65,22 +65,6 @@ export class SqliteDB {
         }
     }
 
-    /*async runAsync(sql) { // not used - if used should implement for Android
-        return new Promise((resolve, reject) => {
-            this.db.run(sql, function (err, row) {
-                if (err) {
-                    console.error(`Sqlite Run Failed ${sql}. ${err.message}`);
-                    reject(err);
-                } else {
-                    resolve(row);
-                }
-            });
-        });
-    }
-    run(...args) { // not used
-        this.db.run(...args);
-        return this;
-    }*/
     async getAsync(sql, params) {
         return new Promise((resolve, reject) => {
             this.db.get(sql, params, (err, row) => {

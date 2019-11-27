@@ -30,7 +30,7 @@ const uiLanguageList = new Map([
     [Language.CHINESE, ['Chinese', '汉语', [], {f: 'china_flag.png'} ]],
     [Language.HI, ['Hindi', 'हिन्दी', [], {f: 'in_flag.png'} ]],
     [Language.INDO, ['Indonesian', 'baˈhasa indoneˈsia', [], {f: 'indonesia_flag.png'} ]],
-    [Language.BUR, ['Burmese', 'ဗမာစာ', [], {f: 'my_flag.png'} ]],
+    [Language.BUR, ['Burmese', 'ဗမာစာ', [], {f: 'my_flag.png', t: true} ]],
     [Language.THAI, ['Thai', 'ภาษาไทย', [], {f: 'th_flag.png', t: true} ]],
     [Language.KM, ['Khmer', 'ភាសាខ្មែរ', [], {f: 'kh_flag.png'} ]],
     [Language.ES, ['Spanish', 'Español', [], {f: 'es_flag.png'} ]],
@@ -145,7 +145,10 @@ class AppSettings {
         console.log(`Got location info from GPS ${JSON.stringify(response)}`);
         const countryCode = response.country;
         console.log(`Setting the pali script and ui language based on the country code ${countryCode}`);
-        return [ countryToPaliScript.get(countryCode) || Script.RO, countryToUiLanguage.get(countryCode) || Language.EN ];
+        return [ countryToPaliScript.get(countryCode) || Script.RO, 
+            countryToUiLanguage.get(countryCode) || Language.EN,
+            countryToDictionaryLanguage.get(countryCode) || '',
+        ];
     }
 }
 
@@ -163,6 +166,17 @@ const countryToPaliScript = new Map([
 const countryToUiLanguage = new Map([
     ['LK', Language.SI],
     ['TH', Language.THAI],
+    ['MM', Language.BUR],
+]);
+
+// select all the dictionaries of this language
+const countryToDictionaryLanguage = new Map([
+    ['LK', Language.SI],
+    ['TH', Language.THAI],
+    ['MM', Language.BUR],
+    ['IN', Language.HI],
+    ['BD', Language.HI], // no bangla so select hindi
+    ['KH', Language.KM],
 ]);
 
 // for dynamically created UT elements

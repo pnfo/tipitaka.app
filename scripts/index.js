@@ -104,11 +104,12 @@ uiLanguageSelect.on('click', '.option', e => {
 }).children(`[value=${appSettings.get('uiLanguage')}]`).addClass('active');
 
 if (appSettings.localeSource == 'gps') { // take this from GPS
-    appSettings.setGPSCountryInfo().then(([newScript, newLang]) => { // values changed based on GPS
+    appSettings.setGPSCountryInfo().then(([newScript, newLang, dictLang]) => { // values changed based on GPS
         paliScriptSelect.children(`[value=${newScript}]`).click();
         uiLanguageSelect.children(`[value=${newLang}]`).click();
+        dictClient.setDictionariesByLanguage(dictLang);
     }).catch(e => console.err(`Request to get gps country failed. ${e}`)); 
-} 
+}
 
 new GroupedCheckOptions($('.dictionary-select'), dict => dictClient.dictionaryListChanged(dict), appSettings.uiLanguageList)
     .render(dictClient.dictionaryList, appSettings.get('dictList'));

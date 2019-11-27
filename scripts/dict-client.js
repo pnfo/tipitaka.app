@@ -66,6 +66,16 @@ export class DictionaryClient extends SearchPane {
         this.prevWord = '';
         this.registerEvents(); // for events on the results view
     }
+    
+    // used to set the dictionaries based on the GPS country
+    setDictionariesByLanguage(lang) {
+        console.log(`Setting dictionaries based on the language ${lang}`);
+        this.dictionaryList.forEach((info, dictName) => {
+            if (info[0] == lang) 
+                this.activeDicts.add(dictName);
+        });
+        appSettings.set('dictList', Array.from(this.activeDicts));
+    }
 
     dictionaryListChanged(dictName) {
         //const dictName = $(e.currentTarget).attr('value');

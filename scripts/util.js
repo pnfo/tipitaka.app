@@ -5,13 +5,14 @@
     ['indian', ['Indian']],
 ]);*/
 export class GroupedOptions {
-    constructor(root, changeCallback) {
+    constructor(root, changeCallback, flagFolder) {
         this.root = root;
         this.changeCallback = changeCallback;
+        this.flagFolder = flagFolder;
     }
     render(infoList, initialVal) {
         //this.currentVal = initialVal;
-        this.renderOptions(infoList, this.root);
+        this.renderOptions(infoList);
         //console.log(initialVal);
         this.updateOptionActive(this.getOptionForValue(initialVal)); //initial set
         this.registerEvents();
@@ -49,14 +50,14 @@ export class GroupedOptions {
             if (info[3].g) {
                 this.createGroupIfNotExist(info[3].g);
             }
-            Util.createLanguageSelectOption(lang, info).appendTo(this.root);
+            Util.createLanguageSelectOption(lang, info, this.flagFolder).appendTo(this.root);
         });
     }
 }
 export class GroupedCheckOptions extends GroupedOptions {
-    constructor(...args) { 
-        super(...args);
-        this.langList = args[2];
+    constructor(root, changeCallback, langList) { 
+        super(root, changeCallback);
+        this.langList = langList;
     }
     getOptionForValue(valueAr) {
         return this.root.children(valueAr.map(dict => `[value=${dict}]`).join(',') || 'none');

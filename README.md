@@ -37,7 +37,6 @@ downloaded to `./node_modules/sqlite3/lib/binding`
 
 ### Following files need to be bundled with the EXE
 * `/misc`
-* `/scripts-prod`
 * `/static`
 * `index.html`
 * `node_sqlite3.node` specific to the platform
@@ -46,7 +45,6 @@ downloaded to `./node_modules/sqlite3/lib/binding`
 ## Building Apps for Android
 1. following files need to be placed in the assets folder
    * `/misc`
-   * `/scripts-prod`
    * `/static`
    * `index.html`
 2. Changes are needed in the following files to make sure that fts and dict requests are handled inside the app and db requests are sent to the Android Java runtime

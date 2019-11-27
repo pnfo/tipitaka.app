@@ -1,0 +1,130 @@
+Chaṭṭha Saṅgāyana Tipiṭaka
+ဆဋ္ဌသင်္ဂါယနာ တိပိဋက
+Settings
+အပြင်အဆင်များ
+Text
+စာသား
+Offline Software
+အင်တာနက်မလိုဘဲ သုံးနိုင်သော ဆော့ဝဲ
+Pali Script Converter
+ပါဠိစာသို့ပြောင်းပေးသော ကွန်ဗက်တာ
+About Us
+ကျွန်ုပ်တို့အကြောင်း
+Help
+အကူအညီ
+Facebook Page
+
+Facebook 
+
+For searching type the search term in the box above
+
+Select User Interface Language
+အသွင်ဖော်ပြမည့် ဘာသာစကားရွေးပါ
+Select Pali Text Display Script
+ပါဠိစာသားဖော်ပြရန် ဘာသာစကား​ရွေးပါ
+Footnotes Format
+အောက်ခြေမှတ်စုပုံစံ
+Page Tags Format
+စာမျက်နှာတွဲပုံစံ
+Text Size
+စကားလုံးအရွယ်အစား
+Do Not Show
+မပြပါနှင့်
+Show On Click
+ခလုတ်နှိပ်လျှင်ပြပါ
+Click
+နှိပ်ပါ
+Show Inline
+စာထဲတွင် ဖော်ပြပါ(...)
+Short Name
+အမည်စဉ်ပါ
+Full Name
+အမည်အပြည့်အစုံ
+Smallest
+အငယ်ဆုံး
+Smaller
+ပိုငယ်သော
+Medium
+အလယ်အလတ်
+Larger
+ပိုကြီးသော
+Largest
+အကြီးဆုံး
+Tree View
+သစ်ပင်ပုံစံ
+Menu
+မီနူး
+Tabs
+
+Starred
+ကြယ်ပွင့်မှတ်
+Select Dictionaries
+အဘိဓာန်ရွေးရန်
+Dictionary Launch Method
+အဘိဓာန်ဖော်ပြမည့်နည်းလမ်း
+Show On Hover
+ 
+XL
+
+XXL
+
+Show/Hide Filter
+Filter ဖော်/ဝှက်
+Exact Word
+စကားလုံးအတိအကျ
+Exact Phrase
+စာပိုဒ်အတိအကျ
+Match Order
+တွဲစပ်မည့် အစီအဉ်
+Word Distance
+စကားလုံးအကွာအဝေး
+Edition
+ပြင်ဆင်ခြင်း
+Book
+စာအုပ်
+Page
+စာမျက်နှာ
+Link has been copied to the clipboard. You can now paste it.
+Link ကို ကော်ပီကူးပြီးဖြစ်သောကြောင့် ပေ့စ်ကပ်နိုင်ပါပြီ
+Please enter minimun XXX characters to start the searching.
+စတင်ရှာဖွေရန် ရိုက်ထည့်ရမည့် အနည်းဆုံး XXX အက္ခရာ
+Each of the search terms must have at least one character.
+
+XXX results found. First YYY results shown.
+XXX ရလဒ်များတွေ့ရှိ။ YYY  ရလဒ်များ အရင်ပြပါ။
+Allowed Range for word distance 1 - 99.
+စာတန်းအကွာအဝေးရွေးရန် (၁ မှ ၉၉)
+Too many results found. First XXX of results shown.
+ရလဒ်များစွာ ထွက်နေပါသည်။ XXX ရလဒ်များ အရင်ပြပါ။
+XXX results found for your search term.
+ရှာဖွေသော စကားရပ်ထဲမှ XXX ရလဒ်များ။
+Search term XXX did not return any results.
+
+There are XXX bookmarks matching your filter.
+
+You have no bookmarks saved.
+သင်သည် စာညှပ်ကတ်ပြားဖြင့် မှတ်သားထားခြင်း မရှိသေးပါ။
+Click the star icon to save to bookmarks.
+စာညှပ်ကတ်ပြားဖြင့်မှတ်ရန် ကြယ်ပုံကို နှိပ်ပါ။
+Columns
+စာတိုင်
+Color Theme
+အရောင်အပြင်အဆင်
+Light
+အဖြူ
+Dark
+အမဲ
+Multi File Display
+ဖိုင်များစွာပြရန်
+Single
+တစ်ခုတည်း
+Tab View
+
+Download Offline Software
+အင်တာနက်မလိုသော ဆော့ဝဲကို ဒေါင်းလုဒ်ဆွဲရန်
+Sort By Book
+စာအုပ်လိုက် စဉ်ရန်
+Bookmark added
+စာညှပ်ကတ်ပေါင်းထည့်မှတ်သားပြီးပြီ။
+Bookmark deleted
+စာညှပ်ကတ် ဖျက်ပြီးပြီ။
