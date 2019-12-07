@@ -5,25 +5,12 @@
  */
 "use strict";
 
-import { UT, PT, PT_REFRESH, appSettings } from './settings.js';
+import { UT, PT, appSettings } from './settings.js';
 import { TextProcessor } from './pali-script.mjs';
 import { PitakaTree } from "./pitaka-tree.js";
 import { titleStorage, SearchFilter, TSE, fileNameFilter, SearchPane } from "./search-common.js";
 
-// incase of android uncomment the line below and comment out the query class below that
-import { FTSQuery } from '../misc/server/fts-server.mjs';
-import { isAndroid } from '../misc/server/sql-query.mjs';
-if (isAndroid) console.log('Android is on');
-
-/*const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
-class FTSQuery {
-    constructor(query) {
-        this.query = query;
-    }
-    async runQuery() {
-        return await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
-    }
-}*/
+const FTSQuery = require('../misc/server/constants.js').FTSQuery;
 
 export class FTSClient extends SearchPane {
     constructor() {

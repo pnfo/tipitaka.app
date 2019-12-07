@@ -2,9 +2,5 @@
 .vscode
 dev
 node_modules
-test
-static/text
-static/fontawesome
-static/webfonts
 dist
 static/db/dict-all.db

@@ -5,18 +5,7 @@ import { Language, appSettings, UT, PT } from './settings.js';
 import { JHoverDialog } from './util.js';
 import { SearchPane } from './search-common.js';
 
-// incase of android uncomment the line below and comment out the query class below that
-import { DictionaryQuery } from '../misc/server/dict-server.mjs';
-
-/*const TipitakaServerURLEndpoint = './tipitaka-query/'; // https://tipitaka.app/nodejs/
-class DictionaryQuery {
-    constructor(query) {
-        this.query = query;
-    }
-    async runQuery() {
-        return await $.post(TipitakaServerURLEndpoint, JSON.stringify(this.query));
-    }
-}*/
+const DictionaryQuery = require('../misc/server/constants.js').DictionaryQuery;
 
 /** change the version when a new dict is available so the old one will be deleted and the new one loaded */
 const dictionaryList = new Map([
@@ -37,8 +26,9 @@ const dictionaryList = new Map([
     ['th-etipitaka', [Language.THAI, 'E-Tipitaka', {s: 'ET', v: 2, o: 'e tipitaka windows software', g: true}] ],
     ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', {s: 'SU', v: 2, o: 'Ven Buja', g: true}] ],
     ['th-thaiware', [Language.THAI, 'Thai Ware', {s: 'TW', v: 2, o: 'tware windows software', g: true}] ],
-    ['th-dhamma-cheti-1', [Language.THAI, 'กิริยากิตก์ฉบับธรรมเจดีย์', {s: 'DC1', v: 1, o: 'online pdf', n: 5922, g: true}] ],
+    ['th-dhamma-cheti-1', [Language.THAI, 'กิริยากิตก์ฉบับธรรมเจดีย์', {s: 'DC1', v: 1, o: 'online pdf', n: 5922, g: true}] ], // TODO combine 1 & 2
     ['th-dhamma-cheti-2', [Language.THAI, 'กิริยาอาขยาตฉบับธรรมเจดีย์', {s: 'DC2', v: 1, o: 'online pdf', n: 4272, g: true}] ],
+    ['th-bhumibol', [Language.THAI, 'PTS Bhumibol', {s: 'BB', v: 1, o: 'online pdf', n: 16143, g: true}] ],
     
     ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', {s: 'SC', v: 2, d: 'SuttaCentral Chinese Dictionary', o: 'Projector'}]],
     ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 2, o: 'cst windows software', n: 16183}]],
