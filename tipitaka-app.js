@@ -6,11 +6,12 @@
 
 // rm tipitaka-app.exe; npx pkg -t win --output tipitaka-app.exe tipitaka-app.js
 // npx pkg -t macos --output tipitaka-app-mac tipitaka-app.js
-// for linux need to pass in a special param since open does not work in linux
+
+// for linux need to compile on a ubuntu box
 // npx pkg -t linux --output tipitaka-app-linux tipitaka-app.js
 
 // run the linux binary in production using pm2 at https://tipitaka.app
-// pm2 start ./tipitaka-app-linux -- --no-open (run in pm2 at tipitaka.app)
+// pm2 start ./tipitaka-app-linux (run in pm2 at tipitaka.app)
 
 // run locally for debugging
 // node tipitaka-app.js --no-open

@@ -1,4 +1,5 @@
 "use strict"
+// try to move the code that needs to be changed when compiling for node/web/android
 
 /**
  *  determines how to access the sqlite dbs (through webview in android or read sqlite files in node)
