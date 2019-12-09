@@ -1,9 +1,5 @@
 "use strict";
 
-// how to make an executable from the server
-// npx rollup tipitaka-app.mjs --file tipitaka-app.js --format cjs
-// rollup is needed since pkg does not support new ES Modules yet
-
 // rm tipitaka-app.exe; npx pkg -t win --output tipitaka-app.exe tipitaka-app.js
 // npx pkg -t macos --output tipitaka-app-mac tipitaka-app.js
 
@@ -14,7 +10,7 @@
 // pm2 start ./tipitaka-app-linux (run in pm2 at tipitaka.app)
 
 // run locally for debugging
-// node tipitaka-app.js --no-open
+// node tipitaka-app.js
 
 // get a copy of the required pre built native modules - sqlite3
 //./node_modules/.bin/node-pre-gyp install --directory=./node_modules/sqlite3 --target_platform=linux win32 or darwin
@@ -105,30 +101,3 @@ async function start() {
 }
 
 start();
-
-/*async function respond(req, res, next) {
-    console.log(`Received request with query ${req.params.query}`);
-
-    let jsonRes;
-    try {
-        const queryObj = JSON.parse(decodeURIComponent(req.params.query));
-        const query = new FR.FTSQuery(queryObj);
-        query.checkQuery(); // will throw on error
-        const ms = await FR.ftsRunner.runQuery(query);
-        jsonRes = { query: ms.query, wordInfo: ms.wordInfo, matches: ms.matches };
-    } catch (err) {
-        jsonRes = { error: err.toString() };
-    }
-    //const test = {raw: 'ff'};
-    res.send(jsonRes);
-    //res.send('hello ' + req.params.name);
-    next();
-}
-// wait for init data and then register routes
-new FTSQuery({type: 'init-data'}).send().then(res => {
-    //server.get('/fts-query/', respond);
-    server.post('/fts-query/', postRespond);
-    //server.head('/fts-query/:query', respond);
-});
-
-*/
