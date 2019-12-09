@@ -101,7 +101,7 @@ There are XXX bookmarks matching your filter.
 You have no bookmarks saved. Click the star icon to save to bookmarks.
 පිටුසන් කිසිවක් හමු නොවිය. සූත්‍ර පිටුසන් කිරීම සඳහා තරු ලකුණ ඔබන්න. 
 Columns
-
+Columns
 Color Theme
 වර්ණ මාලාව
 Light
