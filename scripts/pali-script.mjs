@@ -193,6 +193,7 @@ function un_beautify_mymr(text) {  // reverse of beautify above
     text = text.replace(/\u103A/g, ''); // kinzi
     text = text.replace(/ဿ/g, 'သ\u1039သ'); // s + sa has a single char (great sa)
     text = text.replace(/ည/g, 'ဉ\u1039ဉ'); // nnga
+    text = text.replace(/သံဃ/g, 'သင္ဃ'); // nigghahita to ṅ for this word for searching - from Pn Daza
 
     text = text.replace(/၊/g, ','); // single line -> comma
     return text.replace(/။/g, '.'); // double line -> period
