@@ -53,3 +53,5 @@ downloaded to `./node_modules/sqlite3/lib/binding`
  ## License 
 Attribution-ShareAlike CC BY-SA https://creativecommons.org/licenses/by-sa/4.0/
 You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+
+The VRI texts in the static/texts directory are copyrighted to VRI (https://www.vridhamma.org/). 
