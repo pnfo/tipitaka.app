@@ -4,7 +4,7 @@
 ### How to make an executable from the server
 
 ### Windows
-`rm tipitaka-app.exe; npx pkg -t win --output tipitaka-app.exe tipitaka-app.js`
+`rm tipitaka-app.exe; npx pkg -t win --output tipitaka-app.exe tipitaka-app.js` for 32 bit windows use `win-x86`
 
 ### Mac
 `npx pkg -t macos --output tipitaka-app-mac tipitaka-app.js`
@@ -29,7 +29,7 @@ These need to be placed in the same diretory of the exe created above
 
 get a copy of the required pre built native modules - e.g. **sqlite3**
 
-`./node_modules/.bin/node-pre-gyp install --directory=./node_modules/sqlite3 --target_platform=linux` (win32 or darwin)
+`./node_modules/.bin/node-pre-gyp install --directory=./node_modules/sqlite3 --target_platform=linux` (win32 or darwin) add `--target_arch=ia32` for 32 bit
 
 downloaded to `./node_modules/sqlite3/lib/binding`
 

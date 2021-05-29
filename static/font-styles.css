@@ -64,6 +64,7 @@
 .PT[script=my],.tab-content[script=my] { font-family: 'myanmar'; }
 .PT[script=km],.tab-content[script=km] { font-family: 'khmer'; }
 .PT[script=be],.tab-content[script=be] { font-family: 'bengali'; }
+.PT[script=as],.tab-content[script=as] { font-family: 'bengali'; } /* assamese */
 .PT[script=gm],.tab-content[script=gm] { font-family: 'gurmukhi'; }
 .PT[script=tt],.tab-content[script=tt] { font-family: 'tai tham'; font-size: 1.5rem; }
 .PT[script=gj],.tab-content[script=gj] { font-family: 'gujarati'; }

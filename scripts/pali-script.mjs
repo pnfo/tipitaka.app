@@ -14,7 +14,7 @@ const Script = Object.freeze({
     LAOS: 'lo',
     MY: 'my',
     KM: 'km',
-    BENG: 'be',
+    BENG: 'be', ASSE: 'as', // related
     GURM: 'gm',
     THAM: 'tt',
     GUJA: 'gj',
@@ -35,6 +35,7 @@ const paliScriptInfo = new Map ([
     [Script.MY, ['Myanmar', 'ဗမာစာ', [[0x1000, 0x107F]], {f: 'my_flag.png'} ]],
     [Script.KM, ['Khmer', 'ភាសាខ្មែរ', [[0x1780, 0x17FF]], {f: 'kh_flag.png'} ]],
     [Script.BENG, ['Bengali', 'বাংলা', [[0x0980, 0x09FF]], {f: 'bangla_flag.png', g: 'indian'} ]],
+    [Script.ASSE, ['Assamese', 'অসমীয়া', [], {f: 'bangla_flag.png', g: 'indian'} ]], // assamese uses the same bangla unicode block and most of its letters
     [Script.GURM, ['Gurmukhi', 'ਗੁਰਮੁਖੀ', [[0x0A00, 0x0A7F]], {g: 'indian'} ]],
     [Script.GUJA, ['Gujarati', 'ગુજરાતી', [[0x0A80, 0x0AFF]], {g: 'indian'} ]],
     [Script.TELU, ['Telugu', 'తెలుగు', [[0x0C00, 0x0C7F]], {g: 'indian'} ]],
@@ -64,7 +65,7 @@ const script_index = {
     [Script.LAOS]: 4,
     [Script.MY]: 5,
     [Script.KM]: 6,
-    [Script.BENG]: 7,
+    [Script.BENG]: 7, [Script.ASSE]: 7, // use same convert func
     [Script.GURM]: 8,
     [Script.THAM]: 9,
     [Script.GUJA]: 10,
@@ -309,6 +310,14 @@ function beautify_tibet(text) { // copied form csharp - consider removing subjoi
 function un_beautify_tibet(text) {
     return text; // todo undo the subjoining done above
 }
+function beautify_assamese(text) { 
+    // can unbeautify but not useful since it is not possible to identify assamese since it uses the same unicode block as bangla
+    // rules taken from sumitta.dhan@gmail.com email message 
+    text = text.replace(/ৰ/g, 'ৱ');
+    text = text.replace(/র/g, 'ৰ');
+    text = text.replace(/ল়/g, 'ড়');
+    return text;
+}
 
 const beautify_func_default = [];
 const beautify_func = {
@@ -325,6 +334,7 @@ const beautify_func = {
     [Script.BRAH]: [beautify_brahmi, beautify_common],
     [Script.TIBT]: [beautify_tibet],
     [Script.CYRL]: [beautify_common],
+    [Script.ASSE]: [beautify_assamese],
 };
 // when converting from another script, have to unbeautify before converting
 const un_beautify_func_default = [];
