@@ -49,6 +49,11 @@ downloaded to `./node_modules/sqlite3/lib/binding`
 2. Changes are needed in the following files to make sure that fts and dict requests are handled inside the app and db requests are sent to the Android Java runtime
    1. `sql-query.mjs` disable node imports
    2. `constants.js` change isAndroid
+
+## Building the website
+`npm run build` will build the `webpack-bundle.js` which would be referenced by the index.html
+
+`npx webpack` on the `misc/convert` folder will build the converter tool
    
  ## License 
 Attribution-ShareAlike CC BY-SA https://creativecommons.org/licenses/by-sa/4.0/
