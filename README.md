@@ -1,4 +1,9 @@
-# tipitaka.app
+# tipitaka.app - Chatta Sangayana Tipitaka on Github
+
+## Building the website
+`npm run build` will build the `webpack-bundle.js` which would be referenced by the index.html
+
+`npx webpack` on the `misc/convert` folder will build the converter tool
 
 ## Bulding Apps for Windows, Mac and Linux
 ### How to make an executable from the server
@@ -14,13 +19,6 @@ For linux need to build it on a linux/ubuntu machine
 
 `npx pkg -t linux --output tipitaka-app-linux tipitaka-app.js`
 
-### Run in Website
-Same linux binary is run in the webserver https://tipitaka.app to serve requests from the online website
-
-1. `pm2 start ./tipitaka-app-linux` (run in pm2 at tipitaka.app)
-2. `git clone` the github repository
-3. copy the `static/db/dict-all.db` (this is not included in the repository since the big size)
-
 ### Run locally for debugging
 `node tipitaka-app.js`
 
@@ -33,13 +31,21 @@ get a copy of the required pre built native modules - e.g. **sqlite3**
 
 downloaded to `./node_modules/sqlite3/lib/binding`
 
-
 ### Following files need to be bundled with the EXE
 * `/misc`
 * `/static`
 * `index.html`
 * `node_sqlite3.node` specific to the platform
 * the exe generated above
+
+## Setting up the online https://tipitaka.lk Website
+Same linux binary is run in the webserver https://tipitaka.app to serve requests from the online website. 
+
+1. `git clone` this github repository
+2. copy the `static/db/dict-all.db` (this fts db is not included in the repository since the big size)
+3. check running `node tipitaka-app.js` and install any missing dependencies
+4. `pm2 start tipitaka-app.js` (run in pm2 at tipitaka.app)
+
 
 ## Building Apps for Android
 1. following files need to be placed in the assets folder
@@ -49,13 +55,8 @@ downloaded to `./node_modules/sqlite3/lib/binding`
 2. Changes are needed in the following files to make sure that fts and dict requests are handled inside the app and db requests are sent to the Android Java runtime
    1. `sql-query.mjs` disable node imports
    2. `constants.js` change isAndroid
-
-## Building the website
-`npm run build` will build the `webpack-bundle.js` which would be referenced by the index.html
-
-`npx webpack` on the `misc/convert` folder will build the converter tool
    
- ## License 
+## License 
 Attribution-ShareAlike CC BY-SA https://creativecommons.org/licenses/by-sa/4.0/
 You must give appropriate credit, provide a link to the license, and indicate if changes were made.
 

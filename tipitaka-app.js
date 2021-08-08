@@ -7,7 +7,8 @@
 // npx pkg -t linux --output tipitaka-app-linux tipitaka-app.js
 
 // run the linux binary in production using pm2 at https://tipitaka.app
-// pm2 start ./tipitaka-app-linux (run in pm2 at tipitaka.app)
+// pm2 start tipitaka-app.js (run in pm2 at tipitaka.app)
+// note: you may have to install some dependencies locally in the server
 
 // run locally for debugging
 // node tipitaka-app.js
