@@ -3,4 +3,3 @@
 dev
 node_modules
 dist
-static/db/dict-all.db
