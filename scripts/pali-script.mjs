@@ -492,6 +492,18 @@ export {TextProcessor, Script, paliScriptInfo, getScriptForCode};
 
 // for node
 //module.exports = {TextProcessor: TextProcessor, Script: Script};
+
+/**
+ * how to use this library
+ * first step - convert from source script to sinhala
+ * const sinhText = TextProcessor.convertFrom(romanText, Script.RO) // convert from one specific script to sinhala
+ * const sinhText = TextProcessor.convertFromMixed(mixedPaliText) // convert from any script to Sinhala
+ * second step - convert to your destination script from sinhala
+ * const finalText = TextProcessor.convert(sinhText, Script.MY)
+ */
+
+
+
 /*
 let testDev = '॥ नमो तस्स भगवतो अरहतो सम्मासम्बुद्धस्स॥ දක්ඛිණා';
 let testMaps = 'akappiyapathavīsaṅkhyā';
