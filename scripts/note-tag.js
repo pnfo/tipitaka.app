@@ -1,4 +1,4 @@
-import { Script, TextProcessor } from './pali-script.mjs';
+import { Script, TextProcessor } from './pali-script.js';
 import { appSettings, UT } from './settings.js';
 import { PitakaTree } from './pitaka-tree.js';
 import { Util, JDialog } from './util.js';

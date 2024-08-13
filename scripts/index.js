@@ -1,4 +1,4 @@
-import { getScriptForCode } from './pali-script.mjs';
+import { getScriptForCode } from './pali-script.js';
 import { appSettings, LangHelper, UT, PT, PT_REFRESH, SearchType } from './settings.js';
 import { PitakaTabs } from './pitaka-tabs.js';
 import { PitakaTree } from './pitaka-tree.js';

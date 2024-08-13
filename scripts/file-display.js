@@ -1,4 +1,4 @@
-import { TextProcessor } from './pali-script.mjs';
+import { TextProcessor } from './pali-script.js';
 import { appSettings } from './settings.js';
 import { PageTag, Note, Collection, LinkHandler, HitHighlighter } from './note-tag.js';
 import { bookmarks } from './title-search.js';

@@ -1,7 +1,7 @@
 /**
  * run 'npx webpack' to build the bundle
  */
-import { Script, paliScriptInfo, TextProcessor, getScriptForCode } from '../../scripts/pali-script.mjs';
+import { Script, paliScriptInfo, TextProcessor, getScriptForCode } from '../../scripts/pali-script.js';
 import { appSettings } from '../../scripts/settings.js';
 import { Util, GroupedOptions } from '../../scripts/util.js';
     

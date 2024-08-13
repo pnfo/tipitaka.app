@@ -1,5 +1,5 @@
 "use strict";
-import { TextProcessor } from "./pali-script.mjs";
+import { TextProcessor } from "./pali-script.js";
 import { PT, PT_REFRESH, UT, appSettings } from "./settings.js";
 import { PitakaTree } from "./pitaka-tree.js";
 import { vManager, Util } from "./util.js";

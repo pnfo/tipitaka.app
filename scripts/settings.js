@@ -1,4 +1,4 @@
-import {Script, paliScriptInfo, TextProcessor } from './pali-script.mjs';
+import {Script, paliScriptInfo, TextProcessor } from './pali-script.js';
 
 export const Language = Object.freeze({
     SI: 'si',

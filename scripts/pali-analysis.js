@@ -1,7 +1,7 @@
 "use script";
 
 import { appSettings, LangHelper, UT, PT, PT_REFRESH, SearchType } from './settings.js';
-import { TextProcessor } from './pali-script.mjs';
+import { TextProcessor } from './pali-script.js';
 
 class PaliAnalysis {
     constructor() {

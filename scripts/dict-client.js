@@ -1,6 +1,6 @@
 "use strict";
 
-import { TextProcessor } from './pali-script.mjs';
+import { TextProcessor } from './pali-script.js';
 import { Language, appSettings, UT, PT } from './settings.js';
 import { JHoverDialog } from './util.js';
 import { SearchPane } from './search-common.js';

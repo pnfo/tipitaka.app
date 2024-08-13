@@ -6,7 +6,7 @@
 "use strict";
 
 import { UT, PT, appSettings } from './settings.js';
-import { TextProcessor } from './pali-script.mjs';
+import { TextProcessor } from './pali-script.js';
 import { PitakaTree } from "./pitaka-tree.js";
 import { titleStorage, SearchFilter, TSE, fileNameFilter, SearchPane } from "./search-common.js";
 
