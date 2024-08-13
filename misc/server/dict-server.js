@@ -1,6 +1,7 @@
 "use strict";
 
-const SqliteDB = require('./sql-query.js');
+import { SqliteDB } from './sql-query.js';
+//const SqliteDB = require('./sql-query.js');
 
 /** Loading and searching a single dictionary */
 class DictionaryDb extends SqliteDB {
@@ -87,7 +88,7 @@ class BreakupServer {
 }
 
 let dictServer, breakupServer;
-class DictionaryQuery {
+export class DictionaryQuery {
     constructor(query) {
         this.query = query;
     }
@@ -136,7 +137,7 @@ function levenshtein(a, b) {
     return res;
 }
 
-module.exports = DictionaryQuery;
+//module.exports = DictionaryQuery;
 
 // run tests with the command
 // node --experimental-modules .\scripts\dict-server.mjs

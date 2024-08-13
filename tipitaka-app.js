@@ -17,14 +17,22 @@
 //./node_modules/.bin/node-pre-gyp install --directory=./node_modules/sqlite3 --target_platform=linux win32 or darwin
 // downloaded to ./node_modules/sqlite3/lib/binding
 
-const restify = require('restify');
-const colors = require('colors');
-const path = require('path');
-const fs = require('fs');
-const TipitakaQueryType = require('./misc/server/constants.js').TipitakaQueryType;
-const SqliteDB = require('./misc/server/sql-query.js');
-const FTSQuery = require('./misc/server/fts-server.js');
-const DictionaryQuery = require('./misc/server/dict-server.js');
+// const restify = require('restify');
+// const colors = require('colors');
+// const path = require('path');
+// const fs = require('fs');
+import restify from 'restify';
+import colors from 'colors';
+import path from 'path';
+import fs from 'fs';
+import { TipitakaQueryType } from './misc/server/constants.js';
+import { SqliteDB } from './misc/server/sql-query.js';
+import { FTSQuery } from './misc/server/fts-server.js';
+import { DictionaryQuery } from './misc/server/dict-server.js';
+//const TipitakaQueryType = require('./misc/server/constants.js').TipitakaQueryType;
+//const SqliteDB = require('./misc/server/sql-query.js');
+//const FTSQuery = require('./misc/server/fts-server.js');
+//const DictionaryQuery = require('./misc/server/dict-server.js');
 
 // this gives the script directory or the binary directory in both of the cases above
 const checkDirList = [process.cwd(), path.dirname(process.execPath), path.dirname(process.argv[1])]
@@ -41,7 +49,7 @@ SqliteDB.setRootFolder(dirname); // on macos absolute path to the db file is nee
 console.log(colors.yellow(`Serving static files from ${dirname}`));
 
 
-async function postRespond(req, res, next) {
+async function postRespond(req, res) {
     console.log(`Received request with query ${req.body}`);
 
     const query = JSON.parse(req.body);
@@ -51,12 +59,12 @@ async function postRespond(req, res, next) {
     } else if (query.type == TipitakaQueryType.DICT) {
         tQuery = new DictionaryQuery(query);
     } else {
-        res.send({ error: `Unhandled query type ${query.type}`});
+        res.send(500, { error: `Unhandled query type ${query.type}`});
         return;
     }
     const jsonRes = await tQuery.runQuery();
     res.send(jsonRes);
-    next();
+    //next();
 }
 
 function startRestify() {
@@ -93,8 +101,8 @@ async function start() {
     // opens the browser with the local url
     console.log(`Running on platform ${process.platform}`);
     if (process.platform == 'win32' || process.platform == 'darwin') { // in linux this results in an error
-        const open = require('open');
-        await open('http://127.0.0.1:8080/');  // uncomment when building offline apps
+        //const open = require('open');
+        //await open('http://127.0.0.1:8080/');  // uncomment when building offline apps
     }
     
     await sleep(1000); // make sure the open finishes even if startRestify fails because the server is already running

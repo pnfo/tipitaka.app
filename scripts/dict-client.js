@@ -5,7 +5,8 @@ import { Language, appSettings, UT, PT } from './settings.js';
 import { JHoverDialog } from './util.js';
 import { SearchPane } from './search-common.js';
 
-const DictionaryQuery = require('../misc/server/constants.js').DictionaryQuery;
+import { DictionaryQuery } from '../misc/server/constants.js';
+//const DictionaryQuery = require('../misc/server/constants.js').DictionaryQuery;
 
 /** change the version when a new dict is available so the old one will be deleted and the new one loaded */
 const dictionaryList = new Map([

@@ -4,7 +4,8 @@
  * sqlite will run in either in node or in android - isAndroid flag and the imports have to be set manually
  */
 
-const isAndroid = require('./constants.js').isAndroid;
+import { isAndroid } from './constants.js';
+//const isAndroid = require('./constants.js').isAndroid;
 if (isAndroid) {
     const dbVersions = { // updated dbs need to be marked here for update in android side
         'my-23-vol': 1,
@@ -16,19 +17,37 @@ if (isAndroid) {
 let sqliteRootFolder = '';  // add extra base url in macos
 
 // extending classes that query data should implement the parseRow() function
-class SqliteDB {
+export class SqliteDB {
     constructor(file, isWrite = false) {
         this.file = file;
         if (!isAndroid) {
-            const sqlite3 = require('sqlite3');
-            const path = require('path');
-            this.mode = isWrite ? (sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE) : sqlite3.OPEN_READONLY;
-            this.db = new sqlite3.Database(path.join(sqliteRootFolder, file), this.mode, err => {
-                if (err) {
-                    console.error(`Failed to open ${file}. ${err.message}`);
-                    throw err;
-                }
+            // const sqlite3 = require('sqlite3');
+            // const path = require('path');
+            // this.mode = isWrite ? (sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE) : sqlite3.OPEN_READONLY;
+            // this.db = new sqlite3.Database(path.join(sqliteRootFolder, file), this.mode, err => {
+            //     if (err) {
+            //         console.error(`Failed to open ${file}. ${err.message}`);
+            //         throw err;
+            //     }
+            // });
+            // dynamic import since code should run on client if android
+            import('sqlite3').then(sqlite3 => {
+                import('path').then(path => {
+                    this.mode = isWrite ? (sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE) : sqlite3.OPEN_READONLY;
+                    this.db = new sqlite3.default.Database(path.join(sqliteRootFolder, file), this.mode, err => {
+                        if (err) {
+                            console.error(`Failed to open ${file}. ${err.message}`);
+                            throw err;
+                        }
+                    });
+
+                }).catch(error => {
+                    console.error('Error importing "path" module:', error);
+                });
+            }).catch(error => {
+                console.error('Error importing "sqlite3" module:', error);
             });
+
         } else {
             // need to copy the db from assets folder before it can be opened
             this.db = Android.openDb(file); // this will return version+filename
@@ -98,7 +117,7 @@ class SqliteDB {
 
 //export const runServerLocally = true; // start servers and point the queries locally (1 = node & android, 0 = browser/web)
 
-module.exports = SqliteDB;
+//module.exports = SqliteDB;
 
 // TODO this class is actually not needed 
 /*

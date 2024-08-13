@@ -10,7 +10,8 @@ import { TextProcessor } from './pali-script.mjs';
 import { PitakaTree } from "./pitaka-tree.js";
 import { titleStorage, SearchFilter, TSE, fileNameFilter, SearchPane } from "./search-common.js";
 
-const FTSQuery = require('../misc/server/constants.js').FTSQuery;
+import { FTSQuery } from '../misc/server/constants.js';
+//const FTSQuery = require('../misc/server/constants.js').FTSQuery;
 
 export class FTSClient extends SearchPane {
     constructor() {

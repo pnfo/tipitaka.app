@@ -7,7 +7,8 @@
 
 "use strict";
 
-const SqliteDB = require('./sql-query.js');
+import { SqliteDB } from './sql-query.js';
+//const SqliteDB = require('./sql-query.js');
 //const isRegExp = (term) => /[\[\]\\\^\$\.\|\?\*\+\(\)]/g.exec(term); 
 
 // entry/row fields and the correspoinding column names in the sqlite db
@@ -209,7 +210,7 @@ const sortByBookThenFreq = (a, b) => {
 };
 
 let ftsServer;
-class FTSQuery {
+export class FTSQuery {
     constructor(query) {
         this.query = query;
     }
@@ -240,7 +241,7 @@ class FTSQuery {
     }
 }
 
-module.exports = FTSQuery;
+//module.exports = FTSQuery;
 
 // run tests with the command
 // node --experimental-modules .\scripts\fts-server.mjs
