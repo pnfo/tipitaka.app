@@ -12,7 +12,8 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, 'index.html'),
-                convert: resolve(__dirname, 'misc/convert/index.html')
+                convert: resolve(__dirname, 'misc/convert/index.html'),
+                dhammachakka: resolve(__dirname, 'misc/dhammachakka/index.html')
             }
         },
         outDir: 'dist',

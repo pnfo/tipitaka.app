@@ -271,7 +271,7 @@ class ViewManager {
         // load help page to pane and then show the pane
         const areaDiv = $('#help-area');
         if (!areaDiv.children().length) { // only if not loaded already
-            const html = await $.get(`./help-${areaDiv.attr('lang')}.html`);
+            const html = await $.get(`./translations/help-${areaDiv.attr('lang')}.html`);
             areaDiv.html(html);
             $('i', areaDiv).each((_i, icon) => $(icon).addClass('fa-fw'));
         }
