@@ -4,7 +4,7 @@
 import { Script, paliScriptInfo, TextProcessor, getScriptForCode } from '../../scripts/pali-script.js';
 import { appSettings } from '../../scripts/settings.js';
 import { Util, GroupedOptions } from '../../scripts/util.js';
-    
+
 // populating the settings pane
 // Pali Script Changing
 const localStorageKey = 'convert-prev-script';
@@ -20,7 +20,7 @@ function onPaliScriptChange(newVal) {
     $('#box2').attr('script', newVal);
     runConvert();
 }
-new GroupedOptions(paliScriptSelect, onPaliScriptChange, '../../static/images/')
+new GroupedOptions(paliScriptSelect, onPaliScriptChange, '/images/')
     .render(appSettings.paliScriptList, appSettings.get('paliScript'));
 
 /*paliScriptInfo.forEach((val, lang) => {
@@ -51,14 +51,14 @@ function runConvert() {
 }
 
 $('#copy-button').click(e => {
-    Util.copyText( $('#box2').val());
+    Util.copyText($('#box2').val());
     Util.showToast(`Your text in ${paliScriptInfo.get(selectedScript)[0]} script has been copied to the clipboard. You can now paste it.`);
 });
 
 $('.title-bar').mousedown(function (e) {
-    $('#menu-list').animate({height: 'toggle'}, 200);
+    $('#menu-list').animate({ height: 'toggle' }, 200);
     e.stopPropagation();
     return false;
 });
 $('#menu-list').mousedown(e => e.stopPropagation());
-$('body').mousedown(e => $('#menu-list').animate({height: 'hide'}, 350));
+$('body').mousedown(e => $('#menu-list').animate({ height: 'hide' }, 350));

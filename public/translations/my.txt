@@ -1,0 +1,170 @@
+Settings
+ဆက်တင်များ
+
+Text
+စာသား
+
+Offline Software
+အော့ဖ်လိုင်း ဆော့ဖ်ဝဲ
+
+Pali Script Converter
+ပါဠိ အက္ခရာ ပြောင်းစက်
+
+About Us
+ကျွန်ုပ်တို့အကြောင်း
+
+Help
+အကူအညီ
+
+Facebook Page
+Facebook စာမျက်နှာ
+
+Select User Interface Language
+အက်ပ် ဘာသာစကားရွေးရန်
+
+Select Pali Text Display Script
+ပါဠိတော် အက္ခရာရွေးရန်
+
+Footnotes Format
+အောက်ခြေမှတ်စုပုံစံ
+
+Page Tags Format
+စာမျက်နှာအညွှန်းပုံစံ
+
+Text Size
+စာလုံးအရွယ်အစား
+
+Do Not Show
+မပြပါနှင့်
+
+Show On Click
+နှိပ်လျှင်ပြပါ
+
+Show Inline
+စာကြောင်းထဲပြပါ
+
+Short Name
+အတိုကောက်
+
+Full Name
+အမည်အပြည့်အစုံ
+
+Smallest
+အသေးဆုံး
+
+Smaller
+အသေး
+
+Medium
+အလတ်
+
+Larger
+အကြီး
+
+Largest
+အကြီးဆုံး
+
+Menu
+မီနူး
+
+Starred
+ကြယ်ပွင့်ပြ
+
+Select Dictionaries
+အဘိဓာန်များရွေးရန်
+
+XL
+XL
+
+XXL
+XXL
+
+Show/Hide Filter
+ဇကာ ပြ/ဖျောက်
+
+Match Order
+စကားလုံးအစီအစဉ်တူ
+
+Word Distance
+စကားလုံးအကွာအဝေး
+
+Edition
+မူကွဲ
+
+Book
+ကျမ်းစာ
+
+Page
+စာမျက်နှာ
+
+Link has been copied to the clipboard. You can now paste it.
+လင့်ခ်ကို ကူးယူပြီးပါပြီ။
+
+Please enter minimun XXX characters to start the searching.
+ရှာဖွေရန် အနည်းဆုံး စာလုံး XXX လုံး ရိုက်ထည့်ပါ။
+
+Each of the search terms must have at least one character.
+ရှာဖွေမည့် စကားလုံးတိုင်းတွင် အနည်းဆုံး စာလုံးတစ်လုံး ပါရမည်။
+
+XXX results found. First YYY results shown.
+ရလဒ် XXX ခုတွေ့သည်။ YYY ခု ဦးစွာပြထားသည်။
+
+Allowed Range for word distance 1 - 99.
+စကားလုံးအကွာအဝေး (၁ မှ ၉၉) ရှိရမည်။
+
+Too many results found. First XXX of results shown.
+ရလဒ်များလွန်းသည်။ XXX ခု ဦးစွာပြထားသည်။
+
+XXX results found for your search term.
+ရှာဖွေမှုအတွက် ရလဒ် XXX ခု တွေ့သည်။
+
+Search term XXX did not return any results.
+XXX အတွက် မည်သည့်ရလဒ်မှ မရှိပါ။
+
+There are XXX bookmarks matching your filter.
+ဇကာနှင့်ကိုက်ညီသော စာမှတ် XXX ခု ရှိသည်။
+
+You have no bookmarks saved. Click the star icon to save to bookmarks.
+သိမ်းထားသော စာမှတ်မရှိသေးပါ။ သိမ်းရန် ကြယ်ပုံကိုနှိပ်ပါ။
+
+Columns
+ကော်လံများ
+
+Color Theme
+အရောင် နှုံ
+
+Light
+အလင်း
+
+Dark
+အမှောင်
+
+Multi File Display
+ဖိုင်အများပြသမှု
+
+Single
+တစ်ခုတည်း
+
+Tab View
+Tab ဖြင့်
+
+Download Offline Software
+အော့ဖ်လိုင်း ဆော့ဖ်ဝဲ ဒေါင်းလုဒ်လုပ်ရန်
+
+Bookmark added
+စာမှတ် ထည့်ပြီးပါပြီ။
+
+Bookmark deleted
+စာမှတ် ဖျက်ပြီးပါပြီ။
+
+Sort By Book
+ကျမ်းစာအလိုက်
+
+Exact Word
+ဒီစကားလုံးအတိုင်း
+
+Exact Phrase
+ဒီစာစုအတိုင်း
+
+For searching type the search term in the box above
+ရှာဖွေရန် အထက်ပါအကွက်တွင် ရှာဖွေလိုသော စာသားကို ရိုက်ထည့်ပါ

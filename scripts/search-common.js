@@ -37,13 +37,13 @@ class TitleStorageHelper {
         console.log(`${this.name} loaded of length ${this.data.length} from local storage.`);
         return true;
     }
-    
+
     // whatever the version given would be marked as the version of the loaded data
     async loadUrlData() {
         let data;
         try {
-            data = await $.getJSON(this.dataUrl);    
-        } catch(err) {
+            data = await $.getJSON(this.dataUrl);
+        } catch (err) {
             throw new Error(`Failed to load the ${this.name}. Please check your internet connection`); // TODO add to string resources.
         }
         this.data = data;
@@ -54,7 +54,7 @@ class TitleStorageHelper {
             localStorage.setItem(this.name, compressed);
             console.log(`Stored data of length ${compressed.length} to local storage. Uncompressed length ${uncompressed.length}`);
             localStorage.setItem(`version_${this.name}`, this.version);
-        } catch(domException) {
+        } catch (domException) {
             console.error(`Failed to set ${this.name} of size ${compressed.length} to local storage ${domException}`);
         }
     }
@@ -114,7 +114,7 @@ export const TSE = Object.freeze({
 });
 
 const currentTitleIndexVer = '2.0';
-export const titleStorage = new TitleStorageHelper('title-index', './static/json/title-search-index.json', currentTitleIndexVer);
+export const titleStorage = new TitleStorageHelper('title-index', './json/title-search-index.json', currentTitleIndexVer);
 
 export class SearchPane {
     constructor(root, status) {
@@ -138,7 +138,7 @@ export class SearchPane {
         return searchBarVal.replace(/\s+/g, ' ').replace(/[\d\,\.\*!;"‘’“”–<>=\:\[\]¶\(\)]/g, '');
     }
     checkMinQueryLength(wordSinh) {
-        if ((wordSinh.match(/[අ-ෆ]/g)||[]).length < this.settings.minQueryLength) { // count the number of consos
+        if ((wordSinh.match(/[අ-ෆ]/g) || []).length < this.settings.minQueryLength) { // count the number of consos
             this.setStatus(UT('enter-more-characters', this.settings.minQueryLength));
             return false;
         }

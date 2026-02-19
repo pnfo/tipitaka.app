@@ -1,0 +1,170 @@
+Settings
+सेटिंग्स
+
+Text
+पाठ
+
+Offline Software
+ऑफ़लाइन सॉफ़्टवेयर
+
+Pali Script Converter
+पाली लिपि परिवर्तक
+
+About Us
+हमारे बारे में
+
+Help
+सहायता
+
+Facebook Page
+फेसबुक पेज
+
+Select User Interface Language
+उपयोगकर्ता इंटरफ़ेस भाषा चुनें
+
+Select Pali Text Display Script
+पाली पाठ प्रदर्शन लिपि चुनें
+
+Footnotes Format
+फुटनोट्स का प्रारूप
+
+Page Tags Format
+पेज टैग्स का प्रारूप
+
+Text Size
+पाठ का आकार
+
+Do Not Show
+मत दिखाओ
+
+Show On Click
+क्लिक पर दिखाएं
+
+Show Inline
+इनलाइन दिखाएं
+
+Short Name
+संक्षिप्त नाम
+
+Full Name
+पूरा नाम
+
+Smallest
+सबसे छोटा
+
+Smaller
+छोटा
+
+Medium
+मध्यम
+
+Larger
+बड़ा
+
+Largest
+सबसे बड़ा
+
+Menu
+मेनू
+
+Starred
+तारांकित
+
+Select Dictionaries
+शब्दकोश चुनें
+
+XL
+XL
+
+XXL
+XXL
+
+Show/Hide Filter
+फ़िल्टर दिखाएं/छिपाएं
+
+Match Order
+मिलान क्रम
+
+Word Distance
+शब्द दूरी
+
+Edition
+संस्करण
+
+Book
+किताब
+
+Page
+पेज
+
+Link has been copied to the clipboard. You can now paste it.
+लिंक क्लिपबोर्ड पर कॉपी किया गया है। अब आप इसे पेस्ट कर सकते हैं।
+
+Please enter minimun XXX characters to start the searching.
+खोज शुरू करने के लिए कृपया कम से कम XXX अक्षर दर्ज करें।
+
+Each of the search terms must have at least one character.
+प्रत्येक खोज शब्द में कम से कम एक अक्षर होना चाहिए।
+
+XXX results found. First YYY results shown.
+XXX परिणाम मिले। पहले YYY परिणाम दिखाए गए।
+
+Allowed Range for word distance 1 - 99.
+शब्द दूरी के लिए अनुमत सीमा 1 - 99।
+
+Too many results found. First XXX of results shown.
+बहुत सारे परिणाम मिले। पहले XXX परिणाम दिखाए गए।
+
+XXX results found for your search term.
+आपके खोज शब्द के लिए XXX परिणाम मिले।
+
+Search term XXX did not return any results.
+खोज शब्द XXX का कोई परिणाम नहीं मिला।
+
+There are XXX bookmarks matching your filter.
+आपके फ़िल्टर से मेल खाने वाले XXX बुकमार्क हैं।
+
+You have no bookmarks saved. Click the star icon to save to bookmarks.
+आपके पास कोई बुकमार्क सहेजा नहीं गया है। बुकमार्क में सहेजने के लिए तारा आइकन पर क्लिक करें।
+
+Columns
+कॉलम
+
+Color Theme
+रंग थीम
+
+Light
+लाइट
+
+Dark
+डार्क
+
+Multi File Display
+मल्टी फाइल डिस्प्ले
+
+Single
+सिंगल
+
+Tab View
+टैब व्यू
+
+Download Offline Software
+ऑफ़लाइन सॉफ़्टवेयर डाउनलोड करें
+
+Bookmark added
+बुकमार्क जोड़ा गया
+
+Bookmark deleted
+बुकमार्क हटाया गया
+
+Sort By Book
+पुस्तक द्वारा
+
+Exact Word
+केवल यह शब्द
+
+Exact Phrase
+केवल यह वाक्यांश
+
+For searching type the search term in the box above
+खोजने के लिए ऊपर दिए गए बॉक्स में खोज शब्द टाइप करें

@@ -42,7 +42,7 @@ export class GroupedOptions {
     createGroupIfNotExist(group) {
         let groupElem = this.root.children(`.group[group="${group}"]`);
         if (groupElem.length) return;
-        groupElem = Util.createLanguageSelectOption(group, ['', group, [], {} ]);
+        groupElem = Util.createLanguageSelectOption(group, ['', group, [], {}]);
         groupElem.addClass('group').removeClass('option').attr('group', group).appendTo(this.root);
     }
     renderOptions(infoList) {
@@ -55,7 +55,7 @@ export class GroupedOptions {
     }
 }
 export class GroupedCheckOptions extends GroupedOptions {
-    constructor(root, changeCallback, langList) { 
+    constructor(root, changeCallback, langList) {
         super(root, changeCallback);
         this.langList = langList;
     }
@@ -64,16 +64,16 @@ export class GroupedCheckOptions extends GroupedOptions {
     }
     updateOptionActive(optionAr) {
         optionAr.get().forEach(option => {
-            const gName = $(option).toggleClass('active').attr('group');    
+            const gName = $(option).toggleClass('active').attr('group');
             //console.log(this.root.find(`.group[group=${gName}]`));
             if (gName) this.root.find(`.group[group=${gName}]`) // check if there is an active option in this group
-                    .toggleClass('active', this.root.find(`.option.active[group=${gName}]`).length > 0);
+                .toggleClass('active', this.root.find(`.option.active[group=${gName}]`).length > 0);
         });
     }
     createGroupIfNotExist(info, langInfo) {
         let groupElem = this.root.children(`.group[group="${langInfo[0]}"]`);
         if (!groupElem.length) {
-            this.createDictionarySelectOption('', [info[0], langInfo[1], {g: true}], langInfo)
+            this.createDictionarySelectOption('', [info[0], langInfo[1], { g: true }], langInfo)
                 .addClass('group').appendTo(this.root);
         }
     }
@@ -86,7 +86,7 @@ export class GroupedCheckOptions extends GroupedOptions {
     }
     createDictionarySelectOption(value, info, langInfo) {
         const span = $('<span/>').addClass('UT name').text(info[1]).attr('lang', info[0]);
-        const img = langInfo[3].f ? $('<img/>').attr('src', `./static/images/${langInfo[3].f}`) : '';
+        const img = langInfo[3].f ? $('<img/>').attr('src', `./images/${langInfo[3].f}`) : '';
         const option = $('<div/>').append(span, img).attr('value', value);
         if (info[2].g) option.attr('group', langInfo[0]);
         return option;
@@ -99,12 +99,12 @@ export class Util {
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');
-        document.body.removeChild(el);   
+        document.body.removeChild(el);
     }
     static showToast(toastMsg) {
         var toast = $('#toast').html(toastMsg).fadeIn(300);
         // After 3 seconds, remove the show class from DIV
-        setTimeout(function(){ toast.fadeOut(); }, 2000);
+        setTimeout(function () { toast.fadeOut(); }, 2000);
     }
 
     static getParameterByName(name, defVal) {
@@ -117,7 +117,7 @@ export class Util {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    static createLanguageSelectOption(lang, info, flagFolder = './static/images/') {
+    static createLanguageSelectOption(lang, info, flagFolder = './images/') {
         const span = $('<span/>').addClass('UT name').text(info[1]).attr('lang', lang);
         const img = info[3].f ? $('<img/>').attr('src', `${flagFolder}${info[3].f}`) : '';
         const option = $('<div/>').addClass('option').append(span, img).attr('value', lang);
@@ -142,14 +142,14 @@ export class Util {
     static toggleFullScreen(enter) {
         var doc = window.document;
         var docEl = doc.documentElement;
-      
+
         var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
         var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
-      
+
         if (enter && !doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-          requestFullScreen.call(docEl);
+            requestFullScreen.call(docEl);
         } else if (!enter) {
-          cancelFullScreen.call(doc);
+            cancelFullScreen.call(doc);
         }
     }
 }
@@ -167,7 +167,7 @@ export class JDialog {
         this.dlgDiv = $('<div/>').addClass('jdialog').append(showElem).appendTo(this.root)
             .css('width', Math.min(stayInElem.width(), showElem.outerWidth())).css(this.customCss)
             .click(e => e.stopPropagation()); // prevent clicks on the child from propagating up
-        
+
         const dlgRight = this.dlgDiv.offset().left + this.dlgDiv.width();
         if (dlgRight > (stayInElem.offset().left + stayInElem.width())) {
             const newRight = stayInElem.offset().left + stayInElem.width() - (this.root.offset().left + this.root.width());
@@ -238,15 +238,15 @@ class ViewManager {
         $('#text-view-button').click(e => this.showPane('text'));
 
         $('#menu-toggle').mousedown(function (e) {
-            $('#menu-list').animate({height: 'toggle'}, 200);
+            $('#menu-list').animate({ height: 'toggle' }, 200);
             e.stopPropagation();
         });
-        $('#tree-toggle').mousedown(function(e) {
-            $('.pitaka-tree-container').animate({width: 'toggle'}, 250);
+        $('#tree-toggle').mousedown(function (e) {
+            $('.pitaka-tree-container').animate({ width: 'toggle' }, 250);
             $('.pitaka-tree-container').toggleClass('user-opened');
             e.stopPropagation();
         });
-        $('#menu-list, .pitaka-tree-container').mousedown(function(e) {
+        $('#menu-list, .pitaka-tree-container').mousedown(function (e) {
             e.stopPropagation();
         });
         $('body').mousedown(e => this.hideOverlappingContainers());
@@ -262,16 +262,16 @@ class ViewManager {
         });
     }
     hideOverlappingContainers() { // hide tree and menulist
-        $('#menu-list').animate({height: 'hide'}, 250);
+        $('#menu-list').animate({ height: 'hide' }, 250);
         if ($('.pitaka-tree-container').css('position') == 'absolute') { // hide the tree if it is overlapping
-            $('.pitaka-tree-container').animate({width: 'hide'}, 250);
+            $('.pitaka-tree-container').animate({ width: 'hide' }, 250);
         }
     }
     async loadHelp(e = null) {
         // load help page to pane and then show the pane
         const areaDiv = $('#help-area');
         if (!areaDiv.children().length) { // only if not loaded already
-            const html = await $.get(`./static/help-${areaDiv.attr('lang')}.html`);
+            const html = await $.get(`./help-${areaDiv.attr('lang')}.html`);
             areaDiv.html(html);
             $('i', areaDiv).each((_i, icon) => $(icon).addClass('fa-fw'));
         }

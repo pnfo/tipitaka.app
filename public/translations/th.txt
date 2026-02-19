@@ -1,0 +1,170 @@
+Settings
+การตั้งค่า
+
+Text
+เนื้อหา
+
+Offline Software
+โปรแกรมออฟไลน์
+
+Pali Script Converter
+โปรแกรมแปลงอักษรบาลี
+
+About Us
+เกี่ยวกับเรา
+
+Help
+วิธีใช้
+
+Facebook Page
+Facebook ของเรา
+
+Select User Interface Language
+เลือกภาษาที่แสดง
+
+Select Pali Text Display Script
+เลือกตัวอักษรสำหรับแสดงภาษาบาลี
+
+Footnotes Format
+รูปแบบเชิงอรรถ
+
+Page Tags Format
+รูปแบบเลขหน้าอ้างอิง
+
+Text Size
+ขนาดตัวอักษร
+
+Do Not Show
+ไม่แสดง
+
+Show On Click
+แสดงเมื่อคลิก
+
+Show Inline
+แสดงแทรกในบรรทัด
+
+Short Name
+ชื่อย่อ
+
+Full Name
+ชื่อเต็ม
+
+Smallest
+เล็กที่สุด
+
+Smaller
+เล็กกว่า
+
+Medium
+กลาง
+
+Larger
+ใหญ่กว่า
+
+Largest
+ใหญ่ที่สุด
+
+Menu
+เมนู
+
+Starred
+ติดดาว
+
+Select Dictionaries
+เลือกพจนานุกรม
+
+XL
+XL
+
+XXL
+XXL
+
+Show/Hide Filter
+แสดง/ซ่อน ตัวกรอง
+
+Match Order
+ตรงตามลำดับคำ
+
+Word Distance
+ระยะห่างคำ
+
+Edition
+ฉบับ
+
+Book
+หนังสือ
+
+Page
+หน้า
+
+Link has been copied to the clipboard. You can now paste it.
+คัดลอกลิงก์เรียบร้อยแล้ว คุณสามารถนำไปวางได้ทันที
+
+Please enter minimun XXX characters to start the searching.
+กรุณาป้อนอย่างน้อย XXX ตัวอักษรเพื่อเริ่มค้นหา
+
+Each of the search terms must have at least one character.
+คำค้นหาแต่ละคำต้องมีอย่างน้อยหนึ่งตัวอักษร
+
+XXX results found. First YYY results shown.
+พบผลลัพธ์ XXX รายการ แสดง YYY รายการแรก
+
+Allowed Range for word distance 1 - 99.
+ระยะห่างคำต้องอยู่ระหว่าง 1 - 99
+
+Too many results found. First XXX of results shown.
+พบผลลัพธ์จำนวนมาก แสดง XXX รายการแรก
+
+XXX results found for your search term.
+พบ XXX ผลลัพธ์สำหรับคำค้นหาของคุณ
+
+Search term XXX did not return any results.
+ไม่พบผลลัพธ์สำหรับคำว่า XXX
+
+There are XXX bookmarks matching your filter.
+พบบุ๊คมาร์ค XXX รายการที่ตรงกับตัวกรอง
+
+You have no bookmarks saved. Click the star icon to save to bookmarks.
+ยังไม่มีบุ๊คมาร์ค คลิกที่รูปดาวเพื่อบันทึกบุ๊คมาร์ค
+
+Columns
+คอลัมน์
+
+Color Theme
+ธีมสี
+
+Light
+สว่าง
+
+Dark
+มืด
+
+Multi File Display
+การแสดงผลหลายหน้าต่าง
+
+Single
+หน้าเดียว
+
+Tab View
+แบบแท็บ
+
+Download Offline Software
+ดาวน์โหลดโปรแกรมออฟไลน์
+
+Bookmark added
+เพิ่มบุ๊คมาร์คแล้ว
+
+Bookmark deleted
+ลบบุ๊คมาร์คแล้ว
+
+Sort By Book
+เรียงตามเล่ม
+
+Exact Word
+คำนี้เท่านั้น
+
+Exact Phrase
+วลีนี้เท่านั้น
+
+For searching type the search term in the box above
+สำหรับการค้นหา พิมพ์คำที่ต้องการค้นหาในช่องด้านบน

@@ -1,4 +1,4 @@
-"use script";
+"use strict";
 
 import { appSettings, LangHelper, UT, PT, PT_REFRESH, SearchType } from './settings.js';
 import { TextProcessor } from './pali-script.js';
@@ -28,13 +28,13 @@ class PaliAnalysis {
             return $(`<i class="${prop.iconClass} lookup-icon" word="${word}" type="${type}"></i>`);
         });
         const closeIcon = $('<i class="far fa-times-circle close-icon"></i>').attr('pane', pane);
-        const headerRow = $('<div/>').addClass('header').append(lookupIcons, wordElem, closeIcon); 
-        
+        const headerRow = $('<div/>').addClass('header').append(lookupIcons, wordElem, closeIcon);
+
         const entries = await this.dictClient.searchWordInline(word);
         const breakup = $('<div/>').addClass('breakups').html(entries.breakups)
         const declension = $('<div/>').addClass('declension').text('declension - coming soon');
         const dictElem = $('<div/>').addClass('dict-inline').html(entries.matches);
-        
+
         return $('<div/>').addClass('analysis-window').addClass(appSettings.get('analysisStyle'))
             .append(headerRow, breakup, declension, dictElem);
     }
@@ -42,7 +42,7 @@ class PaliAnalysis {
     openWindow(pane, newWindow, target) {
         $(this.vManager.getPaneRoot(pane)).append(newWindow);
         this.openWindows.set(pane, [newWindow, target]);
-        target.addClass('highlighted').get(0).scrollIntoView({block: 'center'});
+        target.addClass('highlighted').get(0).scrollIntoView({ block: 'center' });
         this.registerClicks(newWindow);
     }
     closeWindow(pane) {
@@ -53,7 +53,7 @@ class PaliAnalysis {
             this.openWindows.delete(pane);
         }
     }
-    
+
     registerClicks(window) {
         window.on('click', '.lookup-icon', e => {
             const icon = $(e.currentTarget);

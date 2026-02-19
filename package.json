@@ -5,5 +5,15 @@
     "open": "^10.1.0",
     "restify": "^11.1.0",
     "sqlite3": "^5.1.7"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^7.2.1",
+    "terser": "^5.46.0",
+    "vite": "^7.3.1"
   }
 }

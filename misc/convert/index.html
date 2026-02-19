@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="3q30uQ1_gO_dEVjUO6EsTgpovt8MHTyY75774HmTSb0" />
@@ -8,18 +9,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="shortcut icon" href="../../static/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="../../static/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../../images/favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="../../static/common-styles.css?v=1" />
-    <link rel="stylesheet" href="../../static/font-styles.css?v=1" />
-    <link rel="stylesheet" href="../../static/fontawesome/all.min.css?v=1"/>
-    
+    <link rel="stylesheet" href="../../styles/common-styles.css?v=1" />
+    <link rel="stylesheet" href="../../styles/font-styles.css?v=1" />
+    <link rel="stylesheet" href="../../styles/fontawesome/all.min.css?v=1" />
+
     <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
         ga('create', 'UA-46817481-2', 'auto');
         ga('send', 'pageview');
@@ -30,55 +33,63 @@
                 display: none;
             }
         }
+
         textarea {
-            font-size: 13pt; 
-            font-family:un-abhaya; 
-            flex: 1 1; 
+            font-size: 13pt;
+            font-family: un-abhaya;
+            flex: 1 1;
             min-height: 100pt;
             max-height: 200pt;
-            flex-basis: auto; 
+            flex-basis: auto;
             border: 1px solid coral;
         }
     </style>
 </head>
+
 <body style="overflow: auto;">
 
-<div align="center" style="margin:0 auto; max-width: 1000pt; display: flex; flex-flow: column;">
+    <div align="center" style="margin:0 auto; max-width: 1000pt; display: flex; flex-flow: column;">
 
-    <div class="title-bar" style="flex: 0 1 auto;">
-        <div style="flex: 1 1; text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;">Pali Script Converter</div>
-        <a class="button" id="menu-toggle"><i class="far fa-bars"></i> <i class="ss-hide UT" lang="en">Menu</i></a>
-    </div>
-    <div id="search-bar-div">
-        <div id="menu-list" style="right: 0; top: 0;">
-            <a class="menu-list-item" href="../../index.html"><i class="far fa-book fa-fw" style="color: green;"></i> <i class="UT" lang="en">Back to Tipitaka</i></a>
-            <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: blue;" class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
+        <div class="title-bar" style="flex: 0 1 auto;">
+            <div style="flex: 1 1; text-overflow: ellipsis;  white-space: nowrap;  overflow: hidden;">Pali Script
+                Converter</div>
+            <a class="button" id="menu-toggle"><i class="far fa-bars"></i> <i class="ss-hide UT" lang="en">Menu</i></a>
         </div>
+        <div id="search-bar-div">
+            <div id="menu-list" style="right: 0; top: 0;">
+                <a class="menu-list-item" href="../../index.html"><i class="far fa-book fa-fw"
+                        style="color: green;"></i> <i class="UT" lang="en">Back to Tipitaka</i></a>
+                <a class="menu-list-item" href="https://www.facebook.com/tipitaka.org/"><i style="color: blue;"
+                        class="fab fa-facebook fa-fw"></i> <i class="UT" lang="en">Facebook Page</i></a>
+            </div>
+        </div>
+
+        <textarea id="box1" class="PT" rows="8"
+            placeholder="1) Type or paste the Input text to be converted here."></textarea>
+
+        <div>2) Select the desired output script by using one of the buttons below</div>
+        <div id="pali-script-select" class="custom-radio"></div>
+
+        <textarea id="box2" class="PT" rows="8"
+            placeholder="3) Output converted text will be displayed here"></textarea>
+
+        <div id="output-buttons" style="padding: 5pt;">
+            <a class="button" id="copy-button"><i class="fa fa-copy" style="color: darkgreen;"></i> Copy</a>
+            <a class="button" onclick="$('#box1,#box2').val('');"><i class="fa fa-trash" style="color: darkred;"></i>
+                Reset</a>
+        </div>
+
+        <div class="p" style="align-self: center; flex: 0; white-space: nowrap;"><i class="fa fa-copyright"
+                style="color: green;"></i> 2018 <a href="https://tipitaka.app">tipitaka.app</a></div>
+        <div class="p" style="color: grey; align-self: center;">Report any conversion errors to path.nirvana<i
+                class="fa fa-at"></i>gmail.com</div>
     </div>
 
-    <textarea id="box1" class="PT" rows="8" placeholder="1) Type or paste the Input text to be converted here."></textarea>
-    
-    <div>2) Select the desired output script by using one of the buttons below</div>
-    <div id="pali-script-select" class="custom-radio"></div>
-    
-    <textarea id="box2" class="PT" rows="8" placeholder="3) Output converted text will be displayed here"></textarea>
+    <div id="toast"></div>
 
-    <div id="output-buttons" style="padding: 5pt;">
-        <a class="button" id="copy-button"><i class="fa fa-copy" style="color: darkgreen;"></i> Copy</a>
-        <a class="button" onclick="$('#box1,#box2').val('');"><i class="fa fa-trash" style="color: darkred;"></i> Reset</a>
-    </div>
-
-    <div class="p" style="align-self: center; flex: 0; white-space: nowrap;"><i class="fa fa-copyright" style="color: green;"></i> 2018 <a href="https://tipitaka.app">tipitaka.app</a></div>
-    <div class="p" style="color: grey; align-self: center;">Report any conversion errors to path.nirvana<i class="fa fa-at"></i>gmail.com</div>
-</div>
-
-<div id="toast"></div>
-
-<script src="../../static/scripts/jquery-3.4.1.min.js"></script>
-<script src="./index.js" type="module"></script>
-
-<!--use "npx webpack" in the convert folder to build this and uncomment for production-->
-<!-- <script src="./bundle.js"></script> -->
+    <script src="../../scripts/jquery-3.4.1.min.js"></script>
+    <script src="./index.js" type="module"></script>
 
 </body>
+
 </html>

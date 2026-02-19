@@ -5,38 +5,38 @@ import { Language, appSettings, UT, PT } from './settings.js';
 import { JHoverDialog } from './util.js';
 import { SearchPane } from './search-common.js';
 
-import { DictionaryQuery } from '../misc/server/constants.js';
+import { DictionaryQuery } from './backend-adapter.js';
 //const DictionaryQuery = require('../misc/server/constants.js').DictionaryQuery;
 
 /** change the version when a new dict is available so the old one will be deleted and the new one loaded */
 const dictionaryList = new Map([
-    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', {s: 'BU', v: 2, o: 'Projector', n: 20970, g: true}]],
-    ['en-nyanatiloka', [Language.EN, 'Nyanatiloka Buddhist', {s: 'ND', v: 1, d: 'Buddhist Dictionary by Ven Nyanatiloka', o: 'pced stardict', g: true}]],
-    ['en-pts', [Language.EN, 'PTS', {s: 'PS', v: 1, d: 'Pali Text Society Dictionary', o: 'dpr', g: true}]],
-    ['en-dppn', [Language.EN, 'Proper Names', {s: 'PN', v: 1, d: 'Pali Proper Names by G P Malalasekera', o: 'dpr', g: true}]],
-    ['en-vri', [Language.EN, 'VRI English', {s: 'VR', v: 2, o: 'cst windows software', g: 'English', n: 13508}]],
-    ['en-critical', [Language.EN, 'Critical PD', {s: 'CR', v: 1, o: 'extracted from https://cpd.uni-koeln.de/', n: 29669, g: true}]],
-    
-    ['my-u-hoke-sein', [Language.BUR, 'U Hoke Sein', {s: 'HS', v: 3, o: 'pced stardict', n: 60695, g: true}]], 
-    ['my-23-vol', [Language.BUR, 'Abhidhāna', {s: 'AB', v: 2, o: 'pced stardict', g: true}]],
-    ['my-android', [Language.BUR, 'Android App', {s: 'AA', v: 1, o: 'Pali Myanmar Dictionary Android App', g: true}]],
-    
-    ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', {s: 'BU', v: 2, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය', g: true}] ],
-    ['si-sumangala', [Language.SI, 'මඩිතියවෙල සුමඞ්ගල', {s: 'MS', v: 3, d: 'මඩිතියවෙල සිරි සුමඞ්ගල හිමි, පාලි-සිංහල ශබ්දකෝෂය', g: true}] ],
-    
-    ['th-etipitaka', [Language.THAI, 'E-Tipitaka', {s: 'ET', v: 2, o: 'e tipitaka windows software', g: true}] ],
-    ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', {s: 'SU', v: 2, o: 'Ven Buja', g: true}] ],
-    ['th-thaiware', [Language.THAI, 'Thai Ware', {s: 'TW', v: 2, o: 'tware windows software', g: true}] ],
-    ['th-dhamma-cheti-1', [Language.THAI, 'กิริยากิตก์ฉบับธรรมเจดีย์', {s: 'DC1', v: 1, o: 'online pdf', n: 5922, g: true}] ], // TODO combine 1 & 2
-    ['th-dhamma-cheti-2', [Language.THAI, 'กิริยาอาขยาตฉบับธรรมเจดีย์', {s: 'DC2', v: 1, o: 'online pdf', n: 4272, g: true}] ],
-    ['th-bhumibol', [Language.THAI, 'PTS Bhumibol', {s: 'BB', v: 1, o: 'online pdf', n: 16143, g: true}] ],
-    
-    ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', {s: 'SC', v: 2, d: 'SuttaCentral Chinese Dictionary', o: 'Projector'}]],
-    ['hi-vri', [Language.HI, 'VRI Hindi', {s: 'VR', v: 2, o: 'cst windows software', n: 16183}]],
-    ['in-suttacentral', [Language.INDO, 'SC Indonesian', {s: 'SC', v: 2, o: 'Projector'}]],
-    ['es-marco', [Language.ES, 'Marco A', {s: 'ES', v: 1, o: 'SuttaCentral'}]],
-    ['pt-marco', [Language.PT, 'Marco A', {s: 'PT', v: 1, o: 'SuttaCentral'}]],
-    ['kh-glossary', [Language.KM, 'Glossary App', {s: 'GA', v: 1, o: 'Pali-Khmer Glossary Windows App v1.0', n: 14391}]],
+    ['en-buddhadatta', [Language.EN, 'Buddhadatta Concise', { s: 'BU', v: 2, o: 'Projector', n: 20970, g: true }]],
+    ['en-nyanatiloka', [Language.EN, 'Nyanatiloka Buddhist', { s: 'ND', v: 1, d: 'Buddhist Dictionary by Ven Nyanatiloka', o: 'pced stardict', g: true }]],
+    ['en-pts', [Language.EN, 'PTS', { s: 'PS', v: 1, d: 'Pali Text Society Dictionary', o: 'dpr', g: true }]],
+    ['en-dppn', [Language.EN, 'Proper Names', { s: 'PN', v: 1, d: 'Pali Proper Names by G P Malalasekera', o: 'dpr', g: true }]],
+    ['en-vri', [Language.EN, 'VRI English', { s: 'VR', v: 2, o: 'cst windows software', g: 'English', n: 13508 }]],
+    ['en-critical', [Language.EN, 'Critical PD', { s: 'CR', v: 1, o: 'extracted from https://cpd.uni-koeln.de/', n: 29669, g: true }]],
+
+    ['my-u-hoke-sein', [Language.BUR, 'U Hoke Sein', { s: 'HS', v: 3, o: 'pced stardict', n: 60695, g: true }]],
+    ['my-23-vol', [Language.BUR, 'Abhidhāna', { s: 'AB', v: 2, o: 'pced stardict', g: true }]],
+    ['my-android', [Language.BUR, 'Android App', { s: 'AA', v: 1, o: 'Pali Myanmar Dictionary Android App', g: true }]],
+
+    ['si-buddhadatta', [Language.SI, 'පොල්වත්තේ බුද්ධදත්ත', { s: 'BU', v: 2, d: 'පොල්වත්තේ බුද්ධදත්ත හිමි, පාලි-සිංහල අකාරාදිය', g: true }]],
+    ['si-sumangala', [Language.SI, 'මඩිතියවෙල සුමඞ්ගල', { s: 'MS', v: 3, d: 'මඩිතියවෙල සිරි සුමඞ්ගල හිමි, පාලි-සිංහල ශබ්දකෝෂය', g: true }]],
+
+    ['th-etipitaka', [Language.THAI, 'E-Tipitaka', { s: 'ET', v: 2, o: 'e tipitaka windows software', g: true }]],
+    ['th-aj-subhira', [Language.THAI, 'สุภีร์ ทุมทอง', { s: 'SU', v: 2, o: 'Ven Buja', g: true }]],
+    ['th-thaiware', [Language.THAI, 'Thai Ware', { s: 'TW', v: 2, o: 'tware windows software', g: true }]],
+    ['th-dhamma-cheti-1', [Language.THAI, 'กิริยากิตก์ฉบับธรรมเจดีย์', { s: 'DC1', v: 1, o: 'online pdf', n: 5922, g: true }]], // TODO combine 1 & 2
+    ['th-dhamma-cheti-2', [Language.THAI, 'กิริยาอาขยาตฉบับธรรมเจดีย์', { s: 'DC2', v: 1, o: 'online pdf', n: 4272, g: true }]],
+    ['th-bhumibol', [Language.THAI, 'PTS Bhumibol', { s: 'BB', v: 1, o: 'online pdf', n: 16143, g: true }]],
+
+    ['ch-suttacentral', [Language.CHINESE, 'SC Chinese', { s: 'SC', v: 2, d: 'SuttaCentral Chinese Dictionary', o: 'Projector' }]],
+    ['hi-vri', [Language.HI, 'VRI Hindi', { s: 'VR', v: 2, o: 'cst windows software', n: 16183 }]],
+    ['in-suttacentral', [Language.INDO, 'SC Indonesian', { s: 'SC', v: 2, o: 'Projector' }]],
+    ['es-marco', [Language.ES, 'Marco A', { s: 'ES', v: 1, o: 'SuttaCentral' }]],
+    ['pt-marco', [Language.PT, 'Marco A', { s: 'PT', v: 1, o: 'SuttaCentral' }]],
+    ['kh-glossary', [Language.KM, 'Glossary App', { s: 'GA', v: 1, o: 'Pali-Khmer Glossary Windows App v1.0', n: 14391 }]],
 ]);
 
 
@@ -45,11 +45,11 @@ export class DictionaryClient extends SearchPane {
     constructor() {
         super($('#dict-area'), $('#dict-status'));
         this.dictionaryList = dictionaryList;
-        this.activeDicts = new Set(appSettings.get('dictList')); 
+        this.activeDicts = new Set(appSettings.get('dictList'));
         this.settings = {
             minQueryLength: 2, // num consos
             maxMatches: 100,  // only up to this many results are requested
-            maxMatchesInline: 10, 
+            maxMatchesInline: 10,
             searchDelay: 400,
         };
         this.requestTimer = '';
@@ -57,12 +57,12 @@ export class DictionaryClient extends SearchPane {
         this.prevWord = '';
         this.registerEvents(); // for events on the results view
     }
-    
+
     // used to set the dictionaries based on the GPS country
     setDictionariesByLanguage(lang) {
         console.log(`Setting dictionaries based on the language ${lang}`);
         this.dictionaryList.forEach((info, dictName) => {
-            if (info[0] == lang) 
+            if (info[0] == lang)
                 this.activeDicts.add(dictName);
         });
         appSettings.set('dictList', Array.from(this.activeDicts));
@@ -88,7 +88,7 @@ export class DictionaryClient extends SearchPane {
         const word = SearchPane.normalizeSearchTerm(searchBarVal);
         const wordSinh = TextProcessor.convertFromMixed(word); // convert to sinhala here
         if (!this.checkMinQueryLength(wordSinh)) return;
-        
+
         if (wordSinh == this.prevWordSinh) {
             return; // same as prev - check array equal
         }
@@ -120,7 +120,7 @@ export class DictionaryClient extends SearchPane {
 
     /* search the active dicts */
     async queryWord(word, limit) {
-        const query = {type: 'dict', word: word, dictionaries: Array.from(this.activeDicts), limit };
+        const query = { type: 'dict', word: word, dictionaries: Array.from(this.activeDicts), limit };
         const tQuery = new DictionaryQuery(query);
         console.log(`sending query with terms ${word} and params ${JSON.stringify(query)}`);
         const response = await tQuery.runQuery();
@@ -129,19 +129,27 @@ export class DictionaryClient extends SearchPane {
             console.error(response.error);
             return false;
         }
+
+        // Ensure arrays
+        response.matches = response.matches || [];
+        response.breakups = response.breakups || [];
+
         console.log(`received ${response.matches.length} matches for word ${word}`);
         return response;
     }
 
     displayResponse(response) {
-        $('#dict-results', this.root).html(this.renderMatches(response.matches));
-        $('#word-breakup', this.root).html(this.renderBreakups(response.breakups));
-        if (!response.matches.length) {
+        const matches = response.matches || [];
+        const breakups = response.breakups || [];
+
+        $('#dict-results', this.root).html(this.renderMatches(matches));
+        $('#word-breakup', this.root).html(this.renderBreakups(breakups));
+        if (!matches.length) {
             this.setStatus(UT('no-results-found', this.prevWord));
-        } else if (response.matches.length < this.settings.maxMatches) {
-            this.setStatus(UT('number-of-results-found', response.matches.length));
+        } else if (matches.length < this.settings.maxMatches) {
+            this.setStatus(UT('number-of-results-found', matches.length));
         } else {
-            this.setStatus(UT('too-many-results-found', this.settings.maxMatches)); 
+            this.setStatus(UT('too-many-results-found', this.settings.maxMatches));
         }
     }
 

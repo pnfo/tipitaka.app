@@ -12,7 +12,7 @@ import { paliAnalysis } from './pali-analysis.js';
 
 const appTree = new PitakaTree($('.pitaka-tree'));
 const appTabs = new PitakaTabs($('.text-section'), appTree);
-appTree.initialize(appTabs).done(function() {
+appTree.initialize(appTabs).done(function () {
     // tree loaded
     LinkHandler.initClipboard();
     LinkHandler.tryStartupLocation(appTree, appTabs);
@@ -108,7 +108,7 @@ if (appSettings.localeSource == 'gps') { // take this from GPS
         paliScriptSelect.children(`[value=${newScript}]`).click();
         uiLanguageSelect.children(`[value=${newLang}]`).click();
         dictClient.setDictionariesByLanguage(dictLang);
-    }).catch(e => console.err(`Request to get gps country failed. ${e}`)); 
+    }).catch(e => console.err(`Request to get gps country failed. ${e}`));
 }
 
 new GroupedCheckOptions($('.dictionary-select'), dict => dictClient.dictionaryListChanged(dict), appSettings.uiLanguageList)
@@ -119,6 +119,10 @@ function changeTextSize(size) {
 }
 function changeColorTheme(bodyClass) {
     $(':root').attr('class', bodyClass); // replace all classes with this class
+    if (window.Android && window.Android.setStatusBarColor) {
+        const color = bodyClass == 'dark' ? '#333333' : '#F3F3F3';
+        window.Android.setStatusBarColor(color);
+    }
 }
 
 function populateFormatSelect(formatList, select, settingName, onChangeCallback = '') {

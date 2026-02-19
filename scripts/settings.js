@@ -1,4 +1,4 @@
-import {Script, paliScriptInfo, TextProcessor } from './pali-script.js';
+import { Script, paliScriptInfo, TextProcessor } from './pali-script.js';
 
 export const Language = Object.freeze({
     SI: 'si',
@@ -8,6 +8,7 @@ export const Language = Object.freeze({
     INDO: 'in',
     BUR: 'my',
     THAI: 'th',
+    KM: 'kh',
     ES: 'es', // spanish
     PT: 'pt', // portuguese
 });
@@ -19,29 +20,23 @@ export const SearchType = Object.freeze({
 });
 
 const searchTypeProp = Object.freeze({
-    [SearchType.TITLE]: { pane: 'title-search', placeholder: 'Search Sutta Titles', next: SearchType.FTS, iconClass: 'far fa-heading fa-fw' }, 
-    [SearchType.FTS]: { pane: 'fts', placeholder: 'Full Text Search', next: SearchType.DICT, iconClass: 'far fa-file-alt fa-fw' }, 
-    [SearchType.DICT]: { pane: 'dict', placeholder: 'Dictionary Search', next: SearchType.TITLE, iconClass: 'far fa-books fa-fw' }, 
+    [SearchType.TITLE]: { pane: 'title-search', placeholder: 'Search Sutta Titles', next: SearchType.FTS, iconClass: 'far fa-heading fa-fw' },
+    [SearchType.FTS]: { pane: 'fts', placeholder: 'Full Text Search', next: SearchType.DICT, iconClass: 'far fa-file-alt fa-fw' },
+    [SearchType.DICT]: { pane: 'dict', placeholder: 'Dictionary Search', next: SearchType.TITLE, iconClass: 'far fa-books fa-fw' },
 });
 
-const uiLanguageList = new Map([
-    [Language.SI, ['Sinhala', 'සිංහල', [], {f: 'sl_flag.png', t: true} ]],
-    [Language.EN, ['English', 'English', [], {f: 'uk_flag.png', t: true} ]],
-    [Language.CHINESE, ['Chinese', '汉语', [], {f: 'china_flag.png'} ]],
-    [Language.HI, ['Hindi', 'हिन्दी', [], {f: 'in_flag.png'} ]],
-    [Language.INDO, ['Indonesian', 'baˈhasa indoneˈsia', [], {f: 'indonesia_flag.png'} ]],
-    [Language.BUR, ['Burmese', 'ဗမာစာ', [], {f: 'my_flag.png', t: true} ]],
-    [Language.THAI, ['Thai', 'ภาษาไทย', [], {f: 'th_flag.png', t: true} ]],
-    [Language.KM, ['Khmer', 'ភាសាខ្មែរ', [], {f: 'kh_flag.png'} ]],
-    [Language.ES, ['Spanish', 'Español', [], {f: 'es_flag.png'} ]],
-    [Language.PT, ['Portuguese', 'Português', [], {f: 'pt_flag.png'} ]],
+export const uiLanguageList = new Map([
+    [Language.EN, ['English', 'English', [], { f: 'uk_flag.png', t: true }]],
+    [Language.BUR, ['Myanmar', 'မြန်မာ', [], { f: 'my_flag.png', t: true }]],
+    [Language.SI, ['Sinhala', 'සිංහල', [], { f: 'lk_flag.png', t: true }]],
+    [Language.THAI, ['Thai', 'ไทย', [], { f: 'th_flag.png', t: true }]],
+    [Language.KM, ['Khmer', 'ខ្មែរ', [], { f: 'kh_flag.png', t: true }]],
+    [Language.HI, ['Hindi', 'हिन्दी', [], { f: 'in_flag.png', t: true }]],
+    [Language.CHINESE, ['Chinese', '中文', [], { f: 'china_flag.png', t: true }]],
+    [Language.INDO, ['Indonesian', 'Bahasa Indonesia', [], { f: 'indonesia_flag.png' }]],
+    [Language.ES, ['Spanish', 'Español', [], { f: 'es_flag.png' }]],
+    [Language.PT, ['Portuguese', 'Português', [], { f: 'pt_flag.png' }]],
 ]);
-
-/*const dictLaunchList = new Map([
-    ['none', ['Do Not Show', '<i class="far fa-eye-slash"/>']],
-    ['click', ['Show On Click', '<i class="fal fa-mouse-pointer"></i>']],
-    ['hover', ['Show On Hover', '<i class="far fa-bullseye"></i>']]
-]);*/
 
 const analysisStyleList = new Map([
     ['top', []],
@@ -132,22 +127,22 @@ class AppSettings {
         this.loadDefaults();
         console.log(`Settings loaded from storage ${JSON.stringify(this.settings)}`);
     }
-    
+
     // try to determine from browser or ip address
     loadDefaults() {
         Object.keys(defaultSettings).forEach(key => {
-            if (!this.settings[key]) this.settings[key] = defaultSettings[key]; 
+            if (!this.settings[key]) this.settings[key] = defaultSettings[key];
         });
     }
-    
+
     async setGPSCountryInfo() {
         const response = await $.getJSON('https://ipinfo.io?token=2632ab35d5f487');
         console.log(`Got location info from GPS ${JSON.stringify(response)}`);
         const countryCode = response.country;
         console.log(`Setting the pali script and ui language based on the country code ${countryCode}`);
-        return [ countryToPaliScript.get(countryCode) || Script.RO, 
-            countryToUiLanguage.get(countryCode) || Language.EN,
-            countryToDictionaryLanguage.get(countryCode) || '',
+        return [countryToPaliScript.get(countryCode) || Script.RO,
+        countryToUiLanguage.get(countryCode) || Language.EN,
+        countryToDictionaryLanguage.get(countryCode) || '',
         ];
     }
 }
@@ -193,8 +188,6 @@ export const stringResources = {
     'no-bookmarks': 'You have no bookmarks saved. Click the star icon to save to bookmarks.',
     'bookmark-added': 'Bookmark added',
     'bookmark-deleted': 'Bookmark deleted',
-    //'dictionary-loading': 'Dictionary Loading...',
-    //'fts-loading': 'Full Text Search Loading. Please wait...',
 };
 
 // based on the uiLanguage selected - store the translations
@@ -223,9 +216,21 @@ export class LangHelper {
     static async loadTranslation(lang) {
         const jsonLines = [];
         try {
-            const lines = (await $.get(`./static/translations/${lang}.txt`)).split('\r\n');
-            for (let i = 0; i < lines.length; i+=2) {
-                jsonLines.push([lines[i].trim(), lines[i+1].trim()]);
+            const text = await $.get(`./translations/${lang}.txt`);
+            if (typeof text === 'string' && text.trim().startsWith('<')) {
+                console.warn(`Translation file for ${lang} returned HTML (likely 404), ignoring.`);
+                return new Map();
+            }
+            const lines = text.split(/\r?\n/);
+            let i = 0;
+            while (i < lines.length) {
+                let key = lines[i].trim();
+                i++;
+                if (key) {
+                    let val = (i < lines.length) ? lines[i].trim() : '';
+                    jsonLines.push([key, val]);
+                    i++; // consumed Value
+                }
             }
         } catch (e) { console.log(e); }
         return new Map(jsonLines);

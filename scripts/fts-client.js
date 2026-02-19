@@ -10,7 +10,7 @@ import { TextProcessor } from './pali-script.js';
 import { PitakaTree } from "./pitaka-tree.js";
 import { titleStorage, SearchFilter, TSE, fileNameFilter, SearchPane } from "./search-common.js";
 
-import { FTSQuery } from '../misc/server/constants.js';
+import { FTSQuery } from './backend-adapter.js';
 //const FTSQuery = require('../misc/server/constants.js').FTSQuery;
 
 export class FTSClient extends SearchPane {
@@ -25,8 +25,10 @@ export class FTSClient extends SearchPane {
             searchDelay: 400,
         };
         this.requestTimer = '';
-        this.options = {sortByBook: true, exactWord: true, exactPhrase: true, matchOrder: true, wordDistance: 10, 
-            maxMatches: this.settings.maxMatches, maxFiles: this.settings.maxFiles };
+        this.options = {
+            sortByBook: true, exactWord: true, exactPhrase: true, matchOrder: true, wordDistance: 10,
+            maxMatches: this.settings.maxMatches, maxFiles: this.settings.maxFiles
+        };
     }
     init(appTree, appTabs) {
         this.appTree = appTree;
@@ -67,7 +69,7 @@ export class FTSClient extends SearchPane {
         // multiple spaces by 1 space, other non-wild chars removed by tokenizer also removed (so user can directly copy paste terms)
         // allowed wild chars % and _ (sqlite LIKE query)
         const termStr = SearchPane.normalizeSearchTerm(searchBarVal);
-        
+
         const termsStrSinh = TextProcessor.convertFromMixed(termStr); // convert to sinhala here
         if (!this.checkMinQueryLength(termsStrSinh)) return;
         const terms = termsStrSinh.split(' ')
@@ -75,7 +77,7 @@ export class FTSClient extends SearchPane {
 
         $('.option[param=exactPhrase]').toggleClass('hidden', terms.length < 2); // this option enabled only if there are more than 1 terms
         $('.option[hide=exactPhrase]').toggleClass('hidden', this.options.exactPhrase || terms.length < 2);
-        
+
         //this.options.wordDistance = Math.max(terms.length, this.options.wordDistance);
         if (terms.length == this.prevTermsSinh.length && terms.every((term, i) => this.prevTermsSinh[i] == term)) {
             return; // same as prev - check array equal
@@ -86,7 +88,7 @@ export class FTSClient extends SearchPane {
         this.scheduleSearchIndex();
     }
     checkTerms(terms) {
-        if (!terms || !terms.length || !terms.every(t => /[අ-ෆ]/.test(t)) ) { // each term should have at least one sinhala char (conso, indept vowel)
+        if (!terms || !terms.length || !terms.every(t => /[අ-ෆ]/.test(t))) { // each term should have at least one sinhala char (conso, indept vowel)
             this.setStatus(UT('fts-search-term-one-char'));
             return false;
         }
@@ -102,16 +104,21 @@ export class FTSClient extends SearchPane {
         if (!this.checkTerms(this.prevTermsSinh)) return; // changing filter/options at the very beginning
         $('#fts-match-list,#fts-match-info').empty();
 
-        const query = {type: 'fts', terms: this.prevTermsSinh, params: this.getQueryParams() };
+        const query = { type: 'fts', terms: this.prevTermsSinh, params: this.getQueryParams() };
         const ftsQ = new FTSQuery(query);
         console.log(`sending query with terms ${query.terms} and params ${JSON.stringify(query.params)}`);
         this.setBusySearching(true); // visual indication of search running
+        await new Promise(r => setTimeout(r, 50)); // let the spinner paint
         const response = await ftsQ.runQuery();
         this.setBusySearching(false); // clear visual indication
         if (response.error) {
             this.setStatus(UT(response.error), 'error-status'); // some server error
             console.error(response.error);
             return false;
+        }
+        if (!response.matches || response.matches.length === 0) { // check if matches is null or undefined or empty
+            this.setStatus(UT('no-results-found', this.prevTermsSinh));
+            return;
         }
         this.matchesStore = response;
         console.log(`received mstore with ${response.matches.length} matches and ${Object.keys(response.wordInfo).length} words`);
@@ -142,7 +149,7 @@ export class FTSClient extends SearchPane {
             indexes.forEach(ind => {
                 PT(this.matchesStore.wordInfo[ind][0]).addClass('token pali-analysis').appendTo(entryDiv);
             });
-            
+
             $('<span/>').text(freq).addClass('total-freq').appendTo(entryDiv);
             $('<span/>').text(numFiles).addClass('count-files').appendTo(entryDiv);
             return entryDiv;
@@ -189,7 +196,7 @@ export class FTSClient extends SearchPane {
         const fileInd = nameDiv.parent().attr('fileInd');
         const offsetAr = match[2][fileInd][1];
 
-        this.appTabs.newTab(fileId, newT[1], coll, { words: highlightWords, offsets: offsetAr } );
+        this.appTabs.newTab(fileId, newT[1], coll, { words: highlightWords, offsets: offsetAr });
         this.appTree.openBranch(fileId);
     }
 

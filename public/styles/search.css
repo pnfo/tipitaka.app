@@ -1,0 +1,326 @@
+#title-search-area {
+    margin: 0.3rem;
+}
+
+.search-status {
+    font-style: italic;
+    color: var(--special-color);
+    padding: 0.3rem;
+}
+
+.error-status {
+    color: red;
+}
+
+.busy-searching {
+    color: var(--special-color);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    font-size: 3rem;
+    font-weight: 900;
+    text-shadow: 0 0 5px white;
+    /* Ensure contrast against any background */
+}
+
+#title-search-results {
+    width: 100%;
+}
+
+.search-result {
+    padding: 0.2rem 0.3rem 0.2rem 0.3rem;
+    border-top: 1px dashed var(--border-color);
+    text-align: left;
+    word-break: break-word;
+}
+
+.search-result:nth-child(even) {
+    background-color: var(--special-bcolor)
+}
+
+.search-result:hover {
+    background-color: var(--hover-bcolor);
+}
+
+.search-result i.parent {
+    color: var(--main-color);
+}
+
+.search-result i.child {
+    font-weight: bold;
+    color: var(--heading-color);
+}
+
+.search-result i.name:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.search-result i.arrow {
+    color: var(--special-color);
+}
+
+.filter-container {
+    display: none;
+}
+
+.filter-table {
+    text-align: left;
+}
+
+.filter-table td {
+    cursor: pointer;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    word-break: break-word;
+    border: 0.5px solid var(--main-bcolor);
+}
+
+.filter-table td:hover {
+    background-color: var(--hover-bcolor);
+    border-color: var(--border-color);
+}
+
+.filter-table td::before {
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 400;
+    content: "\f0c8";
+    padding-right: 5pt;
+}
+
+.filter-table td.checked::before {
+    content: "\f14a";
+}
+
+
+#fts-select-button {
+    color: var(--icon-color);
+    font-weight: 300;
+}
+
+#fts-select-button:hover {
+    background-color: var(--hover-bcolor);
+}
+
+#fts-select-button.active {
+    color: rgb(231, 10, 10);
+    background-color: var(--special-bcolor);
+}
+
+#fts-options {
+    padding-top: 0.25rem;
+    text-align: left;
+}
+
+#fts-options .option {
+    cursor: pointer;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    border: 0.5px solid var(--main-bcolor);
+}
+
+#fts-options .option.hidden {
+    display: none !important;
+}
+
+#fts-options .option:hover {
+    background-color: var(--hover-bcolor);
+    border-color: var(--border-color);
+}
+
+#fts-options .check-box::before {
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 400;
+    content: "\f0c8";
+    padding-right: 5pt;
+}
+
+#fts-options .check-box.checked::before {
+    content: "\f14a";
+}
+
+#input-word-distance {
+    border: 1px solid var(--border-color);
+    max-width: 2rem;
+    min-width: 2rem;
+    margin-left: 0.4rem;
+    background-color: var(--main-bcolor);
+    color: var(--main-color);
+}
+
+#fts-match-list .total-freq {
+    padding: 0.5rem;
+}
+
+#fts-match-list .count-files {
+    padding: 0.5rem;
+}
+
+#fts-match-list .token {
+    padding: 0.5rem;
+}
+
+#fts-match-list .search-result {
+    cursor: pointer;
+    background-color: var(--special-bcolor);
+}
+
+#fts-match-list .search-result:hover {
+    background-color: var(--main-bcolor);
+}
+
+#fts-match-list .search-result.selected {
+    background-color: var(--main-bcolor);
+    color: var(--special-color);
+}
+
+#fts-match-info {
+    background-color: var(--main-bcolor);
+}
+
+#fts-match-info .count-files {
+    padding: 0.5rem;
+}
+
+
+/* dictionary related */
+w:hover {
+    color: var(--special-color);
+}
+
+.pali-analysis {
+    cursor: pointer;
+}
+
+.dict-row {
+    text-align: left;
+    font-weight: normal;
+}
+
+.dict-name {
+    color: var(--icon-color);
+    padding-right: 0.2rem;
+    font-family: 'roman';
+    cursor: pointer;
+}
+
+.dict-word {
+    color: var(--special-color);
+    padding-right: 0.5rem;
+    font-weight: bold;
+}
+
+.dict-meaning {
+    color: var(--main-color);
+}
+
+.dict-meaning i {
+    font-style: italic;
+}
+
+/* meanings can have rich html */
+.dict-desc {
+    padding: 0.2rem;
+    min-width: 5rem;
+}
+
+/*input.type-word { background-color: var(--main-bcolor); color: var(--main-color); border-color: var(--border-color); }*/
+
+#dict-results .dict-row {
+    text-align: left;
+    padding: 0.2rem 1rem 0.2rem 1rem;
+}
+
+#dict-results .dict-row:nth-child(even) {
+    background-color: var(--special-bcolor)
+}
+
+#dict-results .dict-row:hover {
+    background-color: var(--hover-bcolor);
+}
+
+#dict-results .dict-cell {
+    margin-right: 1rem
+}
+
+.lookup-icon {
+    cursor: pointer;
+    padding: 0rem 0.3rem 0rem 0.3rem;
+    color: var(--special-color);
+}
+
+.lookup-icon:hover {
+    font-weight: 900;
+}
+
+.analysis-window {
+    background-color: var(--special-bcolor);
+    border: 1px solid var(--border-color);
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    z-index: 2;
+    text-align: left;
+    overflow-y: auto;
+    width: -moz-available;
+    /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;
+    /* Mozilla-based browsers will ignore this. */
+    width: fill-available;
+    position: fixed;
+}
+
+.analysis-window.bottom {
+    bottom: 0;
+    min-height: 10rem;
+    max-height: 14rem;
+}
+
+.analysis-window.top {
+    top: 0;
+    height: 25%;
+}
+
+.analysis-window .close-icon:hover {
+    color: red;
+    font-weight: 900;
+}
+
+.analysis-window .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.analysis-window .header .word {
+    flex: 1 1 auto;
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.analysis-window .dict-row {
+    font-size: 0.8rem;
+}
+
+.breakups {
+    text-align: left;
+    padding: 0.2rem 1rem 0.2rem 1rem;
+}
+
+.analysis-window .breakups {
+    font-size: 0.8rem;
+    padding: 0rem;
+}
+
+.breakups .word {
+    color: var(--special-color);
+    padding-right: 0.5rem;
+    font-weight: bold;
+}
+
+.breakups .type {
+    padding-right: 0.5rem;
+    font-weight: bold;
+}
+
+.breakups .sub {
+    padding-right: 0.5rem;
+}

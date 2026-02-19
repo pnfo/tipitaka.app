@@ -3,7 +3,7 @@
  */
 import { PT, PT_REFRESH } from './settings.js';
 
-const treeJsonFileURL = './static/json/full-tree.json';
+const treeJsonFileURL = './json/full-tree.json';
 
 class PitakaTree {
     constructor(elem) {
@@ -24,7 +24,7 @@ class PitakaTree {
             this.registerClick();
             console.log(`Tree loaded. num collections: ${this.collections.length}, num fileIds: ${Object.keys(this.fileIdToColl).length}`);
             //$(this).children('ul').children('li:nth-child(2)').children('a').click(); // expand sutta nikaya by default
-        }).fail(function(d, textStatus, error) {
+        }).fail(function (d, textStatus, error) {
             console.error("getJSON failed, status: " + textStatus + ", error: " + error);
         });
     }
@@ -58,15 +58,15 @@ class PitakaTree {
 
     addCollection(node, parentCollId) {
         const collId = this.collections.length;
-        const coll = { id: collId, p: parentCollId, n: [] }; 
+        const coll = { id: collId, p: parentCollId, n: [] };
         Object.keys(node).forEach(nameAttr => { // copy over name attrs
             if (nameAttr != 'c' && !nameAttr.startsWith('f')) {
                 const fileId = node[`f${nameAttr}`];
                 if (fileId) { // leaf
-                    coll.n.push([ nameAttr, node[nameAttr], fileId ]);
-                    this.fileIdToColl[ fileId ] = collId;
+                    coll.n.push([nameAttr, node[nameAttr], fileId]);
+                    this.fileIdToColl[fileId] = collId;
                 } else { // parent
-                    coll.n.push([ nameAttr, node[nameAttr] ]);
+                    coll.n.push([nameAttr, node[nameAttr]]);
                 }
             }
         });
@@ -104,7 +104,7 @@ class PitakaTree {
         return this.collections[this.fileIdToColl[fileId]];
     }
     // filter Collection by nameAttr or fileId - can be a static func
-    static filterCollection(coll, val) { 
+    static filterCollection(coll, val) {
         return coll.n.filter(v => v[0] == val || v[2] == val)[0];
     }
     toggleBranch(li) {
@@ -124,4 +124,4 @@ class PitakaTree {
     }
 }
 
-export {PitakaTree};
+export { PitakaTree };

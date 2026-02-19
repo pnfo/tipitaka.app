@@ -4,4 +4,12 @@
 dev
 node_modules
 dist
-static/db/dict-all.db
+Android
+dict-all.db
+
+
+server/bin
+server-data/db/dict-all.db
+*.fiber.gz
+sign-notorize.sh
+dist-desktop

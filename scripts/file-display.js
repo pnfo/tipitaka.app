@@ -3,16 +3,7 @@ import { appSettings } from './settings.js';
 import { PageTag, Note, Collection, LinkHandler, HitHighlighter } from './note-tag.js';
 import { bookmarks } from './title-search.js';
 
-function Uint16ArrayToString(u16Arr) {
-    const CHUNK_SZ = 0x8000;
-    const c = [];
-    for (let i = 0; i < u16Arr.length; i += CHUNK_SZ) {
-      c.push(String.fromCharCode.apply(null, u16Arr.subarray(i, i+CHUNK_SZ)));
-    }
-    return c.join('');
-}
-
-const titleTypes = new Map([ ['cha', '1-2-3'], ['tit', '1-2'], ['sub', '1'] ]);
+const titleTypes = new Map([['cha', '1-2-3'], ['tit', '1-2'], ['sub', '1']]);
 export class FileDisplay {
     constructor(elem, appTabs, fileId, collObj, highlight) {
         this.root = elem;
@@ -27,12 +18,10 @@ export class FileDisplay {
         this.prevScrollPos = 0; // for hiding navbar
         this.registerEvents();
     }
-    load() {
-        const oReq = new XMLHttpRequest();
-        oReq.open('GET', `./static/text/${this.fileId}.txt`, true);
-        oReq.responseType = "arraybuffer";
-        oReq.onload = (oEvent) => {
-            this.data = Uint16ArrayToString(new Uint16Array(oReq.response));
+    async load() {
+        try {
+            this.data = await $.get({ url: `./text/${this.fileId}.txt`, dataType: 'text' });
+
             if (this.highlight.words) {
                 this.data = HitHighlighter.markOffsets(this.data, this.highlight);
             }
@@ -40,8 +29,9 @@ export class FileDisplay {
             this.refresh();
             this.linkHandler.openAndHighlightLine(this.lineToOpen);
             if (this.highlight.words) this.linkHandler.openHighlightedLines();
-        };
-        oReq.send();
+        } catch (e) {
+            console.error(`Failed to load text file ${this.fileId}:`, e);
+        }
     }
     registerEvents() {
         Note.registerEvents(this);
@@ -98,7 +88,7 @@ export class FileDisplay {
         this.root.children('.cha').first().prevUntil().show(); // show namo, nik, boo
         this.collection.renderTop();
     }
-    
+
     getDivForLine(line, ind) {
         const [rendType, paraNum, text] = this.lineToParts(line);
         const div = $('<div/>').addClass(rendType).attr('line-ind', ind + 1);
@@ -111,7 +101,7 @@ export class FileDisplay {
         } else {
             if (paraNum) {
                 $('<span/>').addClass(`hangnum ${paraNum.length > 4 ? 'long' : ''}`)
-                .text(paraNum + '.').append(shareIcon).appendTo(div);
+                    .text(paraNum + '.').append(shareIcon).appendTo(div);
             } else if ($.inArray(rendType, ['bod', 'gax', 'gae']) >= 0) {
                 $('<span/>').addClass('hangnum').appendTo(div); // just for the first line indent in bod,gax,gae
             }
@@ -124,7 +114,7 @@ export class FileDisplay {
         if (line && (parts.length < 2 || parts.length > 3)) {
             console.log(`malformed line ${line} in file ${this.fileId}`);
         }
-        return [parts[0], parts.length > 2 ? parts[1] : '', parts[parts.length-1]];
+        return [parts[0], parts.length > 2 ? parts[1] : '', parts[parts.length - 1]];
     }
     /**
      * convert the text to beautiful html based on the script selected and other settings
@@ -137,7 +127,7 @@ export class FileDisplay {
         // Notes and page tag rendering according to the settings
         Note.render(span);
         PageTag.render(span);
-        
+
         return span;
     }
 

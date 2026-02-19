@@ -1,0 +1,170 @@
+Settings
+ការកំណត់
+
+Text
+អត្ថបទ
+
+Offline Software
+កម្មវិធីប្រើក្រៅបណ្ដាញ
+
+Pali Script Converter
+កម្មវិធីបម្លែងអក្សរបាលី
+
+About Us
+អំពីយើង
+
+Help
+ជំនួយ
+
+Facebook Page
+ទំព័រ Facebook
+
+Select User Interface Language
+ជ្រើសរើសភាសាប្រើប្រាស់
+
+Select Pali Text Display Script
+ជ្រើសរើសអក្សរសម្រាប់បង្ហាញបាលី
+
+Footnotes Format
+ទម្រង់កំណត់ចំណាំបាត
+
+Page Tags Format
+ទម្រង់ស្លាកទំព័រ
+
+Text Size
+ទំហំអក្សរ
+
+Do Not Show
+កុំបង្ហាញ
+
+Show On Click
+បង្ហាញនៅពេលចុច
+
+Show Inline
+បង្ហាញក្នុងជួរ
+
+Short Name
+ឈ្មោះកាត់
+
+Full Name
+ឈ្មោះពេញ
+
+Smallest
+តូចបំផុត
+
+Smaller
+តូច
+
+Medium
+មធ្យម
+
+Larger
+ធំ
+
+Largest
+ធំបំផុត
+
+Menu
+ម៉ឺនុយ
+
+Starred
+បានដាក់ផ្កាយ
+
+Select Dictionaries
+ជ្រើសរើសវចនានុក្រម
+
+XL
+XL
+
+XXL
+XXL
+
+Show/Hide Filter
+បង្ហាញ/លាក់ តម្រង
+
+Match Order
+តាមលំដាប់ពាក្យ
+
+Word Distance
+ចម្ងាយពាក្យ
+
+Edition
+ការបោះពុម្ព
+
+Book
+សៀវភៅ
+
+Page
+ទំព័រ
+
+Link has been copied to the clipboard. You can now paste it.
+តំណភ្ជាប់ត្រូវបានចម្លង។ អ្នកអាចបិទភ្ជាប់វាបាន។
+
+Please enter minimun XXX characters to start the searching.
+សូមបញ្ចូលយ៉ាងហោចណាស់ XXX តួអក្សរ ដើម្បីចាប់ផ្តើមស្វែងរក។
+
+Each of the search terms must have at least one character.
+ពាក្យស្វែងរកនីមួយៗត្រូវតែមានយ៉ាងហោចណាស់មួយតួអក្សរ។
+
+XXX results found. First YYY results shown.
+រកឃើញលទ្ធផល XXX។ បង្ហាញលទ្ធផល YYY ដំបូង។
+
+Allowed Range for word distance 1 - 99.
+ចម្ងាយពាក្យត្រូវនៅចន្លោះ ១ - ៩៩។
+
+Too many results found. First XXX of results shown.
+រកឃើញលទ្ធផលច្រើនពេក។ បង្ហាញលទ្ធផល XXX ដំបូង។
+
+XXX results found for your search term.
+រកឃើញលទ្ធផល XXX សម្រាប់ពាក្យស្វែងរករបស់អ្នក។
+
+Search term XXX did not return any results.
+ពាក្យស្វែងរក XXX មិនមានលទ្ធផលណាមួយទេ។
+
+There are XXX bookmarks matching your filter.
+មានចំណាំ XXX ដែលត្រូវនឹងតម្រងរបស់អ្នក។
+
+You have no bookmarks saved. Click the star icon to save to bookmarks.
+អ្នកមិនទាន់បានរក្សាទុកចំណាំទេ។ ចុចរូបផ្កាយដើម្បីរក្សាទុក។
+
+Columns
+ជួរឈរ
+
+Color Theme
+ពណ៌រចនាប័ទ្ម
+
+Light
+ភ្លឺ
+
+Dark
+ងងឹត
+
+Multi File Display
+ការបង្ហាញឯកសារច្រើន
+
+Single
+តែមួយ
+
+Tab View
+មើលជាផ្ទាំង
+
+Download Offline Software
+ទាញយកកម្មវិធីប្រើក្រៅបណ្ដាញ
+
+Bookmark added
+បានបន្ថែមចំណាំ
+
+Bookmark deleted
+បានលុបចំណាំ
+
+Sort By Book
+តាមសៀវភៅ
+
+Exact Word
+ពាក្យនេះប៉ុណ្ណោះ
+
+Exact Phrase
+ឃ្លានេះប៉ុណ្ណោះ
+
+For searching type the search term in the box above
+សម្រាប់ការស្វែងរក សូមវាយពាក្យដែលចង់ស្វែងរកក្នុងប្រអប់ខាងលើ

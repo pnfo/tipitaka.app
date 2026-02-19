@@ -1,0 +1,170 @@
+Settings
+设置
+
+Text
+正文
+
+Offline Software
+离线软件
+
+Pali Script Converter
+巴利文转换器
+
+About Us
+关于我们
+
+Help
+使用帮助
+
+Facebook Page
+Facebook 页面
+
+Select User Interface Language
+界面语言
+
+Select Pali Text Display Script
+巴利文显示字体
+
+Footnotes Format
+脚注格式
+
+Page Tags Format
+页码格式
+
+Text Size
+文字大小
+
+Do Not Show
+不显示
+
+Show On Click
+点击显示
+
+Show Inline
+行内显示
+
+Short Name
+简称
+
+Full Name
+全称
+
+Smallest
+最小
+
+Smaller
+较小
+
+Medium
+中等
+
+Larger
+较大
+
+Largest
+最大
+
+Menu
+菜单
+
+Starred
+已收藏
+
+Select Dictionaries
+选择词典
+
+XL
+特大
+
+XXL
+超特大
+
+Show/Hide Filter
+显示/隐藏过滤器
+
+Match Order
+匹配词序
+
+Word Distance
+词距
+
+Edition
+版本
+
+Book
+书名
+
+Page
+页码
+
+Link has been copied to the clipboard. You can now paste it.
+链接已复制到剪贴板。
+
+Please enter minimun XXX characters to start the searching.
+请输入至少 XXX 个字符开始搜索。
+
+Each of the search terms must have at least one character.
+每个搜索词必须至少包含一个字符。
+
+XXX results found. First YYY results shown.
+找到 XXX 个结果。显示前 YYY 个。
+
+Allowed Range for word distance 1 - 99.
+词距范围应在 1 到 99 之间。
+
+Too many results found. First XXX of results shown.
+结果过多。仅显示前 XXX 个。
+
+XXX results found for your search term.
+找到 XXX 个符合您搜索词的结果。
+
+Search term XXX did not return any results.
+未找到关于 XXX 的结果。
+
+There are XXX bookmarks matching your filter.
+有 XXX 个符合过滤条件的书签。
+
+You have no bookmarks saved. Click the star icon to save to bookmarks.
+暂无收藏。点击星形图标添加书签。
+
+Columns
+分栏
+
+Color Theme
+颜色主题
+
+Light
+浅色
+
+Dark
+深色
+
+Multi File Display
+多窗口显示
+
+Single
+单页
+
+Tab View
+标签页
+
+Download Offline Software
+下载离线软件
+
+Bookmark added
+书签已添加
+
+Bookmark deleted
+书签已删除
+
+Sort By Book
+按书名
+
+Exact Word
+仅限此词
+
+Exact Phrase
+仅限此短语
+
+For searching type the search term in the box above
+如需搜索，请在上方框中输入搜索词
