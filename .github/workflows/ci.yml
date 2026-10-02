@@ -1,0 +1,52 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: actions/setup-go@v5
+        with: { go-version-file: server/go.mod, cache-dependency-path: server/go.sum }
+      - run: npm ci
+      - uses: actions/cache@v4
+        with: { path: .cache/dpd, key: "dpd-${{ hashFiles('data/dpd.lock') }}" }
+      - run: npm run upstream -- --dpd-only
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: node scripts/sync-converter.mjs --check
+      - run: npm run build:fixture && npm run build:dict:fixture
+      - run: npm test
+      - run: cd server && go vet ./... && go test -race ./...
+      - run: cd server && go test -run XXX -fuzz FuzzSSRPath -fuzztime 30s .
+      - run: npm run build:web && npm run build:web:app && npm run check:css && npm run build:server
+      - run: npx playwright install --with-deps chromium webkit firefox
+      - run: npx playwright test -c e2e/playwright.config.ts
+        env: { CI: 1 }
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-report, path: e2e/playwright-report }
+
+  # the whole corpus from the pinned upstream commit: validation, key contract (data/nodes.tsv must be up to date)
+  full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: actions/setup-go@v5
+        with: { go-version-file: server/go.mod, cache-dependency-path: server/go.sum }
+      - run: npm ci
+      - uses: actions/cache@v4
+        with: { path: .cache/tipitaka-xml, key: "xml-${{ hashFiles('data/upstream.lock') }}" }
+      - run: npm run upstream
+      - run: npm run build:data
+      - name: data/nodes.tsv is committed for the current upstream
+        run: git diff --exit-code data/nodes.tsv
+      - run: cd server && TIPITAKA_DB=../../db go test -run TestFullCorpus -v ./engine/
+      - uses: actions/upload-artifact@v4
+        with: { name: build-report, path: db/build-report.md }

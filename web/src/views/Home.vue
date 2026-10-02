@@ -50,6 +50,7 @@
 
     <footer class="border-t border-line pt-6 text-center text-xs text-muted">
       <RouterLink :to="{ name: 'about', params: { script } }" class="underline">{{ t('About') }}</RouterLink> ·
+      <RouterLink :to="{ name: 'convert', params: { script } }" class="underline">{{ t('Pali Script Converter') }}</RouterLink> ·
       {{ t('Text: Vipassana Research Institute (CST)') }} · {{ t('Dictionary: DPD and others') }}
     </footer>
   </div>

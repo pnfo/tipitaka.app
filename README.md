@@ -1,79 +1,40 @@
-# tipitaka.app - Chatta Sangayana Tipitaka
+# Tipiṭaka.app – Chaṭṭha Saṅgāyana Tipiṭaka
 
-## Building the Website (Frontend)
-`npm run build` will build the frontend application into the `dist` directory (referenced by `index.html`).
+The Pāḷi Tipiṭaka with aṭṭhakathā, ṭīkā and other texts (VRI Chaṭṭha Saṅgāyana edition) in 22 scripts, with
+full text search, title search, tap-to-lookup dictionaries (Digital Pāḷi Dictionary and 23 others) and a
+mūla / commentary parallel view. The same code runs the website (https://tipitaka.app), the desktop apps and the
+Android app (iOS ready).
 
-`npm run dev` to run the frontend in development mode with hot reload.
+* Texts: [VipassanaTech/tipitaka-xml](https://github.com/VipassanaTech/tipitaka-xml), synchronised automatically
+  (daily workflow → pull request with the changed texts).
+* Script conversion: [@pnfo/pali-converter](https://github.com/pnfo/pali-converter) (shared with open.tipitaka.lk).
+* Dictionary: [DPD](https://www.dpdict.net/) by Bodhirasa Bhikkhu (CC BY-NC-SA 4.0) and the v2 dictionaries.
 
-## Building Apps for Windows, Mac, and Linux
+## Quick start
+Requirements: Node 22+, Go 1.26+ with a C compiler (cgo sqlite).
+```bash
+npm ci
+npm run upstream -- --dpd   # fetch the pinned VRI xml and DPD into .cache/
+npm run build:data          # db/text.db   (~20 s)
+npm run build:dict          # db/dict.db   (~20 s)
+npm run build:web && npm run build:server
+server/bin/tipitaka_app -root-path .        # http://localhost:8402
+npm run dev                                  # vite dev server on :5155, proxies /api to :8402
+```
+On macOS, if cgo linking fails with `tapi error`, `source scripts/go-env.sh` first.
 
-### Prerequisites
-- Go 1.22+
-- GCC (MinGW for Windows cross-compilation on Linux/Mac)
+## Tests
+```bash
+npm test                      # vitest (shared, build, web)
+npm run test:go               # go engine + server on the fixture dbs (npm run build:fixture && npm run build:dict:fixture)
+npm run test:e2e              # playwright: desktop + mobile browsers + android bridge simulation
+npm run lint && npm run typecheck && npm run check:css
+```
 
-### Build Process
-The desktop applications are built using a Go server that serves the frontend and handles database queries.
+## Documentation
+* [dev-docs/architecture.md](dev-docs/architecture.md) – design, key and url scheme, source map
+* [dev-docs/data-pipeline.md](dev-docs/data-pipeline.md) – XML → text.db, schema, keys, reports
+* [dev-docs/native-bridge.md](dev-docs/native-bridge.md) – Android / iOS apps (gomobile engine + WebView)
+* [dev-docs/testing.md](dev-docs/testing.md), [dev-docs/deploy.md](dev-docs/deploy.md), [dev-docs/alignments.md](dev-docs/alignments.md)
 
-Run the build script:
-    ```bash
-    ./server/build-all.sh
-    ```
-    This script will cross-compile the application for Linux, Windows, and macOS. The binaries will be output to `server/bin`.
-
-### Running Locally
-To run the server locally for development or testing:
-1.  Navigate to the `server` directory.
-2.  Run the Go server pointing to the project root:
-    ```bash
-    go run main.go -root-path=../
-    ```
-    -   `-root-path=../` tells the server to look for `dist` and `server-data` in the parent directory.
-    -   Use `-no-open` to prevent the browser from opening automatically.
-
-### Distribution
-To create a distribution package, include:
-*   The compiled binary (e.g., `tipitaka_app_windows_intel.exe`)
-*   `dist` directory (frontend build)
-*   `server-data` directory (databases)
-    *   **Note:** `server-data/db/dict-all.db` (Full Text Search DB) is large and not included in the repository. It must be downloaded separately and placed in `server-data/db/`.
-*   The following script can create these zip files for all supported OS'es with the above files included
-    ```bash
-    ./server/create-zips.sh
-    ```
-
-## Setting up the Online Website (https://tipitaka.app)
-The same Linux binary is used to serve requests for the online website.
-
-1.  Clone this repository.
-2.  Build the frontend:
-    ```bash
-    npm run build
-    ```
-3.  Build the Go server for Linux (most droplets use Linux)
-4.  Ensure `server-data` is populated, including `dict-all.db` (copy from existing deployment or download).
-5.  Copy the `dist`, Go server (`tipitaka_app_linux_intel`) and `server-data` folder to the droplet 
-5.  Run the server:
-    ```bash
-    chmod +x tipitaka_app_linux_intel
-    ./tipitaka_app_linux_intel -root-path=. -no-open
-    ```
-6.  Use a process manager like `pm2` or `systemd` to keep it running.
-
-## Building Apps for Android
-The Android app uses a WebView to display the content and serves data via a local server setup within the app.
-
-### Files to Include
-1.  **Frontend**: Run `npm run build`. Copy the **contents** of the `dist` directory to `Android/app/src/main/assets/dist`.
-    *   (`dist` directory should be inside `assets`)
-2.  **Data**: Copy the `server-data` directory (ensure `dict-all.db` is included) to `Android/server_data/src/main/assets/server-data`.
-    *   The Android project uses the `:server_data` module as an **Asset Pack** to manage large data files.
-
-### Build Process
-1.  Open the [`Android` repository](https://github.com/pathnirvana/tipitaka.app-android-app) in Android Studio.
-2.  Build the release APK/Bundle as usual.
-
-## License 
-Attribution-ShareAlike CC BY-SA https://creativecommons.org/licenses/by-sa/4.0/
-You must give appropriate credit, provide a link to the license, and indicate if changes were made.
-
-The VRI texts in the static/texts directory are copyrighted to VRI (https://www.vridhamma.org/). 
+v2 (jQuery) is in the git history before the `v3` branch.

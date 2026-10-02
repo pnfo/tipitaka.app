@@ -1,0 +1,17 @@
+# Testing
+
+| command | what |
+|---|---|
+| `npm test` | Vitest: markup/tokenizer/normalisation, script converter goldens (writes `server/convert/golden.json` for Go), XML parser, catalog, tree + key snapshot of the fixture corpus (`build/__snapshots__/fixture-keys.txt`), paragraph links, fts offsets, web data layer (HTTP + native bridge sources, cache, SSR prefill), stores (v2 settings / bookmarks migration), highlighting |
+| `cd server && go test -race ./...` | engine on the fixture dbs (tree, text, links, titles, fts semantics incl. suffix/phrase/filters/paging, dictionaries, DPD lookup, bridge JSON), HTTP API (status codes, cache headers, no `/sql-query`), SSR (title, canonical, alternates, conversion, 404s), sitemaps, legacy redirects, markup, goja converter == JS goldens |
+| `go test -run XXX -fuzz FuzzSSRPath .` | fuzzes url parsing / rendering |
+| `TIPITAKA_DB=../../db go test -run TestFullCorpus -v ./engine/` | timings of typical and broad searches on the full corpus |
+| `npm run test:e2e` | Playwright against the real Go server and fixture dbs: chromium, webkit, firefox, Pixel, iPhone, and `android-sim` (app build + simulated bridge). Reader (start position, lazy loading, script switch, `#p` targets, notes, groups, 404, bare keys), search (suggestions, combos, options, filters, wildcards, other-script input, titles), dictionary (tap lookup, DPD), settings/bookmarks/history + v2 migration, SSR without JS, API security |
+| `npm run check:css` | built CSS against the target browsers |
+| `npm run lint`, `npm run typecheck` | eslint, vue-tsc |
+
+The fixture corpus is `e2e/fixtures/xml` (truncated copies of 8 upstream files, `tsx build/make-fixtures.ts`).
+The fixture dict.db contains only the fixture text's words (needs `.cache/dpd`: `npm run upstream -- --dpd-only`).
+
+On macOS with a newer SDK than the Command Line Tools, `source scripts/go-env.sh` before cgo builds.
+Firefox may not start in sandboxed environments; CI runs it.

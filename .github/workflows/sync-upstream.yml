@@ -1,0 +1,54 @@
+name: sync-upstream
+# Daily: when VipassanaTech/tipitaka-xml has new commits (or DPD a new release), rebuild the databases, run the
+# tests and open a pull request with the build report (changed texts, key changes, new warnings).
+# Merging the PR and running the release workflow publishes the new databases; deploying stays manual.
+on:
+  schedule: [{ cron: '30 1 * * *' }]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: actions/setup-go@v5
+        with: { go-version-file: server/go.mod, cache-dependency-path: server/go.sum }
+      - run: npm ci
+      - id: up
+        run: npm run upstream -- --latest --dpd-latest
+      - if: steps.up.outputs.xml_changed == 'true' || steps.up.outputs.dpd_changed == 'true'
+        id: build
+        run: |
+          npm run build:data -- --allow-removed
+          npm run build:dict
+          npm run build:fixture && npm run build:dict:fixture
+          npm test
+          (cd server && go test ./... && TIPITAKA_DB=../../db go test -run TestFullCorpus -v ./engine/)
+          {
+            echo 'report<<EOF'
+            head -c 60000 db/build-report.md
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+      - if: steps.build.outcome == 'success'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: sync/upstream
+          delete-branch: true
+          title: 'Upstream sync: tipitaka-xml ${{ steps.up.outputs.xml_changed == ''true'' && ''updated'' || ''unchanged'' }}, DPD ${{ steps.up.outputs.dpd_changed == ''true'' && ''updated'' || ''unchanged'' }}'
+          commit-message: 'data: sync upstream tipitaka-xml / DPD'
+          add-paths: |
+            data/upstream.lock
+            data/dpd.lock
+            data/nodes.tsv
+          body: |
+            Automated sync of [VipassanaTech/tipitaka-xml](https://github.com/VipassanaTech/tipitaka-xml) and the Digital Pāḷi Dictionary.
+            All tests passed. Review the changed texts and key changes below (removed keys break published urls: add a
+            `build/key-overrides.ts` entry before merging), then merge and run the release workflow.
+
+            ${{ steps.build.outputs.report }}

@@ -1,0 +1,81 @@
+name: release
+# Builds the databases, the web builds, the desktop zips (natively on each OS: cgo sqlite) and the Android
+# engine AAR, and attaches them to a GitHub release. The linux amd64 binary + dbs are what scripts/deploy.sh
+# installs on the server. Trigger with a v* tag or manually.
+on:
+  push: { tags: ['v*'] }
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - uses: actions/cache@v4
+        with: { path: .cache, key: "src-${{ hashFiles('data/upstream.lock', 'data/dpd.lock') }}" }
+      - run: npm run upstream -- --dpd
+      - run: npm run build:data && npm run build:dict && npm run build:web && npm run build:web:app
+      - run: |
+          mkdir -p out
+          (cd db && zip -q ../out/tipitaka-app-db.zip text.db dict.db build-info.json)
+          (cd web && zip -qr ../out/web-dist-app.zip dist-app)
+      - uses: actions/upload-artifact@v4
+        with: { name: data, path: 'db/*.db', retention-days: 7 }
+      - uses: actions/upload-artifact@v4
+        with: { name: web, path: web/dist, retention-days: 7 }
+      - uses: actions/upload-artifact@v4
+        with: { name: release-data, path: out/*.zip, retention-days: 7 }
+
+  desktop:
+    needs: data
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-13, macos-14, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults: { run: { shell: bash } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version-file: server/go.mod, cache-dependency-path: server/go.sum }
+      - uses: actions/download-artifact@v4
+        with: { name: data, path: db }
+      - uses: actions/download-artifact@v4
+        with: { name: web, path: web/dist }
+      - run: bash scripts/release-desktop.sh
+      - uses: actions/upload-artifact@v4
+        with: { name: 'desktop-${{ matrix.os }}', path: release/*.zip }
+
+  android-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version-file: server/go.mod, cache-dependency-path: server/go.sum }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager "ndk;27.1.12297006"
+      - run: bash scripts/build-mobile.sh android
+        env: { ANDROID_NDK_HOME: '${{ env.ANDROID_HOME }}/ndk/27.1.12297006' }
+      - uses: actions/upload-artifact@v4
+        with: { name: android-engine, path: server/mobile/build/engine.aar }
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [desktop, android-engine]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/desktop-*/*.zip
+            artifacts/release-data/*.zip
+            artifacts/android-engine/engine.aar

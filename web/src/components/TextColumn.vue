@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<{
   linked?: Set<number>
   contained?: boolean
   idPrefix?: string
-}>(), { coll: 'mula', idPrefix: '' })
+}>(), { coll: 'mula', idPrefix: '', target: undefined, highlight: () => [], linked: undefined })
 const emit = defineEmits<{
   visible: [para: number, key: string]
   word: [roman: string, shown: string]

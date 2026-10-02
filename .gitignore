@@ -16,10 +16,7 @@ dist-desktop
 # v3
 /web/dist
 /web/dist-app
-/db/*.db
-/db/*.db-*
-/db/build-report.md
-/db/build-info.json
+/db/
 /e2e/fixtures/db
 /test-results
 /playwright-report

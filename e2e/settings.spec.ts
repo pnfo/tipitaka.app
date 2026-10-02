@@ -36,3 +36,10 @@ test.describe('settings and storage', () => {
     await expect(page.getByTestId('history-item').first()).toBeVisible()
   })
 })
+
+test('script converter page', async ({ page }) => {
+  await page.goto('/latn/convert')
+  await page.getByTestId('convert-input').fill('ධම්මපදං')
+  await page.getByTestId('convert-target').selectOption('latn')
+  await expect(page.getByTestId('convert-output')).toHaveText(/dhammapadaṃ/i)
+})

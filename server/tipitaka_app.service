@@ -1,24 +1,22 @@
-# Systemd conf file to run the Go binary in production
-# Should be located in /etc/systemd/system/tipitaka_app.service
-
+# systemd unit for the tipitaka.app Go server (v3). Install: /etc/systemd/system/tipitaka_app.service
+# scripts/deploy.sh puts each release in ~/www/tipitaka.app/releases/<ts> and points `current` at it.
+# nginx: location / { proxy_pass http://localhost:8402; }  (unchanged from v2)
 [Unit]
-Description=Tipitaka.app CST Go server
+Description=Tipitaka.app Go server
 After=network.target
 
 [Service]
 Type=simple
 User=janaka
-
-WorkingDirectory=/home/janaka/www/tipitaka.app
-ExecStart=/home/janaka/www/tipitaka.app/tipitaka_app_linux_intel -no-open
+WorkingDirectory=/home/janaka/www/tipitaka.app/current
+ExecStart=/home/janaka/www/tipitaka.app/current/tipitaka_app -no-open -listen 127.0.0.1:8402 -root-path /home/janaka/www/tipitaka.app/current
 Restart=on-failure
 RestartSec=5
+# the dbs are read-only and memory mapped by sqlite; keep the go heap small on the 1 GB droplet
+Environment=GOMEMLIMIT=300MiB
 
 [Install]
 WantedBy=multi-user.target
 
-# Start Service
-# sudo systemctl start tipitaka_app.service
-
-# View Logs tailing
+# sudo systemctl daemon-reload && sudo systemctl restart tipitaka_app
 # journalctl -u tipitaka_app.service -f
