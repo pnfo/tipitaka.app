@@ -50,7 +50,7 @@
     <!-- parallel: mūla | commentary -->
     <div v-else-if="parallel" class="mx-auto flex max-w-[1500px] gap-0 md:gap-2" :style="{ height: 'calc(100vh - 6.25rem)' }" data-testid="parallel">
       <div class="min-w-0 flex-1 border-line md:border-r">
-        <TextColumn ref="main" :node-key="key" :script="script" :conv="conv" :coll="info.coll" :target="targetPara" :highlight="highlight"
+        <TextColumn ref="main" :node-key="streamKey" :script="script" :conv="conv" :coll="info.coll" :target="targetPara" :highlight="highlight"
           :linked="linkedMain" contained @visible="onVisible" @word="onWord" @para="onPara" @loaded="onMainLoaded" />
       </div>
       <div class="hidden min-w-0 flex-1 flex-col md:flex">
@@ -70,7 +70,7 @@
 
     <!-- single column -->
     <div v-else class="pb-24 pt-2" data-testid="reader">
-      <TextColumn ref="main" :node-key="key" :script="script" :conv="conv" :coll="info.coll" :target="targetPara" :highlight="highlight"
+      <TextColumn ref="main" :node-key="streamKey" :script="script" :conv="conv" :coll="info.coll" :target="targetPara" :highlight="highlight"
         @visible="onVisible" @word="onWord" @para="onPara" @loaded="onMainLoaded">
         <template #end>
           <nav class="mt-10 flex items-center justify-between gap-4 border-t border-line pt-4 font-ui text-sm">
@@ -113,6 +113,8 @@ const { script, conv } = useScript()
 const { width } = useWindowSize()
 
 const key = computed(() => route.params.key as string)
+/** the node the text stream started at: only changes on navigation, not when the url follows the scroll position */
+const streamKey = ref('')
 const info = ref<NodeInfo | null>(null)
 const visible = ref<{ key: string; para: number } | null>(null)
 const visibleInfo = ref<NodeInfo | null>(null)
@@ -144,6 +146,7 @@ async function load(k: string) {
   try {
     const i = await api.node(k)
     info.value = i
+    streamKey.value = k
     tree.reveal(i.path.map(p => p.key), i.key, i.coll)
     if (i.book < 0) groupChildren.value = await api.children(k)
     library.visit({ key: i.key, title: i.title, path: i.bookTitle ?? i.path[i.path.length - 1]?.title ?? '', para: i.start })
@@ -206,7 +209,7 @@ const linkedSide = computed(() => new Set(links.value.filter(l => l.k.startsWith
 async function onMainLoaded(from: number, to: number) {
   if (!info.value) return
   try {
-    const ls = await api.links(key.value, from, to)
+    const ls = await api.links(streamKey.value, from, to)
     const seen = new Map(links.value.map(l => [`${l.i}:${l.b}:${l.t}`, l]))
     for (const l of ls) seen.set(`${l.i}:${l.b}:${l.t}`, l)
     links.value = [...seen.values()]
@@ -218,7 +221,7 @@ async function onMainLoaded(from: number, to: number) {
     }
   } catch { /* links are optional */ }
 }
-watch(key, () => { links.value = []; linkTargets.value = [] })
+watch(streamKey, () => { links.value = []; linkTargets.value = [] })
 
 let syncTimer: ReturnType<typeof setTimeout> | undefined
 function syncSide(para: number) {

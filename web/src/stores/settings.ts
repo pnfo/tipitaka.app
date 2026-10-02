@@ -3,7 +3,7 @@
  * ('settings': paliScript si/ro/..., uiLanguage, dictList, ...).
  */
 import { defineStore } from 'pinia'
-import { reactive, watch } from 'vue'
+import { reactive, toRefs, watch } from 'vue'
 import { LEGACY_SCRIPT, isScriptCode, DEFAULT_SCRIPT } from '@shared/scripts'
 import { readJson, writeJson } from './storage'
 
@@ -81,7 +81,7 @@ export const useSettings = defineStore('settings', () => {
   watch(s, v => writeJson(SETTINGS_KEY, v), { deep: true, immediate: true })
   watch(() => s.theme, applyTheme, { immediate: true })
   watch(() => [s.textSize, s.leading, s.width] as const, applyText, { immediate: true })
-  return s
+  return toRefs(s) // refs: pinia treats them as state (a returned reactive object would be copied)
 })
 
 function applyTheme(theme: Theme) {
