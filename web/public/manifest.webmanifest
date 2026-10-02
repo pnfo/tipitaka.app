@@ -1,0 +1,9 @@
+{
+  "name": "Tipiṭaka.app – Chaṭṭha Saṅgāyana Tipiṭaka",
+  "short_name": "Tipiṭaka",
+  "icons": [{ "src": "images/app-icon.png", "sizes": "300x300", "type": "image/png" }],
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbf8f3",
+  "theme_color": "#7a2e14"
+}

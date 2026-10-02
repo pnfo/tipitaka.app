@@ -225,7 +225,7 @@ const dpdCols = `id, lemma, pos, grammar, meaning, meaning_lit, meaning_2, const
 	plus_case, compound_type, compound_construction, notes, stem, pattern, example, source, sutta, ebt_count`
 
 func (e *Engine) dpdHeads(ctx context.Context, where string, args []any, limit int) ([]DpdHead, error) {
-	rows, err := e.dict.QueryContext(ctx, "SELECT "+dpdCols+" FROM dpd_head WHERE "+where+" ORDER BY ebt_count DESC, id LIMIT ?", append(args, limit)...)
+	rows, err := e.dict.QueryContext(ctx, "SELECT "+dpdCols+" FROM dpd_head WHERE "+where+" ORDER BY id LIMIT ?", append(args, limit)...)
 	if err != nil {
 		return nil, err
 	}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pi-Latn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Tipiṭaka.app – Pāḷi Tipiṭaka</title>
+    <meta name="description" content="Pāḷi Tipiṭaka (Chaṭṭha Saṅgāyana) with aṭṭhakathā, ṭīkā and other texts in 22 scripts, full text search and dictionaries (DPD and more).">
+    <meta property="og:site_name" content="Tipiṭaka.app">
+    <meta property="og:image" content="https://tipitaka.app/images/og.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Tipiṭaka">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#7a2e14">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/app-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <script>
+      // theme before first paint (settings saved by the app, see src/stores/settings.ts)
+      try { var s = JSON.parse(localStorage.getItem('tipitaka.app-settings-3') || '{}'); if (s.theme && s.theme !== 'light') document.documentElement.className = s.theme === 'dark' ? 'dark' : s.theme } catch (e) {}
+    </script>
+    <style>
+      /* server rendered text (removed when the app mounts) - readable without js */
+      body { margin: 0; background: #fbf8f3; color: #2b2522; font-family: 'Noto Serif', Georgia, serif; }
+      #ssr { max-width: 760px; margin: 0 auto; padding: 72px 20px 40px; font-size: 18px; line-height: 1.6; }
+      #ssr .ssr-crumbs { font: 14px system-ui, sans-serif; margin-bottom: 16px; color: #6b625c; }
+      #ssr a { color: #7a2e14; }
+      #ssr h1, #ssr h2, #ssr h3, #ssr h4 { color: #7a2e14; text-align: center; font-weight: 600; }
+      #ssr .centre, #ssr .nikaya, #ssr .trailer { text-align: center; }
+      #ssr .bodytext { text-indent: 1.5em; text-align: justify; }
+      #ssr .gatha1, #ssr .gatha2, #ssr .gatha3, #ssr .gathalast { margin: 0 0 0 2.5em; }
+      #ssr .gathalast { margin-bottom: 1em; }
+      #ssr .note { font-size: .8em; color: #6b625c; }
+      #ssr .num { color: #7a2e14; font-size: .85em; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

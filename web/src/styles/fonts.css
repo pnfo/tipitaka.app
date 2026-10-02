@@ -1,0 +1,52 @@
+/* Script fonts: every Pali text element gets font-family var(--font-text) which is set per script on
+ * [data-script]. Browsers only download the faces that are actually used. */
+@font-face { font-family: 'pali-latn'; src: url('../assets/fonts/NotoSerif-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-latn'; src: url('../assets/fonts/NotoSerif-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-deva'; src: url('../assets/fonts/NotoSerifDevanagari-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-deva'; src: url('../assets/fonts/NotoSerifDevanagari-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-beng'; src: url('../assets/fonts/NotoSerifBengali-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-beng'; src: url('../assets/fonts/NotoSerifBengali-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-guru'; src: url('../assets/fonts/NotoSansGurmukhi-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-guru'; src: url('../assets/fonts/NotoSansGurmukhi-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-gujr'; src: url('../assets/fonts/NotoSerifGujarati-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-gujr'; src: url('../assets/fonts/NotoSerifGujarati-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-telu'; src: url('../assets/fonts/NotoSerifTelugu-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-telu'; src: url('../assets/fonts/NotoSerifTelugu-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-knda'; src: url('../assets/fonts/NotoSerifKannada-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-knda'; src: url('../assets/fonts/NotoSerifKannada-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-mlym'; src: url('../assets/fonts/NotoSerifMalayalam-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-mlym'; src: url('../assets/fonts/NotoSerifMalayalam-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-khmr'; src: url('../assets/fonts/NotoSerifKhmer-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-khmr'; src: url('../assets/fonts/NotoSerifKhmer-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-thai'; src: url('../assets/fonts/THSarabunNew.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-thai'; src: url('../assets/fonts/THSarabunNew-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-mymr'; src: url('../assets/fonts/Pyidaungsu-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'pali-mymr'; src: url('../assets/fonts/Pyidaungsu-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-laoo'; src: url('../assets/fonts/LaoPaliAlpha-Regular.woff') format('woff'); font-display: swap; }
+@font-face { font-family: 'pali-lana'; src: url('../assets/fonts/TaiThamLN2.woff') format('woff'); font-display: swap; }
+@font-face { font-family: 'pali-tibt'; src: url('../assets/fonts/DDC_Uchen.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'pali-brah'; src: url('../assets/fonts/NotoSansBrahmi-Regular.woff2') format('woff2'); font-display: swap; }
+
+[data-script='latn'], [data-script='cyrl'] { --font-text: 'pali-latn', 'Noto Serif', Georgia, serif; }
+[data-script='sinh'] { --font-text: 'pali-sinh', 'Noto Serif Sinhala', serif; }
+[data-script='deva'] { --font-text: 'pali-deva', 'Noto Serif Devanagari', serif; }
+[data-script='beng'], [data-script='asse'] { --font-text: 'pali-beng', 'Noto Serif Bengali', serif; }
+[data-script='guru'] { --font-text: 'pali-guru', 'Noto Sans Gurmukhi', sans-serif; }
+[data-script='gujr'] { --font-text: 'pali-gujr', 'Noto Serif Gujarati', serif; }
+[data-script='telu'] { --font-text: 'pali-telu', 'Noto Serif Telugu', serif; }
+[data-script='knda'] { --font-text: 'pali-knda', 'Noto Serif Kannada', serif; }
+[data-script='mlym'], [data-script='taml'] { --font-text: 'pali-mlym', 'Noto Serif Malayalam', serif; }
+[data-script='khmr'] { --font-text: 'pali-khmr', 'Noto Serif Khmer', serif; }
+[data-script='thai'] { --font-text: 'pali-thai', 'Noto Serif Thai', serif; --script-scale: 1.25; }
+[data-script='mymr'] { --font-text: 'pali-mymr', 'Noto Serif Myanmar', serif; }
+[data-script='laoo'] { --font-text: 'pali-laoo', 'Noto Serif Lao', serif; }
+[data-script='lana'] { --font-text: 'pali-lana', 'Noto Sans Tai Tham', serif; }
+[data-script='tibt'] { --font-text: 'pali-tibt', 'Noto Serif Tibetan', serif; --script-scale: 1.15; }
+[data-script='brah'] { --font-text: 'pali-brah', 'Noto Sans Brahmi', sans-serif; }
+[data-script='cakm'] { --font-text: 'Noto Sans Chakma', sans-serif; }
+[data-script='java'] { --font-text: 'Noto Sans Javanese', serif; }
+[data-script='bali'] { --font-text: 'Noto Sans Balinese', serif; }
+.reading { font-size: calc(var(--text-size) * var(--script-scale, 1)); }
+.pali { font-family: var(--font-text); }

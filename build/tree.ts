@@ -218,6 +218,16 @@ export function buildCorpus(xmlDir: string, opts: { books?: BookDef[]; parse?: (
   for (const p of paras) ownEnd.set(p.node, Math.max(ownEnd.get(p.node) ?? -1, p.idx + 1))
   for (const n of nodes) if (n.parent < 0) setEnd(n.idx)
 
+  // groups were created before the books: order every child list by the first book below each child
+  const firstBook = (i: number): number => {
+    const n = nodes[i]
+    if (n.book >= 0) return n.book
+    let m = Infinity
+    for (const c of n.children) m = Math.min(m, firstBook(c))
+    return m
+  }
+  for (const n of nodes) if (n.kind === 'group') n.children.sort((a, b) => firstBook(a) - firstBook(b) || a - b)
+
   assignHeadingKeys(nodes, keyToNode, warnings)
   for (const n of nodes) {
     if (!n.title) n.title = n.kind === 'book' ? (tbooks[n.book]?.def.title ?? n.key) : n.key
