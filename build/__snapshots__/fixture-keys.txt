@@ -1,0 +1,218 @@
+mula	Tipiṭaka (Mūla)
+vp	Vinayapiṭaka
+sp	Suttapiṭaka
+dn	Dīghanikāya
+mn	Majjhimanikāya
+sn	Saṃyuttanikāya
+an	Aṅguttaranikāya
+kn	Khuddakanikāya
+ap	Abhidhammapiṭaka
+ap-yam	Yamakapāḷi
+ap-pat	Paṭṭhānapāḷi
+atta	Aṭṭhakathā
+atta-vp	Vinayapiṭaka (Aṭṭhakathā)
+atta-sp	Suttapiṭaka (Aṭṭhakathā)
+atta-dn	Dīghanikāya (Aṭṭhakathā)
+atta-mn	Majjhimanikāya (Aṭṭhakathā)
+atta-sn	Saṃyuttanikāya (Aṭṭhakathā)
+atta-an	Aṅguttaranikāya (Aṭṭhakathā)
+atta-kn	Khuddakanikāya (Aṭṭhakathā)
+atta-ap	Abhidhammapiṭaka (Aṭṭhakathā)
+tika	Ṭīkā
+tika-vp	Vinayapiṭaka (Ṭīkā)
+tika-sp	Suttapiṭaka (Ṭīkā)
+tika-dn	Dīghanikāya (Ṭīkā)
+tika-mn	Majjhimanikāya (Ṭīkā)
+tika-sn	Saṃyuttanikāya (Ṭīkā)
+tika-an	Aṅguttaranikāya (Ṭīkā)
+tika-kn	Khuddakanikāya (Ṭīkā)
+tika-ap	Abhidhammapiṭaka (Ṭīkā)
+anya	Añña
+anya-visuddhimagga	Visuddhimagga
+anya-sangayana	Saṅgāyana-puccha vissajjanā
+anya-ledi	Leḍī sayāḍo gantha-saṅgaho
+anya-vandana	Buddha-vandanā gantha-saṅgaho
+anya-vamsa	Vaṃsa-gantha-saṅgaho
+anya-byakarana	Byākaraṇa gantha-saṅgaho
+anya-niti	Nīti-gantha-saṅgaho
+anya-pakinnaka	Pakiṇṇaka-gantha-saṅgaho
+anya-sihala	Sīhaḷa-gantha-saṅgaho
+vp-prj	Pārājikapāḷi
+vp-prj-1	Verañjakaṇḍaṃ
+vp-prj-2	1. Pārājikakaṇḍaṃ
+vp-prj-2-1	1. Paṭhamapārājikaṃ
+vp-prj-2-1-1	Sudinnabhāṇavāro
+vp-prj-2-1-2	Makkaṭīvatthu
+vp-prj-2-1-3	Santhatabhāṇavāro
+vp-prj-2-1-4	Vinītavatthuuddānagāthā
+vp-prj-2-1-5	Vinītavatthu
+vp-prj-2-2	2. Dutiyapārājikaṃ
+dn-1	Sīlakkhandhavaggapāḷi
+dn-1-1	1. Brahmajālasuttaṃ
+dn-1-1-1	Paribbājakakathā
+dn-1-1-2	Cūḷasīlaṃ
+dn-1-1-3	Majjhimasīlaṃ
+dn-1-1-4	Mahāsīlaṃ
+dn-1-1-5	Pubbantakappikā
+dn-1-1-6	Sassatavādo
+dn-1-1-7	Ekaccasassatavādo
+dn-1-1-8	Antānantavādo
+dn-1-1-9	Amarāvikkhepavādo
+dn-1-1-10	Adhiccasamuppannavādo
+dn-1-1-11	Aparantakappikā
+dn-1-1-12	Saññīvādo
+dn-1-1-13	Asaññīvādo
+dn-1-1-14	Nevasaññīnāsaññīvādo
+dn-1-1-15	Ucchedavādo
+dn-1-1-16	Diṭṭhadhammanibbānavādo
+dn-1-1-17	Paritassitavipphanditavāro
+dn-1-1-18	Phassapaccayāvāro
+dn-1-1-19	Netaṃ ṭhānaṃ vijjativāro
+dn-1-1-20	Diṭṭhigatikādhiṭṭhānavaṭṭakathā
+dn-1-1-21	Vivaṭṭakathādi
+dn-1-2	2. Sāmaññaphalasuttaṃ
+dn-1-2-1	Rājāmaccakathā
+dn-1-2-2	Komārabhaccajīvakakathā
+dn-1-2-3	Sāmaññaphalapucchā
+dn-1-2-4	Pūraṇakassapavādo
+dn-1-2-5	Makkhaligosālavādo
+dn-1-2-6	Ajitakesakambalavādo
+dn-1-2-7	Pakudhakaccāyanavādo
+dn-1-2-8	Nigaṇṭhanāṭaputtavādo
+dn-1-2-9	Sañcayabelaṭṭhaputtavādo
+dn-1-2-10	Paṭhamasandiṭṭhikasāmaññaphalaṃ
+dn-1-2-11	Dutiyasandiṭṭhikasāmaññaphalaṃ
+dn-1-2-12	Paṇītatarasāmaññaphalaṃ
+dn-1-2-13	Cūḷasīlaṃ
+dn-1-2-14	Majjhimasīlaṃ
+dn-1-2-15	Mahāsīlaṃ
+dn-1-2-16	Indriyasaṃvaro
+dn-1-2-17	Satisampajaññaṃ
+dn-1-2-18	Santoso
+dn-1-2-19	Nīvaraṇappahānaṃ
+dn-1-2-20	Paṭhamajjhānaṃ
+dn-1-2-21	Dutiyajjhānaṃ
+dn-1-2-22	Tatiyajjhānaṃ
+dn-1-2-23	Catutthajjhānaṃ
+dn-1-2-24	Vipassanāñāṇaṃ
+dn-1-2-25	Manomayiddhiñāṇaṃ
+dn-1-2-26	Iddhividhañāṇaṃ
+dn-1-2-27	Dibbasotañāṇaṃ
+dn-1-2-28	Cetopariyañāṇaṃ
+dn-1-2-29	Pubbenivāsānussatiñāṇaṃ
+dn-1-2-30	Dibbacakkhuñāṇaṃ
+dn-1-2-31	Āsavakkhayañāṇaṃ
+dn-1-2-32	Ajātasattuupāsakattapaṭivedanā
+dn-1-3	3. Ambaṭṭhasuttaṃ
+dn-1-3-1	Pokkharasātivatthu
+dn-1-3-2	Ambaṭṭhamāṇavo
+dn-1-3-3	Paṭhamaibbhavādo
+dn-1-3-4	Dutiyaibbhavādo
+dn-1-3-5	Tatiyaibbhavādo
+dn-1-3-6	Dāsiputtavādo
+dn-1-3-7	Ambaṭṭhavaṃsakathā
+dn-1-3-8	Khattiyaseṭṭhabhāvo
+mn-1	Mūlapaṇṇāsapāḷi
+mn-1-1	1. Mūlapariyāyavaggo
+mn-1-1-1	1. Mūlapariyāyasuttaṃ
+mn-1-1-2	2. Sabbāsavasuttaṃ
+mn-1-1-2-1	Dassanā pahātabbāsavā
+mn-1-1-2-2	Saṃvarā pahātabbāsavā
+mn-1-1-2-3	Paṭisevanā pahātabbāsavā
+mn-1-1-2-4	Adhivāsanā pahātabbāsavā
+mn-1-1-2-5	Parivajjanā pahātabbāsavā
+mn-1-1-2-6	Vinodanā pahātabbāsavā
+mn-1-1-2-7	Bhāvanā pahātabbāsavā
+mn-1-1-3	3. Dhammadāyādasuttaṃ
+mn-1-1-4	4. Bhayabheravasuttaṃ
+mn-1-1-5	5. Anaṅgaṇasuttaṃ
+mn-1-1-6	6. Ākaṅkheyyasuttaṃ
+mn-1-1-7	7. Vatthasuttaṃ
+mn-1-1-8	8. Sallekhasuttaṃ
+mn-1-1-9	9. Sammādiṭṭhisuttaṃ
+kn-dhp	Dhammapadapāḷi
+kn-dhp-1	1. Yamakavaggo
+kn-dhp-2	2. Appamādavaggo
+kn-dhp-3	3. Cittavaggo
+kn-dhp-4	4. Pupphavaggo
+kn-dhp-5	5. Bālavaggo
+kn-dhp-6	6. Paṇḍitavaggo
+kn-dhp-7	7. Arahantavaggo
+kn-dhp-8	8. Sahassavaggo
+kn-dhp-9	9. Pāpavaggo
+kn-dhp-10	10. Daṇḍavaggo
+kn-dhp-11	11. Jarāvaggo
+kn-dhp-12	12. Attavaggo
+kn-dhp-13	13. Lokavaggo
+kn-dhp-14	14. Buddhavaggo
+kn-dhp-15	15. Sukhavaggo
+kn-dhp-16	16. Piyavaggo
+kn-dhp-17	17. Kodhavaggo
+kn-dhp-18	18. Malavaggo
+kn-dhp-19	19. Dhammaṭṭhavaggo
+kn-dhp-20	20. Maggavaggo
+kn-dhp-21	21. Pakiṇṇakavaggo
+kn-dhp-22	22. Nirayavaggo
+kn-dhp-23	23. Nāgavaggo
+kn-dhp-24	24. Taṇhāvaggo
+kn-dhp-25	25. Bhikkhuvaggo
+kn-dhp-26	26. Brāhmaṇavaggo
+atta-dn-1	Sīlakkhandhavaggaṭṭhakathā
+atta-dn-1-0	Ganthārambhakathā
+atta-dn-1-0-1	Nidānakathā
+atta-dn-1-0-2	Paṭhamamahāsaṅgītikathā
+atta-dn-1-1	1. Brahmajālasuttavaṇṇanā
+atta-dn-1-1-1	Paribbājakakathāvaṇṇanā
+atta-dn-1-1-2	Cūḷasīlavaṇṇanā
+atta-dn-1-1-3	Majjhimasīlavaṇṇanā
+atta-dn-1-1-4	Mahāsīlavaṇṇanā
+atta-dn-1-1-5	Pubbantakappikasassatavādavaṇṇanā
+atta-dn-1-1-6	Ekaccasassatavādavaṇṇanā
+atta-dn-1-1-7	Antānantavādavaṇṇanā
+atta-dn-1-1-8	Amarāvikkhepavādavaṇṇanā
+atta-dn-1-1-9	Adhiccasamuppannavādavaṇṇanā
+atta-dn-1-1-10	Aparantakappikavaṇṇanā
+atta-dn-1-1-11	Saññīvādavaṇṇanā
+atta-dn-1-1-12	Asaññīvādavaṇṇanā
+atta-dn-1-1-13	Ucchedavādavaṇṇanā
+atta-dn-1-1-14	Diṭṭhadhammanibbānavādavaṇṇanā
+atta-dn-1-1-15	Paritassitavipphanditavāravaṇṇanā
+atta-dn-1-1-16	Phassapaccayavāravaṇṇanā
+atta-dn-1-1-17	Diṭṭhigatikādhiṭṭhānavaṭṭakathāvaṇṇanā
+atta-dn-1-1-18	Vivaṭṭakathādivaṇṇanā
+atta-dn-1-2	2. Sāmaññaphalasuttavaṇṇanā
+atta-dn-1-2-1	Rājāmaccakathāvaṇṇanā
+atta-dn-1-2-2	Komārabhaccajīvakakathāvaṇṇanā
+atta-dn-1-2-3	Sāmaññaphalapucchāvaṇṇanā
+atta-kn-dhp	Dhammapada-aṭṭhakathā
+atta-kn-dhp-0	Ganthārambhakathā
+atta-kn-dhp-1	1. Yamakavaggo
+atta-kn-dhp-1-1	1. Cakkhupālattheravatthu
+atta-kn-dhp-1-2	2. Maṭṭhakuṇḍalīvatthu
+atta-kn-dhp-1-3	3. Tissattheravatthu
+atta-kn-dhp-1-4	4. Kāḷayakkhinīvatthu
+tika-dn-1	Sīlakkhandhavaggaṭīkā
+tika-dn-1-0	tika-dn-1-0
+tika-dn-1-0-1	Ganthārambhakathāvaṇṇanā
+tika-dn-1-0-2	Nidānakathāvaṇṇanā
+tika-dn-1-0-3	Paṭhamamahāsaṅgītikathāvaṇṇanā
+tika-dn-1-1	1. Brahmajālasuttavaṇṇanā
+tika-dn-1-1-1	Paribbājakakathāvaṇṇanā
+tika-dn-1-1-2	Cūḷasīlavaṇṇanā
+tika-dn-1-1-3	Majjhimasīlavaṇṇanā
+tika-dn-1-1-4	Mahāsīlavaṇṇanā
+tika-dn-1-1-5	Pubbantakappikasassatavādavaṇṇanā
+tika-dn-1-1-6	Ekaccasassatavādavaṇṇanā
+tika-dn-1-1-7	Antānantavādavaṇṇanā
+tika-dn-1-1-8	Amarāvikkhepavādavaṇṇanā
+anya-vism	Visuddhimagga
+anya-vism-0	Nidānādikathā
+anya-vism-1	1. Sīlaniddeso
+anya-vism-1-1	Sīlasarūpādikathā
+anya-vism-1-2	Sīlānisaṃsakathā
+anya-vism-1-3	Sīlappabhedakathā
+anya-vism-1-4	Pātimokkhasaṃvarasīlaṃ
+anya-vism-1-5	Indriyasaṃvarasīlaṃ
+anya-vism-1-6	Ājīvapārisuddhisīlaṃ
+anya-vism-1-7	Paccayasannissitasīlaṃ
+anya-vism-1-8	Catupārisuddhisampādanavidhi

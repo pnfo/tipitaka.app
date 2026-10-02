@@ -13,3 +13,17 @@ server-data/db/dict-all.db
 *.fiber.gz
 sign-notorize.sh
 dist-desktop
+# v3
+/web/dist
+/web/dist-app
+/db/*.db
+/db/*.db-*
+/db/build-report.md
+/db/build-info.json
+/e2e/fixtures/db
+/test-results
+/playwright-report
+/e2e/test-results
+/e2e/playwright-report
+/server/bin/tipitaka_app*
+/web/public/sitemap*
