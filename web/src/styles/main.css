@@ -81,7 +81,7 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .reading .pb { font-family: var(--font-ui); font-size: 0.62em; color: var(--c-muted); border: 1px solid var(--c-line); border-radius: 4px; padding: 0 3px; margin: 0 2px; vertical-align: 0.25em; text-indent: 0; }
 .reading mark, .reading .hl { background: var(--c-highlight); color: inherit; border-radius: 2px; }
 .reading .w-sel { background: var(--c-primary-soft); outline: 1px solid var(--c-primary); border-radius: 3px; }
-.reading b { font-weight: 600; }
+.reading b { font-weight: 700; }
 
 /* script specific fonts (fonts.css) are selected by the lang attribute */
 .dpd-html a { color: var(--c-link); text-decoration: underline; }

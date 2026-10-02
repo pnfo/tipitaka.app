@@ -7,7 +7,7 @@
     </div>
     <div v-else-if="err" class="py-6 text-center text-muted">{{ err }}</div>
     <template v-else-if="res">
-      <div class="mb-3 flex items-baseline gap-2">
+      <div class="mb-3 flex items-baseline space-x-2">
         <h2 class="pali text-xl font-semibold text-primary" data-testid="dict-word">{{ conv(res.word) }}</h2>
         <span v-if="script !== 'latn'" class="text-muted">{{ res.word }}</span>
         <span class="flex-1" />
@@ -16,7 +16,7 @@
 
       <!-- DPD analysis of the form -->
       <div v-if="res.grammar?.length || res.deconstructor?.length" class="mb-3 rounded-lg bg-surface2 p-2.5">
-        <div v-for="(g, i) in uniqueGrammar" :key="i" class="flex gap-2">
+        <div v-for="(g, i) in uniqueGrammar" :key="i" class="space-x-2">
           <span class="pali font-medium">{{ conv(g[0]) }}</span><span class="text-muted">{{ g[1] }}</span><span>{{ g[2] }}</span>
         </div>
         <div v-for="(d, i) in res.deconstructor ?? []" :key="'d' + i" class="pali">
@@ -33,7 +33,7 @@
       <section v-if="res.entries.length" class="mb-4">
         <div class="section-title">{{ t('Dictionaries') }}</div>
         <div v-for="(e, i) in res.entries" :key="i" class="border-b border-line py-2 last:border-0">
-          <div class="mb-0.5 flex items-center gap-2">
+          <div class="mb-0.5 space-x-2">
             <span class="chip" :title="dictName(e.dict)">{{ dictShort(e.dict) }}</span>
             <span class="pali font-medium">{{ conv(e.word) }}</span>
           </div>

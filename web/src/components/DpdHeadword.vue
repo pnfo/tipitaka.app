@@ -1,7 +1,7 @@
 <!-- one DPD headword (Digital Pāḷi Dictionary, CC BY-NC-SA 4.0) -->
 <template>
   <article class="border-b border-line py-2 last:border-0" data-testid="dpd-head">
-    <button class="flex w-full items-baseline gap-2 text-left" :aria-expanded="open" @click="open = !open">
+    <button class="flex w-full items-baseline space-x-2 text-left" :aria-expanded="open" @click="open = !open">
       <span class="pali font-semibold">{{ conv(lemma) }}</span>
       <sup v-if="sense" class="text-[10px] text-muted">{{ sense }}</sup>
       <span class="chip">{{ h.pos }}</span>

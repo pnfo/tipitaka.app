@@ -1,29 +1,30 @@
-/* Script fonts: every Pali text element gets font-family var(--font-text) which is set per script on
+/* (single font-weight values: ranges need Chrome 62, WebView 53 would use the bold face for all text)
+ * Script fonts: every Pali text element gets font-family var(--font-text) which is set per script on
  * [data-script]. Browsers only download the faces that are actually used. */
 @font-face { font-family: 'pali-latn'; src: url('../assets/fonts/NotoSerif-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-latn'; src: url('../assets/fonts/NotoSerif-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-latn'; src: url('../assets/fonts/NotoSerif-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-deva'; src: url('../assets/fonts/NotoSerifDevanagari-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-deva'; src: url('../assets/fonts/NotoSerifDevanagari-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-deva'; src: url('../assets/fonts/NotoSerifDevanagari-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-beng'; src: url('../assets/fonts/NotoSerifBengali-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-beng'; src: url('../assets/fonts/NotoSerifBengali-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-beng'; src: url('../assets/fonts/NotoSerifBengali-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-guru'; src: url('../assets/fonts/NotoSansGurmukhi-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-guru'; src: url('../assets/fonts/NotoSansGurmukhi-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-guru'; src: url('../assets/fonts/NotoSansGurmukhi-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-gujr'; src: url('../assets/fonts/NotoSerifGujarati-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-gujr'; src: url('../assets/fonts/NotoSerifGujarati-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-gujr'; src: url('../assets/fonts/NotoSerifGujarati-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-telu'; src: url('../assets/fonts/NotoSerifTelugu-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-telu'; src: url('../assets/fonts/NotoSerifTelugu-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-telu'; src: url('../assets/fonts/NotoSerifTelugu-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-knda'; src: url('../assets/fonts/NotoSerifKannada-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-knda'; src: url('../assets/fonts/NotoSerifKannada-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-knda'; src: url('../assets/fonts/NotoSerifKannada-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-mlym'; src: url('../assets/fonts/NotoSerifMalayalam-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-mlym'; src: url('../assets/fonts/NotoSerifMalayalam-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-mlym'; src: url('../assets/fonts/NotoSerifMalayalam-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-khmr'; src: url('../assets/fonts/NotoSerifKhmer-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-khmr'; src: url('../assets/fonts/NotoSerifKhmer-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-khmr'; src: url('../assets/fonts/NotoSerifKhmer-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-thai'; src: url('../assets/fonts/THSarabunNew.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-thai'; src: url('../assets/fonts/THSarabunNew-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-thai'; src: url('../assets/fonts/THSarabunNew-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-mymr'; src: url('../assets/fonts/Pyidaungsu-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'pali-mymr'; src: url('../assets/fonts/Pyidaungsu-Bold.woff2') format('woff2'); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: 'pali-mymr'; src: url('../assets/fonts/Pyidaungsu-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'pali-laoo'; src: url('../assets/fonts/LaoPaliAlpha-Regular.woff') format('woff'); font-display: swap; }
 @font-face { font-family: 'pali-lana'; src: url('../assets/fonts/TaiThamLN2.woff') format('woff'); font-display: swap; }
 @font-face { font-family: 'pali-tibt'; src: url('../assets/fonts/DDC_Uchen.woff2') format('woff2'); font-display: swap; }
