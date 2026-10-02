@@ -27,3 +27,5 @@ dist-desktop
 /e2e/playwright-report
 /server/bin/tipitaka_app*
 /web/public/sitemap*
+/server/testdata/fuzz
+/server/mobile/build

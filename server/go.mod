@@ -1,25 +1,18 @@
-module github.com/pnfo/tipitaka-go/server
+module tipitaka.app/server
 
-go 1.25.6
+go 1.26.0
+
+require github.com/mattn/go-sqlite3 v1.14.52
 
 require (
-	github.com/fatih/color v1.18.0
-	github.com/gofiber/fiber/v2 v2.52.11
-	github.com/jmoiron/sqlx v1.4.0
-	github.com/mattn/go-sqlite3 v1.14.34
+	github.com/dop251/goja v0.0.0-20261002135814-104bc28c3abd
+	github.com/klauspost/compress v1.20.1
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
+	golang.org/x/text v0.42.0
 )
 
 require (
-	github.com/andybalholm/brotli v1.1.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.16 // indirect
-	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.51.0 // indirect
-	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	github.com/dlclark/regexp2/v2 v2.8.1 // indirect
+	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
+	github.com/google/pprof v0.0.0-20230207041349-798e818bf904 // indirect
 )

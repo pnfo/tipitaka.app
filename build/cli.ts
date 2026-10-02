@@ -11,7 +11,7 @@ import { buildCorpus } from './tree'
 import { buildParaLinks } from './links'
 import { writeDb } from './write-db'
 import { validate } from './validate'
-import { buildLegacyMap } from './legacy'
+import { readLegacyMap } from './legacy'
 import { FIXTURE_BOOKS } from './fixture'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -34,8 +34,9 @@ const linkWarnings: string[] = []
 const links = buildParaLinks(corpus, path.join(repo, 'data/alignments'), linkWarnings)
 log(`links: ${links.length}`)
 
-const legacy = fixture ? { entries: [], unmapped: [] } : buildLegacyMap(corpus, path.join(repo, 'public'))
-log(`legacy map: ${legacy.entries.length} entries, ${legacy.unmapped.length} unmapped`)
+const legacyWarnings: string[] = []
+const legacy = readLegacyMap(corpus, path.join(repo, 'data/legacy-map.tsv'), legacyWarnings, fixture)
+log(`legacy map: ${legacy.length} entries`)
 
 const upstreamLock = path.join(repo, 'data/upstream.lock')
 const upstream = fs.existsSync(upstreamLock) ? fs.readFileSync(upstreamLock, 'utf8').trim() : 'unknown'
@@ -47,7 +48,7 @@ const now = new Date()
 const dbVersion = now.toISOString().replace(/\D/g, '').slice(2, 10) // yyMMddHH
 const meta = { content_hash: contentHash, db_version: dbVersion, upstream, built_at: now.toISOString(), fixture: fixture ? '1' : '0' }
 
-const res = writeDb(path.join(outDir, 'text.db'), corpus, links, meta, legacy.entries)
+const res = writeDb(path.join(outDir, 'text.db'), corpus, links, meta, legacy)
 log(`text.db: ${res.tokenCount} tokens, ${res.postingCount} postings`)
 fs.writeFileSync(path.join(outDir, 'build-info.json'), JSON.stringify({ ...meta, db_version: +dbVersion }, null, 2) + '\n')
 
@@ -63,12 +64,12 @@ const md = [
   `# Build report`, '',
   `upstream ${upstream} · content ${contentHash} · ${now.toISOString()}`, '',
   `| books | nodes | paragraphs | tokens | links | legacy |`, `|---|---|---|---|---|---|`,
-  `| ${corpus.books.length} | ${corpus.nodes.length} | ${corpus.paras.length} | ${res.tokenCount} | ${links.length} | ${legacy.entries.length} (${legacy.unmapped.length} unmapped) |`, '',
+  `| ${corpus.books.length} | ${corpus.nodes.length} | ${corpus.paras.length} | ${res.tokenCount} | ${links.length} | ${legacy.length} |`, '',
   `## Key changes`, prevKeys ? `${added.length} added, ${removed.length} removed` : 'no previous build', '',
   ...removed.slice(0, 200).map(k => `- removed \`${k}\``), ...added.slice(0, 200).map(k => `- added \`${k}\``), '',
   `## Errors (${report.errors.length})`, ...report.errors.map(e => `- ${e}`), '',
-  `## Warnings (${report.warnings.length + linkWarnings.length})`, ...[...report.warnings, ...linkWarnings].slice(0, 500).map(w => `- ${w}`), '',
-  `## Unmapped legacy files (${legacy.unmapped.length})`, ...legacy.unmapped.slice(0, 200).map(u => `- ${u}`), '',
+  `## Warnings (${report.warnings.length + linkWarnings.length + legacyWarnings.length})`,
+  ...[...report.warnings, ...linkWarnings, ...legacyWarnings].slice(0, 500).map(w => `- ${w}`), '',
 ].join('\n')
 fs.writeFileSync(path.join(outDir, 'build-report.md'), md)
 log(`report: ${report.errors.length} errors, ${report.warnings.length} warnings -> ${path.relative(repo, outDir)}/build-report.md`)
