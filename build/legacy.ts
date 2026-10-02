@@ -11,6 +11,8 @@ import path from 'node:path'
 import { convert } from '@pnfo/pali-converter'
 import { fold } from '../shared/normalize'
 import { dfsOrder, type Corpus } from './tree'
+import { paraPos } from './links'
+import { tokens } from '../shared/tokenize'
 import type { Collection } from './catalog'
 
 export interface LegacyEntry { file: string; line: number; key: string; para: number }
@@ -64,12 +66,27 @@ export function buildLegacyMap(c: Corpus, publicDir: string): { entries: LegacyE
   const order = oldFileOrder(JSON.parse(fs.readFileSync(treeFile, 'utf8')))
 
   // new nodes per collection in tree order
-  const perColl = new Map<Collection, { key: string; title: string; start: number }[]>()
+  type Cand = { key: string; title: string; start: number; book: number }
+  const perColl = new Map<Collection, Cand[]>()
   for (const ci of dfsOrder(c)) {
     const n = c.nodes[ci]
     if (n.kind === 'group') continue
     if (!perColl.has(n.coll)) perColl.set(n.coll, [])
-    perColl.get(n.coll)!.push({ key: n.key, title: norm(n.title.replace(/^[\d\s.()-]+/, '')), start: n.start })
+    perColl.get(n.coll)!.push({ key: n.key, title: norm(n.title.replace(/^[\d\s.()-]+/, '')), start: n.start, book: n.book })
+  }
+  // words of the text following a node start (to tell apart headings with the same title in different books)
+  const textAfter = (cand: Cand, nWords = 150) => {
+    const out: string[] = []
+    const b = c.books[cand.book]
+    for (let i = cand.start; i < b.paraCount && out.length < nWords; i++) out.push(...tokens(stripQuotes(c.paras[paraPos(c, cand.book, i)].text)))
+    return out.slice(0, nWords)
+  }
+  const overlap = (a: string[], b: string[]) => {
+    const m = new Map<string, number>()
+    for (const w of b) m.set(w, (m.get(w) ?? 0) + 1)
+    let common = 0
+    for (const w of a) { const v = m.get(w) ?? 0; if (v > 0) { common++; m.set(w, v - 1) } }
+    return common / Math.max(a.length, 1)
   }
   const used = new Set<string>()
   const ptr = new Map<Collection, number>()
@@ -81,8 +98,12 @@ export function buildLegacyMap(c: Corpus, publicDir: string): { entries: LegacyE
     if (!fs.existsSync(f)) continue
     const coll = oldFileColl(fileId)
     const list = perColl.get(coll) ?? []
-    const lines = fs.readFileSync(f, 'utf8').split('\r\n')
+    const lines = fs.readFileSync(f, 'utf8').split(/\r?\n/)
+    // old text after each line (Roman words), for scoring candidates
+    const oldWords = lines.map(l => romanWords(l))
+    const wordsFrom = (i: number, n = 150) => { const out: string[] = []; for (let k = i; k < lines.length && out.length < n; k++) out.push(...oldWords[k]); return out.slice(0, n) }
     let headings = 0
+    let book = -1 // book of the previous match in this file
     lines.forEach((line, i) => {
       const parts = line.split(':')
       if (!HEADING_TYPES.has(parts[0])) return
@@ -90,13 +111,27 @@ export function buildLegacyMap(c: Corpus, publicDir: string): { entries: LegacyE
       const title = romanize(parts.slice(parts.length > 2 && /^\d/.test(parts[1]) ? 2 : 1).join(':'))
       if (!title) return
       const p = ptr.get(coll) ?? 0
+      // candidates: same title, unused; prefer the book of the previous heading and the reading order
       let found = -1
-      for (let j = p; j < Math.min(list.length, p + 4000); j++) if (list[j].title === title && !used.has(list[j].key)) { found = j; break }
-      if (found < 0) for (let j = 0; j < list.length; j++) if (list[j].title === title && !used.has(list[j].key)) { found = j; break }
+      if (book >= 0) for (let j = p; j < Math.min(list.length, p + 4000); j++) if (list[j].book === book && list[j].title === title && !used.has(list[j].key)) { found = j; break }
+      if (found < 0) {
+        const cands: number[] = []
+        for (let j = 0; j < list.length; j++) if (list[j].title === title && !used.has(list[j].key)) cands.push(j)
+        if (cands.length === 1) found = cands[0]
+        else if (cands.length > 1) {
+          const ow = wordsFrom(i)
+          let best = -1
+          for (const j of cands.slice(0, 50)) {
+            const sc = overlap(ow, textAfter(list[j])) - (j >= p ? 0 : 0.01) // ties: reading order
+            if (sc > best) { best = sc; found = j }
+          }
+        }
+      }
       if (found < 0) return
       const n = list[found]
       used.add(n.key)
       ptr.set(coll, found + 1)
+      book = n.book
       entries.push({ file: fileId, line: i + 1, key: n.key, para: n.start })
     })
     // the file itself maps to its first matched heading
@@ -107,12 +142,19 @@ export function buildLegacyMap(c: Corpus, publicDir: string): { entries: LegacyE
   return { entries, unmapped }
 }
 
+const stripQuotes = (s: string) => s.replace(/[“”‘’"'`]/g, '')
+/** Roman words of a v2 line (type prefix, page tags, notes and markup removed) */
+function romanWords(line: string): string[] {
+  const t = line.replace(/^[a-z]{3}:(\d+:)?/, '').replace(/<pb [^>]*\/>/g, '').replace(/<n>.*?<\/n>/g, ' ').replace(/<\/?b>/g, '')
+  return t ? tokens(stripQuotes(convert(t, 'latn', 'sinh').toLowerCase())) : []
+}
+
 // tsx build/legacy.ts: regenerate data/legacy-map.tsv
 if (process.argv[1]?.endsWith('legacy.ts')) {
   const { buildCorpus } = await import('./tree')
   const repo = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
   const c = buildCorpus(path.join(repo, '.cache/tipitaka-xml/romn'))
-  const { entries, unmapped } = buildLegacyMap(c, path.join(repo, 'public'))
+  const { entries, unmapped } = buildLegacyMap(c, process.argv[2] ?? path.join(repo, '.cache/v2/public')) // git archive 1dd4fdf public | tar -x -C .cache/v2
   const rows = ['# v2 tipitaka.app file id, line (1 based, 0 = file), key - generated by build/legacy.ts', ...entries.map(e => `${e.file}\t${e.line}\t${e.key}`)]
   fs.writeFileSync(path.join(repo, 'data/legacy-map.tsv'), rows.join('\n') + '\n')
   console.log(`${entries.length} entries, unmapped: ${unmapped.join(', ')}`)
