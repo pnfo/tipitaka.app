@@ -38,9 +38,15 @@ shared/  pure TS used by build, web and tests: markup, tokenizer, normalisation,
 * **Reader**: a book is one stream of paragraphs; it opens at the node (or `#p`), loads more when scrolling down,
   earlier text on request. The url follows the heading at the top of the view. Tapping a word looks it up (DPD
   inflection/deconstruction + other dictionaries) - no per-word spans, the word is found with caret hit testing.
-* **Parallel view**: CST commentary paragraphs carry the paragraph number of the text they explain; `para_link`
-  is built from those numbers (`build/links.ts`) plus optional manual/AI alignment files (`data/alignments/*.tsv`,
+* **Tabs (v2 tab views)**: open texts are tabs (`web/src/stores/tabs.ts`, saved in localStorage); the setting
+  *Single / Tabs / Columns* decides whether links open a new tab and whether the tabs are shown side by side.
+  The url always shows the active tab. "Open alongside" opens the commentary (or mūla) of the current text as a
+  column; linked columns scroll together through `para_link`: CST commentary paragraphs carry the paragraph number
+  of the text they explain (`build/links.ts`), plus optional manual/AI alignment files (`data/alignments/*.tsv`,
   see `dev-docs/alignments.md`).
+* **Full text search UI (v2 layout)**: the matched word forms (combinations) with frequencies, and for the selected
+  form the texts (suttas/chapters: `fts` groups, section headings roll up) with hit counts, each expandable to its
+  hits in context (`fts` with `group`). Search box: type switch text / titles / dictionary, font of the typed script.
 * **Old devices**: Tailwind 3.4, legacy JS build for Chrome 53 / iOS 12; layout checked for WebView 64+
   (`npm run check:css`).
 

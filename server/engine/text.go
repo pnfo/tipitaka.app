@@ -111,10 +111,10 @@ func (e *Engine) NodeAt(ctx context.Context, book, idx int) (*Node, error) {
 
 // Link is a paragraph level mūla/aṭṭhakathā/ṭīkā link.
 type Link struct {
-	Idx     int    `json:"i"`  // paragraph in the requested range
-	Book    int    `json:"b"`  // other side
-	To      int    `json:"t"`  // other side paragraph
-	Key     string `json:"k"`  // node of the other side paragraph
+	Idx     int    `json:"i"` // paragraph in the requested range
+	Book    int    `json:"b"` // other side
+	To      int    `json:"t"` // other side paragraph
+	Key     string `json:"k"` // node of the other side paragraph
 	Kind    string `json:"kind"`
 	Source  string `json:"src"`
 	Forward bool   `json:"fwd"` // true: requested paragraph comments on the other side

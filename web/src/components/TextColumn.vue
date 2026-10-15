@@ -37,13 +37,15 @@ const props = withDefaults(defineProps<{
   script: string
   conv: (s: string) => string
   coll?: string
-  /** paragraph index to show first (e.g. #p123) */
+  /** paragraph index to show first and mark (e.g. #p123) */
   target?: number
+  /** paragraph index to show first without marking it (restored reading position) */
+  start?: number
   highlight?: string[]
   linked?: Set<number>
   contained?: boolean
   idPrefix?: string
-}>(), { coll: 'mula', idPrefix: '', target: undefined, highlight: () => [], linked: undefined })
+}>(), { coll: 'mula', idPrefix: '', target: undefined, start: undefined, highlight: () => [], linked: undefined })
 const emit = defineEmits<{
   visible: [para: number, key: string]
   word: [roman: string, shown: string]
@@ -84,9 +86,10 @@ async function init() {
   const my = ++gen
   paras.value = []
   htmlCache = new Map()
+  const first = props.target ?? props.start
   let c = await api.text(props.nodeKey)
-  if (props.target !== undefined && (props.target < c.from || props.target >= c.to)) {
-    c = await api.text(props.nodeKey, Math.max(0, props.target - 20), CHUNK)
+  if (first !== undefined && (first < c.from || first >= c.to)) {
+    c = await api.text(props.nodeKey, Math.max(0, first - 20), CHUNK)
   }
   if (my !== gen) return
   book.value = c.book
@@ -95,7 +98,7 @@ async function init() {
   paras.value = c.paras
   emit('loaded', c.from, c.to, c.book)
   await nextTick()
-  scrollToPara(props.target ?? c.from, props.target === undefined)
+  scrollToPara(first ?? c.from, first === undefined)
 }
 
 async function loadNext() {

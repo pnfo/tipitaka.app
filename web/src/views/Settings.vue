@@ -4,13 +4,21 @@
 
     <section>
       <h2 class="section-title">{{ t('Pali script') }}</h2>
-      <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <RouterLink v-for="s in SCRIPTS" :key="s.code" :to="{ name: 'settings', params: { script: s.code } }" replace
-          class="rounded-lg border px-3 py-2" :class="s.code === script ? 'border-primary bg-primary-soft' : 'border-line hover:bg-surface2'" :data-testid="`set-script-${s.code}`">
-          <div :data-script="s.code" class="text-lg" style="font-family: var(--font-text)">{{ sample(s.code) }}</div>
-          <div class="text-xs text-muted">{{ s.name }}</div>
-        </RouterLink>
+      <div class="flex items-center gap-3">
+        <select :value="script" class="input max-w-xs" data-testid="set-script" @change="setScript(($event.target as HTMLSelectElement).value)">
+          <option v-for="s in SCRIPTS" :key="s.code" :value="s.code">{{ s.native }} – {{ s.name }}</option>
+        </select>
+        <span :data-script="script" class="text-xl" style="font-family: var(--font-text)">{{ sample(script) }}</span>
       </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">{{ t('Tabs') }}</h2>
+      <div class="flex flex-wrap gap-2">
+        <button v-for="v in TAB_VIEWS" :key="v.id" class="chip text-sm" :class="{ on: settings.tabView === v.id }" :data-testid="`tabview-${v.id}`" @click="settings.tabView = v.id">{{ v.label }}</button>
+      </div>
+      <p class="mt-2 text-xs text-muted">{{ TAB_VIEWS.find(v => v.id === settings.tabView)?.desc }}</p>
+      <label class="mt-2 flex items-center gap-2 text-sm"><input v-model="settings.syncScroll" type="checkbox"> {{ t('Scroll linked columns together (mūla / commentary)') }}</label>
     </section>
 
     <section>
@@ -69,18 +77,26 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { SCRIPTS } from '@shared/scripts'
 import { useApi } from '@/data/api'
 import type { Dict } from '@/data/types'
 import { convertTo, useScript } from '@/composables/script'
-import { useSettings, type NotesMode, type Theme } from '@/stores/settings'
+import { useSettings, type NotesMode, type TabView, type Theme } from '@/stores/settings'
 import { UI_LANGS, t } from '@/i18n'
 
 const settings = useSettings()
 const { script, conv } = useScript()
 useHead({ title: t('Settings') })
 const sample = (code: string) => convertTo('Buddho', code)
+const route = useRoute(), router = useRouter()
+const setScript = (code: string) => router.replace({ name: 'settings', params: { script: code }, query: route.query })
+const TAB_VIEWS: { id: TabView; label: string; desc: string }[] = [
+  { id: 'single', label: t('Single'), desc: t('Opening a text replaces the current one.') },
+  { id: 'tabbed', label: t('Tabs'), desc: t('Every text opens in a new tab.') },
+  { id: 'columns', label: t('Columns'), desc: t('Open texts are shown side by side (on wide screens).') },
+]
 const THEMES: { id: Theme; label: string; bg: string; fg: string }[] = [
   { id: 'light', label: t('Light'), bg: '#fbf8f3', fg: '#2b2522' }, { id: 'sepia', label: t('Sepia'), bg: '#f4ecd8', fg: '#3b2f22' }, { id: 'dark', label: t('Dark'), bg: '#141211', fg: '#ece6df' },
 ]

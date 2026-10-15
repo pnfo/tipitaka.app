@@ -11,7 +11,8 @@ export const SETTINGS_KEY = 'tipitaka.app-settings-3'
 
 export type Theme = 'light' | 'sepia' | 'dark'
 export type NotesMode = 'pointer' | 'inline' | 'hidden'
-export type Layout = 'single' | 'parallel'
+/** v2 tab views: one text, tabs, or the tabs side by side as columns */
+export type TabView = 'single' | 'tabbed' | 'columns'
 
 export interface Settings {
   script: string
@@ -25,14 +26,18 @@ export interface Settings {
   paraNums: boolean
   /** dictionaries used for lookups ('dpd' + dict codes); empty = all */
   dicts: string[]
-  layout: Layout
+  tabView: TabView
+  /** scroll linked columns (mūla / commentary) together */
+  syncScroll: boolean
+  /** height of the dictionary / commentary sheet on phones, % of the screen */
+  sheetHeight: number
   /** tap a word to look it up */
   tapLookup: boolean
 }
 
 export const DEFAULTS: Settings = {
   script: DEFAULT_SCRIPT, uiLang: 'en', theme: 'light', textSize: 18, leading: 1.65, width: 760, notes: 'pointer', pageRefs: '',
-  paraNums: true, dicts: [], layout: 'single', tapLookup: true,
+  paraNums: true, dicts: [], tabView: 'single', syncScroll: true, sheetHeight: 45, tapLookup: true,
 }
 
 /** v2 settings -> v3 (scripts/settings.js keys) */
@@ -44,6 +49,7 @@ export function migrateV2(old: Record<string, unknown>): Partial<Settings> {
   if (['en', 'si', 'my', 'th', 'kh', 'hi', 'ch'].includes(ui)) out.uiLang = ui
   if (old.colorTheme === 'dark') out.theme = 'dark'
   if (Array.isArray(old.dictList) && old.dictList.length) out.dicts = ['dpd', ...(old.dictList as string[])]
+  if (old.tabViewFormat === 'tabbed' || old.tabViewFormat === 'columns') out.tabView = old.tabViewFormat
   if (old.footnoteFormat === 'hidden') out.notes = 'hidden'
   else if (old.footnoteFormat === 'inline') out.notes = 'inline'
   return out

@@ -16,6 +16,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"sync"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -27,16 +28,17 @@ type Engine struct {
 	dict *sql.DB // nil when dict.db is missing
 	Meta map[string]string
 
-	nodes    []Node         // index = node id (DFS order)
-	byKey    map[string]int // key -> id
-	children [][]int
-	mirrored map[int][]int // node id -> nodes whose mirror_key is this node (its commentaries)
+	nodes     []Node         // index = node id (DFS order)
+	byKey     map[string]int // key -> id
+	children  [][]int
+	mirrored  map[int][]int // node id -> nodes whose mirror_key is this node (its commentaries)
 	books     []Book
 	bookAnc   [][]string // book id -> keys of the ancestors of its root (for search filters)
 	bookNodes [][]int    // book id -> its node ids sorted by start (tree order for equal starts)
 
-	tokMu   sync.Mutex
-	paraTok map[int][]int32 // book id -> tok offset of every paragraph (lazy)
+	tokMu     sync.Mutex
+	paraTok   map[int]*bookParaInfo // book id -> tok offset and node of every paragraph (lazy)
+	groupNode []int                 // node id -> the node its search hits are grouped under (sutta / chapter level)
 
 	ftsCache *lru
 }
@@ -112,7 +114,7 @@ func OpenFiles(textPath, dictPath string) (*Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	e := &Engine{text: text, paraTok: map[int][]int32{}, ftsCache: newLRU(64)}
+	e := &Engine{text: text, paraTok: map[int]*bookParaInfo{}, ftsCache: newLRU(64)}
 	if dictPath != "" {
 		if _, err := os.Stat(dictPath); err == nil {
 			if e.dict, err = openRO(dictPath); err != nil {
@@ -213,6 +215,22 @@ func (e *Engine) load(ctx context.Context) error {
 		e.books = append(e.books, b)
 	}
 	rows.Close()
+	// search result groups: unnumbered section headings roll up to their sutta / chapter
+	e.groupNode = make([]int, len(e.nodes))
+	for i := range e.nodes {
+		g := i
+		for {
+			n := e.nodes[g]
+			if n.Kind != "heading" || n.Parent < 0 || isNumberedTitle(n.Title) {
+				break
+			}
+			if pk := e.nodes[n.Parent].Kind; pk == "book" || pk == "group" {
+				break
+			}
+			g = n.Parent
+		}
+		e.groupNode[i] = g
+	}
 	e.bookNodes = make([][]int, len(e.books))
 	for i, n := range e.nodes {
 		if n.Book >= 0 && n.Book < len(e.books) {
@@ -253,4 +271,10 @@ func (e *Engine) Keys() []string {
 		out[i] = n.Key
 	}
 	return out
+}
+
+// isNumberedTitle: "12. Sāmaññaphalasuttaṃ", "(5) 1. ..." - suttas, vaggas, chapters
+func isNumberedTitle(t string) bool {
+	t = strings.TrimLeft(t, "(")
+	return t != "" && t[0] >= '0' && t[0] <= '9'
 }

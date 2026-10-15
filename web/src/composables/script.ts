@@ -4,7 +4,7 @@
  */
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { convert, convertMixed } from '@pnfo/pali-converter'
+import { convert, convertMixed, getScriptForCode } from '@pnfo/pali-converter'
 import { isScriptCode, SCRIPTS } from '@shared/scripts'
 import { useSettings } from '@/stores/settings'
 
@@ -23,6 +23,17 @@ export function convertTo(text: string, script: string): string {
 /** user input in any script -> Roman lower case (search, dictionary) */
 export function toRoman(input: string): string {
   return convertMixed(input, 'latn').toLowerCase()
+}
+
+/** the script of typed text (first letter that is not Roman); used to pick the font of search inputs */
+export function detectScript(text: string): string {
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i)
+    if (code < 0x80) continue
+    const s = getScriptForCode(code)
+    if (typeof s === 'string' && s !== 'latn') return s
+  }
+  return 'latn'
 }
 
 export function useScript() {

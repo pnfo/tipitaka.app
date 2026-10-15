@@ -39,7 +39,8 @@ export interface TitleHit extends TNode { parent: string; bookTitle: string }
 
 export interface Combo { id: number; words: string[]; freq: number; books: number }
 export interface FtsHit { combo: number; book: number; para: number; key: string; title: string; path: string; offs: number[]; text: string }
-export interface FtsResult { combos: Combo[]; total: number; page: number; pageSize: number; hits: FtsHit[]; truncated: boolean; tokens: number[] }
+export interface FtsGroup { key: string; title: string; path: string; coll: Coll; count: number; para: number }
+export interface FtsResult { combos: Combo[]; total: number; page: number; pageSize: number; hits: FtsHit[]; groups: FtsGroup[]; groupsTruncated?: boolean; truncated: boolean; tokens: number[] }
 
 export interface Dict { code: string; lang: string; name: string; short: string; desc?: string; origin?: string; entries: number }
 export interface DictEntry { dict: string; word: string; meaning: string; dist: number }

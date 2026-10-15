@@ -282,3 +282,47 @@ func TestLegacyMissing(t *testing.T) {
 		t.Fatalf("legacy %v", err)
 	}
 }
+
+func TestFtsGroups(t *testing.T) {
+	e := fixture(t)
+	r, err := e.Fts(ctx, FtsQuery{Terms: []string{"bhikkhave"}, Exact: true, Combo: 0})
+	if err != nil {
+		t.Fatal(err)
+	}
+	sum := 0
+	for _, g := range r.Groups {
+		sum += g.Count
+		if strings.Contains(g.Key, "dn-1-1-") {
+			t.Fatalf("sections must roll up to the sutta: %s %s", g.Key, g.Title)
+		}
+	}
+	if len(r.Groups) == 0 || sum != r.Total {
+		t.Fatalf("groups %d sum %d total %d", len(r.Groups), sum, r.Total)
+	}
+	g := r.Groups[0]
+	one, _ := e.Fts(ctx, FtsQuery{Terms: []string{"bhikkhave"}, Exact: true, Combo: 0, Group: g.Key})
+	if one.Total != g.Count || len(one.Hits) == 0 || one.Hits[0].Para != g.Para {
+		t.Fatalf("group filter: total %d want %d", one.Total, g.Count)
+	}
+	byFreq, _ := e.Fts(ctx, FtsQuery{Terms: []string{"bhikkhave"}, Exact: true, Combo: 0, SortFreq: true})
+	for i := 1; i < len(byFreq.Groups); i++ {
+		if byFreq.Groups[i].Count > byFreq.Groups[i-1].Count {
+			t.Fatal("sortFreq")
+		}
+	}
+	if _, err := e.Fts(ctx, FtsQuery{Terms: []string{"bhikkhave"}, Combo: 0, Group: "nope"}); ErrorCode(err) != "bad_request" {
+		t.Fatal("unknown group")
+	}
+}
+
+func TestFtsNoHits(t *testing.T) {
+	e := fixture(t)
+	r, err := e.Call(ctx, "fts", MapParams{"q": "bhikkhave", "pageSize": "0"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	res := r.(*FtsResult)
+	if len(res.Hits) != 0 || len(res.Groups) == 0 || res.Total == 0 {
+		t.Fatalf("pageSize=0: hits %d groups %d", len(res.Hits), len(res.Groups))
+	}
+}

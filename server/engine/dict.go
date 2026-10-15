@@ -29,28 +29,28 @@ type DictEntry struct {
 
 // DpdHead is a DPD headword.
 type DpdHead struct {
-	ID                   int    `json:"id"`
-	Lemma                string `json:"lemma"`
-	Pos                  string `json:"pos"`
-	Grammar              string `json:"grammar"`
-	Meaning              string `json:"meaning"`
-	MeaningLit           string `json:"meaningLit,omitempty"`
-	Meaning2             string `json:"meaning2,omitempty"`
-	Construction         string `json:"construction,omitempty"`
-	RootKey              string `json:"rootKey,omitempty"`
-	RootBase             string `json:"rootBase,omitempty"`
-	DerivedFrom          string `json:"derivedFrom,omitempty"`
-	Sanskrit             string `json:"sanskrit,omitempty"`
-	PlusCase             string `json:"plusCase,omitempty"`
-	CompoundType         string `json:"compoundType,omitempty"`
-	CompoundConstruction string `json:"compoundConstruction,omitempty"`
-	Notes                string `json:"notes,omitempty"`
-	Stem                 string `json:"stem,omitempty"`
-	Pattern              string `json:"pattern,omitempty"`
-	Example              string `json:"example,omitempty"`
-	Source               string `json:"source,omitempty"`
-	Sutta                string `json:"sutta,omitempty"`
-	EbtCount             int    `json:"ebtCount"`
+	ID                   int      `json:"id"`
+	Lemma                string   `json:"lemma"`
+	Pos                  string   `json:"pos"`
+	Grammar              string   `json:"grammar"`
+	Meaning              string   `json:"meaning"`
+	MeaningLit           string   `json:"meaningLit,omitempty"`
+	Meaning2             string   `json:"meaning2,omitempty"`
+	Construction         string   `json:"construction,omitempty"`
+	RootKey              string   `json:"rootKey,omitempty"`
+	RootBase             string   `json:"rootBase,omitempty"`
+	DerivedFrom          string   `json:"derivedFrom,omitempty"`
+	Sanskrit             string   `json:"sanskrit,omitempty"`
+	PlusCase             string   `json:"plusCase,omitempty"`
+	CompoundType         string   `json:"compoundType,omitempty"`
+	CompoundConstruction string   `json:"compoundConstruction,omitempty"`
+	Notes                string   `json:"notes,omitempty"`
+	Stem                 string   `json:"stem,omitempty"`
+	Pattern              string   `json:"pattern,omitempty"`
+	Example              string   `json:"example,omitempty"`
+	Source               string   `json:"source,omitempty"`
+	Sutta                string   `json:"sutta,omitempty"`
+	EbtCount             int      `json:"ebtCount"`
 	Root                 *DpdRoot `json:"root,omitempty"`
 }
 

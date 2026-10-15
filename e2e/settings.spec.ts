@@ -43,3 +43,33 @@ test('script converter page', async ({ page }) => {
   await page.getByTestId('convert-target').selectOption('latn')
   await expect(page.getByTestId('convert-output')).toHaveText(/dhammapadaṃ/i)
 })
+
+test('script dropdown', async ({ page }) => {
+  await page.goto('/latn/settings')
+  await page.getByTestId('set-script').selectOption('thai')
+  await expect(page).toHaveURL(/\/thai\/settings/)
+})
+
+test('the dictionary sheet on phones keeps the height set by dragging', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'phones only')
+  await page.goto('/latn/dn-1-1')
+  const para = page.getByTestId('reader').locator('.para.bodytext').first()
+  const b = (await para.boundingBox())!
+  await page.mouse.click(b.x + 60, b.y + 10)
+  const sheet = page.getByTestId('study-panel')
+  await expect(sheet).toBeVisible()
+  const h0 = (await sheet.boundingBox())!.height
+  // pointer events (mouse drags are not available on mobile webkit in playwright)
+  const handle = page.getByTestId('sheet-handle')
+  const y = (await handle.boundingBox())!.y
+  await handle.dispatchEvent('pointerdown', { pointerId: 7, clientY: y, bubbles: true })
+  for (const dy of [30, 80, 150]) await handle.dispatchEvent('pointermove', { pointerId: 7, clientY: y - dy, bubbles: true })
+  await handle.dispatchEvent('pointerup', { pointerId: 7, clientY: y - 150, bubbles: true })
+  const h1 = (await sheet.boundingBox())!.height
+  expect(h1).toBeGreaterThan(h0 + 100)
+  // a different word with other content: same height
+  await page.getByTestId('panel-close').click()
+  await page.mouse.click(b.x + 150, b.y + 40)
+  await expect(sheet).toBeVisible()
+  expect(Math.abs((await sheet.boundingBox())!.height - h1)).toBeLessThan(3)
+})

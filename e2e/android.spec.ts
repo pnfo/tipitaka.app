@@ -27,7 +27,7 @@ test('reads, searches and looks up words through the bridge', async ({ page }) =
   await page.goto(`${APP}/index.html#/latn/dn-1-1`)
   await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText('1. Brahmajālasuttaṃ')
   await page.goto(`${APP}/index.html#/latn/search/bhikkhave`)
-  await expect(page.getByTestId('fts-hits').locator('li').first()).toBeVisible()
+  await expect(page.getByTestId('fts-group').first()).toBeVisible()
   await page.goto(`${APP}/index.html#/latn/dict/dhamma`)
   await expect(page.getByTestId('dpd-head').first()).toBeVisible()
   expect(apiCalls).toEqual([]) // the page itself never used the network api

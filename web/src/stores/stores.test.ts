@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
 import { DEFAULTS, SETTINGS_KEY, guessFromBrowser, loadSettings, migrateV2, useSettings } from './settings'
 import { BOOKMARKS_KEY, useLibrary } from './library'
+import { MAX_TABS, TABS_KEY, useTabs } from './tabs'
 import type { Api } from '@/data/api'
 
 beforeEach(() => {
@@ -13,8 +14,8 @@ beforeEach(() => {
 
 describe('settings', () => {
   it('migrates the v2 settings', () => {
-    expect(migrateV2({ paliScript: 'si', uiLanguage: 'si', dictList: ['en-pts'], colorTheme: 'dark' }))
-      .toEqual({ script: 'sinh', uiLang: 'si', dicts: ['dpd', 'en-pts'], theme: 'dark' })
+    expect(migrateV2({ paliScript: 'si', uiLanguage: 'si', dictList: ['en-pts'], colorTheme: 'dark', tabViewFormat: 'columns' }))
+      .toEqual({ script: 'sinh', uiLang: 'si', dicts: ['dpd', 'en-pts'], theme: 'dark', tabView: 'columns' })
     localStorage.setItem('settings', JSON.stringify({ paliScript: 'my' }))
     expect(loadSettings().script).toBe('mymr')
   })
@@ -56,5 +57,35 @@ describe('library', () => {
     expect(localStorage.getItem('bookmarks')).toBeNull()
     await nextTick()
     expect(JSON.parse(localStorage.getItem(BOOKMARKS_KEY)!)).toHaveLength(1)
+  })
+})
+
+describe('tabs', () => {
+  it('opens new tabs, reuses open texts, replaces in place, closes', async () => {
+    const tabs = useTabs()
+    tabs.open('dn-1-1', { newTab: true })
+    tabs.open('dn-1-2', { newTab: true })
+    expect(tabs.tabs.map(t => t.key)).toEqual(['dn-1-1', 'dn-1-2'])
+    tabs.open('dn-1-1', { newTab: true, target: 30 })
+    expect(tabs.tabs).toHaveLength(2)
+    expect(tabs.active?.key).toBe('dn-1-1')
+    expect(tabs.active?.target).toBe(30)
+    tabs.open('mn-1-1-1', { newTab: false })
+    expect(tabs.tabs.map(t => t.key)).toEqual(['mn-1-1-1', 'dn-1-2'])
+    tabs.close(tabs.activeId)
+    expect(tabs.tabs.map(t => t.key)).toEqual(['dn-1-2'])
+    tabs.close(tabs.activeId) // the last tab stays
+    expect(tabs.tabs).toHaveLength(1)
+    for (let i = 0; i < MAX_TABS + 3; i++) tabs.open(`k${i}`, { newTab: true })
+    expect(tabs.tabs).toHaveLength(MAX_TABS)
+    await nextTick()
+    expect(JSON.parse(localStorage.getItem(TABS_KEY)!).tabs).toHaveLength(MAX_TABS)
+  })
+  it('restores saved tabs', () => {
+    localStorage.setItem(TABS_KEY, JSON.stringify({ tabs: [{ id: 4, key: 'a', current: 'a-1', para: 7 }, { id: 9, key: 'b', current: 'b' }], active: 9 }))
+    const tabs = useTabs()
+    expect(tabs.active?.key).toBe('b')
+    expect(tabs.tabs[0]).toMatchObject({ current: 'a-1', para: 7 })
+    expect(tabs.open('c', { newTab: true }).id).toBe(10)
   })
 })

@@ -1,7 +1,7 @@
 <!-- script selector: the url prefix changes, the rest of the route is kept -->
 <template>
-  <button ref="btn" class="btn h-9 shrink-0 px-2.5" :aria-label="t('Pali script')" aria-haspopup="dialog" data-testid="script-picker" @click="open = !open">
-    <IconLanguages class="h-4 w-4 text-muted" />
+  <button ref="btn" class="btn h-9 shrink-0 px-2 sm:px-2.5" :aria-label="t('Pali script')" aria-haspopup="dialog" data-testid="script-picker" @click="open = !open">
+    <IconLanguages class="hidden h-4 w-4 text-muted sm:inline" />
     <span class="max-w-[6rem] truncate" :data-script="script" style="font-family: var(--font-text)">{{ info.native }}</span>
   </button>
   <Floating :open="open" :anchor="btn ?? null" align="end" @close="open = false">

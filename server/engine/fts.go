@@ -24,10 +24,22 @@ type FtsQuery struct {
 	Phrase   bool     `json:"phrase"`
 	Order    bool     `json:"order"`
 	Distance int      `json:"distance"`
-	Filter   []string `json:"filter"` // node keys (collections / books) to search in
-	Combo    int      `json:"combo"`  // -1 all combos
+	Filter   []string `json:"filter"`   // node keys (collections / books) to search in
+	Combo    int      `json:"combo"`    // -1 all combos
+	Group    string   `json:"group"`    // only the hits in this group (FtsGroup.Key)
+	SortFreq bool     `json:"sortFreq"` // groups by number of hits instead of tree order
 	Page     int      `json:"page"`
 	PageSize int      `json:"pageSize"`
+}
+
+// FtsGroup is a text (sutta, chapter ...) with hits of the selected combos (v2: the file list of a match).
+type FtsGroup struct {
+	Key   string `json:"key"`
+	Title string `json:"title"`
+	Path  string `json:"path"` // titles of the ancestors below the collection, " › " separated
+	Coll  string `json:"coll"`
+	Count int    `json:"count"`
+	Para  int    `json:"para"` // first hit
 }
 
 // Combo is a combination of matched words.
@@ -52,13 +64,16 @@ type FtsHit struct {
 
 // FtsResult is the search response.
 type FtsResult struct {
-	Combos    []Combo  `json:"combos"`
-	Total     int      `json:"total"` // occurrences of the selected combos
-	Page      int      `json:"page"`
-	PageSize  int      `json:"pageSize"`
-	Hits      []FtsHit `json:"hits"`
-	Truncated bool     `json:"truncated"` // limits were hit, results are incomplete
-	Tokens    []int    `json:"tokens"`    // number of matching words per term
+	Combos   []Combo    `json:"combos"`
+	Total    int        `json:"total"` // occurrences of the selected combos
+	Page     int        `json:"page"`
+	PageSize int        `json:"pageSize"`
+	Hits     []FtsHit   `json:"hits"`
+	Groups   []FtsGroup `json:"groups"`
+	// more than maxGroups texts matched: only the first ones are listed
+	GroupsTruncated bool  `json:"groupsTruncated"`
+	Truncated       bool  `json:"truncated"` // limits were hit, results are incomplete
+	Tokens          []int `json:"tokens"`    // number of matching words per term
 }
 
 const (
@@ -71,7 +86,9 @@ const (
 // ErrTooBroad is returned when a query would touch too much data.
 type ErrTooBroad struct{ Term string }
 
-func (e *ErrTooBroad) Error() string { return fmt.Sprintf("the term '%s' is too broad, please refine the query", e.Term) }
+func (e *ErrTooBroad) Error() string {
+	return fmt.Sprintf("the term '%s' is too broad, please refine the query", e.Term)
+}
 
 type tokenInfo struct {
 	id   int
@@ -245,7 +262,7 @@ func (e *Engine) Fts(ctx context.Context, q FtsQuery) (*FtsResult, error) {
 	if q.Distance <= 0 {
 		q.Distance = 10
 	}
-	if q.PageSize <= 0 || q.PageSize > 200 {
+	if q.PageSize == 0 || q.PageSize > 200 { // -1: combos and groups only (api pageSize=0)
 		q.PageSize = 50
 	}
 	cacheKey := fmt.Sprintf("%q|%v|%v|%v|%d|%q", q.Terms, q.Exact, q.Phrase, q.Order, q.Distance, q.Filter)
@@ -468,11 +485,16 @@ func (e *Engine) ftsCompute(ctx context.Context, q FtsQuery) (*ftsBase, error) {
 	return base, nil
 }
 
+const maxGroups = 2000
+
 func (e *Engine) ftsPage(ctx context.Context, base *ftsBase, q FtsQuery) (*FtsResult, error) {
-	res := &FtsResult{Combos: base.combos, Page: q.Page, PageSize: q.PageSize, Hits: []FtsHit{}, Truncated: base.truncated, Tokens: base.tokens}
+	res := &FtsResult{Combos: base.combos, Page: q.Page, PageSize: q.PageSize, Hits: []FtsHit{}, Groups: []FtsGroup{}, Truncated: base.truncated, Tokens: base.tokens}
 	type ref struct {
 		combo int
 		m     *ftsMatch
+		para  int
+		tok   int32
+		group int
 	}
 	var sel []ref
 	for ci := range base.matches {
@@ -480,7 +502,7 @@ func (e *Engine) ftsPage(ctx context.Context, base *ftsBase, q FtsQuery) (*FtsRe
 			continue
 		}
 		for k := range base.matches[ci] {
-			sel = append(sel, ref{ci, &base.matches[ci][k]})
+			sel = append(sel, ref{combo: ci, m: &base.matches[ci][k]})
 		}
 	}
 	// tree order: books are numbered in tree order, then position
@@ -491,30 +513,77 @@ func (e *Engine) ftsPage(ctx context.Context, base *ftsBase, q FtsQuery) (*FtsRe
 		}
 		return minOff(ma.offs) < minOff(mb.offs)
 	})
-	res.Total = len(sel)
-	start := q.Page * q.PageSize
-	if start > len(sel) {
-		start = len(sel)
-	}
-	end := min(start+q.PageSize, len(sel))
-	for _, r := range sel[start:end] {
-		first := minOff(r.m.offs)
-		paraIdx, tok, err := e.paraOfToken(ctx, r.m.book, first)
+	// paragraph and group of every occurrence
+	counts := map[int]*FtsGroup{}
+	var order []int
+	for i := range sel {
+		bp, err := e.bookParas(ctx, sel[i].m.book)
 		if err != nil {
 			return nil, err
 		}
-		h := FtsHit{Combo: r.combo, Book: r.m.book, Para: paraIdx, Path: e.books[r.m.book].Title}
+		p := bp.paraOf(minOff(sel[i].m.offs))
+		sel[i].para, sel[i].tok = p, bp.tok[p]
+		g := e.groupNode[bp.node[p]]
+		sel[i].group = g
+		if c, ok := counts[g]; ok {
+			c.Count++
+		} else {
+			n := e.nodes[g]
+			counts[g] = &FtsGroup{Key: n.Key, Title: n.Title, Path: e.groupPath(g), Coll: n.Coll, Count: 1, Para: p}
+			order = append(order, g)
+		}
+	}
+	for _, g := range order {
+		res.Groups = append(res.Groups, *counts[g])
+	}
+	if q.SortFreq {
+		sort.SliceStable(res.Groups, func(a, b int) bool { return res.Groups[a].Count > res.Groups[b].Count })
+	}
+	if len(res.Groups) > maxGroups {
+		res.Groups = res.Groups[:maxGroups]
+		res.GroupsTruncated = true
+	}
+	if q.Group != "" {
+		gi, ok := e.byKey[q.Group]
+		if !ok {
+			return nil, &ParamError{"unknown group"}
+		}
+		kept := sel[:0]
+		for _, r := range sel {
+			if r.group == gi {
+				kept = append(kept, r)
+			}
+		}
+		sel = kept
+	}
+	res.Total = len(sel)
+	start := min(q.Page*max(q.PageSize, 0), len(sel))
+	end := min(start+max(q.PageSize, 0), len(sel))
+	for _, r := range sel[start:end] {
+		h := FtsHit{Combo: r.combo, Book: r.m.book, Para: r.para, Path: e.books[r.m.book].Title}
 		for _, o := range r.m.offs {
-			h.Offs = append(h.Offs, int(o-tok))
+			h.Offs = append(h.Offs, int(o-r.tok))
 		}
 		var nodeID int
-		if err := e.text.QueryRowContext(ctx, "SELECT node_id, text FROM para WHERE id = ?", r.m.book*paraIDShift+paraIdx).Scan(&nodeID, &h.Text); err != nil {
+		if err := e.text.QueryRowContext(ctx, "SELECT node_id, text FROM para WHERE id = ?", r.m.book*paraIDShift+r.para).Scan(&nodeID, &h.Text); err != nil {
 			return nil, err
 		}
 		h.Key, h.Title = e.nodes[nodeID].Key, e.nodes[nodeID].Title
 		res.Hits = append(res.Hits, h)
 	}
 	return res, nil
+}
+
+// groupPath: titles of the ancestors of a group below the collection root
+func (e *Engine) groupPath(id int) string {
+	var parts []string
+	for p := e.nodes[id].Parent; p >= 0 && e.nodes[p].Parent >= 0; p = e.nodes[p].Parent {
+		parts = append(parts, e.nodes[p].Title)
+	}
+	for l, r := 0, len(parts)-1; l < r; l, r = l+1, r-1 {
+		parts[l], parts[r] = parts[r], parts[l]
+	}
+	return strings.Join(parts, " › ")
 }
 
 func minOff(o []int32) int32 {
@@ -525,40 +594,40 @@ func minOff(o []int32) int32 {
 	return m
 }
 
-// paraOfToken finds the paragraph of a book token offset (and that paragraph's first token offset).
-func (e *Engine) paraOfToken(ctx context.Context, book int, off int32) (int, int32, error) {
-	toks, err := e.bookParaTok(ctx, book)
-	if err != nil {
-		return 0, 0, err
-	}
-	i := sort.Search(len(toks), func(k int) bool { return toks[k] > off }) - 1
-	// empty paragraphs share the offset of the next one: take the last paragraph starting at or before off
-	if i < 0 {
-		i = 0
-	}
-	return i, toks[i], nil
+// bookParaInfo: the first token offset and the node of every paragraph of a book
+type bookParaInfo struct {
+	tok  []int32
+	node []int32
 }
 
-func (e *Engine) bookParaTok(ctx context.Context, book int) ([]int32, error) {
+// paraOf finds the paragraph of a book token offset. Empty paragraphs share the offset of the next one:
+// the last paragraph starting at or before off is the one holding the token.
+func (b *bookParaInfo) paraOf(off int32) int {
+	i := sort.Search(len(b.tok), func(k int) bool { return b.tok[k] > off }) - 1
+	return max(i, 0)
+}
+
+func (e *Engine) bookParas(ctx context.Context, book int) (*bookParaInfo, error) {
 	e.tokMu.Lock()
 	defer e.tokMu.Unlock()
 	if t, ok := e.paraTok[book]; ok {
 		return t, nil
 	}
-	rows, err := e.text.QueryContext(ctx, "SELECT tok FROM para WHERE id >= ? AND id < ? ORDER BY id", book*paraIDShift, (book+1)*paraIDShift)
+	rows, err := e.text.QueryContext(ctx, "SELECT tok, node_id FROM para WHERE id >= ? AND id < ? ORDER BY id", book*paraIDShift, (book+1)*paraIDShift)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var out []int32
+	out := &bookParaInfo{}
 	for rows.Next() {
-		var t int32
-		if err := rows.Scan(&t); err != nil {
+		var t, n int32
+		if err := rows.Scan(&t, &n); err != nil {
 			return nil, err
 		}
-		out = append(out, t)
+		out.tok = append(out.tok, t)
+		out.node = append(out.node, n)
 	}
-	if len(out) == 0 {
+	if len(out.tok) == 0 {
 		return nil, sql.ErrNoRows
 	}
 	e.paraTok[book] = out

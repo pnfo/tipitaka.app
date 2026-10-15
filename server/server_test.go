@@ -144,12 +144,12 @@ func TestSitemapRobots(t *testing.T) {
 func TestMarkup(t *testing.T) {
 	id := func(s string) string { return s }
 	cases := map[string]string{
-		"a **b** c":             "a <b>b</b> c",
-		"a {b **c**} d":         `a <span class="note">[b <b>c</b>]</span> d`,
-		"x|M1.0001|y <z>":       "xy &lt;z&gt;",
-		"a **b":                 "a <b>b</b>",
-		"a {b":                  `a <span class="note">[b]</span>`,
-		"a | b":                 "a | b",
+		"a **b** c":       "a <b>b</b> c",
+		"a {b **c**} d":   `a <span class="note">[b <b>c</b>]</span> d`,
+		"x|M1.0001|y <z>": "xy &lt;z&gt;",
+		"a **b":           "a <b>b</b>",
+		"a {b":            `a <span class="note">[b]</span>`,
+		"a | b":           "a | b",
 	}
 	for in, want := range cases {
 		if got := markupToHTML(in, id); got != want {

@@ -8,7 +8,7 @@
         <TreeDrawer />
       </aside>
       <div v-if="ui.treeOpen && !wide" class="fixed inset-0 top-14 z-20 bg-black" style="opacity: .35" @click="ui.treeOpen = false" />
-      <main class="min-w-0 flex-1">
+      <main class="min-w-0 flex-1" :style="ui.panelOpen && !wide ? { paddingBottom: `${settings.sheetHeight}vh` } : undefined">
         <RouterView />
       </main>
       <StudyPanel />

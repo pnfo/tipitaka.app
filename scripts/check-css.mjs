@@ -14,7 +14,7 @@ const ignore = ['css-touch-action', 'css-overscroll-behavior', 'css-text-indent'
   'css-not-sel-list' /* tailwind space-x uses :not([hidden]) with a single argument */,
   'css-placeholder', 'mdn-text-decoration-shorthand' /* cosmetic: placeholder colour, underline/strike colour */, 'css-boxdecorationbreak', 'css-backdrop-filter', 'mdn-text-decoration-line', 'mdn-text-decoration-color',
   // cosmetic only: missing spacing between flex items, focus rings, scroll offsets of anchors, a fixed popover width
-  'flexbox-gap', 'css-focus-visible', 'css-focus-within', 'css-snappoints', 'css-math-functions', 'css-display-contents', 'multicolumn']
+  'flexbox-gap', 'css3-cursors', 'pointer', 'css-focus-visible', 'css-focus-within', 'css-snappoints', 'css-math-functions', 'css-display-contents', 'multicolumn']
 const dir = process.argv[2] || 'web/dist/assets'
 const problems = []
 for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.css'))) {

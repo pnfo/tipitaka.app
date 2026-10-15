@@ -142,7 +142,7 @@ export class Api {
   text = (key: string, from?: number, count?: number) => this.call<TextChunk>('text', { key, from, count })
   links = (key: string, from?: number, to?: number) => this.call<Link[]>('links', { key, from, to })
   titles = (q: string, colls?: string[], limit?: number) => this.call<TitleHit[]>('titles', { q, colls: colls?.join(','), limit })
-  fts = (p: { q: string; exact?: boolean; phrase?: boolean; order?: boolean; distance?: number; filter?: string[]; combo?: number; page?: number; pageSize?: number }) =>
+  fts = (p: { q: string; exact?: boolean; phrase?: boolean; order?: boolean; distance?: number; filter?: string[]; combo?: number; group?: string; sortFreq?: boolean; page?: number; pageSize?: number }) =>
     this.call<FtsResult>('fts', { ...p, filter: p.filter?.join(',') })
   dicts = () => this.call<Dict[]>('dicts')
   dict = (w: string, dicts?: string[], limit?: number) => this.call<DictResult>('dict', { w, dicts: dicts?.join(','), limit })

@@ -30,7 +30,7 @@ html, body { background: var(--c-bg); color: var(--c-fg); }
 body { font-family: var(--font-ui); margin: 0; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
-:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+@layer base { :focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; } } /* base layer: outline-none utilities win */
 input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 
 @layer components {

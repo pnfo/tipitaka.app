@@ -159,7 +159,11 @@ func (e *Engine) Call(ctx context.Context, op string, p Params) (any, error) {
 		if err != nil {
 			return nil, err
 		}
-		fq := FtsQuery{Terms: strings.Fields(q), Exact: flag(p, "exact"), Phrase: flag(p, "phrase"), Order: flag(p, "order"), Filter: splitList(p, "filter")}
+		fq := FtsQuery{Terms: strings.Fields(q), Exact: flag(p, "exact"), Phrase: flag(p, "phrase"), Order: flag(p, "order"), Filter: splitList(p, "filter"),
+			SortFreq: flag(p, "sortFreq")}
+		if fq.Group, err = str(p, "group"); err != nil {
+			return nil, err
+		}
 		if fq.Distance, err = num(p, "distance", 10); err != nil {
 			return nil, err
 		}
@@ -171,6 +175,9 @@ func (e *Engine) Call(ctx context.Context, op string, p Params) (any, error) {
 		}
 		if fq.PageSize, err = num(p, "pageSize", 50); err != nil {
 			return nil, err
+		}
+		if fq.PageSize <= 0 {
+			fq.PageSize = -1 // combos and groups only
 		}
 		return e.Fts(ctx, fq)
 	case "dicts":

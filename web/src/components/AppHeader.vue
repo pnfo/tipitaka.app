@@ -3,12 +3,13 @@
     <button class="icon-btn" :class="{ active: ui.treeOpen }" :aria-label="t('Contents')" :title="t('Contents')" data-testid="tree-toggle" @click="ui.treeOpen = !ui.treeOpen">
       <IconMenu class="h-5 w-5" />
     </button>
-    <RouterLink :to="{ name: 'home', params: { script } }" class="mr-1 flex shrink-0 items-center gap-2" aria-label="Tipiṭaka.app">
+    <RouterLink :to="{ name: 'home', params: { script } }" class="mr-1 hidden shrink-0 items-center gap-2 sm:flex" aria-label="Tipiṭaka.app">
       <img :src="logo" alt="" class="h-7 w-7 rounded-full" width="28" height="28">
       <span class="hidden font-semibold tracking-tight text-primary sm:inline" style="font-family: var(--font-text)">{{ conv('Tipiṭaka') }}</span>
     </RouterLink>
     <div class="flex min-w-0 flex-1 justify-center">
-      <SearchBox class="w-full max-w-xl" />
+      <!-- the search pages have their own box on phones -->
+      <SearchBox class="w-full max-w-xl" :class="{ 'hidden sm:block': onSearchPage }" />
     </div>
     <ScriptPicker />
     <RouterLink :to="{ name: 'bookmarks', params: { script } }" class="icon-btn hidden sm:inline-flex" :aria-label="t('Bookmarks')" :title="t('Bookmarks')">
@@ -26,11 +27,15 @@ import IconBookmark from '~icons/lucide/bookmark'
 import IconSettings from '~icons/lucide/settings'
 import SearchBox from './SearchBox.vue'
 import ScriptPicker from './ScriptPicker.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useUi } from '@/stores/ui'
 import { useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
 const ui = useUi()
+const route = useRoute()
+const onSearchPage = computed(() => route.name === 'search' || route.name === 'titles' || route.name === 'dict')
 const logo = `${import.meta.env.BASE_URL}images/app-icon.png`
 const { script, conv } = useScript()
 </script>
