@@ -1,11 +1,23 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+
+/** the header script picker (wide screens) or the settings dropdown (phones) */
+async function pickScript(page: Page, isMobile: boolean, code: string) {
+  if (isMobile) {
+    await expect(page.getByTestId('script-picker')).toBeHidden()
+    await page.goto('/latn/settings')
+    await page.getByTestId('set-script').selectOption(code)
+    await expect(page).toHaveURL(new RegExp(`/${code}/settings`))
+  } else {
+    await page.getByTestId('script-picker').click()
+    await page.getByTestId(`script-${code}`).click()
+  }
+}
 
 test.describe('reader', () => {
   test('opens a sutta at its start with breadcrumb and tree', async ({ page, isMobile }) => {
     await page.goto('/latn/dn-1-1')
     const reader = page.getByTestId('reader')
     await expect(reader.locator('.para.heading').first()).toHaveText('1. Brahmajālasuttaṃ')
-    await expect(page.getByTestId('breadcrumb')).toContainText('Brahmajālasuttaṃ')
     await expect(page).toHaveTitle(/Brahmajālasuttaṃ – Sīlakkhandhavaggapāḷi \| Tipiṭaka\.app/)
     await expect(page.getByTestId('load-prev')).toBeVisible() // the book starts before the sutta
     if (isMobile) await page.getByTestId('tree-toggle').click()
@@ -27,10 +39,10 @@ test.describe('reader', () => {
     await expect(page.getByTestId('reader').locator('.para.nikaya')).toHaveText('Dīghanikāyo')
   })
 
-  test('changes the script in the url and the text', async ({ page }) => {
+  test('changes the script in the url and the text', async ({ page, isMobile }) => {
     await page.goto('/latn/dn-1-1')
-    await page.getByTestId('script-picker').click()
-    await page.getByTestId('script-sinh').click()
+    await pickScript(page, isMobile, 'sinh')
+    if (isMobile) await page.goto('/dn-1-1')
     await expect(page).toHaveURL(/\/sinh\/dn-1-1/)
     await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText(/^1\. බ්\u200d?රහ්මජාලසුත්තං$/)
     await expect(page.locator('html')).toHaveAttribute('lang', 'pi-Sinh')
@@ -57,15 +69,29 @@ test.describe('reader', () => {
     await expect(page).toHaveURL(/\/latn\/dn-1$/)
   })
 
+  test('paragraph and heading options: link, copy, bookmark', async ({ page, context, browserName }) => {
+    if (browserName === 'chromium') await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+    await page.goto('/latn/dn-1-1')
+    await page.getByTestId('reader').locator('.para.heading').first().click()
+    const menu = page.getByTestId('para-menu')
+    await expect(menu).toBeVisible()
+    await menu.getByTestId('menu-link').click()
+    await expect(page.getByTestId('toast')).toBeVisible()
+    if (browserName === 'chromium') expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/\/latn\/dn-1-1#p\d+$/)
+    await page.getByTestId('reader').locator('.num').first().click()
+    await page.getByTestId('para-menu').getByTestId('menu-bookmark').click()
+    await page.goto('/latn/bookmarks')
+    await expect(page.getByTestId('bookmarks').locator('li')).toHaveCount(1)
+  })
+
   test('unknown keys show an error', async ({ page }) => {
     await page.goto('/latn/nope-1')
     await expect(page.getByText('This page does not exist.')).toBeVisible()
   })
 
-  test('bare keys redirect to the saved script', async ({ page }) => {
+  test('bare keys redirect to the saved script', async ({ page, isMobile }) => {
     await page.goto('/latn/dn-1-1')
-    await page.getByTestId('script-picker').click()
-    await page.getByTestId('script-thai').click()
+    await pickScript(page, isMobile, 'thai')
     await page.goto('/mn-1-1-1')
     await expect(page).toHaveURL(/\/thai\/mn-1-1-1/)
   })

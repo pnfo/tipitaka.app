@@ -28,7 +28,8 @@ test.describe('settings and storage', () => {
 
   test('bookmarks and history', async ({ page }) => {
     await page.goto('/latn/dn-1-2')
-    await page.getByTestId('bookmark-btn').click()
+    await page.getByTestId('reader').locator('.para.heading').first().click()
+    await page.getByTestId('menu-bookmark').click()
     await expect(page.getByTestId('toast')).toBeVisible()
     await page.goto('/latn/bookmarks')
     await expect(page.getByTestId('bookmarks')).toContainText('Sāmaññaphalasuttaṃ')

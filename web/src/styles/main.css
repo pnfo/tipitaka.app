@@ -88,3 +88,10 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .meaning-html { overflow-wrap: anywhere; }
 .meaning-html p { margin: 0.25em 0; }
 .meaning-html hr { border-color: var(--c-line); margin: 0.4em 0; }
+
+/* paragraph options button: left of the paragraph, only with a mouse (touch: tap the number / heading) */
+.para-dots { left: -0.25rem; transform: translateX(-100%); }
+@media (max-width: 899px) { .para-dots { left: 0.1rem; transform: none; } }
+@media (hover: none) { .para-dots { display: none; } }
+.reading .para.heading { cursor: pointer; }
+.reading .num { cursor: pointer; }

@@ -37,7 +37,7 @@
     <div v-else :class="contained ? 'min-h-0 flex-1' : 'pb-24 pt-2'">
       <TextColumn ref="column" :node-key="tab.key" :script="script" :conv="conv" :coll="info.coll" :target="tab.target" :start="startPara"
         :highlight="tab.hl" :linked="linked" :contained="contained" :id-prefix="contained ? `t${tab.id}-` : ''"
-        @visible="onVisible" @word="w => $emit('word', w)" @para="p => $emit('para', p, tab.current)" @loaded="onLoaded">
+        @visible="onVisible" @word="w => $emit('word', w)" @menu="(p, el) => { menu = { para: p, anchor: el } }" @loaded="onLoaded">
         <template #end>
           <nav v-if="next" class="mt-10 flex justify-end border-t border-line pt-4 font-ui text-sm">
             <RouterLink :to="{ name: 'read', params: { script, key: next.key } }" class="btn" @click="ui.navInTab = true">
@@ -46,6 +46,7 @@
           </nav>
         </template>
       </TextColumn>
+      <ParaMenu :para="menu?.para ?? null" :anchor="menu?.anchor ?? null" :links="links" @close="menu = null" @alongside="(k, p) => $emit('alongside', k, p)" />
     </div>
   </div>
 </template>
@@ -55,8 +56,9 @@ import { computed, ref, watch } from 'vue'
 import IconChevron from '~icons/lucide/chevron-right'
 import IconX from '~icons/lucide/x'
 import TextColumn from './TextColumn.vue'
+import ParaMenu from './ParaMenu.vue'
 import { ApiError, useApi } from '@/data/api'
-import type { Link, NodeInfo, TNode } from '@/data/types'
+import type { Link, NodeInfo, Para, TNode } from '@/data/types'
 import type { Tab } from '@/stores/tabs'
 import { useScript } from '@/composables/script'
 import { useUi } from '@/stores/ui'
@@ -67,7 +69,7 @@ const emit = defineEmits<{
   info: [info: NodeInfo]
   visible: [key: string, para: number, info: NodeInfo]
   word: [shown: string]
-  para: [para: number, key: string]
+  alongside: [key: string, para: number | undefined]
   activate: []
   close: []
 }>()
@@ -82,6 +84,7 @@ const error = ref('')
 const links = ref<Link[]>([])
 const column = ref<InstanceType<typeof TextColumn>>()
 const next = ref<{ key: string; title: string } | null>(null)
+const menu = ref<{ para: Para; anchor: HTMLElement } | null>(null)
 // restored reading position: read once per text (the tab's para follows the scrolling)
 const startPara = ref(props.tab.para)
 watch(() => props.tab.key, () => { startPara.value = props.tab.para })

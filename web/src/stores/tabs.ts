@@ -17,6 +17,9 @@ export interface Tab {
   target?: number
   /** words to highlight (search) */
   hl?: string[]
+  /** title / collection of `current` (tab names without loading the text) */
+  title?: string
+  coll?: string
 }
 
 export const TABS_KEY = 'tipitaka.app-tabs-3'
@@ -27,7 +30,7 @@ export const useTabs = defineStore('tabs', () => {
   const tabs = ref<Tab[]>(saved?.tabs?.filter(t => t && t.key) ?? [])
   const activeId = ref(saved && tabs.value.some(t => t.id === saved.active) ? saved.active : tabs.value[0]?.id ?? 0)
   let nextId = Math.max(0, ...tabs.value.map(t => t.id)) + 1
-  watch([tabs, activeId], () => writeJson(TABS_KEY, { tabs: tabs.value.map(({ id, key, current, para }) => ({ id, key, current, para })), active: activeId.value }), { deep: true })
+  watch([tabs, activeId], () => writeJson(TABS_KEY, { tabs: tabs.value.map(({ id, key, current, para, title, coll }) => ({ id, key, current, para, title, coll })), active: activeId.value }), { deep: true })
 
   const active = computed(() => tabs.value.find(t => t.id === activeId.value))
   const find = (key: string) => tabs.value.find(t => t.key === key || t.current === key)
@@ -38,10 +41,10 @@ export const useTabs = defineStore('tabs', () => {
     if (existing && (opts.newTab || existing.id === activeId.value)) {
       activeId.value = existing.id
       if (opts.target !== undefined || opts.hl?.length) Object.assign(existing, { target: opts.target, hl: opts.hl })
-      if (existing.current !== key) Object.assign(existing, { key, current: key, para: undefined })
+      if (existing.current !== key) Object.assign(existing, { key, current: key, para: undefined, title: undefined })
       return existing
     }
-    const fresh = { key, current: key, para: undefined, target: opts.target, hl: opts.hl }
+    const fresh = { key, current: key, para: undefined, target: opts.target, hl: opts.hl, title: undefined, coll: undefined }
     if (!opts.newTab && active.value) {
       Object.assign(active.value, fresh)
       return active.value
@@ -59,7 +62,7 @@ export const useTabs = defineStore('tabs', () => {
     tabs.value.splice(i, 1)
     if (activeId.value === id) activeId.value = tabs.value[Math.min(i, tabs.value.length - 1)].id
   }
-  /** keep only the active tab (single view) */
+  /** keep only the active tab (single view, "close the others") */
   function closeOthers() {
     tabs.value = tabs.value.filter(t => t.id === activeId.value)
   }

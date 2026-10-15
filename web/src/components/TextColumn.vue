@@ -5,12 +5,17 @@
 -->
 <template>
   <div ref="root" :class="contained ? 'h-full overflow-y-auto overscroll-contain' : ''" @scroll.passive="onScroll">
-    <div class="reading mx-auto max-w-reading px-4 sm:px-6" :class="`coll-${coll}`" @click="onClick">
+    <div class="reading relative mx-auto max-w-reading px-4 sm:px-6" :class="`coll-${coll}`" @click="onClick" @mouseover="onOver">
       <div v-if="from > 0" class="flex justify-center py-3 font-ui">
         <button class="btn text-muted" :disabled="loadingPrev" data-testid="load-prev" @click="loadPrev"><IconUp class="h-4 w-4" />{{ t('Show previous text') }}</button>
       </div>
       <div v-for="p in paras" :id="`${idPrefix}p${p.i}`" :key="p.i" :data-i="p.i" :data-k="p.k"
         :class="[paraClass(p), { target: p.i === target, linked: linked?.has(p.i) }]" v-html="render(p)" />
+      <!-- options of the paragraph under the mouse (on touch: tap the paragraph number or a heading) -->
+      <button v-if="hovered" class="para-dots icon-btn absolute h-7 w-7 bg-surface text-link shadow" :style="{ top: `${hovered.top}px` }"
+        :aria-label="t('Options')" data-testid="para-options" @click.stop="openMenu(hovered.i, $event.currentTarget as HTMLElement)">
+        <IconDots class="h-4 w-4" />
+      </button>
       <div v-if="loadingNext" class="py-6 text-center text-sm text-muted">{{ t('Loading…') }}</div>
       <div ref="bottomSentinel" class="h-1" />
       <slot v-if="book && to >= book.paraCount" name="end" />
@@ -25,6 +30,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { noteTexts, markupToHtml } from '@shared/markup'
 import IconUp from '~icons/lucide/chevrons-up'
+import IconDots from '~icons/lucide/ellipsis'
 import Floating from './Floating.vue'
 import { useApi } from '@/data/api'
 import type { Book, Para } from '@/data/types'
@@ -49,7 +55,8 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
   visible: [para: number, key: string]
   word: [roman: string, shown: string]
-  para: [para: number]
+  /** the options menu of a paragraph (anchor: the element to show it next to) */
+  menu: [para: Para, anchor: HTMLElement]
   loaded: [from: number, to: number, book: Book]
 }>()
 
@@ -191,6 +198,19 @@ function onScroll() {
   }, 150)
 }
 
+// paragraph options: a dots button next to the paragraph under the mouse
+const hovered = ref<{ i: number; top: number } | null>(null)
+function onOver(e: MouseEvent) {
+  const el = (e.target as HTMLElement).closest('.para') as HTMLElement | null
+  if (!el || el.dataset.i === undefined) return
+  const i = +el.dataset.i
+  if (hovered.value?.i !== i) hovered.value = { i, top: el.offsetTop }
+}
+function openMenu(i: number, anchor: HTMLElement) {
+  const p = paras.value.find(x => x.i === i)
+  if (p) emit('menu', p, anchor)
+}
+
 let selected: HTMLElement | null = null
 function onClick(e: MouseEvent) {
   const target = e.target as HTMLElement
@@ -202,7 +222,7 @@ function onClick(e: MouseEvent) {
     note.value = text ? { el: ptr, html: markupToHtml(text, { convert: props.conv, notes: 'inline' }) } : null
     return
   }
-  if (target.closest('.num') && paraEl) { emit('para', +paraEl.dataset.i!); return }
+  if (paraEl && (target.closest('.num') || paraEl.classList.contains('heading'))) { openMenu(+paraEl.dataset.i!, paraEl.querySelector('.num') ?? paraEl); return }
   if (!settings.tapLookup || !paraEl) return
   if (window.getSelection()?.toString()) return // the user is selecting text
   const w = wordAtPoint(e.clientX, e.clientY)

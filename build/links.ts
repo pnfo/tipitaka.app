@@ -4,7 +4,8 @@
  *  - node level: atta-<k> mirrors <k>, tika-<k> mirrors atta-<k> (when both keys exist)
  *  - paragraph level (para_link): CST commentary paragraphs carry the paragraph number of the text they
  *    comment on. Inside the mirrored node of the nearest ancestor that has one, the paragraph with the same
- *    number (first number of a range) is the target.
+ *    number (first number of a range) is the target; when that node does not have the number, the next mirrored
+ *    ancestor is tried (positional section keys may pair different sections).
  *  - data/alignments/*.tsv (manual or AI made links, see dev-docs/alignments.md) are added on top; rows that
  *    no longer resolve are reported.
  */
@@ -47,24 +48,29 @@ export function buildParaLinks(c: Corpus, alignDir?: string, warnings: string[] 
     }
     return m
   }
-  // nearest ancestor (or self) with a mirror target
-  const targetCache = new Map<number, { node: TNode; kind: LinkKind } | null>()
-  const targetOf = (ni: number): { node: TNode; kind: LinkKind } | null => {
-    if (targetCache.has(ni)) return targetCache.get(ni)!
+  // the mirror targets of a node and its ancestors, nearest first. Positional keys of small sections can match a
+  // different section on the other side, so the number is looked up in the nearest target that has it.
+  const targetCache = new Map<number, { node: TNode; kind: LinkKind }[]>()
+  const targetsOf = (ni: number): { node: TNode; kind: LinkKind }[] => {
+    const hit = targetCache.get(ni)
+    if (hit) return hit
     const n = c.nodes[ni]
     const t = mirrorTarget(c, n.key)
-    const res = t ? { node: c.nodes[c.keyToNode.get(t.key)!], kind: t.kind } : n.parent >= 0 && c.nodes[n.parent].kind !== 'group' ? targetOf(n.parent) : null
+    const up = n.parent >= 0 && c.nodes[n.parent].kind !== 'group' ? targetsOf(n.parent) : []
+    const res = t ? [{ node: c.nodes[c.keyToNode.get(t.key)!], kind: t.kind }, ...up] : up
     targetCache.set(ni, res)
     return res
   }
   for (const p of c.paras) {
     const f = firstNum(p.num)
     if (!f || c.nodes[p.node].coll === 'mula') continue
-    const t = targetOf(p.node)
-    if (!t || t.node.start < 0) continue
-    const toIdx = indexFor(t.node).get(f)
-    if (toIdx === undefined) continue
-    links.push({ fromBook: p.book, fromIdx: p.idx, toBook: t.node.book, toIdx, kind: t.kind, source: 'paranum', conf: 1 })
+    for (const t of targetsOf(p.node)) {
+      if (t.node.start < 0) continue
+      const toIdx = indexFor(t.node).get(f)
+      if (toIdx === undefined) continue
+      links.push({ fromBook: p.book, fromIdx: p.idx, toBook: t.node.book, toIdx, kind: t.kind, source: 'paranum', conf: 1 })
+      break
+    }
   }
   if (alignDir && fs.existsSync(alignDir)) links.push(...readAlignments(c, alignDir, warnings))
   return links

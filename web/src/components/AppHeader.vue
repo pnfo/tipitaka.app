@@ -11,7 +11,8 @@
       <!-- the search pages have their own box on phones -->
       <SearchBox class="w-full max-w-xl" :class="{ 'hidden sm:block': onSearchPage }" />
     </div>
-    <ScriptPicker />
+    <!-- on phones the script is chosen in the settings -->
+    <div class="hidden sm:block"><ScriptPicker /></div>
     <RouterLink :to="{ name: 'bookmarks', params: { script } }" class="icon-btn hidden sm:inline-flex" :aria-label="t('Bookmarks')" :title="t('Bookmarks')">
       <IconBookmark class="h-5 w-5" />
     </RouterLink>
