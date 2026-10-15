@@ -90,6 +90,8 @@ export const useSettings = defineStore('settings', () => {
   const s = reactive<Settings>(loadSettings())
   watch(s, v => writeJson(SETTINGS_KEY, v), { deep: true, immediate: true })
   watch(() => s.theme, applyTheme, { immediate: true })
+  // on <html> too: popovers and dialogs are teleported to <body>, outside the app's [data-script]
+  watch(() => s.script, v => { if (typeof document !== 'undefined') document.documentElement.setAttribute('data-script', v) }, { immediate: true })
   watch(() => [textSizeOf(s, s.script), s.leading, s.width] as const, applyText, { immediate: true })
   return toRefs(s) // refs: pinia treats them as state (a returned reactive object would be copied)
 })

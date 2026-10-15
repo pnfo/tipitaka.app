@@ -64,6 +64,14 @@ test.describe('reader', () => {
     await expect(page.getByRole('dialog')).toContainText('anubaddhā')
   })
 
+  test('variant readings use the font of the script (the popover is outside the reader)', async ({ page }) => {
+    await page.goto('/sinh/dn-1-1')
+    await page.getByTestId('reader').locator('.note-ptr').first().click()
+    const note = page.getByRole('dialog').locator('.reading')
+    await expect(note).toBeVisible()
+    expect(await note.evaluate(el => getComputedStyle(el).fontFamily)).toContain('pali-sinh')
+  })
+
   test('groups list their children', async ({ page }) => {
     await page.goto('/latn/dn')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Dīghanikāya')
