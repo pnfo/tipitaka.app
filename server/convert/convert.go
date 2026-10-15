@@ -6,8 +6,6 @@ package convert
 import (
 	_ "embed"
 	"fmt"
-	"regexp"
-	"strings"
 	"sync"
 
 	"github.com/dop251/goja"
@@ -66,12 +64,6 @@ func newRuntime() any {
 	return &rt{vm: vm, convert: fn}
 }
 
-// Pāḷi has no ai / au diphthongs: Roman "ai", "au" are two vowels (sa-uddesaṃ, Devanagari सउद्देसं) but the
-// converter reads them as diphthongs. A private use character keeps them apart (as fromRoman in shared/scripts.ts).
-const vowelSep = "\uE000"
-
-var vowelPair = regexp.MustCompile(`([aA])([iuIU])`)
-
 // Convert converts Roman Pali text to the script (Roman is returned unchanged, keeping its capitalisation).
 func Convert(text, script string) (out string, err error) {
 	if script == "latn" || text == "" {
@@ -90,8 +82,7 @@ func Convert(text, script string) (out string, err error) {
 			err = fmt.Errorf("convert: %v", p)
 		}
 	}()
-	out = r.convert(vowelPair.ReplaceAllString(text, "${1}"+vowelSep+"${2}"), script, "latn")
-	return strings.ReplaceAll(out, vowelSep, ""), nil
+	return r.convert(text, script, "latn"), nil
 }
 
 // MustConvert converts and returns the input on errors (rendering).

@@ -5,7 +5,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { convert } from '@pnfo/pali-converter'
-import { SCRIPTS, fromRoman } from './scripts'
+import { SCRIPTS } from './scripts'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const INPUTS = [
@@ -19,20 +19,20 @@ const INPUTS = [
 
 describe('converter', () => {
   it('converts to every script and writes the goldens for Go', () => {
-    const golden = INPUTS.map(input => ({ in: input, out: Object.fromEntries(SCRIPTS.filter(s => s.code !== 'latn').map(s => [s.code, fromRoman(convert, input, s.code)])) }))
+    const golden = INPUTS.map(input => ({ in: input, out: Object.fromEntries(SCRIPTS.filter(s => s.code !== 'latn').map(s => [s.code, convert(input, s.code, 'latn')])) }))
     for (const g of golden) for (const [code, out] of Object.entries(g.out)) expect(out, code).not.toBe(g.in)
     fs.writeFileSync(path.join(repo, 'server/convert/golden.json'), JSON.stringify(golden, null, 1) + '\n')
   })
-  it('a + i / u are two vowels (Pāḷi has no diphthongs), as in the VRI Devanagari text', () => {
-    expect(fromRoman(convert, 'sauddesaṃ', 'sinh')).toBe('සඋද්දෙසං')
-    expect(fromRoman(convert, 'sauddesaṃ', 'deva')).toBe('सउद्देसं')
-    expect(fromRoman(convert, 'puttaiccādito', 'deva')).toBe('पुत्तइच्चादितो')
-    for (const s of SCRIPTS) expect(fromRoman(convert, 'sauddesaṃ naubhaya', s.code), s.code).not.toMatch(/undefined|\uE000/)
+  it('a + i / u are two vowels (Pāḷi has no diphthongs, fixed in @pnfo/pali-converter 1.2.0), as in the VRI Devanagari text', () => {
+    expect(convert('sauddesaṃ', 'sinh', 'latn')).toBe('සඋද්දෙසං')
+    expect(convert('sauddesaṃ', 'deva', 'latn')).toBe('सउद्देसं')
+    expect(convert('puttaiccādito', 'deva', 'latn')).toBe('पुत्तइच्चादितो')
+    for (const s of SCRIPTS) expect(convert('sauddesaṃ naubhaya', s.code, 'latn'), s.code).not.toMatch(/undefined/)
   })
   it('round trips Sinhala', () => {
     for (const input of INPUTS) {
-      const sinh = fromRoman(convert, input, 'sinh')
-      expect(fromRoman(convert, convert(sinh, 'latn', 'sinh'), 'sinh')).toBe(sinh)
+      const sinh = convert(input, 'sinh', 'latn')
+      expect(convert(convert(sinh, 'latn', 'sinh'), 'sinh', 'latn')).toBe(sinh)
     }
   })
 })
