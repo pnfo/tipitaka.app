@@ -10,13 +10,18 @@ test.describe('tabs and columns (v2 tab views)', () => {
     const cols = page.getByTestId('columns').getByTestId('column')
     await expect(cols).toHaveCount(2)
     await expect(cols.nth(1)).toContainText('Brahmajālasuttavaṇṇanā')
-    await expect(page.getByTestId('tab')).toHaveCount(2)
-    await expect(page.getByTestId('tab').nth(1)).toContainText('Brahmajālasuttavaṇṇanā') // names, not keys
-    await page.getByTestId('tabs-list').click()
+    // the columns have their own headers: no tab strip, the list of open texts is in the last column's header
+    await expect(page.getByTestId('tab')).toHaveCount(0)
+    await expect(cols.nth(1).getByTestId('tabs-list')).toBeVisible()
+    await expect(cols.nth(0).getByTestId('tabs-list')).toHaveCount(0)
+    await cols.nth(1).getByTestId('tabs-list').click()
+    await expect(page.getByTestId('tabs-list-item')).toHaveCount(2)
+    await expect(page.getByTestId('tabs-list-item').nth(1)).toContainText('Brahmajālasuttavaṇṇanā') // names, not keys
     await page.getByTestId('view-tabbed').click()
     await page.keyboard.press('Escape')
     await expect(page.getByTestId('columns')).toHaveCount(0)
     await expect(page.getByTestId('reader')).toBeVisible()
+    await expect(page.getByTestId('tab')).toHaveCount(2)
     await page.getByTestId('tab').nth(1).click()
     await expect(page).toHaveURL(/atta-dn-1-1/)
     await page.getByTestId('tab-close').nth(1).click()

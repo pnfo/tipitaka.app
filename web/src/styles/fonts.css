@@ -73,3 +73,9 @@ html[data-ui-lang='my'] { --font-ui: 'ui-mymr', system-ui, -apple-system, 'Segoe
 html[data-ui-lang='th'] { --font-ui: 'ui-thai', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
 html[data-ui-lang='kh'] { --font-ui: 'ui-khmr', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
 html[data-ui-lang='hi'] { --font-ui: 'ui-deva', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+
+/* Pāḷi words inside an interface sentence: in the interface font when the Pāḷi script is the language's own script
+ * (same size as the words around them), else in the Pāḷi font */
+html[data-ui-lang='si'][data-script='sinh'] .pali-inline, html[data-ui-lang='my'][data-script='mymr'] .pali-inline,
+html[data-ui-lang='th'][data-script='thai'] .pali-inline, html[data-ui-lang='kh'][data-script='khmr'] .pali-inline,
+html[data-ui-lang='hi'][data-script='deva'] .pali-inline { font-family: var(--font-ui); }

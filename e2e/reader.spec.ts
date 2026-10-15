@@ -112,6 +112,25 @@ test.describe('reader', () => {
     await expect(page.getByTestId('para-menu')).toBeVisible()
   })
 
+  test('numbered and unnumbered paragraphs start their text at the same place, the number at the left edge', async ({ page }) => {
+    await page.goto('/latn/dn-1-1')
+    const reader = page.getByTestId('reader')
+    await expect(reader.locator('.para.bodytext.has-num').first()).toBeVisible()
+    const x = await page.evaluate(() => {
+      const textStart = (p: Element) => {
+        const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement?.closest('.num') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT })
+        const n = walker.nextNode()!
+        const r = document.createRange(); r.setStart(n, 0); r.setEnd(n, 1)
+        return r.getBoundingClientRect().left
+      }
+      const numbered = document.querySelector('[data-testid=reader] .para.bodytext.has-num')!
+      const plain = document.querySelector('[data-testid=reader] .para.bodytext:not(.has-num)')!
+      return { numbered: textStart(numbered), plain: textStart(plain), num: numbered.querySelector('.num')!.getBoundingClientRect().left, edge: numbered.getBoundingClientRect().left }
+    })
+    expect(Math.abs(x.numbered - x.plain)).toBeLessThan(2)
+    expect(Math.abs(x.num - x.edge)).toBeLessThan(2)
+  })
+
   test('unknown keys show an error', async ({ page }) => {
     await page.goto('/latn/nope-1')
     await expect(page.getByText('This page does not exist.')).toBeVisible()

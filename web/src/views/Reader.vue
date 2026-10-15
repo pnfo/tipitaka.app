@@ -6,14 +6,19 @@
 -->
 <template>
   <div>
-    <TabsBar v-if="tabs.tabs.length > 1 || view !== 'single'" class="sticky top-14 z-20" @activate="activate" @close="closeTab" @close-others="closeOthers" />
+    <TabsBar v-if="!showColumns && (tabs.tabs.length > 1 || view !== 'single')" class="sticky top-14 z-20" @activate="activate" @close="closeTab" @close-others="closeOthers" />
 
-    <!-- columns: every tab side by side -->
-    <div v-if="showColumns" class="mx-auto flex max-w-[1800px]" :style="{ height: 'calc(100vh - 6rem)' }" data-testid="columns">
-      <div v-for="tb in tabs.tabs" :key="tb.id" class="min-w-0 flex-1 border-r border-line last:border-r-0">
+    <!-- columns: every tab side by side, each with its own header (no tab strip); the list of open texts and the
+         view switch are in the header of the last column -->
+    <div v-if="showColumns" class="mx-auto flex max-w-[1800px]" :style="{ height: 'calc(100vh - 3.5rem)' }" data-testid="columns">
+      <div v-for="(tb, i) in tabs.tabs" :key="tb.id" class="min-w-0 flex-1 border-r border-line last:border-r-0">
         <ReaderPane :ref="el => setPane(tb.id, el)" :tab="tb" contained :active="tb.id === tabs.activeId" closable
           @info="i => onInfo(tb.id, i)" @visible="(k, p, i) => onVisible(tb.id, k, p, i)" @word="onWord" @alongside="openAlongside"
-          @activate="activate(tb.id)" @close="closeTab(tb.id)" />
+          @activate="activate(tb.id)" @close="closeTab(tb.id)">
+          <template v-if="i === tabs.tabs.length - 1" #actions>
+            <TabsBar list-only @activate="activate" @close="closeTab" @close-others="closeOthers" />
+          </template>
+        </ReaderPane>
       </div>
     </div>
     <!-- the active tab -->

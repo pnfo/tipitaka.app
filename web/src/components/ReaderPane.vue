@@ -9,6 +9,7 @@
       @click="$emit('activate')">
       <span class="coll-dot" />
       <span class="pali min-w-0 flex-1 truncate" :class="{ 'font-medium': active }">{{ conv(currentTitle) }}</span>
+      <slot name="actions" />
       <button v-if="closable" class="icon-btn h-7 w-7" :aria-label="t('Close')" @click.stop="$emit('close')"><IconX class="h-4 w-4" /></button>
     </div>
 

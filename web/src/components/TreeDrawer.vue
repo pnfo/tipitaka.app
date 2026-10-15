@@ -5,7 +5,7 @@
         class="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-1 py-1.5 text-[0.8125rem] font-medium" :class="[`coll-${c.coll}`, tree.coll === c.coll ? 'bg-surface2 text-fg' : 'text-muted hover:bg-surface2']"
         :data-testid="`tree-tab-${c.coll}`" @click="tree.coll = c.coll">
         <span class="coll-dot" />
-        <span class="pali truncate">{{ conv(COLL_LABEL[c.coll]) }}</span>
+        <span class="pali truncate">{{ conv(COLL_NAME[c.coll]) }}</span>
       </button>
     </div>
     <div ref="scroller" class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 py-2 text-base" data-testid="tree">
@@ -22,13 +22,12 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import TreeNode from './TreeNode.vue'
 import { useTree } from '@/stores/tree'
 import { useScript } from '@/composables/script'
-import type { Coll } from '@/data/types'
+import { COLL_NAME } from '@/composables/filters'
 import { t } from '@/i18n'
 
 const tree = useTree()
 const { conv } = useScript()
 const scroller = ref<HTMLElement>()
-const COLL_LABEL: Record<Coll, string> = { mula: 'Mūla', atta: 'Aṭṭhakathā', tika: 'Ṭīkā', anya: 'Añña' }
 
 const roots = computed(() => (tree.children.get('') ?? []).map(n => ({ key: n.key, coll: n.coll })))
 const rootNode = computed(() => (tree.children.get('') ?? []).find(n => n.coll === tree.coll))

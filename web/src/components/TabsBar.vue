@@ -1,6 +1,8 @@
-<!-- open texts: a scrollable strip of tabs with scroll buttons and a list of all tabs (tipitaka.lk style) -->
+<!-- open texts: a scrollable strip of tabs with scroll buttons and a list of all tabs (tipitaka.lk style);
+     listOnly: just the list button (columns view: the columns have their own headers) -->
 <template>
-  <div class="flex h-10 items-stretch border-b border-line bg-surface" data-testid="tab-bar">
+  <div :class="listOnly ? 'flex shrink-0 items-center' : 'flex h-10 items-stretch border-b border-line bg-surface'" data-testid="tab-bar" @click="listOnly && $event.stopPropagation()">
+    <template v-if="!listOnly">
     <button v-show="overflow" class="icon-btn h-full shrink-0 rounded-none" :aria-label="t('Scroll left')" @click="scrollBy(-1)"><IconLeft class="h-4 w-4" /></button>
     <div ref="strip" class="no-scrollbar flex min-w-0 flex-1 items-end overflow-x-auto" role="tablist" @scroll="updateOverflow">
       <div v-for="tb in tabs.tabs" :key="tb.id" role="tab" :aria-selected="tb.id === tabs.activeId" :title="conv(tb.title ?? '')" :data-tab="tb.id"
@@ -14,8 +16,9 @@
       </div>
     </div>
     <button v-show="overflow" class="icon-btn h-full shrink-0 rounded-none" :aria-label="t('Scroll right')" @click="scrollBy(1)"><IconRight class="h-4 w-4" /></button>
-    <div class="shrink-0 border-l border-line">
-      <button ref="listBtn" class="icon-btn h-full w-auto rounded-none px-2" :title="t('Open texts')" data-testid="tabs-list" @click="listOpen = !listOpen">
+    </template>
+    <div :class="listOnly ? '' : 'shrink-0 border-l border-line'">
+      <button ref="listBtn" class="icon-btn w-auto px-2" :class="listOnly ? 'h-7' : 'h-full rounded-none'" :title="t('Open texts')" data-testid="tabs-list" @click="listOpen = !listOpen">
         <IconTabs class="h-4 w-4" /><span class="ml-1 text-xs tabular-nums">{{ tabs.tabs.length }}</span>
       </button>
       <Floating :open="listOpen" :anchor="listBtn ?? null" align="end" @close="listOpen = false">
@@ -57,6 +60,7 @@ import { useSettings, type TabView } from '@/stores/settings'
 import { useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
+defineProps<{ listOnly?: boolean }>()
 defineEmits<{ activate: [id: number]; close: [id: number]; closeOthers: [] }>()
 const tabs = useTabs(), settings = useSettings()
 const { conv } = useScript()

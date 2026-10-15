@@ -7,9 +7,11 @@
 import { computed } from 'vue'
 import { useSettings } from '@/stores/settings'
 import { useTree } from '@/stores/tree'
-import type { TNode } from '@/data/types'
+import type { Coll, TNode } from '@/data/types'
 
 export const DEFAULT_COLLECTIONS = ['mula', 'atta', 'tika']
+/** the Pāḷi names of the collections (shown converted to the Pāḷi script) */
+export const COLL_NAME: Record<Coll, string> = { mula: 'Mūla', atta: 'Aṭṭhakathā', tika: 'Ṭīkā', anya: 'Añña' }
 export const ALL_COLLECTIONS = ['mula', 'atta', 'tika', 'anya']
 
 export function useCollectionFilter() {

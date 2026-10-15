@@ -6,7 +6,8 @@
       <button class="menu-item" data-testid="menu-copy" @click="copyText"><IconCopy class="h-4 w-4" />{{ t('Copy the paragraph') }}</button>
       <template v-for="o in others" :key="o.key">
         <button class="menu-item" :class="`coll-${o.coll}`" data-testid="menu-alongside" @click="$emit('alongside', o.key, o.para)">
-          <IconColumns class="h-4 w-4" /><span>{{ t('Open {0} alongside', COLL_NAME[o.coll]) }}</span>
+          <!-- the collection name is Pāḷi: in the Pāḷi script and font, within the translated sentence -->
+          <IconColumns class="h-4 w-4" /><span>{{ alongside[0] }}<span class="pali pali-inline">{{ conv(COLL_NAME[o.coll]) }}</span>{{ alongside[1] }}</span>
         </button>
       </template>
       <button v-if="hasLinks" class="menu-item" data-testid="menu-commentary" @click="showLinks"><IconPanel class="h-4 w-4" />{{ t('Show the commentary here') }}</button>
@@ -29,6 +30,7 @@ import { plainText } from '@shared/markup'
 import { useApi } from '@/data/api'
 import type { Coll, Link, Para } from '@/data/types'
 import { useScript } from '@/composables/script'
+import { COLL_NAME } from '@/composables/filters'
 import { useLibrary } from '@/stores/library'
 import { useUi } from '@/stores/ui'
 import { t } from '@/i18n'
@@ -38,7 +40,7 @@ defineEmits<{ close: []; alongside: [key: string, para: number | undefined] }>()
 const api = useApi()
 const library = useLibrary(), ui = useUi()
 const { script, conv } = useScript()
-const COLL_NAME: Record<Coll, string> = { mula: 'Mūla', atta: 'Aṭṭhakathā', tika: 'Ṭīkā', anya: 'Añña' }
+const alongside = computed(() => t('Open {0} alongside', '\u0000').split('\u0000'))
 
 // texts on the other side: the paragraph's links, else the commentary / mūla of its node
 const others = ref<{ key: string; para?: number; coll: Coll }[]>([])
