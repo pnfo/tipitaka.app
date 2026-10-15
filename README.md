@@ -11,7 +11,7 @@ Android app (iOS ready).
 * Dictionary: [DPD](https://www.dpdict.net/) by Bodhirasa Bhikkhu (CC BY-NC-SA 4.0) and the v2 dictionaries.
 
 ## Quick start
-Requirements: Node 22+, Go 1.26+ with a C compiler (cgo sqlite).
+Requirements: Node 24+, Go 1.27+ with a C compiler (cgo sqlite).
 ```bash
 npm ci
 npm run upstream -- --dpd   # fetch the pinned VRI xml and DPD into .cache/
