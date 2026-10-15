@@ -18,9 +18,8 @@ export interface Settings {
   script: string
   uiLang: string
   theme: Theme
-  textSize: number // px, for scripts without their own size
-  /** text size per Pāḷi script (px), set when the size is changed while that script is shown */
-  textSizes: Record<string, number>
+  /** reading text px; the interface scales with it (UI_SCALE) */
+  textSize: number
   leading: number
   width: number // reading column px
   notes: NotesMode
@@ -40,7 +39,7 @@ export interface Settings {
 }
 
 export const DEFAULTS: Settings = {
-  script: DEFAULT_SCRIPT, uiLang: 'en', theme: 'light', textSize: 18, textSizes: {}, leading: 1.65, width: 760, notes: 'pointer', pageRefs: '',
+  script: DEFAULT_SCRIPT, uiLang: 'en', theme: 'light', textSize: 18, leading: 1.65, width: 760, notes: 'pointer', pageRefs: '',
   paraNums: true, dicts: [], tabView: 'single', syncScroll: true, sheetHeight: 45, searchFilter: null, tapLookup: true,
 }
 
@@ -68,6 +67,7 @@ export function loadSettings(): Settings {
     s = v2 ? migrateV2(v2) : guessFromBrowser()
   }
   const merged = { ...DEFAULTS, ...s }
+  delete (merged as { textSizes?: unknown }).textSizes // per script sizes (v3 beta), dropped
   if (!isScriptCode(merged.script)) merged.script = DEFAULT_SCRIPT
   return merged
 }
@@ -92,23 +92,26 @@ export const useSettings = defineStore('settings', () => {
   watch(() => s.theme, applyTheme, { immediate: true })
   // on <html> too: popovers and dialogs are teleported to <body>, outside the app's [data-script]
   watch(() => s.script, v => { if (typeof document !== 'undefined') document.documentElement.setAttribute('data-script', v) }, { immediate: true })
-  watch(() => [textSizeOf(s, s.script), s.leading, s.width] as const, applyText, { immediate: true })
+  watch(() => [s.textSize, s.leading, s.width] as const, applyText, { immediate: true })
   return toRefs(s) // refs: pinia treats them as state (a returned reactive object would be copied)
 })
-
-/** the text size of a script: its own size, else the common one */
-export function textSizeOf(s: Settings, script: string): number {
-  return s.textSizes?.[script] ?? s.textSize
-}
 
 function applyTheme(theme: Theme) {
   if (typeof document === 'undefined') return
   document.documentElement.className = theme === 'light' ? '' : theme
 }
 
+/**
+ * How much the interface follows the text size: the root font size (all rem sizes: tree, dictionary, menus,
+ * buttons) changes by this share of the text size change, e.g. text 18 → 24px (+33%): interface 16 → 20px (+25%).
+ */
+export const UI_SCALE = 0.75
+export const uiFontSize = (textSize: number) => Math.round(16 * (1 + (textSize / DEFAULTS.textSize - 1) * UI_SCALE) * 100) / 100
+
 function applyText([size, leading, width]: readonly [number, number, number]) {
   if (typeof document === 'undefined') return
   const st = document.documentElement.style
+  st.fontSize = `${uiFontSize(size)}px`
   st.setProperty('--text-size', `${size}px`)
   st.setProperty('--text-leading', String(leading))
   st.setProperty('--reading-width', `${width}px`)

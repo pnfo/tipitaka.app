@@ -33,9 +33,7 @@
       </div>
       <div class="card space-y-4">
         <label class="flex items-center gap-3 text-sm"><span class="w-32 shrink-0">{{ t('Text size') }}</span>
-          <input v-model.number="textSize" type="range" min="12" max="32" step="1" class="flex-1" data-testid="text-size"><span class="w-10 text-right text-muted">{{ textSize }}</span></label>
-        <p class="-mt-2 pl-[8.75rem] text-xs text-muted">{{ t('Remembered for the {0} script.', uiLang === 'en' ? info.name : info.native) }}
-          <button v-if="settings.textSizes[script] !== undefined" class="ml-1 underline" @click="resetSize">{{ t('Reset') }}</button></p>
+          <input v-model.number="settings.textSize" type="range" min="12" max="32" step="1" class="flex-1" data-testid="text-size"><span class="w-10 text-right text-muted">{{ settings.textSize }}</span></label>
         <label class="flex items-center gap-3 text-sm"><span class="w-32 shrink-0">{{ t('Line spacing') }}</span>
           <input v-model.number="settings.leading" type="range" min="1.3" max="2.2" step="0.05" class="flex-1"><span class="w-10 text-right text-muted">{{ settings.leading.toFixed(2) }}</span></label>
         <label class="flex items-center gap-3 text-sm"><span class="w-32 shrink-0">{{ t('Text width') }}</span>
@@ -71,21 +69,11 @@ import DictFilter from '@/components/DictFilter.vue'
 import ScriptPicker from '@/components/ScriptPicker.vue'
 import { computed } from 'vue'
 import { useScript } from '@/composables/script'
-import { textSizeOf, useSettings, type NotesMode, type TabView, type Theme } from '@/stores/settings'
-import { UI_LANGS, t, uiLang } from '@/i18n'
+import { useSettings, type NotesMode, type TabView, type Theme } from '@/stores/settings'
+import { UI_LANGS, t } from '@/i18n'
 
 const settings = useSettings()
-const { script, conv, info } = useScript()
-// text size of the current script (each script remembers its own)
-const textSize = computed({
-  get: () => textSizeOf(settings, script.value),
-  set: (v: number) => { settings.textSizes = { ...settings.textSizes, [script.value]: v } },
-})
-function resetSize() {
-  const rest = { ...settings.textSizes }
-  delete rest[script.value]
-  settings.textSizes = rest
-}
+const { script, conv } = useScript()
 useHead({ title: computed(() => t('Settings')) })
 // computed: the labels follow a change of the interface language
 const TAB_VIEWS = computed<{ id: TabView; label: string; desc: string }[]>(() => [

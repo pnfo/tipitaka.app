@@ -5,7 +5,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { convert, convertMixed, getScriptForCode } from '@pnfo/pali-converter'
-import { isScriptCode, SCRIPTS } from '@shared/scripts'
+import { fromRoman, isScriptCode, SCRIPTS } from '@shared/scripts'
 import { useSettings } from '@/stores/settings'
 
 const cache = new Map<string, string>()
@@ -14,7 +14,7 @@ export function convertTo(text: string, script: string): string {
   const k = script + '\u0000' + text
   const hit = cache.get(k)
   if (hit !== undefined) return hit
-  const v = convert(text, script, 'latn')
+  const v = fromRoman(convert, text, script)
   if (cache.size > 20000) cache.clear()
   cache.set(k, v)
   return v

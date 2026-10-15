@@ -3,11 +3,11 @@
   <article class="border-b border-line py-2 last:border-0" data-testid="dpd-head">
     <button class="flex w-full items-baseline space-x-2 text-left" :aria-expanded="open" @click="open = !open">
       <span class="pali font-semibold">{{ conv(lemma) }}</span>
-      <sup v-if="sense" class="text-[10px] text-muted">{{ sense }}</sup>
+      <sup v-if="sense" class="text-[0.625rem] text-muted">{{ sense }}</sup>
       <span class="chip">{{ h.pos }}</span>
       <span class="min-w-0 flex-1"><b>{{ h.meaning || h.meaning2 }}</b><span v-if="h.meaningLit" class="text-muted"> · lit. {{ h.meaningLit }}</span></span>
     </button>
-    <dl v-if="open" class="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-[13px]">
+    <dl v-if="open" class="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-[0.8125rem]">
       <template v-for="row in rows" :key="row[0]">
         <dt class="text-muted">{{ row[0] }}</dt>
         <dd :class="{ pali: row[2] }">{{ row[1] }}</dd>

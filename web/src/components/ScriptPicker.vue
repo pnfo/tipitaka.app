@@ -11,7 +11,7 @@
         <button v-for="s in SCRIPTS" :key="s.code" class="flex flex-col items-start rounded-lg px-2 py-1.5 text-left hover:bg-surface2"
           :class="{ 'bg-primary-soft text-primary': s.code === script }" :data-testid="`script-${s.code}`" @click="pick(s.code)">
           <span class="text-base leading-tight" :data-script="s.code" style="font-family: var(--font-text)">{{ sample(s.code) }}</span>
-          <span class="text-[11px] text-muted">{{ s.name }}</span>
+          <span class="text-[0.6875rem] text-muted">{{ s.name }}</span>
         </button>
       </div>
     </div>

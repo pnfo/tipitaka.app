@@ -6,7 +6,7 @@
   <button class="btn h-10 shrink-0 px-3" :class="{ 'border-primary text-primary': !isDefault }" :title="t('Collections to search')" data-testid="collection-filter" @click="openDialog">
     <IconFilter class="h-4 w-4" />
     <span class="hidden sm:inline">{{ t('Filter') }}</span>
-    <span v-if="!isDefault" class="rounded-full bg-primary px-1.5 text-[11px] text-white" data-testid="filter-badge">{{ keys.length }}</span>
+    <span v-if="!isDefault" class="rounded-full bg-primary px-1.5 text-[0.6875rem] text-white" data-testid="filter-badge">{{ keys.length }}</span>
   </button>
   <Dialog :open="open" :title="t('Collections to search')" testid="collection-dialog" @close="open = false">
     <div class="space-y-4">

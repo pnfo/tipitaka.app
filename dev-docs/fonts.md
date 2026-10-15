@@ -36,5 +36,12 @@ reading text, search inputs, dictionary entries and interface text in that langu
 `size-adjust` (Chrome < 92, the oldest Android WebViews) show the unadjusted sizes.
 
 ## Text size
-On top of that the reader can set the text size per script (`settings.textSizes[script]`, falling back to
-`settings.textSize`), remembered for each script.
+One text size for all scripts (`settings.textSize`, reading text in px). The interface follows it: the root font
+size, which every rem size uses (tree, dictionary, menus, buttons, spacing), changes by `UI_SCALE` (3/4) of the text
+size change, e.g. text 18 → 24px: interface 16 → 20px (`uiFontSize` in `web/src/stores/settings.ts`). Fixed sizes in
+the components are therefore written in rem, not px.
+
+## Conversion from Roman
+Pāḷi has no ai / au diphthongs, but the converter reads Roman "ai", "au" as the Sanskrit diphthongs (ෛ ෞ, and
+"undefined" in Thai, Myanmar, Khmer). `fromRoman()` (shared/scripts.ts) and `convert.Convert` (Go) keep the two vowels
+apart: sauddesaṃ → සඋද්දෙසං, सउद्देसं as in the VRI Devanagari text.

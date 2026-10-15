@@ -38,3 +38,17 @@ export const LEGACY_SCRIPT: Record<string, string> = {
   si: 'sinh', hi: 'deva', ro: 'latn', th: 'thai', lo: 'laoo', my: 'mymr', km: 'khmr', be: 'beng', as: 'asse',
   gm: 'guru', tt: 'lana', gj: 'gujr', te: 'telu', ka: 'knda', mm: 'mlym', br: 'brah', tb: 'tibt', cy: 'cyrl',
 }
+
+/**
+ * Pāḷi has no ai / au diphthongs: Roman "ai", "au" are always two vowels (sa-uddesaṃ, VRI Devanagari सउद्देसं), but
+ * the converter reads them as the Sanskrit diphthongs (සෞද්දෙසං, and "undefined" in Thai, Myanmar, Khmer). A private
+ * use character keeps the vowels apart during the conversion. Same in server/convert/convert.go.
+ */
+const VOWEL_SEP = ''
+export const splitRomanVowels = (roman: string) => roman.replace(/([aA])([iuIU])/g, `$1${VOWEL_SEP}$2`)
+export const dropVowelSep = (text: string) => text.split(VOWEL_SEP).join('')
+
+/** Roman Pāḷi to another script with the converter function (@pnfo/pali-converter convert) */
+export function fromRoman(convert: (text: string, to: string, from: string) => string, text: string, script: string): string {
+  return dropVowelSep(convert(splitRomanVowels(text), script, 'latn'))
+}

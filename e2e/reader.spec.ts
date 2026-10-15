@@ -96,6 +96,22 @@ test.describe('reader', () => {
     await expect(page.getByTestId('bookmarks').locator('li')).toHaveCount(1)
   })
 
+  test('the options button stays while the pointer moves from the text to it', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'hover: desktop only')
+    await page.goto('/latn/dn-1-1')
+    const para = page.getByTestId('reader').locator('.para.bodytext').nth(1)
+    const dots = para.locator('xpath=..').getByTestId('para-options')
+    const p = (await para.boundingBox())!
+    await page.mouse.move(p.x + 80, p.y + p.height / 2)
+    await expect(dots).toBeVisible()
+    const d = (await dots.boundingBox())!
+    await page.mouse.move(d.x + d.width / 2, d.y + d.height / 2, { steps: 12 }) // through the margin
+    await expect(dots).toBeVisible()
+    await page.mouse.down()
+    await page.mouse.up()
+    await expect(page.getByTestId('para-menu')).toBeVisible()
+  })
+
   test('unknown keys show an error', async ({ page }) => {
     await page.goto('/latn/nope-1')
     await expect(page.getByText('This page does not exist.')).toBeVisible()

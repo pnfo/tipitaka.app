@@ -4,7 +4,7 @@
     <button class="btn shrink-0" :class="[compact ? 'h-8 px-2' : 'h-10 px-3', { 'border-primary text-primary': !all }]" :title="t('Dictionaries')" data-testid="dict-filter" @click="open = true">
       <IconFilter class="h-4 w-4" />
       <span v-if="!compact" class="hidden sm:inline">{{ t('Dictionaries') }}</span>
-      <span v-if="!all" class="rounded-full bg-primary px-1.5 text-[11px] text-white">{{ settings.dicts.length }}</span>
+      <span v-if="!all" class="rounded-full bg-primary px-1.5 text-[0.6875rem] text-white">{{ settings.dicts.length }}</span>
     </button>
     <Dialog :open="open" :title="t('Dictionaries')" testid="dict-dialog" @close="open = false">
       <DictList />

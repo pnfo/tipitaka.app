@@ -12,7 +12,7 @@
         <span class="ml-1 hidden md:inline">{{ TYPES[type].short }}</span>
       </button>
       <input ref="input" v-model="q" type="search" class="h-full w-full min-w-0 bg-transparent pl-1 pr-3 text-sm outline-none" :data-script="inputScript"
-        :style="inputScript !== 'latn' ? { fontFamily: 'var(--font-text)', fontSize: '15px' } : undefined" :placeholder="TYPES[type].placeholder"
+        :style="inputScript !== 'latn' ? { fontFamily: 'var(--font-text)', fontSize: '0.9375rem' } : undefined" :placeholder="TYPES[type].placeholder"
         :aria-label="t('Search')" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-testid="search-input"
         @focus="focused = true" @blur="onBlur" @keydown.enter.prevent="choose(active)">
     </div>

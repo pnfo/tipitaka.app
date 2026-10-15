@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto max-w-3xl space-y-6 px-4 pb-20 pt-6 text-[15px] leading-relaxed">
+  <div class="mx-auto max-w-3xl space-y-6 px-4 pb-20 pt-6 text-[0.9375rem] leading-relaxed">
     <h1 class="text-2xl font-semibold">{{ t('About') }}</h1>
     <p>{{ t('Tipiṭaka.app presents the Chaṭṭha Saṅgāyana Tipiṭaka with its commentaries (aṭṭhakathā), sub-commentaries (ṭīkā) and other Pāḷi texts, in 22 scripts, with full text search and dictionaries.') }}</p>
     <section class="card space-y-2">

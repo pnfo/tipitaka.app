@@ -21,7 +21,7 @@
       <slot v-if="book && to >= book.paraCount" name="end" />
     </div>
     <Floating :open="!!note" :anchor="note?.el ?? null" @close="note = null">
-      <div class="reading max-w-xs text-sm" style="font-size: 0.95rem" v-html="note?.html" />
+      <div class="reading max-w-xs" style="font-size: calc(var(--text-size) * 0.9)" v-html="note?.html" />
     </Floating>
   </div>
 </template>

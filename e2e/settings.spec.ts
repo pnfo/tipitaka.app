@@ -64,19 +64,20 @@ test('the script picked in settings applies to the open texts, also after going 
   }
 })
 
-test('each script remembers its own text size', async ({ page }) => {
-  await page.goto('/latn/settings')
-  const size = page.getByTestId('text-size')
-  await size.fill('24')
+test('the text size scales the text and the interface, the same for every script', async ({ page, isMobile }) => {
+  await page.goto('/latn/dn-1-1')
+  const tree = page.getByTestId('tree-toggle')
+  const uiSize = () => page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize))
+  expect(await uiSize()).toBe(16)
+  await page.getByTestId('settings-link').click()
+  await page.getByTestId('text-size').fill('24')
   await expect.poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue('--text-size'))).toBe('24px')
+  expect(await uiSize()).toBe(20) // the interface follows at 3/4 of the change
   await page.getByTestId('settings-script').getByTestId('script-picker').click()
   await page.getByTestId('script-thai').click()
   await expect(page).toHaveURL(/\/thai\/settings/)
-  await expect(size).toHaveValue('18') // the default for a script without its own size
-  await size.fill('20')
-  await page.getByTestId('settings-script').getByTestId('script-picker').click()
-  await page.getByTestId('script-latn').click()
-  await expect(size).toHaveValue('24')
+  await expect(page.getByTestId('text-size')).toHaveValue('24')
+  if (!isMobile) await expect(tree).toBeVisible()
 })
 
 test('the interface language sets the interface font', async ({ page }) => {
