@@ -1,10 +1,11 @@
 import { expect, test } from '@playwright/test'
+import { paraOptions } from './helpers'
 
 test.describe('tabs and columns (v2 tab views)', () => {
   test('commentary alongside: columns with linked scrolling, switching to tabs, closing', async ({ page, isMobile }) => {
     test.skip(isMobile, 'columns need a wide screen')
     await page.goto('/latn/dn-1-1')
-    await page.getByTestId('reader').locator('.para.heading').first().click()
+    await paraOptions(page, page.getByTestId('reader').locator('.para.heading').first())
     await page.getByTestId('menu-alongside').first().click()
     const cols = page.getByTestId('columns').getByTestId('column')
     await expect(cols).toHaveCount(2)

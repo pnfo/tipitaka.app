@@ -27,7 +27,7 @@ import { useScript } from '@/composables/script'
 import { useUi } from '@/stores/ui'
 import { t } from '@/i18n'
 
-useHead({ title: t('Pali Script Converter') })
+useHead({ title: computed(() => t('Pali Script Converter')) })
 const { script } = useScript()
 const ui = useUi()
 const input = ref(readJson('tipitaka.app-convert-input', ''))

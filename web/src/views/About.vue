@@ -26,13 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useApi } from '@/data/api'
 import type { Meta } from '@/data/types'
 import { t } from '@/i18n'
 
-useHead({ title: t('About') })
+useHead({ title: computed(() => t('About')) })
 const meta = ref<Meta | null>(null)
 useApi().meta().then(m => { meta.value = m }).catch(() => {})
 </script>

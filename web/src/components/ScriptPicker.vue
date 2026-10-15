@@ -20,7 +20,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { changeScript } from '@/router'
 import IconLanguages from '~icons/lucide/languages'
 import Floating from './Floating.vue'
 import { SCRIPTS } from '@shared/scripts'
@@ -28,14 +29,13 @@ import { convertTo, useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
 const { script, info } = useScript()
-const route = useRoute(), router = useRouter()
+const router = useRouter()
 const open = ref(false)
 const btn = ref<HTMLElement>()
 const sample = (code: string) => convertTo('Dhamma', code)
 
 function pick(code: string) {
   open.value = false
-  if (route.params.script && route.name) router.replace({ name: route.name, params: { ...route.params, script: code }, query: route.query, hash: route.hash })
-  else router.push({ name: 'home', params: { script: code } })
+  changeScript(router, code)
 }
 </script>

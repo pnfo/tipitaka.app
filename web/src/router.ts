@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { START_LOCATION, createRouter, createWebHashHistory, createWebHistory, type RouteRecordRaw, type Router } from 'vue-router'
 import { SCRIPT_CODES, LEGACY_SCRIPT } from '@shared/scripts'
 import { isNativeApp, useApi } from './data/api'
 import { useSettings } from './stores/settings'
@@ -25,6 +25,15 @@ export const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', name: 'notfound', component: () => import('./views/NotFound.vue') },
 ]
 
+let pendingScript = ''
+/** switch the Pāḷi script: the current page in the new script */
+export function changeScript(router: Router, code: string) {
+  const route = router.currentRoute.value
+  pendingScript = code
+  if (route.params.script && route.name) return router.replace({ name: route.name, params: { ...route.params, script: code }, query: route.query, hash: route.hash })
+  return router.push({ name: 'home', params: { script: code } })
+}
+
 export function makeRouter() {
   const router = createRouter({
     history: isNativeApp() ? createWebHashHistory() : createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +44,7 @@ export function makeRouter() {
       return { top: 0 }
     },
   })
-  router.beforeEach(async to => {
+  router.beforeEach(async (to, from) => {
     // v2 links ?a=<file>-<line>-<script> (the server redirects too; the apps need it here)
     const a = to.query.a
     if (typeof a === 'string' && a) {
@@ -46,9 +55,15 @@ export function makeRouter() {
       } catch { return { name: 'home', params: { script: useSettings().script }, replace: true } }
     }
     if (to.name === 'root') return { name: 'home', params: { script: useSettings().script }, replace: true }
-    // remember the script of the url
+    // The script of the url is the script of the app on the first page (shared links) and when the user picks
+    // one (changeScript). Later navigations (back / forward, remembered pages) keep the current script.
     const s = to.params.script as string | undefined
-    if (s) useSettings().script = s
+    const settings = useSettings()
+    if (s && s !== settings.script && from !== START_LOCATION && s !== pendingScript && to.name) {
+      return { name: to.name, params: { ...to.params, script: settings.script }, query: to.query, hash: to.hash, replace: true }
+    }
+    pendingScript = ''
+    if (s) settings.script = s
   })
   router.afterEach(to => { if (to.name !== 'settings') useUi().lastPage = to.fullPath })
   return router

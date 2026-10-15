@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test'
+import { wordPoint } from './helpers'
 
 test.describe('dictionary', () => {
   test('tapping a word looks it up (DPD + dictionaries)', async ({ page }) => {
     await page.goto('/latn/dn-1-1')
-    const first = page.getByTestId('reader').locator('.para.bodytext').first()
-    const box = (await first.boundingBox())!
-    // "Evaṃ" is the first word after the paragraph number
-    await page.mouse.click(box.x + 70, box.y + 10)
+    await expect(page.getByTestId('reader').locator('.para.bodytext').first()).toBeVisible()
+    const at = await wordPoint(page, 'Evaṃ')
+    await page.mouse.click(at.x, at.y)
     const panel = page.getByTestId('study-panel')
     await expect(panel).toBeVisible()
     await expect(panel.getByTestId('dict-word')).toHaveText(/evaṃ/i)

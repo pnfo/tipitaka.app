@@ -91,9 +91,15 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .meaning-html p { margin: 0.25em 0; }
 .meaning-html hr { border-color: var(--c-line); margin: 0.4em 0; }
 
-/* paragraph options button: left of the paragraph, only with a mouse (touch: tap the number / heading) */
-.para-dots { left: -0.25rem; transform: translateX(-100%); }
-@media (max-width: 899px) { .para-dots { left: 0.1rem; transform: none; } }
-@media (hover: none) { .para-dots { display: none; } }
-.reading .para.heading { cursor: pointer; }
-.reading .num { cursor: pointer; }
+/* paragraph options (tipitaka.lk): a round blue button over the start of the paragraph, shown on hover
+   (touch screens: after tapping the paragraph) and while its menu is open */
+.para-wrap { position: relative; }
+.para-dots { position: absolute; left: -1.45rem; top: calc(var(--text-leading, 1.65) * 0.5em - 0.65rem); display: none; height: 1.3rem; width: 1.3rem;
+  align-items: center; justify-content: center; border-radius: 9999px; background: var(--c-surface); color: var(--c-link); box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  z-index: 2; } /* em: the text size (centred on the first line) */
+.dark .para-dots { color: #7cb4ff; }
+.para-wrap:hover .para-dots, .para-wrap.tapped .para-dots, .para-wrap.menu-open .para-dots { display: inline-flex; }
+.para-wrap.menu-open .para-dots { box-shadow: 0 0 0 2px var(--c-link); }
+.reading .para-wrap > .heading + .para-dots { top: 50%; margin-top: -0.65rem; }
+/* numbered paragraphs start at the left edge with their number (no first line indent) */
+.reading .para.bodytext.has-num, .reading .para.unindented.has-num { text-indent: 0; }

@@ -22,7 +22,8 @@
     "test:full": "FULL=1 vitest run build",
     "test:go": "cd server && go test ./...",
     "test:e2e": "npm run build:fixture && npm run build:dict:fixture && npm run build:web && npm run build:web:app && npm run build:server && playwright test -c e2e/playwright.config.ts",
-    "check:css": "node scripts/check-css.mjs"
+    "check:css": "node scripts/check-css.mjs",
+    "i18n:missing": "tsx scripts/i18n-missing.ts"
   },
   "dependencies": {
     "@pnfo/pali-converter": "github:pnfo/pali-converter#ceabcfd8335d55c23409df6eaa0e4d8244c1a8bd",

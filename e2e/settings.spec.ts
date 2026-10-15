@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { paraOptions } from './helpers'
 
 test.describe('settings and storage', () => {
   test('theme and text size persist', async ({ page }) => {
@@ -28,7 +29,7 @@ test.describe('settings and storage', () => {
 
   test('bookmarks and history', async ({ page }) => {
     await page.goto('/latn/dn-1-2')
-    await page.getByTestId('reader').locator('.para.heading').first().click()
+    await paraOptions(page, page.getByTestId('reader').locator('.para.heading').first())
     await page.getByTestId('menu-bookmark').click()
     await expect(page.getByTestId('toast')).toBeVisible()
     await page.goto('/latn/bookmarks')
@@ -45,10 +46,46 @@ test('script converter page', async ({ page }) => {
   await expect(page.getByTestId('convert-output')).toHaveText(/dhammapadaṃ/i)
 })
 
-test('script dropdown', async ({ page }) => {
+test('the script picked in settings applies to the open texts, also after going back', async ({ page, isMobile }) => {
+  await page.goto('/latn/dn-1-1')
+  await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText('1. Brahmajālasuttaṃ')
+  await page.getByTestId('settings-link').click()
+  await page.getByTestId('settings-script').getByTestId('script-picker').click()
+  await page.getByTestId('script-sinh').click()
+  await expect(page).toHaveURL(/\/sinh\/settings/)
+  await page.getByTestId('settings-link').click() // toggles back to the text: in the new script
+  await expect(page).toHaveURL(/\/sinh\/dn-1-1/)
+  await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText(/රහ්මජාලසුත්තං/)
+  await page.goBack() // older history entries are shown in the new script too
+  await expect(page).toHaveURL(/\/sinh\//)
+  if (!isMobile) {
+    await page.goto('/sinh/dn-1-1')
+    await expect(page.getByTestId('script-picker')).toBeVisible()
+  }
+})
+
+test('each script remembers its own text size', async ({ page }) => {
   await page.goto('/latn/settings')
-  await page.getByTestId('set-script').selectOption('thai')
+  const size = page.getByTestId('text-size')
+  await size.fill('24')
+  await expect.poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue('--text-size'))).toBe('24px')
+  await page.getByTestId('settings-script').getByTestId('script-picker').click()
+  await page.getByTestId('script-thai').click()
   await expect(page).toHaveURL(/\/thai\/settings/)
+  await expect(size).toHaveValue('18') // the default for a script without its own size
+  await size.fill('20')
+  await page.getByTestId('settings-script').getByTestId('script-picker').click()
+  await page.getByTestId('script-latn').click()
+  await expect(size).toHaveValue('24')
+})
+
+test('the interface language sets the interface font', async ({ page }) => {
+  await page.goto('/latn/settings')
+  await expect(page.locator('html')).toHaveAttribute('data-ui-lang', 'en')
+  await page.getByRole('button', { name: 'සිංහල' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-ui-lang', 'si')
+  await expect(page.getByRole('heading', { level: 1 })).not.toHaveText('Settings')
+  expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toContain('pali-sinh')
 })
 
 test('the dictionary sheet on phones keeps the height set by dragging', async ({ page, isMobile }) => {

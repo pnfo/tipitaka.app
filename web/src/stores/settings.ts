@@ -18,7 +18,9 @@ export interface Settings {
   script: string
   uiLang: string
   theme: Theme
-  textSize: number // px
+  textSize: number // px, for scripts without their own size
+  /** text size per Pāḷi script (px), set when the size is changed while that script is shown */
+  textSizes: Record<string, number>
   leading: number
   width: number // reading column px
   notes: NotesMode
@@ -38,7 +40,7 @@ export interface Settings {
 }
 
 export const DEFAULTS: Settings = {
-  script: DEFAULT_SCRIPT, uiLang: 'en', theme: 'light', textSize: 18, leading: 1.65, width: 760, notes: 'pointer', pageRefs: '',
+  script: DEFAULT_SCRIPT, uiLang: 'en', theme: 'light', textSize: 18, textSizes: {}, leading: 1.65, width: 760, notes: 'pointer', pageRefs: '',
   paraNums: true, dicts: [], tabView: 'single', syncScroll: true, sheetHeight: 45, searchFilter: null, tapLookup: true,
 }
 
@@ -88,9 +90,14 @@ export const useSettings = defineStore('settings', () => {
   const s = reactive<Settings>(loadSettings())
   watch(s, v => writeJson(SETTINGS_KEY, v), { deep: true, immediate: true })
   watch(() => s.theme, applyTheme, { immediate: true })
-  watch(() => [s.textSize, s.leading, s.width] as const, applyText, { immediate: true })
+  watch(() => [textSizeOf(s, s.script), s.leading, s.width] as const, applyText, { immediate: true })
   return toRefs(s) // refs: pinia treats them as state (a returned reactive object would be copied)
 })
+
+/** the text size of a script: its own size, else the common one */
+export function textSizeOf(s: Settings, script: string): number {
+  return s.textSizes?.[script] ?? s.textSize
+}
 
 function applyTheme(theme: Theme) {
   if (typeof document === 'undefined') return

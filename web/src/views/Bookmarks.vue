@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import { useHead } from '@unhead/vue'
+import { computed } from 'vue'
 import IconTrash from '~icons/lucide/trash-2'
 import { useLibrary } from '@/stores/library'
 import { useScript } from '@/composables/script'
@@ -35,5 +36,5 @@ import { t } from '@/i18n'
 
 const library = useLibrary()
 const { script, conv } = useScript()
-useHead({ title: t('Bookmarks') })
+useHead({ title: computed(() => t('Bookmarks')) })
 </script>

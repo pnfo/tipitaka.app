@@ -30,7 +30,7 @@ export function paraHtml(p: Para, convert: (s: string) => string, o: ParaRenderO
 }
 
 export function paraClass(p: Para): string {
-  return `para ${p.r}${HEADINGS.has(p.r) ? ' heading' : ''}`
+  return `para ${p.r}${HEADINGS.has(p.r) ? ' heading' : ''}${p.n ? ' has-num' : ''}`
 }
 
 const isWordChar = (c: string) => {

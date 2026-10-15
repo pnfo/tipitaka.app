@@ -32,7 +32,7 @@ const settings = useSettings()
 const open = ref(false)
 const dicts = ref<Dict[]>([])
 useApi().dicts().then(d => { dicts.value = d }).catch(() => {})
-const LANG_NAMES: Record<string, string> = { en: 'English', my: 'Myanmar', si: 'Sinhala', th: 'Thai', ch: 'Chinese', hi: 'Hindi', in: 'Indonesian', es: 'Spanish', pt: 'Portuguese', kh: 'Khmer' }
+const langName = (code: string) => ({ en: t('English'), my: t('Myanmar'), si: t('Sinhala'), th: t('Thai'), ch: t('Chinese'), hi: t('Hindi'), in: t('Indonesian'), es: t('Spanish'), pt: t('Portuguese'), kh: t('Khmer') } as Record<string, string>)[code] ?? code
 const codes = computed(() => ['dpd', ...dicts.value.map(d => d.code)])
 const all = computed(() => settings.dicts.length === 0)
 const isOn = (code: string) => all.value || settings.dicts.includes(code)
@@ -55,9 +55,9 @@ const DictList = defineComponent(() => () => {
     h('span', label), sub ? h('span', { class: 'text-xs text-muted' }, sub) : null,
   ])
   return h('div', { class: 'space-y-3', 'data-testid': 'dict-list' }, [
-    h('div', [h('div', { class: 'section-title' }, 'Pāḷi – English'), row('dpd', 'DPD', 'Digital Pāḷi Dictionary')]),
+    h('div', [h('div', { class: 'section-title' }, t('Pāḷi – English')), row('dpd', 'DPD', t('Digital Pāḷi Dictionary'))]),
     ...Object.entries(groups).map(([lang, ds]) => h('div', [
-      h('div', { class: 'section-title' }, LANG_NAMES[lang] ?? lang),
+      h('div', { class: 'section-title' }, langName(lang)),
       h('div', { class: 'grid grid-cols-1 sm:grid-cols-2' }, ds.map(d => row(d.code, d.name))),
     ])),
   ])

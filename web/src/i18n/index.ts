@@ -16,10 +16,11 @@ export const uiLang = ref('en')
 
 export async function setUiLang(code: string) {
   uiLang.value = code
+  // the interface font follows the language (styles/fonts.css)
+  if (typeof document !== 'undefined') document.documentElement.setAttribute('data-ui-lang', code)
   if (code === 'en') { current.value = {}; return }
   const load = loaders[`./${code}.json`]
   current.value = load ? (await load()).default : {}
-  if (typeof document !== 'undefined') document.documentElement.setAttribute('data-ui-lang', code)
 }
 
 /** translate; {0} {1} are replaced by the arguments */

@@ -5,17 +5,17 @@
 -->
 <template>
   <div ref="root" :class="contained ? 'h-full overflow-y-auto overscroll-contain' : ''" @scroll.passive="onScroll">
-    <div class="reading relative mx-auto max-w-reading px-4 sm:px-6" :class="`coll-${coll}`" @click="onClick" @mouseover="onOver">
+    <div class="reading relative mx-auto max-w-reading pl-6 pr-4 sm:px-6" :class="`coll-${coll}`" @click="onClick">
       <div v-if="from > 0" class="flex justify-center py-3 font-ui">
         <button class="btn text-muted" :disabled="loadingPrev" data-testid="load-prev" @click="loadPrev"><IconUp class="h-4 w-4" />{{ t('Show previous text') }}</button>
       </div>
-      <div v-for="p in paras" :id="`${idPrefix}p${p.i}`" :key="p.i" :data-i="p.i" :data-k="p.k"
-        :class="[paraClass(p), { target: p.i === target, linked: linked?.has(p.i) }]" v-html="render(p)" />
-      <!-- options of the paragraph under the mouse (on touch: tap the paragraph number or a heading) -->
-      <button v-if="hovered" class="para-dots icon-btn absolute h-7 w-7 bg-surface text-link shadow" :style="{ top: `${hovered.top}px` }"
-        :aria-label="t('Options')" data-testid="para-options" @click.stop="openMenu(hovered.i, $event.currentTarget as HTMLElement)">
-        <IconDots class="h-4 w-4" />
-      </button>
+      <!-- every paragraph / verse / heading has an options button (tipitaka.lk): shown on hover, on touch screens after a tap -->
+      <div v-for="p in paras" :key="p.i" class="para-wrap" :class="{ 'menu-open': menuFor === p.i, tapped: tapped === p.i }">
+        <div :id="`${idPrefix}p${p.i}`" :data-i="p.i" :data-k="p.k" :class="[paraClass(p), { target: p.i === target, linked: linked?.has(p.i) }]" v-html="render(p)" />
+        <button class="para-dots" :aria-label="t('Options')" data-testid="para-options" @click.stop="openMenu(p.i, $event.currentTarget as HTMLElement)">
+          <IconDots class="h-3.5 w-3.5" />
+        </button>
+      </div>
       <div v-if="loadingNext" class="py-6 text-center text-sm text-muted">{{ t('Loading…') }}</div>
       <div ref="bottomSentinel" class="h-1" />
       <slot v-if="book && to >= book.paraCount" name="end" />
@@ -164,7 +164,6 @@ async function scrollToPara(i: number, top = false) {
   if (props.contained && root.value) root.value.scrollTop += el.getBoundingClientRect().top - root.value.getBoundingClientRect().top - 12
   else window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 110)
 }
-defineExpose({ scrollToPara })
 
 // lazy loading near the ends
 let io: IntersectionObserver | null = null
@@ -198,31 +197,30 @@ function onScroll() {
   }, 150)
 }
 
-// paragraph options: a dots button next to the paragraph under the mouse
-const hovered = ref<{ i: number; top: number } | null>(null)
-function onOver(e: MouseEvent) {
-  const el = (e.target as HTMLElement).closest('.para') as HTMLElement | null
-  if (!el || el.dataset.i === undefined) return
-  const i = +el.dataset.i
-  if (hovered.value?.i !== i) hovered.value = { i, top: el.offsetTop }
-}
+// paragraph options (the menu itself is in ReaderPane); the button of the open menu stays visible
+const menuFor = ref<number | null>(null)
 function openMenu(i: number, anchor: HTMLElement) {
   const p = paras.value.find(x => x.i === i)
-  if (p) emit('menu', p, anchor)
+  if (!p) return
+  menuFor.value = i
+  emit('menu', p, anchor)
 }
+defineExpose({ scrollToPara, menuClosed: () => { menuFor.value = null } })
 
+// the last tapped paragraph shows its options button (touch screens have no hover)
+const tapped = ref<number | null>(null)
 let selected: HTMLElement | null = null
 function onClick(e: MouseEvent) {
   const target = e.target as HTMLElement
   const ptr = target.closest('.note-ptr') as HTMLElement | null
   const paraEl = target.closest('.para') as HTMLElement | null
+  tapped.value = paraEl ? +paraEl.dataset.i! : null
   if (ptr && paraEl) {
     const p = paras.value.find(x => x.i === +paraEl.dataset.i!)
     const text = p ? noteTexts(p.t)[+ptr.dataset.i!] : ''
     note.value = text ? { el: ptr, html: markupToHtml(text, { convert: props.conv, notes: 'inline' }) } : null
     return
   }
-  if (paraEl && (target.closest('.num') || paraEl.classList.contains('heading'))) { openMenu(+paraEl.dataset.i!, paraEl.querySelector('.num') ?? paraEl); return }
   if (!settings.tapLookup || !paraEl) return
   if (window.getSelection()?.toString()) return // the user is selecting text
   const w = wordAtPoint(e.clientX, e.clientY)

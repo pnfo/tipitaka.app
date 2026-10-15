@@ -46,7 +46,7 @@
           </nav>
         </template>
       </TextColumn>
-      <ParaMenu :para="menu?.para ?? null" :anchor="menu?.anchor ?? null" :links="links" @close="menu = null" @alongside="(k, p) => $emit('alongside', k, p)" />
+      <ParaMenu :para="menu?.para ?? null" :anchor="menu?.anchor ?? null" :links="links" @close="menu = null; column?.menuClosed()" @alongside="(k, p) => $emit('alongside', k, p)" />
     </div>
   </div>
 </template>

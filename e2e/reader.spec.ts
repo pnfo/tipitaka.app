@@ -1,11 +1,13 @@
 import { expect, test, type Page } from '@playwright/test'
+import { paraOptions } from './helpers'
 
 /** the header script picker (wide screens) or the settings dropdown (phones) */
 async function pickScript(page: Page, isMobile: boolean, code: string) {
   if (isMobile) {
     await expect(page.getByTestId('script-picker')).toBeHidden()
     await page.goto('/latn/settings')
-    await page.getByTestId('set-script').selectOption(code)
+    await page.getByTestId('settings-script').getByTestId('script-picker').click()
+    await page.getByTestId(`script-${code}`).click()
     await expect(page).toHaveURL(new RegExp(`/${code}/settings`))
   } else {
     await page.getByTestId('script-picker').click()
@@ -72,13 +74,15 @@ test.describe('reader', () => {
   test('paragraph and heading options: link, copy, bookmark', async ({ page, context, browserName }) => {
     if (browserName === 'chromium') await context.grantPermissions(['clipboard-read', 'clipboard-write'])
     await page.goto('/latn/dn-1-1')
-    await page.getByTestId('reader').locator('.para.heading').first().click()
+    const reader = page.getByTestId('reader')
+    // every paragraph, verse and heading has the options button
+    await expect(reader.locator('.para')).toHaveCount(await reader.getByTestId('para-options').count())
+    await paraOptions(page, reader.locator('.para.heading').first())
     const menu = page.getByTestId('para-menu')
-    await expect(menu).toBeVisible()
     await menu.getByTestId('menu-link').click()
     await expect(page.getByTestId('toast')).toBeVisible()
     if (browserName === 'chromium') expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/\/latn\/dn-1-1#p\d+$/)
-    await page.getByTestId('reader').locator('.num').first().click()
+    await paraOptions(page, reader.locator('.para.bodytext').nth(1)) // plain paragraphs too
     await page.getByTestId('para-menu').getByTestId('menu-bookmark').click()
     await page.goto('/latn/bookmarks')
     await expect(page.getByTestId('bookmarks').locator('li')).toHaveCount(1)
