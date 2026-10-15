@@ -1,6 +1,6 @@
 <!-- dictionary results: DPD analysis (lookup of an inflected form) or a typed word, other dictionaries, breakups -->
 <template>
-  <div class="text-sm" data-testid="dict-view">
+  <div class="text-sm" style="overflow-wrap: anywhere" data-testid="dict-view">
     <div v-if="!word" class="py-8 text-center text-muted">{{ t('Tap a word in the text to look it up.') }}</div>
     <div v-else-if="loading" class="space-y-2 py-2" aria-busy="true">
       <div v-for="i in 4" :key="i" class="h-4 animate-pulse rounded bg-surface2" />
@@ -12,6 +12,7 @@
         <span v-if="script !== 'latn'" class="text-muted">{{ res.word }}</span>
         <span class="flex-1" />
         <RouterLink v-if="compact" :to="{ name: 'dict', params: { script, q: res.word } }" class="text-xs text-link underline">{{ t('More') }}</RouterLink>
+        <DictFilter v-if="compact" compact />
       </div>
 
       <!-- DPD analysis of the form -->
@@ -58,6 +59,7 @@ import { computed, ref, watch } from 'vue'
 import DOMPurify from 'dompurify'
 import IconSplit from '~icons/lucide/split'
 import DpdHeadword from './DpdHeadword.vue'
+import DictFilter from './DictFilter.vue'
 import { ApiError, useApi } from '@/data/api'
 import type { Dict, DictResult } from '@/data/types'
 import { useScript } from '@/composables/script'

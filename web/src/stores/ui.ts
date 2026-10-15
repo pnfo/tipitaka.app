@@ -12,6 +12,8 @@ export const useUi = defineStore('ui', () => {
   const linkTarget = ref<{ key: string; para: number } | null>(null)
   /** the next navigation comes from inside a tab (breadcrumb, next): it replaces the text instead of opening a tab */
   const navInTab = ref(false)
+  /** the last page that was not the settings (the settings button goes back to it) */
+  const lastPage = ref('')
   const toast = ref<{ msg: string; id: number } | null>(null)
   let toastTimer: ReturnType<typeof setTimeout> | undefined
   function showToast(msg: string) {
@@ -24,5 +26,5 @@ export const useUi = defineStore('ui', () => {
     panelTab.value = 'dict'
     panelOpen.value = true
   }
-  return { treeOpen, panelOpen, panelTab, lookupWord, linkTarget, navInTab, toast, showToast, openLookup }
+  return { treeOpen, panelOpen, panelTab, lookupWord, linkTarget, navInTab, lastPage, toast, showToast, openLookup }
 })

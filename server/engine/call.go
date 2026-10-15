@@ -153,7 +153,8 @@ func (e *Engine) Call(ctx context.Context, op string, p Params) (any, error) {
 		if err != nil {
 			return nil, err
 		}
-		return e.Titles(ctx, q, splitList(p, "colls"), limit)
+		// colls (mula, atta ...) is the older name of filter: collections are the root keys
+		return e.Titles(ctx, q, append(splitList(p, "filter"), splitList(p, "colls")...), limit)
 	case "fts":
 		q, err := str(p, "q")
 		if err != nil {

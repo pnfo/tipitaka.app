@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory, createWebHistory, type RouteRecordR
 import { SCRIPT_CODES, LEGACY_SCRIPT } from '@shared/scripts'
 import { isNativeApp, useApi } from './data/api'
 import { useSettings } from './stores/settings'
+import { useUi } from './stores/ui'
 import Home from './views/Home.vue'
 import Reader from './views/Reader.vue'
 
@@ -49,5 +50,6 @@ export function makeRouter() {
     const s = to.params.script as string | undefined
     if (s) useSettings().script = s
   })
+  router.afterEach(to => { if (to.name !== 'settings') useUi().lastPage = to.fullPath })
   return router
 }

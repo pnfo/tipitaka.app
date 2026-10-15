@@ -74,3 +74,20 @@ test('the dictionary sheet on phones keeps the height set by dragging', async ({
   await expect(sheet).toBeVisible()
   expect(Math.abs((await sheet.boundingBox())!.height - h1)).toBeLessThan(3)
 })
+
+test('the settings button toggles back to the previous page', async ({ page }) => {
+  await page.goto('/latn/search/bhikkhave')
+  await page.getByTestId('settings-link').click()
+  await expect(page).toHaveURL(/\/latn\/settings/)
+  await page.getByTestId('settings-link').click()
+  await expect(page).toHaveURL(/\/latn\/search\/bhikkhave/)
+})
+
+test('no page is wider than a phone screen', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'phones only')
+  for (const url of ['/latn', '/latn/dn-1-1', '/sinh/search/bhikkhave', '/latn/dict/dhamma', '/latn/titles/sutta', '/latn/settings', '/latn/bookmarks']) {
+    await page.goto(url, { waitUntil: 'networkidle' })
+    const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth])
+    expect(sw, url).toBeLessThanOrEqual(cw)
+  }
+})

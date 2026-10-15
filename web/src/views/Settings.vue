@@ -63,25 +63,16 @@
 
     <section>
       <h2 class="section-title">{{ t('Dictionaries') }}</h2>
-      <p class="mb-2 text-xs text-muted">{{ t('None selected = all dictionaries.') }}</p>
-      <div class="card space-y-3 text-sm">
-        <label class="flex items-center gap-2"><input type="checkbox" :checked="settings.dicts.includes('dpd')" @change="toggleDict('dpd')"> <b>DPD</b> – Digital Pāḷi Dictionary (English)</label>
-        <div v-for="(group, lang) in byLang" :key="lang">
-          <div class="mb-1 text-xs uppercase text-muted">{{ LANG_NAMES[lang] ?? lang }}</div>
-          <label v-for="d in group" :key="d.code" class="mr-4 inline-flex items-center gap-1.5"><input type="checkbox" :checked="settings.dicts.includes(d.code)" @change="toggleDict(d.code)"> {{ d.name }}</label>
-        </div>
-      </div>
+      <div class="card"><DictFilter inline /></div>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { SCRIPTS } from '@shared/scripts'
-import { useApi } from '@/data/api'
-import type { Dict } from '@/data/types'
+import DictFilter from '@/components/DictFilter.vue'
 import { convertTo, useScript } from '@/composables/script'
 import { useSettings, type NotesMode, type TabView, type Theme } from '@/stores/settings'
 import { UI_LANGS, t } from '@/i18n'
@@ -102,19 +93,8 @@ const THEMES: { id: Theme; label: string; bg: string; fg: string }[] = [
 ]
 const NOTES: { id: NotesMode; label: string }[] = [{ id: 'pointer', label: t('Marker') }, { id: 'inline', label: t('Inline') }, { id: 'hidden', label: t('Hidden') }]
 const EDITIONS = [{ id: 'M', label: 'Myanmar', title: 'Myanmar (Chaṭṭha Saṅgāyana) edition' }, { id: 'V', label: 'VRI', title: 'VRI edition' }, { id: 'P', label: 'PTS', title: 'Pali Text Society edition' }, { id: 'T', label: 'Thai', title: 'Thai edition' }]
-const LANG_NAMES: Record<string, string> = { en: 'English', my: 'Myanmar', si: 'Sinhala', th: 'Thai', ch: 'Chinese', hi: 'Hindi', in: 'Indonesian', es: 'Spanish', pt: 'Portuguese', kh: 'Khmer' }
 
 function toggleEdition(id: string) {
   settings.pageRefs = settings.pageRefs.includes(id) ? settings.pageRefs.replace(id, '') : 'MVPT'.split('').filter(e => e === id || settings.pageRefs.includes(e)).join('')
-}
-const dicts = ref<Dict[]>([])
-useApi().dicts().then(d => { dicts.value = d }).catch(() => {})
-const byLang = computed(() => {
-  const g: Record<string, Dict[]> = {}
-  for (const d of dicts.value) (g[d.lang] ??= []).push(d)
-  return g
-})
-function toggleDict(code: string) {
-  settings.dicts = settings.dicts.includes(code) ? settings.dicts.filter(c => c !== code) : [...settings.dicts, code]
 }
 </script>

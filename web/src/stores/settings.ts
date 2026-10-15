@@ -31,13 +31,15 @@ export interface Settings {
   syncScroll: boolean
   /** height of the dictionary / commentary sheet on phones, % of the screen */
   sheetHeight: number
+  /** collections searched (full text and titles): node keys (collection roots, pitaka groups); null = default */
+  searchFilter: string[] | null
   /** tap a word to look it up */
   tapLookup: boolean
 }
 
 export const DEFAULTS: Settings = {
   script: DEFAULT_SCRIPT, uiLang: 'en', theme: 'light', textSize: 18, leading: 1.65, width: 760, notes: 'pointer', pageRefs: '',
-  paraNums: true, dicts: [], tabView: 'single', syncScroll: true, sheetHeight: 45, tapLookup: true,
+  paraNums: true, dicts: [], tabView: 'single', syncScroll: true, sheetHeight: 45, searchFilter: null, tapLookup: true,
 }
 
 /** v2 settings -> v3 (scripts/settings.js keys) */

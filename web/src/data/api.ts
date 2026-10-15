@@ -141,7 +141,7 @@ export class Api {
   node = (key: string) => this.call<NodeInfo>('node', { key })
   text = (key: string, from?: number, count?: number) => this.call<TextChunk>('text', { key, from, count })
   links = (key: string, from?: number, to?: number) => this.call<Link[]>('links', { key, from, to })
-  titles = (q: string, colls?: string[], limit?: number) => this.call<TitleHit[]>('titles', { q, colls: colls?.join(','), limit })
+  titles = (q: string, filter?: string[], limit?: number) => this.call<TitleHit[]>('titles', { q, filter: filter?.join(','), limit })
   fts = (p: { q: string; exact?: boolean; phrase?: boolean; order?: boolean; distance?: number; filter?: string[]; combo?: number; group?: string; sortFreq?: boolean; page?: number; pageSize?: number }) =>
     this.call<FtsResult>('fts', { ...p, filter: p.filter?.join(',') })
   dicts = () => this.call<Dict[]>('dicts')

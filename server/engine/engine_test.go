@@ -97,6 +97,12 @@ func TestTitles(t *testing.T) {
 			t.Fatalf("collection filter: %v", h)
 		}
 	}
+	if hits, _ := e.Titles(ctx, "brahmajala", []string{"atta-sp"}, 10); len(hits) == 0 || hits[0].Coll != "atta" {
+		t.Fatal("filter by a pitaka group of a collection")
+	}
+	if hits, _ := e.Titles(ctx, "brahmajala", []string{"vp", "anya"}, 10); len(hits) != 0 {
+		t.Fatalf("filter excludes: %v", hits)
+	}
 	if hits, _ := e.Titles(ctx, "brahmajala", []string{"atta"}, 10); len(hits) == 0 {
 		t.Fatal("diacritic insensitive title search")
 	}

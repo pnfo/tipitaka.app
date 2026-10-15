@@ -81,8 +81,9 @@ type TitleHit struct {
 }
 
 // Titles finds nodes whose title contains q (diacritic-insensitive unless q has diacritics), titles starting
-// with q first, then in tree order. colls limits the collections (mula, atta, tika, anya).
-func (e *Engine) Titles(ctx context.Context, q string, colls []string, limit int) ([]TitleHit, error) {
+// with q first, then in tree order. filter limits the search to the nodes below these keys (collections
+// mula / atta / tika / anya, pitaka groups vp / atta-sp ..., books); empty = everything.
+func (e *Engine) Titles(ctx context.Context, q string, filter []string, limit int) ([]TitleHit, error) {
 	q = strings.TrimSpace(strings.ToLower(q))
 	if len([]rune(q)) < 2 {
 		return []TitleHit{}, nil
@@ -92,17 +93,7 @@ func (e *Engine) Titles(ctx context.Context, q string, colls []string, limit int
 	}
 	sensitive := HasDiacritics(q)
 	fq := Fold(q)
-	collOK := func(c string) bool {
-		if len(colls) == 0 {
-			return true
-		}
-		for _, x := range colls {
-			if x == c {
-				return true
-			}
-		}
-		return false
-	}
+	allowed := e.underKeys(filter)
 	type scored struct {
 		id    int
 		score int
@@ -110,7 +101,7 @@ func (e *Engine) Titles(ctx context.Context, q string, colls []string, limit int
 	var hits []scored
 	for i := range e.nodes {
 		n := &e.nodes[i]
-		if n.Kind == "group" || !collOK(n.Coll) {
+		if n.Kind == "group" || (allowed != nil && !allowed(i)) {
 			continue
 		}
 		var pos int
@@ -169,4 +160,28 @@ func (e *Engine) SitemapNodes() []string {
 		}
 	}
 	return out
+}
+
+// underKeys returns a test for "node is one of the keys or below one of them" (nil when keys is empty).
+func (e *Engine) underKeys(keys []string) func(id int) bool {
+	if len(keys) == 0 {
+		return nil
+	}
+	set := map[int]bool{}
+	for _, k := range keys {
+		if i, ok := e.byKey[k]; ok {
+			set[i] = true
+		}
+	}
+	memo := make(map[int]bool, 1024)
+	var under func(id int) bool
+	under = func(id int) bool {
+		if v, ok := memo[id]; ok {
+			return v
+		}
+		v := set[id] || (e.nodes[id].Parent >= 0 && under(e.nodes[id].Parent))
+		memo[id] = v
+		return v
+	}
+	return under
 }

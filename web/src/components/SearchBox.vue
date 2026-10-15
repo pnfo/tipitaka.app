@@ -42,6 +42,7 @@ import { useApi } from '@/data/api'
 import type { TitleHit } from '@/data/types'
 import { detectScript, toRoman, useScript } from '@/composables/script'
 import { readJson, writeJson } from '@/stores/storage'
+import { useCollectionFilter } from '@/composables/filters'
 import { t } from '@/i18n'
 
 type SearchType = 'search' | 'titles' | 'dict'
@@ -67,11 +68,12 @@ const active = ref(0)
 const titles = ref<TitleHit[]>([])
 const input = ref<HTMLInputElement>()
 const inputScript = computed(() => detectScript(q.value))
+const { keys: collFilter } = useCollectionFilter()
 
 const roman = computed(() => toRoman(q.value.trim()))
 watchDebounced(roman, async r => {
   if (r.length < 2) { titles.value = []; return }
-  try { titles.value = await api.titles(r, undefined, 6) } catch { titles.value = [] }
+  try { titles.value = await api.titles(r, collFilter.value, 6) } catch { titles.value = [] }
 }, { debounce: 200 })
 watch(q, () => { active.value = 0 })
 

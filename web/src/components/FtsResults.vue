@@ -5,17 +5,24 @@
 -->
 <template>
   <div>
-    <div class="mb-3 flex flex-wrap items-center gap-1.5 text-sm" data-testid="fts-options">
-      <button v-for="o in toggles" :key="o.key" class="chip" :class="{ on: opt(o.key) }" :title="o.title" :data-testid="`opt-${o.key}`" @click="setOpt(o.key, !opt(o.key))">{{ o.label }}</button>
-      <label v-if="terms.length > 1 && !opt('phrase')" class="flex items-center gap-1 text-xs text-muted">{{ t('Within') }}
-        <select :value="distance" class="rounded border border-line bg-surface px-1" data-testid="opt-distance" @change="setOpt('distance', ($event.target as HTMLSelectElement).value)">
-          <option v-for="d in [1, 2, 3, 5, 10, 20, 50]" :key="d" :value="d">{{ d }}</option>
-        </select> {{ t('words') }}
-      </label>
-      <span class="mx-1 h-4 w-px bg-line" />
-      <button v-for="f in FILTERS" :key="f.key" class="chip" :class="[`coll-${f.coll}`, { on: filter.includes(f.key) }]" :data-testid="`filter-${f.key}`" @click="toggleFilter(f.key)">
-        <span class="coll-dot" />{{ f.label }}
-      </button>
+    <div class="mb-3 flex flex-wrap items-center gap-2 text-sm" data-testid="fts-options">
+      <button class="chip" :class="{ on: opt('exact') }" :title="t('Match only the word as typed, not the words that begin with it')" data-testid="opt-exact"
+        @click="setOpt('exact', !opt('exact'))">{{ t('Exact word') }}</button>
+      <!-- several words: a phrase, or the words near each other -->
+      <template v-if="terms.length > 1">
+        <div class="flex rounded-full border border-line p-0.5" role="radiogroup" :aria-label="t('How the words are found')">
+          <button class="seg" :class="{ on: phrase }" role="radio" :aria-checked="phrase" data-testid="opt-phrase" @click="setOpt('mode', '')">{{ t('Exact phrase') }}</button>
+          <button class="seg" :class="{ on: !phrase }" role="radio" :aria-checked="!phrase" data-testid="opt-near" @click="setOpt('mode', 'near')">{{ t('Near each other') }}</button>
+        </div>
+        <template v-if="!phrase">
+          <label class="flex items-center gap-1 text-xs text-muted">{{ t('within') }}
+            <select :value="distance" class="rounded border border-line bg-surface px-1 py-0.5 text-fg" data-testid="opt-distance" @change="setOpt('distance', ($event.target as HTMLSelectElement).value)">
+              <option v-for="d in [2, 3, 5, 10, 20, 50]" :key="d" :value="d">{{ d }}</option>
+            </select> {{ t('words') }}
+          </label>
+          <button class="chip" :class="{ on: opt('order') }" data-testid="opt-order" @click="setOpt('order', !opt('order'))">{{ t('In this order') }}</button>
+        </template>
+      </template>
     </div>
     <details class="mb-3 text-xs text-muted">
       <summary class="cursor-pointer">{{ t('How to search') }}</summary>
@@ -23,7 +30,7 @@
         <li>{{ t('A word finds all its endings: dhamma → dhammo, dhammassa, dhammānaṃ… (turn on "Exact word" to match only the word).') }}</li>
         <li>{{ t('* stands for any letters anywhere: *ssa finds words ending in ssa, *dhamm* words containing dhamm. ? is one letter.') }}</li>
         <li>{{ t('Without diacritics a word matches with or without them: dhamma also finds dhammā.') }}</li>
-        <li>{{ t('Several words: found within the word distance, in any order; "In order" or "Phrase" make it stricter.') }}</li>
+        <li>{{ t('Several words are found as an exact phrase, or with "Near each other" within a number of words (in any order, or in this order).') }}</li>
         <li>{{ t('Type in any script.') }}</li>
       </ul>
     </details>
@@ -96,6 +103,7 @@ import IconChevron from '~icons/lucide/chevron-right'
 import { ApiError, useApi } from '@/data/api'
 import type { FtsGroup, FtsHit, FtsResult } from '@/data/types'
 import { useScript } from '@/composables/script'
+import { useCollectionFilter } from '@/composables/filters'
 import { tokenize, indexedText } from '@shared/tokenize'
 import { escapeHtml } from '@shared/markup'
 import { t } from '@/i18n'
@@ -105,19 +113,12 @@ const route = useRoute(), router = useRouter()
 const api = useApi()
 const { script, conv } = useScript()
 
-const FILTERS = [
-  { key: 'mula', coll: 'mula', label: 'Mūla' }, { key: 'atta', coll: 'atta', label: 'Aṭṭhakathā' }, { key: 'tika', coll: 'tika', label: 'Ṭīkā' },
-  { key: 'anya', coll: 'anya', label: 'Añña' }, { key: 'vp', coll: 'mula', label: 'Vinaya' }, { key: 'sp', coll: 'mula', label: 'Sutta' }, { key: 'ap', coll: 'mula', label: 'Abhidhamma' },
-]
-const toggles = computed(() => [
-  { key: 'exact', label: t('Exact word'), title: t('Do not match longer words') },
-  { key: 'phrase', label: t('Phrase'), title: t('Words next to each other in this order') },
-  { key: 'order', label: t('In order'), title: t('Words in this order') },
-])
 
 const opt = (k: string) => route.query[k] === '1'
 const distance = computed(() => +(route.query.distance ?? 10) || 10)
-const filter = computed(() => String(route.query.filter ?? '').split(',').filter(Boolean))
+const { keys: filter } = useCollectionFilter()
+// several words: an exact phrase (default, as in v2) or near each other (?mode=near)
+const phrase = computed(() => route.query.mode !== 'near')
 // v2 showed the first (most frequent) form; ?combo=all shows every form
 const combo = computed(() => (route.query.combo === 'all' ? -1 : typeof route.query.combo === 'string' && route.query.combo !== '' ? +route.query.combo : 0))
 const terms = computed(() => props.q.split(/\s+/).filter(Boolean))
@@ -129,20 +130,17 @@ function setOpt(k: string, v: boolean | string) {
   if (k !== 'combo' && k !== 'sortFreq') delete query.combo
   router.replace({ query })
 }
-function toggleFilter(k: string) {
-  const f = new Set(filter.value)
-  if (f.has(k)) f.delete(k)
-  else f.add(k)
-  setOpt('filter', [...f].join(','))
-}
 
 const res = ref<FtsResult | null>(null)
 const error = ref('')
 const loading = ref(false)
 const groupLimit = ref(200)
 const open = reactive<Record<string, { hits: FtsHit[]; page: number }>>({})
-const params = computed(() => ({ q: props.q, exact: opt('exact'), phrase: opt('phrase'), order: opt('order'), distance: distance.value, filter: filter.value,
-  combo: combo.value, sortFreq: opt('sortFreq') }))
+const params = computed(() => {
+  const many = terms.value.length > 1
+  return { q: props.q, exact: opt('exact'), phrase: many && phrase.value, order: many && !phrase.value && opt('order'), distance: distance.value,
+    filter: filter.value, combo: combo.value, sortFreq: opt('sortFreq') }
+})
 
 let gen = 0
 watch(params, async p => {
@@ -220,4 +218,6 @@ function snippet(h: FtsHit): string {
 @media (min-width: 900px) { .combo { width: 100%; border-color: transparent; background: transparent; } }
 .combo:hover { background: var(--c-surface2); }
 .combo.on { border-color: var(--c-primary); background: var(--c-primary-soft); color: var(--c-primary); }
+.seg { border-radius: 9999px; padding: .1rem .7rem; font-size: .8rem; color: var(--c-muted); }
+.seg.on { background: var(--c-primary-soft); color: var(--c-primary); }
 </style>

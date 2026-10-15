@@ -16,9 +16,10 @@
     <RouterLink :to="{ name: 'bookmarks', params: { script } }" class="icon-btn hidden sm:inline-flex" :aria-label="t('Bookmarks')" :title="t('Bookmarks')">
       <IconBookmark class="h-5 w-5" />
     </RouterLink>
-    <RouterLink :to="{ name: 'settings', params: { script } }" class="icon-btn" :aria-label="t('Settings')" :title="t('Settings')" data-testid="settings-link">
+    <button class="icon-btn" :class="{ active: route.name === 'settings' }" :aria-label="t('Settings')" :title="t('Settings')" :aria-pressed="route.name === 'settings'"
+      data-testid="settings-link" @click="toggleSettings">
       <IconSettings class="h-5 w-5" />
-    </RouterLink>
+    </button>
   </header>
 </template>
 
@@ -29,13 +30,18 @@ import IconSettings from '~icons/lucide/settings'
 import SearchBox from './SearchBox.vue'
 import ScriptPicker from './ScriptPicker.vue'
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useUi } from '@/stores/ui'
 import { useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
 const ui = useUi()
-const route = useRoute()
+const route = useRoute(), router = useRouter()
+/** the settings button is a toggle: from the settings back to where the user was */
+function toggleSettings() {
+  if (route.name === 'settings') router.push(ui.lastPage || { name: 'home', params: { script: script.value } })
+  else router.push({ name: 'settings', params: { script: script.value } })
+}
 const onSearchPage = computed(() => route.name === 'search' || route.name === 'titles' || route.name === 'dict')
 const logo = `${import.meta.env.BASE_URL}images/app-icon.png`
 const { script, conv } = useScript()

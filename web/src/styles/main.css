@@ -27,6 +27,8 @@
 }
 
 html, body { background: var(--c-bg); color: var(--c-fg); }
+/* nothing may widen the layout on phones (mobile browsers would zoom the whole page out) */
+body { overflow-x: hidden; }
 body { font-family: var(--font-ui); margin: 0; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
