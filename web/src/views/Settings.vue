@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto max-w-3xl space-y-8 px-4 pb-20 pt-6">
+  <div class="mx-auto max-w-3xl space-y-6 px-4 pb-20 pt-5">
     <h1 class="text-2xl font-semibold">{{ t('Settings') }}</h1>
 
     <section>

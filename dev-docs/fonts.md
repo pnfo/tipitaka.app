@@ -6,34 +6,52 @@ Every Pāḷi script has its own family `pali-<script>` in `web/src/styles/fonts
 Text in Pāḷi gets `font-family: var(--font-text)`, which `[data-script]` sets per script. Browsers download only the
 faces that are used.
 
-The interface language has its own font: `setUiLang()` sets `html[data-ui-lang]`, and `--font-ui` uses the face of the
-language's script (si → `pali-sinh`, my → `pali-mymr`, th → `pali-thai`, kh → `pali-khmr`, hi → `pali-deva`;
-English and Chinese use the system font). The Pāḷi script and the interface language are independent settings.
+The interface language has its own font: `setUiLang()` sets `html[data-ui-lang]`, and `--font-ui` starts with a
+`ui-<script>` face (si → Sinhala, my → Myanmar, th → Thai, kh → Khmer, hi → Devanagari; English and Chinese use the
+system font). The `ui-` faces have a `unicode-range` of their script only, so Latin text in the interface (English
+dictionary meanings, numbers, "English") stays in the system font. The Pāḷi script and the interface language are
+independent settings.
 
-## Equal sizes across scripts
-At the same font size the scripts look very different in size: Sinhala and Myanmar letters fill much more of the
-em box than Thai. So every face has a `size-adjust` that brings it to the same visual size:
+## Sizes across scripts
+At the same font size the scripts differ a lot in size: the letters of Myanmar and Sinhala fill much more of the em
+box than Thai. `scripts/measure-fonts.mjs` measures the letter height of every face (Chromium canvas, the converted
+word "mana", which has no ascenders or descenders) relative to the Roman x-height, and `--write` sets the
+`size-adjust` of the faces in `fonts.css`.
 
-1. Measure, in Chromium with the faces loaded, the height of the letter bodies of `convert('mana', script)` (canvas
-   `measureText`, `actualBoundingBoxAscent + actualBoundingBoxDescent`; no ascenders or descenders in this word) at
-   100px, and the x-height of Noto Serif (55.6px).
-2. `size-adjust = 55.6 / h`, plus 15% for non-Roman scripts (their letters carry more detail than a Roman x-height
-   and are hard to read at exactly the same height), clamped to 50%–145%.
+Pāḷi text (`pali-<script>`): halfway (geometric mean) between
+- equal sizes: non-Roman letters at 1.15× the Roman x-height look the same size as Roman, and
+- the sizes users know from tipitaka.app v2 (measured there: Sinhala 1.45, Myanmar 1.6, Khmer 1.21, Devanagari
+  1.13, Thai 1.1 (shown at 1.5×); the other scripts used the same Noto fonts as now, i.e. their own size).
 
-| script | size-adjust | | script | size-adjust |
-|---|---|---|---|---|
-| latn | 100% | | knda | 77.3% |
-| sinh | 78.6% | | mlym | 112.8% |
-| deva | 102% | | khmr | 93.8% |
-| beng | 100.9% | | thai | 145% |
-| guru | 102.8% | | mymr | 70.6% |
-| gujr | 103.6% | | laoo | 93.5% |
-| telu | 85.5% | | lana | 69.4% |
-| brah | 88.1% | | tibt | 59.3% |
+Interface text (`ui-<script>`): the v2 size, since v2's interface text was 16px in the script font while ours is
+mostly 14px (×16/14; English: Times 16px in v2 ≈ system-ui 14px).
 
-`size-adjust` scales the glyphs and the line metrics of the face, so it applies everywhere the face is used:
-reading text, search inputs, dictionary entries and interface text in that language. Browsers without
-`size-adjust` (Chrome < 92, the oldest Android WebViews) show the unadjusted sizes.
+| script | own height | Pāḷi size-adjust | interface size-adjust |
+|---|---|---|---|
+| latn | 1.00 | 100% | |
+| sinh | 1.46 | 88.2% | 113.2% |
+| deva | 1.13 | 101.1% | 114.5% |
+| beng | 1.14 | 100.4% | |
+| guru | 1.12 | 101.4% | |
+| gujr | 1.11 | 101.8% | |
+| telu | 1.35 | 92.5% | |
+| knda | 1.49 | 87.9% | |
+| mlym | 1.02 | 106.2% | |
+| khmr | 1.23 | 96.2% | 112.7% |
+| thai | 0.73 | 153.3% | 171.3% |
+| mymr | 1.63 | 83.2% | 112.2% |
+| laoo | 1.23 | 96.7% | |
+| lana | 1.66 | 83.3% | |
+| tibt | 1.94 | 77.0% | |
+| brah | 1.31 | 93.9% | |
+
+`size-adjust` scales the glyphs and the line metrics of the face. Browsers without `size-adjust` (Chrome < 92, the
+oldest Android WebViews) show the unadjusted sizes.
+
+## Type scale of the interface
+Rem based, so everything follows the text size setting (below). Pāḷi lists (tree, word forms, hit titles) 15–16px
+like v2's 16px; labels, buttons and chips 14px; secondary lines (paths, descriptions) 13px; 12px only for counts and
+badges. Section titles are 13px semibold (small capitals in English only, other scripts have no case).
 
 ## Text size
 One text size for all scripts (`settings.textSize`, reading text in px). The interface follows it: the root font

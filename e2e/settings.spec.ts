@@ -86,7 +86,7 @@ test('the interface language sets the interface font', async ({ page }) => {
   await page.getByRole('button', { name: 'සිංහල' }).click()
   await expect(page.locator('html')).toHaveAttribute('data-ui-lang', 'si')
   await expect(page.getByRole('heading', { level: 1 })).not.toHaveText('Settings')
-  expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toContain('pali-sinh')
+  expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toContain('ui-sinh')
 })
 
 test('the dictionary sheet on phones keeps the height set by dragging', async ({ page, isMobile }) => {

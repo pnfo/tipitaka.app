@@ -11,7 +11,7 @@
         <h2 class="pali text-xl font-semibold text-primary" data-testid="dict-word">{{ conv(res.word) }}</h2>
         <span v-if="script !== 'latn'" class="text-muted">{{ res.word }}</span>
         <span class="flex-1" />
-        <RouterLink v-if="compact" :to="{ name: 'dict', params: { script, q: res.word } }" class="text-xs text-link underline">{{ t('More') }}</RouterLink>
+        <RouterLink v-if="compact" :to="{ name: 'dict', params: { script, q: res.word } }" class="text-sm text-link underline">{{ t('More') }}</RouterLink>
         <DictFilter v-if="compact" compact />
       </div>
 
@@ -28,7 +28,7 @@
       <section v-if="res.dpd.length" class="mb-4">
         <div class="section-title flex items-center gap-2">DPD <span class="font-normal normal-case tracking-normal">· Digital Pāḷi Dictionary</span></div>
         <DpdHeadword v-for="h in shownDpd" :key="h.id" :h="h" :conv="conv" />
-        <button v-if="res.dpd.length > shownDpd.length" class="text-xs text-link underline" @click="dpdAll = true">{{ t('Show {0} more', res.dpd.length - shownDpd.length) }}</button>
+        <button v-if="res.dpd.length > shownDpd.length" class="text-sm text-link underline" @click="dpdAll = true">{{ t('Show {0} more', res.dpd.length - shownDpd.length) }}</button>
       </section>
 
       <section v-if="res.entries.length" class="mb-4">

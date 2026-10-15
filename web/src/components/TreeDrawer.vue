@@ -2,13 +2,13 @@
   <nav class="flex h-full flex-col" :aria-label="t('Contents')">
     <div class="flex gap-1 border-b border-line p-2" role="tablist">
       <button v-for="c in roots" :key="c.key" role="tab" :aria-selected="tree.coll === c.coll"
-        class="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-1 py-1.5 text-xs font-medium" :class="[`coll-${c.coll}`, tree.coll === c.coll ? 'bg-surface2 text-fg' : 'text-muted hover:bg-surface2']"
+        class="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-1 py-1.5 text-[0.8125rem] font-medium" :class="[`coll-${c.coll}`, tree.coll === c.coll ? 'bg-surface2 text-fg' : 'text-muted hover:bg-surface2']"
         :data-testid="`tree-tab-${c.coll}`" @click="tree.coll = c.coll">
         <span class="coll-dot" />
         <span class="pali truncate">{{ conv(COLL_LABEL[c.coll]) }}</span>
       </button>
     </div>
-    <div ref="scroller" class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 py-2 text-sm" data-testid="tree">
+    <div ref="scroller" class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 py-2 text-base" data-testid="tree">
       <template v-if="rootNode">
         <TreeNode v-for="n in tree.children.get(rootNode.key) ?? []" :key="n.key" :node="n" :depth="0" />
       </template>

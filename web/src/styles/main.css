@@ -44,13 +44,15 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
   .btn-primary { @apply inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-white; background: var(--c-primary); }
   .dark .btn-primary { color: #1d1a18; }
   .card { @apply rounded-xl border border-line p-4; background: var(--c-surface); }
-  .chip { @apply inline-flex items-center gap-1 rounded-full border border-line px-2.5 py-0.5 text-xs; background: var(--c-surface); }
+  .chip { @apply inline-flex items-center gap-1 rounded-full border border-line px-3 py-1 text-sm; background: var(--c-surface); }
   .chip.on { border-color: var(--c-primary); background: var(--c-primary-soft); color: var(--c-primary); }
   .input { @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-fg outline-none; }
   .input:focus { border-color: var(--c-primary); }
   .menu-item { @apply flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm; }
   .menu-item:hover { background: var(--c-surface2); }
-  .section-title { @apply mb-2 text-xs font-semibold uppercase tracking-wider text-muted; }
+  .section-title { @apply mb-2 text-[0.8125rem] font-semibold text-muted; }
+  /* small capitals only where the script has them */
+  html[data-ui-lang='en'] .section-title { @apply text-xs uppercase tracking-wider; }
 }
 
 /* collection colours */

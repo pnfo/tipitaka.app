@@ -74,9 +74,9 @@
                 <span class="coll-dot" />
                 <RouterLink :to="readLink(g.key, g.para)" class="min-w-0 flex-1 hover:text-primary">
                   <span class="pali block truncate font-medium">{{ conv(g.title) }}</span>
-                  <span class="pali block truncate text-xs text-muted">{{ conv(g.path) }}</span>
+                  <span class="pali block truncate text-[0.8125rem] text-muted">{{ conv(g.path) }}</span>
                 </RouterLink>
-                <span class="chip tabular-nums">{{ g.count }}</span>
+                <span class="chip py-0.5 text-xs tabular-nums">{{ g.count }}</span>
               </div>
               <div v-if="open[g.key]" class="border-t border-line bg-bg px-3 py-2" data-testid="group-hits">
                 <RouterLink v-for="(h, i) in open[g.key].hits" :key="i" :to="readLink(h.key, h.para, h)" class="block rounded-lg px-2 py-1.5 hover:bg-surface2">
@@ -214,10 +214,10 @@ function snippet(h: FtsHit): string {
 </script>
 
 <style scoped>
-.combo { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; border-radius: .5rem; border: 1px solid var(--c-line); background: var(--c-surface); padding: .3rem .6rem; font-size: .9rem; }
+.combo { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; border-radius: .5rem; border: 1px solid var(--c-line); background: var(--c-surface); padding: .3rem .6rem; font-size: .95rem; }
 @media (min-width: 900px) { .combo { width: 100%; border-color: transparent; background: transparent; } }
 .combo:hover { background: var(--c-surface2); }
 .combo.on { border-color: var(--c-primary); background: var(--c-primary-soft); color: var(--c-primary); }
-.seg { border-radius: 9999px; padding: .1rem .7rem; font-size: .8rem; color: var(--c-muted); }
+.seg { border-radius: 9999px; padding: .15rem .75rem; font-size: .875rem; color: var(--c-muted); }
 .seg.on { background: var(--c-primary-soft); color: var(--c-primary); }
 </style>
