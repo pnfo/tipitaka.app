@@ -4,7 +4,7 @@
  *  - NativeSource: the engine compiled into the Android / iOS app, reached through the native bridge
  * The front door (Api) adds a small LRU cache, request de-duplication and the SSR prefill.
  */
-import type { DictResult, Dict, FtsResult, LegacyTarget, Link, Meta, NodeInfo, TextChunk, TitleHit, TNode } from './types'
+import type { DictResult, Dict, Entity, EntityInfo, EntityType, FtsResult, LegacyTarget, Link, MentionRef, Meta, NodeInfo, ParaName, TextChunk, TitleHit, TNode, Gloss, UnitSetting } from './types'
 
 export type Params = Record<string, string | number | boolean | undefined>
 
@@ -141,6 +141,7 @@ export class Api {
   node = (key: string) => this.call<NodeInfo>('node', { key })
   text = (key: string, from?: number, count?: number) => this.call<TextChunk>('text', { key, from, count })
   links = (key: string, from?: number, to?: number) => this.call<Link[]>('links', { key, from, to })
+  glosses = (key: string, from?: number, to?: number) => this.call<Gloss[]>('glosses', { key, from, to })
   titles = (q: string, filter?: string[], limit?: number) => this.call<TitleHit[]>('titles', { q, filter: filter?.join(','), limit })
   fts = (p: { q: string; exact?: boolean; phrase?: boolean; order?: boolean; distance?: number; filter?: string[]; combo?: number; group?: string; sortFreq?: boolean; page?: number; pageSize?: number }) =>
     this.call<FtsResult>('fts', { ...p, filter: p.filter?.join(',') })
@@ -148,6 +149,13 @@ export class Api {
   dict = (w: string, dicts?: string[], limit?: number) => this.call<DictResult>('dict', { w, dicts: dicts?.join(','), limit })
   lookup = (w: string, dicts?: string[], limit?: number) => this.call<DictResult>('lookup', { w, dicts: dicts?.join(','), limit })
   legacy = (file: string, line: number) => this.call<LegacyTarget>('legacy', { file, line })
+  names = (q = '', types?: EntityType[], limit?: number) => this.call<Entity[]>('names', { q, types: types?.join(','), limit })
+  entity = (slug: string) => this.call<EntityInfo>('entity', { slug })
+  /** the setting of the sutta / story around a paragraph (null: none) */
+  settings = (key: string, para?: number) => this.call<UnitSetting | null>('settings', { key, para })
+  /** the mentions of a name in a book (maybe: those that may be it or a namesake), 100 a page */
+  mentions = (slug: string, book: number, maybe = false, page = 0) => this.call<MentionRef[]>('mentions', { slug, book, maybe, page })
+  paranames = (key: string, from?: number, to?: number) => this.call<ParaName[]>('paranames', { key, from, to })
 }
 
 let api: Api | null = null

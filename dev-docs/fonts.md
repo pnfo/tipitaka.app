@@ -1,7 +1,8 @@
 # Fonts
 
 ## Faces
-Every Pāḷi script has its own family `pali-<script>` in `web/src/styles/fonts.css` (Noto Serif / Sans faces in
+Every Pāḷi script has its own family `pali-<script>` in `web/src/styles/fonts.css`. Tamil uses Noto Serif Tamil (the
+variable Tamil subset of Google Fonts); its superscripts ²³⁴ come from `pali-latn` (Noto Serif / Sans faces in
 `web/src/assets/fonts`, regular 400 and bold 700 as separate faces: WebView 53 does not understand weight ranges).
 Text in Pāḷi gets `font-family: var(--font-text)`, which `[data-script]` sets per script. Browsers download only the
 faces that are used.
@@ -37,6 +38,7 @@ mostly 14px (×16/14; English: Times 16px in v2 ≈ system-ui 14px).
 | telu | 1.35 | 92.5% | |
 | knda | 1.49 | 87.9% | |
 | mlym | 1.02 | 106.2% | |
+| taml | 1.01 | 106.5% | |
 | khmr | 1.23 | 96.2% | 112.7% |
 | thai | 0.73 | 153.3% | 171.3% |
 | mymr | 1.63 | 83.2% | 112.2% |

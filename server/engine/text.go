@@ -136,6 +136,7 @@ func (e *Engine) Links(ctx context.Context, key string, from, to int) ([]Link, e
 		to = from + 2000
 	}
 	out := []Link{}
+	keys := map[[2]int]string{} // node keys of the other side's paragraphs (many links share them)
 	q := func(sqlText string, fwd bool) error {
 		rows, err := e.text.QueryContext(ctx, sqlText, n.Book, from, to)
 		if err != nil {
@@ -148,9 +149,15 @@ func (e *Engine) Links(ctx context.Context, key string, from, to int) ([]Link, e
 				return err
 			}
 			l.Forward = fwd
-			if t, err := e.NodeAt(ctx, l.Book, l.To); err == nil {
-				l.Key = t.Key
+			k := [2]int{l.Book, l.To}
+			key, ok := keys[k]
+			if !ok {
+				if t, err := e.NodeAt(ctx, l.Book, l.To); err == nil {
+					key = t.Key
+				}
+				keys[k] = key
 			}
+			l.Key = key
 			out = append(out, l)
 		}
 		return rows.Err()
@@ -160,6 +167,85 @@ func (e *Engine) Links(ctx context.Context, key string, from, to int) ([]Link, e
 	}
 	if err := q("SELECT to_idx, from_book, from_idx, kind, source FROM para_link WHERE to_book = ? AND to_idx >= ? AND to_idx < ?", false); err != nil {
 		return nil, err
+	}
+	return out, nil
+}
+
+// Gloss is a word level alignment: a commentary lemma and the words it quotes (build/align, table gloss).
+// Spans are [paragraph:offset, paragraph:offset) in UTF-16 code units of the stored paragraph markup.
+type Gloss struct {
+	ID   int     `json:"g"`
+	Side string  `json:"side"` // "t": the requested text has the quoted words, "c": it has the lemma
+	Idx  int     `json:"i"`    // span in the requested text
+	S    int     `json:"s"`
+	EIdx int     `json:"ei"`
+	E    int     `json:"e"`
+	Book int     `json:"b"` // other side span
+	To   int     `json:"t"`
+	ToS  int     `json:"ts"`
+	ToEI int     `json:"tei"`
+	ToE  int     `json:"te"`
+	XIdx int     `json:"xi"` // end of the explanation in the commentary [xi:x)
+	X    int     `json:"x"`
+	Key  string  `json:"k"` // node of the other side's first paragraph
+	Kind string  `json:"kind"`
+	Src  string  `json:"src"`
+	Conf float64 `json:"conf"`
+}
+
+// glossSpill: a lemma (merged verse lines) or a quoted passage ("tiādi") can start before the requested range
+const glossSpill = 20
+
+// Glosses returns the glosses touching the paragraphs [from, to) of the book of key, from both sides.
+func (e *Engine) Glosses(ctx context.Context, key string, from, to int) ([]Gloss, error) {
+	n, err := e.node(key)
+	if err != nil {
+		return nil, err
+	}
+	if n.Book < 0 {
+		return []Gloss{}, nil
+	}
+	if from < 0 {
+		from, to = n.Start, n.End
+	}
+	if to-from > 2000 {
+		to = from + 2000
+	}
+	out := []Gloss{}
+	keys := map[[2]int]string{}
+	q := func(sqlText, side string) error {
+		rows, err := e.text.QueryContext(ctx, sqlText, n.Book, from-glossSpill, to, from)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			g := Gloss{Side: side}
+			if err := rows.Scan(&g.ID, &g.Idx, &g.S, &g.EIdx, &g.E, &g.Book, &g.To, &g.ToS, &g.ToEI, &g.ToE, &g.XIdx, &g.X, &g.Kind, &g.Src, &g.Conf); err != nil {
+				return err
+			}
+			out = append(out, g)
+		}
+		return rows.Err()
+	}
+	if err := q(`SELECT id, c_idx, c_s, c_eidx, c_e, t_book, t_idx, t_s, t_eidx, t_e, x_eidx, x_e, kind, src, conf FROM gloss
+		WHERE c_book = ? AND c_idx >= ? AND c_idx < ? AND c_eidx >= ?`, "c"); err != nil {
+		return nil, err
+	}
+	if err := q(`SELECT id, t_idx, t_s, t_eidx, t_e, c_book, c_idx, c_s, c_eidx, c_e, x_eidx, x_e, kind, src, conf FROM gloss
+		WHERE t_book = ? AND t_idx >= ? AND t_idx < ? AND t_eidx >= ?`, "t"); err != nil {
+		return nil, err
+	}
+	for i := range out {
+		k := [2]int{out[i].Book, out[i].To}
+		key, ok := keys[k]
+		if !ok {
+			if t, err := e.NodeAt(ctx, k[0], k[1]); err == nil {
+				key = t.Key
+			}
+			keys[k] = key
+		}
+		out[i].Key = key
 	}
 	return out, nil
 }

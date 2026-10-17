@@ -37,11 +37,20 @@ watch(() => ui.linkTarget, async lt => {
   loading.value = true
   try {
     const links = await api.links(lt.key, lt.para, lt.para + 1)
+    // one passage per linked book: its linked paragraphs from the first one on (the paragraphs of an explanation are
+    // all linked), or the first paragraph and the unnumbered ones after it (paragraph number links)
+    const byBook = new Map<number, typeof links>()
+    for (const l of links) byBook.set(l.b, [...(byBook.get(l.b) ?? []), l])
     const out: typeof items.value = []
-    for (const l of links.slice(0, 6)) {
-      const [info, chunk] = await Promise.all([api.node(l.k), api.text(l.k, l.t, 3)])
-      // the linked paragraph and the following ones of the same number block
-      out.push({ key: l.k, title: info.title, coll: info.coll, para: l.t, paras: chunk.paras.filter((p, i) => i === 0 || !p.n) })
+    for (const ls of [...byBook.values()].slice(0, 4)) {
+      const ts = [...new Set(ls.map(l => l.t))].sort((a, b) => a - b)
+      let n = 1
+      while (n < ts.length && n < 6 && ts[n] - ts[n - 1] <= 2) n++
+      const first = ls.find(l => l.t === ts[0])!
+      const count = Math.max(ts[n - 1] - ts[0] + 1, 3)
+      const [info, chunk] = await Promise.all([api.node(first.k), api.text(first.k, ts[0], count)])
+      const paras = n > 1 ? chunk.paras : chunk.paras.filter((p, i) => i === 0 || !p.n)
+      out.push({ key: first.k, title: info.title, coll: info.coll, para: ts[0], paras })
     }
     items.value = out
   } finally { loading.value = false }

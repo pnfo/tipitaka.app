@@ -21,6 +21,9 @@
 @font-face { font-family: 'pali-knda'; src: url('../assets/fonts/NotoSerifKannada-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 87.9%; }
 @font-face { font-family: 'pali-mlym'; src: url('../assets/fonts/NotoSerifMalayalam-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 106.2%; }
 @font-face { font-family: 'pali-mlym'; src: url('../assets/fonts/NotoSerifMalayalam-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 106.2%; }
+/* Noto Serif Tamil (variable, Tamil subset of Google Fonts): the superscripts ²³⁴ of Pāḷi in Tamil come from the next font */
+@font-face { font-family: 'pali-taml'; src: url('../assets/fonts/NotoSerifTamil.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 106.5%; }
+@font-face { font-family: 'pali-taml'; src: url('../assets/fonts/NotoSerifTamil.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 106.5%; }
 @font-face { font-family: 'pali-khmr'; src: url('../assets/fonts/NotoSerifKhmer-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 96.2%; }
 @font-face { font-family: 'pali-khmr'; src: url('../assets/fonts/NotoSerifKhmer-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 96.2%; }
 @font-face { font-family: 'pali-thai'; src: url('../assets/fonts/THSarabunNew.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 153.3%; }
@@ -40,7 +43,8 @@
 [data-script='gujr'] { --font-text: 'pali-gujr', 'Noto Serif Gujarati', serif; }
 [data-script='telu'] { --font-text: 'pali-telu', 'Noto Serif Telugu', serif; }
 [data-script='knda'] { --font-text: 'pali-knda', 'Noto Serif Kannada', serif; }
-[data-script='mlym'], [data-script='taml'] { --font-text: 'pali-mlym', 'Noto Serif Malayalam', serif; }
+[data-script='mlym'] { --font-text: 'pali-mlym', 'Noto Serif Malayalam', serif; }
+[data-script='taml'] { --font-text: 'pali-taml', 'Noto Serif Tamil', 'pali-latn', serif; }
 [data-script='khmr'] { --font-text: 'pali-khmr', 'Noto Serif Khmer', serif; }
 [data-script='thai'] { --font-text: 'pali-thai', 'Noto Serif Thai', serif; }
 [data-script='mymr'] { --font-text: 'pali-mymr', 'Noto Serif Myanmar', serif; }

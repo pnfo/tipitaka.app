@@ -13,8 +13,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { Corpus, TNode } from './tree'
 
-export type LinkKind = 'mula-atta' | 'atta-tika'
-export interface ParaLink { fromBook: number; fromIdx: number; toBook: number; toIdx: number; kind: LinkKind; source: 'paranum' | 'manual' | 'ai'; conf: number }
+export type LinkKind = 'mula-atta' | 'atta-tika' | 'mula-tika'
+export interface ParaLink { fromBook: number; fromIdx: number; toBook: number; toIdx: number; kind: LinkKind; source: 'paranum' | 'gloss' | 'manual' | 'ai'; conf: number }
 
 const PREFIX_TARGET: [string, string, LinkKind][] = [['atta-', '', 'mula-atta'], ['tika2-', 'atta-', 'atta-tika'], ['tika-', 'atta-', 'atta-tika']]
 

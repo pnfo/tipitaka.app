@@ -8,7 +8,7 @@
  */
 
 export type Seg =
-  | { t: 'text'; s: string }
+  | { t: 'text'; s: string; o?: number } // o: offset of the text in the markup
   | { t: 'bold'; c: Seg[] }
   | { t: 'note'; c: Seg[] }
   | { t: 'pb'; ed: string; n: string }
@@ -20,9 +20,10 @@ export function parseMarkup(text: string): Seg[] {
   const root: Seg[] = []
   const stack: { kind: 'bold' | 'note' | 'root'; c: Seg[] }[] = [{ kind: 'root', c: root }]
   let buf = ''
+  let bufStart = 0
   const top = () => stack[stack.length - 1]
   const flush = () => {
-    if (buf) top().c.push({ t: 'text', s: buf })
+    if (buf) top().c.push({ t: 'text', s: buf, o: bufStart })
     buf = ''
   }
   for (let i = 0; i < text.length; i++) {
@@ -51,8 +52,8 @@ export function parseMarkup(text: string): Seg[] {
         flush()
         top().c.push({ t: 'pb', ed: m[1], n: m[2] })
         i += m[0].length - 1
-      } else buf += ch
-    } else buf += ch
+      } else { if (!buf) bufStart = i; buf += ch }
+    } else { if (!buf) bufStart = i; buf += ch }
   }
   flush()
   return root
@@ -82,6 +83,29 @@ export interface RenderOptions {
   notes?: 'inline' | 'pointer' | 'hidden'
   /** which page refs to show, e.g. 'MVPT' or '' for none */
   pageRefs?: string
+  /** ranges of the markup (offsets into it) wrapped in <span class="gl …" data-g="…"> (commentary alignment) */
+  spans?: Span[]
+}
+
+export interface Span { s: number; e: number; id: string; cls: string }
+
+/** a text run cut at the span boundaries, each piece wrapped in the spans covering it */
+function wrapSpans(s: string, o: number, spans: Span[], render: (s: string) => string): string {
+  const inside = spans.filter(x => x.s < o + s.length && x.e > o)
+  if (!inside.length) return render(s)
+  const cuts = new Set([0, s.length])
+  for (const x of inside) { cuts.add(Math.max(0, x.s - o)); cuts.add(Math.min(s.length, x.e - o)) }
+  const pts = [...cuts].sort((a, b) => a - b)
+  let out = ''
+  for (let k = 0; k + 1 < pts.length; k++) {
+    const a = pts[k], b = pts[k + 1]
+    const piece = render(s.slice(a, b))
+    const cover = inside.filter(x => x.s - o <= a && x.e - o >= b)
+    if (!cover.length || !s.slice(a, b).trim()) { out += piece; continue }
+    const cls = [...new Set(cover.flatMap(x => x.cls.split(' ')))].join(' ')
+    out += `<span class="gl ${escapeHtml(cls)}" data-g="${escapeHtml(cover.map(x => x.id).join(' '))}">${piece}</span>`
+  }
+  return out
 }
 
 /** markup -> html. Server side SSR uses the same structure (server/engine/markup.go). */
@@ -93,7 +117,8 @@ export function markupToHtml(text: string, opt: RenderOptions = {}): string {
   const walk = (segs: Seg[], inNote: boolean): string =>
     segs.map(s => {
       switch (s.t) {
-        case 'text': return escapeHtml(convert(s.s))
+        case 'text': return opt.spans?.length && !inNote && s.o !== undefined
+          ? wrapSpans(s.s, s.o, opt.spans, x => escapeHtml(convert(x))) : escapeHtml(convert(s.s))
         case 'bold': return `<b>${walk(s.c, inNote)}</b>`
         case 'pb': return refs.includes(s.ed) ? `<span class="pb" data-ed="${s.ed}" data-n="${s.n}">${s.ed}${s.n}</span>` : ''
         case 'note': {

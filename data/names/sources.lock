@@ -1,0 +1,56 @@
+{
+  "sc-map": {
+    "repo": "suttacentral/sc-data",
+    "commit": "d4082f073688f258749f0676ab922366f145b1d7",
+    "path": "additional-info/map_data.json",
+    "desc": "SuttaCentral map: places, mahājanapadas, journeys (CC0)",
+    "sha256": "3b466847a5efab278c1cc62da3fba8c5c168ffcccb74626e3ec7d5fd5f63f666"
+  },
+  "sc-dppn": {
+    "repo": "suttacentral/sc-data",
+    "commit": "d4082f073688f258749f0676ab922366f145b1d7",
+    "path": "dictionaries/complex/en/pli2en_dppn.json",
+    "desc": "SuttaCentral DPPN: place coordinates (location / precision tags)",
+    "sha256": "bb4dcf37627a43775dbce4657970873dd5700e52b139d42769eb9f4e765e258a"
+  },
+  "ne-coastline": {
+    "repo": "nvkelso/natural-earth-vector",
+    "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+    "path": "geojson/ne_10m_coastline.geojson",
+    "desc": "Natural Earth 10m coastline (public domain)",
+    "sha256": "6f75ae0e0de157b14946e2255eb1f5486d9a13819032e26d4610852d296788f6"
+  },
+  "ne-rivers": {
+    "repo": "nvkelso/natural-earth-vector",
+    "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+    "path": "geojson/ne_10m_rivers_lake_centerlines.geojson",
+    "desc": "Natural Earth 10m rivers (public domain)",
+    "sha256": "bb854a900ecbd3b408df46d5e16e3e0f974ba55993f9d8b5c26e855273c0905a"
+  },
+  "ne-regions": {
+    "repo": "nvkelso/natural-earth-vector",
+    "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+    "path": "geojson/ne_10m_geography_regions_polys.geojson",
+    "desc": "Natural Earth 10m physical regions: mountain ranges (public domain)",
+    "sha256": "b7b26e50ea917d3696aec87f932def2bf5f890f5770e441d59c162c6f4c92a77"
+  },
+  "ne-borders": {
+    "repo": "nvkelso/natural-earth-vector",
+    "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+    "path": "geojson/ne_10m_admin_0_boundary_lines_land.geojson",
+    "desc": "Natural Earth 10m country borders (public domain)",
+    "sha256": "74d9c16229c095fde65943a9919e337682f044bcebccb120764f38edf3b70f4a"
+  },
+  "ne-land": {
+    "repo": "nvkelso/natural-earth-vector",
+    "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+    "path": "geojson/ne_50m_land.geojson",
+    "desc": "Natural Earth 50m land (public domain)",
+    "sha256": "e874b27a51d146452be360cafb3cc50c86001074a67d534113e6534682f9826b"
+  },
+  "ne-relief": {
+    "url": "https://naciscdn.org/naturalearth/50m/raster/SR_50M.zip",
+    "desc": "Natural Earth 1:50m shaded relief (public domain)",
+    "sha256": "ff810f5f2747463fd8ffa612b23e5f5e5d593a345218976872b6749610976ab7"
+  }
+}

@@ -48,9 +48,21 @@
       </div>
     </section>
 
+    <!-- (not inside the apps themselves) -->
+    <section v-if="!inApp" class="mb-10" data-testid="home-apps">
+      <h2 class="section-title">{{ t('Apps') }}</h2>
+      <p class="mb-3 text-sm text-muted">{{ t('The same app works offline on Android and on Windows, macOS and Linux.') }}</p>
+      <div class="flex flex-wrap gap-2">
+        <a class="btn" href="https://play.google.com/store/apps/details?id=app.tipitaka.main">Android</a>
+        <a class="btn" href="https://github.com/pnfo/tipitaka.app/releases">Windows · macOS · Linux</a>
+      </div>
+    </section>
+
     <footer class="border-t border-line pt-6 text-center text-xs text-muted">
       <RouterLink :to="{ name: 'about', params: { script } }" class="underline">{{ t('About') }}</RouterLink> ·
       <RouterLink :to="{ name: 'convert', params: { script } }" class="underline">{{ t('Pali Script Converter') }}</RouterLink> ·
+      <RouterLink :to="{ name: 'names', params: { script } }" class="underline">{{ t('Places and people') }}</RouterLink> ·
+      <RouterLink :to="{ name: 'map', params: { script } }" class="underline">{{ t('Map') }}</RouterLink> ·
       {{ t('Text: Vipassana Research Institute (CST)') }} · {{ t('Dictionary: DPD and others') }}
     </footer>
   </div>
@@ -59,7 +71,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from 'vue'
 import { useHead } from '@unhead/vue'
-import { useApi } from '@/data/api'
+import { isNativeApp, useApi } from '@/data/api'
 import type { TNode, Coll } from '@/data/types'
 import { useScript } from '@/composables/script'
 import { useLibrary } from '@/stores/library'
@@ -71,7 +83,9 @@ const library = useLibrary(), tree = useTree()
 const { script, conv } = useScript()
 useHead({ title: '' })
 
-const DESC: Record<Coll, string> = { mula: 'Root texts', atta: 'Commentaries', tika: 'Sub-commentaries', anya: 'Other texts: Visuddhimagga, grammar, chronicles…' }
+const DESC = computed<Record<Coll, string>>(() => ({ mula: t('Root texts'), atta: t('Commentaries'), tika: t('Sub-commentaries'),
+  anya: t('Other texts: Visuddhimagga, grammar, chronicles…') }))
+const inApp = isNativeApp()
 const starters = ['dn-1-1', 'dn-2-9', 'mn-1-1-1', 'mn-1-1-10', 'sn-5-12-1-1', 'kn-dhp-1', 'kn-snp-1-8', 'kn-khp-5', 'anya-vism-1']
 const titles = reactive<Record<string, string>>({})
 

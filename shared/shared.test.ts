@@ -8,10 +8,17 @@ describe('markup', () => {
   it('parses and serializes losslessly', () => {
     expect(serialize(parseMarkup(t))).toBe(t)
     expect(parseMarkup('a **b {c **d** e} f** g')).toEqual([
-      { t: 'text', s: 'a ' },
-      { t: 'bold', c: [{ t: 'text', s: 'b ' }, { t: 'note', c: [{ t: 'text', s: 'c ' }, { t: 'bold', c: [{ t: 'text', s: 'd' }] }, { t: 'text', s: ' e' }] }, { t: 'text', s: ' f' }] },
-      { t: 'text', s: ' g' },
+      { t: 'text', s: 'a ', o: 0 },
+      { t: 'bold', c: [{ t: 'text', s: 'b ', o: 4 }, { t: 'note', c: [{ t: 'text', s: 'c ', o: 7 }, { t: 'bold', c: [{ t: 'text', s: 'd', o: 11 }] }, { t: 'text', s: ' e', o: 14 }] }, { t: 'text', s: ' f', o: 17 }] },
+      { t: 'text', s: ' g', o: 21 },
     ])
+  })
+  it('wraps spans of the markup (commentary alignment), cut at bold and note boundaries', () => {
+    const t = 'Evaṃ me **sutaṃ** ekaṃ {x} samayaṃ'
+    const html = markupToHtml(t, { notes: 'hidden', spans: [{ s: 5, e: 34, id: '7', cls: 'gl-atta' }, { s: 5, e: 7, id: '8', cls: 'gl-tika' }] })
+    // spaces inside a range are underlined too (a quoted phrase is one line), whitespace-only pieces are not wrapped
+    expect(html).toBe('Evaṃ <span class="gl gl-atta gl-tika" data-g="7 8">me</span> <b><span class="gl gl-atta" data-g="7">sutaṃ</span></b>'
+      + '<span class="gl gl-atta" data-g="7"> ekaṃ </span><span class="gl gl-atta" data-g="7"> samayaṃ</span>')
   })
   it('tolerates unbalanced markers', () => {
     expect(serialize(parseMarkup('a **b'))).toBe('a **b**')

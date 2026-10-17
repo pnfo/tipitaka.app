@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { submodules: true }
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
       - run: npm ci
       - uses: actions/cache@v4
-        with: { path: .cache, key: "src-${{ hashFiles('data/upstream.lock', 'data/dpd.lock') }}" }
-      - run: npm run upstream -- --dpd
+        with: { path: .cache, key: "src-${{ hashFiles('data/upstream.lock', 'data/dpd.lock', 'data/dicts.lock') }}" }
+      - run: npm run upstream -- --dpd --dicts
       - run: npm run build:data && npm run build:dict && npm run build:web && npm run build:web:app
       - run: |
           mkdir -p out

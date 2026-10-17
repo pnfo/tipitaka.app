@@ -5,9 +5,10 @@ VipassanaTech/tipitaka-xml romn/*.xml  (pinned: data/upstream.lock)      DPD dpd
         │ npm run upstream → .cache/                                          │ + server-data/dicts/*.db, breakups.db
         │ npm run build:data (build/, Node + better-sqlite3)                  │ npm run build:dict
         ▼                                                                     ▼
-db/text.db  book, node (tree), para (Roman markup), para_link, token/posting (fts), legacy      db/dict.db
+db/text.db  book, node (tree), para (Roman markup), para_link, token/posting (fts), legacy,      db/dict.db
+            entity/setting (places and people, dev-docs/names.md)
         │
-server/engine (Go)  tree · text · links · titles · fts · dict/DPD lookup · legacy   — JSON in, JSON out (Call / QueryJSON)
+server/engine (Go)  tree · text · links · titles · fts · dict/DPD lookup · legacy · names   — JSON in, JSON out (Call / QueryJSON)
   ├── server/       website + desktop app: GET /api/<op>, SSR, sitemaps, robots, v2 link redirects, static web/dist
   └── server/mobile gomobile bind → Android AAR / iOS xcframework (the apps run the same engine next to the dbs)
 web/  Vue 3 + TypeScript + Pinia + vue-router + Tailwind 3.4 (+ @pnfo/pali-converter, DOMPurify, unhead)

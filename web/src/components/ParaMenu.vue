@@ -11,6 +11,7 @@
         </button>
       </template>
       <button v-if="hasLinks" class="menu-item" data-testid="menu-commentary" @click="showLinks"><IconPanel class="h-4 w-4" />{{ t('Show the commentary here') }}</button>
+      <button class="menu-item" data-testid="menu-setting" @click="showSetting"><IconMapPin class="h-4 w-4" />{{ t('Where was this taught?') }}</button>
       <button class="menu-item" data-testid="menu-bookmark" @click="toggleBookmark">
         <IconStar class="h-4 w-4" :class="{ 'fill-current text-primary': bookmarked }" />{{ bookmarked ? t('Remove the bookmark') : t('Add a bookmark') }}
       </button>
@@ -25,6 +26,7 @@ import IconCopy from '~icons/lucide/copy'
 import IconColumns from '~icons/lucide/columns-2'
 import IconPanel from '~icons/lucide/panel-bottom-open'
 import IconStar from '~icons/lucide/star'
+import IconMapPin from '~icons/lucide/map-pin'
 import Floating from './Floating.vue'
 import { plainText } from '@shared/markup'
 import { useApi } from '@/data/api'
@@ -49,10 +51,17 @@ watch(() => props.para, async p => {
   others.value = []
   if (!p) return
   const byColl = new Map<Coll, { key: string; para?: number; coll: Coll }>()
+  // per node of the other side: its first linked paragraph and how many paragraphs link (the whole explanation of
+  // the paragraph is linked, a stray paragraph number only once): the best supported node of each collection wins
+  const nodes = new Map<string, { para: number; n: number }>()
   for (const l of props.links.filter(l => l.i === p.i)) {
+    const o = nodes.get(l.k)
+    nodes.set(l.k, { para: Math.min(o?.para ?? l.t, l.t), n: (o?.n ?? 0) + 1 })
+  }
+  for (const [key, o] of [...nodes].sort((a, b) => b[1].n - a[1].n)) {
     try {
-      const n = await api.node(l.k)
-      if (!byColl.has(n.coll)) byColl.set(n.coll, { key: l.k, para: l.t, coll: n.coll })
+      const n = await api.node(key)
+      if (!byColl.has(n.coll)) byColl.set(n.coll, { key, para: o.para, coll: n.coll })
     } catch { /* ignore */ }
   }
   // the commentary / mūla of the paragraph's node, or of the nearest ancestor that has one (sections often do not)
@@ -88,9 +97,11 @@ function copyText() {
 }
 function showLinks() {
   const p = props.para!
-  ui.linkTarget = { key: p.k, para: p.i }
-  ui.panelTab = 'links'
-  ui.panelOpen = true
+  ui.openParaCommentary({ key: p.k, para: p.i })
+}
+function showSetting() {
+  const p = props.para!
+  ui.openSetting({ key: p.k, para: p.i })
 }
 async function toggleBookmark() {
   const p = props.para!

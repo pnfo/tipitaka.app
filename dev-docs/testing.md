@@ -15,3 +15,25 @@ The fixture dict.db contains only the fixture text's words (needs `.cache/dpd`: 
 
 On macOS with a newer SDK than the Command Line Tools, `source scripts/go-env.sh` before cgo builds.
 Firefox may not start in sandboxed environments; CI runs it.
+
+## Script converter against native texts
+The gold standard is Pāḷi typed by native users, not VRI's script editions, which are machine transliterations.
+
+`npx tsx scripts/converter-native.ts <script> <native text files…>` converts every native word back to Roman. When that
+Roman word is a CST word but the converter spells it differently, it counts the difference, by the part that differs.
+
+Sources used on 2026-10-17:
+* **Thai:** the Siam Rath edition of the E-Tipitaka app (`download.watnapahpong.org/data/etipitaka/android/pali.zip`,
+  `palinew.zip`).
+* **Myanmar:** the Burmese nissaya of IAPT (`github.com/iapt-platform/digital-nissaya`, `NsyUni/028.txt`), the
+  Tipiṭaka Pāḷi-Myanmar Dictionary (my-23-vol) and its headword list (pndaza, `tipitaka_abidan.db`).
+
+With pali-converter PR #1, the differences from native text are 0.01% of tokens for Thai, 0.01% for the Myanmar
+nissaya, and 0.24% for the headword list (mixed typing there).
+
+Native counts, not VRI, decided:
+* **Thai:** iṃ as ึ; e/o before ห ว ร ย น ล ม clusters (เทฺว).
+* **Myanmar:** tall aa after ပ္ပ ပ္ဖ ဂ္ဃ ဝှ; ဒါ; the Sangha as သံဃ.
+
+`scripts/converter-check.ts <dir> <files…>` compares with VRI's editions. That is only useful to find candidates (it
+found the Tibetan tsheg and the broken reverse conversions).

@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"unicode/utf16"
 )
 
 // tests run on the fixture dbs: npm run build:fixture && npm run build:dict:fixture
@@ -82,6 +83,36 @@ func TestLinks(t *testing.T) {
 	}
 	if back == 0 {
 		t.Fatalf("no commentary links into dn-1-1: %v", links)
+	}
+}
+
+func TestGlosses(t *testing.T) {
+	e := fixture(t)
+	gs, err := e.Glosses(ctx, "dn-1-1", -1, -1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text, _ := e.Text(ctx, "dn-1-1", -1, 0)
+	paras := map[int]string{}
+	for _, p := range text.Paras {
+		paras[p.Idx] = p.Text
+	}
+	quoted := 0
+	for _, g := range gs {
+		if g.Side != "t" || !strings.HasPrefix(g.Key, "atta-dn-1-1") {
+			continue
+		}
+		quoted++
+		if p, ok := paras[g.Idx]; ok && g.Idx == g.EIdx && (g.S >= g.E || g.E > len(utf16.Encode([]rune(p)))) {
+			t.Fatalf("bad span %+v in %q", g, p)
+		}
+	}
+	if quoted < 20 {
+		t.Fatalf("too few aṭṭhakathā glosses on dn-1-1: %d of %d", quoted, len(gs))
+	}
+	cs, _ := e.Glosses(ctx, "atta-dn-1-1", -1, -1)
+	if len(cs) == 0 || cs[0].Side != "c" {
+		t.Fatalf("no lemmas in atta-dn-1-1: %v", cs)
 	}
 }
 
@@ -247,6 +278,22 @@ func TestDict(t *testing.T) {
 	if l.Dpd[0].Root == nil {
 		t.Fatal("root info")
 	}
+	// DPD not chosen: no DPD headwords or analysis, the other dictionaries still found through its lemmas
+	nd, err := e.Lookup(ctx, "dhammassa", []string{"en-pts", "en-ncped"}, 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(nd.Dpd) != 0 || len(nd.Grammar) != 0 || len(nd.Deconstructor) != 0 {
+		t.Fatalf("dpd shown without dpd: %+v", nd)
+	}
+	if len(nd.Entries) == 0 {
+		t.Fatal("no dictionary entries through the dpd lemmas")
+	}
+	for _, x := range nd.Entries {
+		if x.Dict != "en-pts" && x.Dict != "en-ncped" {
+			t.Fatalf("dict filter %v", x.Dict)
+		}
+	}
 }
 
 func TestQueryJSON(t *testing.T) {
@@ -330,5 +377,107 @@ func TestFtsNoHits(t *testing.T) {
 	res := r.(*FtsResult)
 	if len(res.Hits) != 0 || len(res.Groups) == 0 || res.Total == 0 {
 		t.Fatalf("pageSize=0: hits %d groups %d", len(res.Hits), len(res.Groups))
+	}
+}
+
+func TestNames(t *testing.T) {
+	e := fixture(t)
+	// a sutta's nidāna: "ekaṃ samayaṃ bhagavā antarā ca rājagahaṃ antarā ca nāḷandaṃ …"
+	u, err := e.Settings(ctx, "dn-1-1", -1)
+	if err != nil || u == nil || u.Key != "dn-1-1" || len(u.Rows) != 2 || u.Rows[0].Slug != "rajagaha" || u.Rows[0].Role != "place" || u.Rows[1].Slug != "nalanda-2" {
+		t.Fatalf("dn-1-1 setting %+v %v", u, err)
+	}
+	// a Dhammapada verse has the setting of its story (Dhp-a: "kattha bhāsitāti? Sāvatthiyaṃ. Kaṃ ārabbhāti? Cakkhupālattheraṃ.")
+	u, err = e.Settings(ctx, "kn-dhp-1", 4)
+	if err != nil || u == nil || u.Title != "1. Cakkhupālattheravatthu" || u.Para != 4 {
+		t.Fatalf("dhp 1 setting %+v %v", u, err)
+	}
+	roles := map[string]string{}
+	for _, r := range u.Rows {
+		roles[r.Role] = r.Slug
+		if r.Source != "atta" || !strings.HasPrefix(r.EvKey, "atta-kn-dhp") {
+			t.Fatalf("dhp row %+v", r)
+		}
+	}
+	if roles["place"] != "savatthi" || roles["about"] != "cakkhupala" {
+		t.Fatalf("dhp roles %v", roles)
+	}
+	if u, err := e.Settings(ctx, "kn-dhp-1", 3); err != nil || u != nil {
+		t.Fatalf("vagga title has no setting: %+v %v", u, err)
+	}
+
+	page, err := e.EntityPage(ctx, "savatthi")
+	if err != nil || page.Type != "place" || page.Name != "Sāvatthī" || page.Units < 9 {
+		t.Fatalf("savatthi %+v %v", page, err)
+	}
+	if page.Lat == nil || page.Lon == nil || *page.Lat < 27 || *page.Lat > 28 || page.Prec != 1 {
+		t.Fatalf("savatthi coordinates %v %v %d", page.Lat, page.Lon, page.Prec)
+	}
+	if page.Settings[0].Key == "" || page.Settings[0].Coll == "" || page.Settings[0].Book == "" {
+		t.Fatalf("setting ref %+v", page.Settings[0])
+	}
+	if len(page.Related) == 0 || page.Related[0].Slug != "jetavana" || page.Related[0].Role != "place" {
+		t.Fatalf("related %+v", page.Related)
+	}
+	if _, err := e.EntityPage(ctx, "nope"); err != ErrNotFound {
+		t.Fatalf("want not found, got %v", err)
+	}
+
+	list, err := e.Names(ctx, "sav", nil, 0)
+	if err != nil || len(list) != 1 || list[0].Slug != "savatthi" {
+		t.Fatalf("names sav %+v %v", list, err)
+	}
+	list, err = e.Names(ctx, "", []string{"person"}, 0)
+	if err != nil || len(list) == 0 {
+		t.Fatalf("persons %+v %v", list, err)
+	}
+	for _, x := range list {
+		if x.Type != "person" || (x.Units == 0 && x.Mentions == 0) {
+			t.Fatalf("person filter %+v", x)
+		}
+	}
+}
+
+func TestMentions(t *testing.T) {
+	e := fixture(t)
+	// DN 1: "… Suppiyopi kho paribbājako … saddhiṃ antevāsinā brahmadattena māṇavena"
+	ns, err := e.ParaNames(ctx, "dn-1-1-1", 5, 6)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c, _ := e.Text(ctx, "dn-1-1-1", 5, 1)
+	text := utf16.Encode([]rune(c.Paras[0].Text))
+	found := map[string]bool{}
+	for _, n := range ns {
+		w := string(utf16.Decode(text[n.S:n.E]))
+		if n.Idx != 5 || !strings.Contains(strings.ToLower(w), strings.ToLower(n.Name[:3])) {
+			t.Fatalf("mention %s at %d:%d is %q", n.Slug, n.S, n.E, w)
+		}
+		found[n.Slug] = true
+	}
+	for _, s := range []string{"rajagaha", "nalanda-2", "suppiya-1", "brahmadatta-5"} {
+		if !found[s] {
+			t.Fatalf("no mention of %s in %v", s, found)
+		}
+	}
+
+	page, err := e.EntityPage(ctx, "suppiya-1")
+	if err != nil || page.Mentions == 0 || len(page.Books) == 0 || page.Books[0].Sure == 0 {
+		t.Fatalf("suppiya page %+v %v", page, err)
+	}
+	co := false
+	for _, r := range page.Comentions {
+		co = co || r.Slug == "brahmadatta-5"
+	}
+	if !co {
+		t.Fatalf("comentions %+v", page.Comentions)
+	}
+	ms, err := e.Mentions(ctx, "suppiya-1", page.Books[0].Book, false, 0)
+	if err != nil || len(ms) == 0 || !strings.Contains(strings.ToLower(ms[0].Word), "suppiy") || ms[0].Key == "" {
+		t.Fatalf("mentions %+v %v", ms, err)
+	}
+	list, err := e.Names(ctx, "", []string{"person"}, 0)
+	if err != nil || len(list) == 0 || list[0].Mentions == 0 {
+		t.Fatalf("names %+v %v", list, err)
 	}
 }

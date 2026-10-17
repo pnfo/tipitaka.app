@@ -53,14 +53,34 @@ func (a *App) handleSitemapIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 	for _, s := range convert.Scripts {
 		fmt.Fprintf(w, "<sitemap><loc>%s/sitemaps/%s.xml</loc></sitemap>", a.cfg.Site, s)
+		fmt.Fprintf(w, "<sitemap><loc>%s/sitemaps/names-%s.xml</loc></sitemap>", a.cfg.Site, s)
 	}
 	fmt.Fprint(w, `</sitemapindex>`)
 }
 
 func (a *App) handleSitemap(w http.ResponseWriter, r *http.Request) {
 	script, ok := strings.CutSuffix(r.PathValue("file"), ".xml")
+	// names-<script>.xml: the names index, the map and every name page (apart: a sitemap holds 50000 urls at most)
+	names := strings.HasPrefix(script, "names-")
+	script = strings.TrimPrefix(script, "names-")
 	if !ok || !convert.IsScript(script) {
 		http.NotFound(w, r)
+		return
+	}
+	if names {
+		slugs, err := a.eng.NameSlugs(r.Context())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		fmt.Fprint(w, `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
+		fmt.Fprintf(w, "<url><loc>%s/%s/names</loc></url><url><loc>%s/%s/map</loc></url>", a.cfg.Site, script, a.cfg.Site, script)
+		for _, s := range slugs {
+			fmt.Fprintf(w, "<url><loc>%s/%s/names/%s</loc></url>", a.cfg.Site, script, s)
+		}
+		fmt.Fprint(w, `</urlset>`)
 		return
 	}
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")

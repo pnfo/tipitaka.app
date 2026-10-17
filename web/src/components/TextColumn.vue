@@ -4,14 +4,14 @@
   Emits the paragraph at the top of the view (url / breadcrumb sync, parallel sync).
 -->
 <template>
-  <div ref="root" :class="contained ? 'h-full overflow-y-auto overscroll-contain' : ''" @scroll.passive="onScroll">
-    <div class="reading relative mx-auto max-w-reading pl-6 pr-4 sm:px-6" :class="`coll-${coll}`" @click="onClick">
+  <div ref="root" :class="contained ? 'h-full overflow-y-auto overscroll-contain' : ''" @scroll.passive="onScroll(); $emit('scrolled')">
+    <div class="reading relative mx-auto max-w-reading px-5 sm:px-6" :class="`coll-${coll}`" @click="onClick">
       <div v-if="from > 0" class="flex justify-center py-3 font-ui">
         <button class="btn text-muted" :disabled="loadingPrev" data-testid="load-prev" @click="loadPrev"><IconUp class="h-4 w-4" />{{ t('Show previous text') }}</button>
       </div>
       <!-- every paragraph / verse / heading has an options button (tipitaka.lk): shown on hover, on touch screens after a tap -->
       <div v-for="p in paras" :key="p.i" class="para-wrap" :class="{ 'menu-open': menuFor === p.i, tapped: tapped === p.i }">
-        <div :id="`${idPrefix}p${p.i}`" :data-i="p.i" :data-k="p.k" :class="[paraClass(p), { target: p.i === target, linked: linked?.has(p.i) }]" v-html="render(p)" />
+        <div :id="`${idPrefix}p${p.i}`" :data-i="p.i" :data-k="p.k" :class="[paraClass(p), { target: p.i === target }]" v-html="render(p)" />
         <button class="para-dots" :aria-label="t('Options')" data-testid="para-options" @click.stop="openMenu(p.i, $event.currentTarget as HTMLElement)">
           <IconDots class="h-3.5 w-3.5" />
         </button>
@@ -34,8 +34,10 @@ import IconDots from '~icons/lucide/ellipsis'
 import Floating from './Floating.vue'
 import { useApi } from '@/data/api'
 import type { Book, Para } from '@/data/types'
+import type { Span } from '@shared/markup'
 import { useSettings } from '@/stores/settings'
 import { paraClass, paraHtml, wordAtPoint, wordsRegex } from '@/composables/text'
+import { glossIdsAt } from '@/composables/glosses'
 import { t } from '@/i18n'
 
 const props = withDefaults(defineProps<{
@@ -48,13 +50,16 @@ const props = withDefaults(defineProps<{
   /** paragraph index to show first without marking it (restored reading position) */
   start?: number
   highlight?: string[]
-  linked?: Set<number>
+  /** commentary alignment underlines per paragraph */
+  glosses?: Map<number, Span[]>
   contained?: boolean
   idPrefix?: string
-}>(), { coll: 'mula', idPrefix: '', target: undefined, start: undefined, highlight: () => [], linked: undefined })
+}>(), { coll: 'mula', idPrefix: '', target: undefined, start: undefined, highlight: () => [], glosses: undefined })
 const emit = defineEmits<{
   visible: [para: number, key: string]
-  word: [roman: string, shown: string]
+  /** a tapped word, with the glosses (ids) of the underline it is in and its paragraph */
+  word: [roman: string, shown: string, glosses: number[], para: { key: string; para: number }]
+  scrolled: []
   /** the options menu of a paragraph (anchor: the element to show it next to) */
   menu: [para: Para, anchor: HTMLElement]
   loaded: [from: number, to: number, book: Book]
@@ -73,19 +78,20 @@ const CHUNK = 150
 
 const hl = computed(() => wordsRegex(props.highlight ?? []))
 const opts = computed(() => ({ notes: settings.notes, pageRefs: settings.pageRefs, paraNums: settings.paraNums, highlight: hl.value }))
-// rendered html cache: re-rendered when the script or options change
-let htmlCache = new Map<number, string>()
+// rendered html cache: re-rendered when the script or options change, or the paragraph's underlines arrive
+let htmlCache = new Map<number, { h: string; sp?: Span[] }>()
 watch([() => props.script, opts], () => { htmlCache = new Map() })
 function render(p: Para) {
   // read the reactive inputs on every call so cache hits still re-render on script/option changes
   const o = opts.value
   void props.script
-  let h = htmlCache.get(p.i)
-  if (h === undefined) {
-    h = paraHtml(p, props.conv, o)
-    htmlCache.set(p.i, h)
+  const sp = settings.glosses ? props.glosses?.get(p.i) : undefined
+  let c = htmlCache.get(p.i)
+  if (c === undefined || c.sp !== sp) {
+    c = { h: paraHtml(p, props.conv, o, sp), sp }
+    htmlCache.set(p.i, c)
   }
-  return h
+  return c.h
 }
 
 let gen = 0 // ignore responses of an older load
@@ -105,7 +111,16 @@ async function init() {
   paras.value = c.paras
   emit('loaded', c.from, c.to, c.book)
   await nextTick()
-  scrollToPara(first ?? c.from, first === undefined)
+  await scrollToPara(first ?? c.from, first === undefined)
+  fillView()
+}
+
+// the observer only reports changes: a first chunk shorter than the view (a small node) keeps the end in view
+function fillView() {
+  const s = bottomSentinel.value
+  if (!s) return
+  const bottom = props.contained && root.value ? root.value.getBoundingClientRect().bottom : window.innerHeight
+  if (s.getBoundingClientRect().top < bottom + 1200) loadNext()
 }
 
 async function loadNext() {
@@ -119,6 +134,8 @@ async function loadNext() {
     to.value = c.to
     emit('loaded', c.from, c.to, c.book)
   } finally { loadingNext.value = false }
+  await nextTick()
+  fillView()
 }
 
 async function loadPrev() {
@@ -157,6 +174,7 @@ async function scrollToPara(i: number, top = false) {
     to.value = c.to
     emit('loaded', c.from, c.to, c.book)
     await nextTick()
+    setTimeout(fillView)
   }
   const el = document.getElementById(`${props.idPrefix}p${i}`)
   if (!el) return
@@ -205,7 +223,7 @@ function openMenu(i: number, anchor: HTMLElement) {
   menuFor.value = i
   emit('menu', p, anchor)
 }
-defineExpose({ scrollToPara, menuClosed: () => { menuFor.value = null } })
+defineExpose({ scrollToPara, menuClosed: () => { menuFor.value = null }, scrollRoot: () => root.value ?? null })
 
 // the last tapped paragraph shows its options button (touch screens have no hover)
 const tapped = ref<number | null>(null)
@@ -223,14 +241,19 @@ function onClick(e: MouseEvent) {
   }
   if (!settings.tapLookup || !paraEl) return
   if (window.getSelection()?.toString()) return // the user is selecting text
+  const glosses = glossIdsAt(target)
   const w = wordAtPoint(e.clientX, e.clientY)
-  if (!w) return
+  if (!w) {
+    // between the words of an underlined phrase: its commentary only
+    if (glosses.length) emit('word', '', '', glosses, { key: paraEl.dataset.k!, para: +paraEl.dataset.i! })
+    return
+  }
   if (selected?.parentNode) selected.replaceWith(...Array.from(selected.childNodes))
   try {
     selected = document.createElement('span')
     selected.className = 'w-sel'
     w.range.surroundContents(selected)
   } catch { selected = null }
-  emit('word', w.word, w.word)
+  emit('word', w.word, w.word, glosses, { key: paraEl.dataset.k!, para: +paraEl.dataset.i! })
 }
 </script>

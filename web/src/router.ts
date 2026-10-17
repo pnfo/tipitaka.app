@@ -20,6 +20,8 @@ export const routes: RouteRecordRaw[] = [
   { path: `/:script${S}/settings`, name: 'settings', component: () => import('./views/Settings.vue') },
   { path: `/:script${S}/about`, name: 'about', component: () => import('./views/About.vue') },
   { path: `/:script${S}/convert`, name: 'convert', component: () => import('./views/Convert.vue') },
+  { path: `/:script${S}/names/:slug(${KEY_RE})?`, name: 'names', component: () => import('./views/Names.vue') },
+  { path: `/:script${S}/map`, name: 'map', component: () => import('./views/MapView.vue') },
   { path: `/:script${S}/:key(${KEY_RE})`, name: 'read', component: Reader },
   { path: `/:key(${KEY_RE})`, name: 'bare', redirect: to => `/${useSettings().script}/${to.params.key}` },
   { path: '/:pathMatch(.*)*', name: 'notfound', component: () => import('./views/NotFound.vue') },

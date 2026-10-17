@@ -1,5 +1,5 @@
 /** helpers for rendering paragraphs: html, search highlights and the word under a click */
-import { escapeHtml, markupToHtml, type RenderOptions } from '@shared/markup'
+import { escapeHtml, markupToHtml, type RenderOptions, type Span } from '@shared/markup'
 import type { Para } from '@/data/types'
 
 export const HEADINGS = new Set(['book', 'chapter', 'title', 'subhead', 'subsubhead'])
@@ -21,9 +21,10 @@ export function wordsRegex(words: string[]): RegExp | null {
 
 export interface ParaRenderOptions extends RenderOptions { paraNums: boolean; highlight: RegExp | null }
 
-export function paraHtml(p: Para, convert: (s: string) => string, o: ParaRenderOptions): string {
+/** spans: commentary alignment underlines (composables/glosses.ts) */
+export function paraHtml(p: Para, convert: (s: string) => string, o: ParaRenderOptions, spans?: Span[]): string {
   const conv = o.highlight ? (s: string) => convert(markWords(s, o.highlight)) : convert
-  let html = markupToHtml(p.t, { ...o, convert: conv })
+  let html = markupToHtml(p.t, { ...o, convert: conv, spans })
   if (o.highlight) html = html.replace(/\u0001/g, '<mark>').replace(/\u0002/g, '</mark>')
   if (o.paraNums && p.n) html = `<span class="num" data-num="${escapeHtml(p.n)}">${escapeHtml(convert(p.n))}</span>${html}`
   return html

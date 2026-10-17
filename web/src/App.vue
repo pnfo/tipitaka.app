@@ -29,19 +29,36 @@ import AppHeader from './components/AppHeader.vue'
 import TreeDrawer from './components/TreeDrawer.vue'
 import StudyPanel from './components/StudyPanel.vue'
 import { useUi } from './stores/ui'
-import { useSettings } from './stores/settings'
+import { useRouter } from 'vue-router'
+import { firstVisit, useSettings } from './stores/settings'
+import { countryDefaults, landingPath } from './composables/country'
+import { changeScript } from './router'
+import { isScriptCode } from '@shared/scripts'
 import { useLibrary } from './stores/library'
 import { useScript } from './composables/script'
 import { setUiLang } from './i18n'
-import { useApi } from './data/api'
+import { isNativeApp, useApi } from './data/api'
 
 const ui = useUi(), settings = useSettings(), library = useLibrary()
+const router = useRouter()
 const { script, info } = useScript()
 const { width } = useWindowSize()
 const wide = computed(() => width.value >= 1200)
 
 useHead({ titleTemplate: t => (t ? `${t} | Tipiṭaka.app` : 'Tipiṭaka.app – Pāḷi Tipiṭaka'), htmlAttrs: { lang: computed(() => info.value.lang) } })
 watch(() => settings.uiLang, l => setUiLang(l), { immediate: true })
+
+// a new visitor: the script and interface language of their country, unless they chose one meanwhile or arrived
+// through a link that names a script (composables/country.ts)
+if (firstVisit && !isNativeApp()) {
+  const start = { script: settings.script, uiLang: settings.uiLang }
+  const linkScript = isScriptCode(landingPath.split('/')[1])
+  countryDefaults().then(d => {
+    if (!d) return
+    if (settings.uiLang === start.uiLang) settings.uiLang = d.uiLang
+    if (!linkScript && settings.script === start.script && d.script !== settings.script) changeScript(router, d.script)
+  })
+}
 
 onMounted(() => {
   document.getElementById('ssr')?.remove() // server rendered text is replaced by the app

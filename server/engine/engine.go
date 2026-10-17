@@ -40,7 +40,9 @@ type Engine struct {
 	paraTok   map[int]*bookParaInfo // book id -> tok offset and node of every paragraph (lazy)
 	groupNode []int                 // node id -> the node its search hits are grouped under (sutta / chapter level)
 
-	ftsCache *lru
+	ftsCache    *lru
+	hasNames    bool // the entity / setting tables exist (dbs built before them have none)
+	hasMentions bool // the mention tables exist
 }
 
 // Node is a tree node (group, book, div or heading).
@@ -240,6 +242,15 @@ func (e *Engine) load(ctx context.Context) error {
 	for _, ids := range e.bookNodes {
 		sort.SliceStable(ids, func(a, b int) bool { return e.nodes[ids[a]].Start < e.nodes[ids[b]].Start })
 	}
+	var n int
+	if err := e.text.QueryRowContext(ctx, "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'setting'").Scan(&n); err != nil {
+		return err
+	}
+	e.hasNames = n > 0
+	if err := e.text.QueryRowContext(ctx, "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'mention'").Scan(&n); err != nil {
+		return err
+	}
+	e.hasMentions = n > 0
 	e.bookAnc = make([][]string, len(e.books))
 	for i, b := range e.books {
 		for n := b.Root; n >= 0; n = e.nodes[n].Parent {

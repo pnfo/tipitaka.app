@@ -37,8 +37,8 @@
 
     <div v-else :class="contained ? 'min-h-0 flex-1' : 'pb-24 pt-2'">
       <TextColumn ref="column" :node-key="tab.key" :script="script" :conv="conv" :coll="info.coll" :target="tab.target" :start="startPara"
-        :highlight="tab.hl" :linked="linked" :contained="contained" :id-prefix="contained ? `t${tab.id}-` : ''"
-        @visible="onVisible" @word="w => $emit('word', w)" @menu="(p, el) => { menu = { para: p, anchor: el } }" @loaded="onLoaded">
+        :highlight="tab.hl" :glosses="spans" :contained="contained" :id-prefix="contained ? `t${tab.id}-` : ''"
+        @visible="onVisible" @word="(w, _s, ids, para) => $emit('word', w, glossesOf(ids), para)" @scrolled="$emit('scrolled')" @menu="(p, el) => { menu = { para: p, anchor: el } }" @loaded="onLoaded">
         <template #end>
           <nav v-if="next" class="mt-10 flex justify-end border-t border-line pt-4 font-ui text-sm">
             <RouterLink :to="{ name: 'read', params: { script, key: next.key } }" class="btn" @click="ui.navInTab = true">
@@ -59,7 +59,8 @@ import IconX from '~icons/lucide/x'
 import TextColumn from './TextColumn.vue'
 import ParaMenu from './ParaMenu.vue'
 import { ApiError, useApi } from '@/data/api'
-import type { Link, NodeInfo, Para, TNode } from '@/data/types'
+import type { Gloss, Link, NodeInfo, Para, TNode } from '@/data/types'
+import { glossSpans } from '@/composables/glosses'
 import type { Tab } from '@/stores/tabs'
 import { useScript } from '@/composables/script'
 import { useUi } from '@/stores/ui'
@@ -69,7 +70,8 @@ const props = defineProps<{ tab: Tab; contained?: boolean; active?: boolean; clo
 const emit = defineEmits<{
   info: [info: NodeInfo]
   visible: [key: string, para: number, info: NodeInfo]
-  word: [shown: string]
+  word: [shown: string, glosses: Gloss[], para: { key: string; para: number }]
+  scrolled: []
   alongside: [key: string, para: number | undefined]
   activate: []
   close: []
@@ -83,6 +85,7 @@ const currentInfo = ref<NodeInfo | null>(null)
 const children = ref<TNode[]>([])
 const error = ref('')
 const links = ref<Link[]>([])
+const glosses = ref<Gloss[]>([])
 const column = ref<InstanceType<typeof TextColumn>>()
 const next = ref<{ key: string; title: string } | null>(null)
 const menu = ref<{ para: Para; anchor: HTMLElement } | null>(null)
@@ -95,6 +98,7 @@ watch(() => props.tab.key, async k => {
   error.value = ''
   info.value = null
   links.value = []
+  glosses.value = []
   try {
     const i = await api.node(k)
     if (k !== props.tab.key) return
@@ -115,14 +119,24 @@ async function onVisible(para: number, key: string) {
 }
 
 async function onLoaded(from: number, to: number) {
-  try {
-    const ls = await api.links(props.tab.key, from, to)
-    const seen = new Map(links.value.map(l => [`${l.i}:${l.b}:${l.t}`, l]))
-    for (const l of ls) seen.set(`${l.i}:${l.b}:${l.t}`, l)
-    links.value = [...seen.values()]
-  } catch { /* links are optional */ }
+  const key = props.tab.key
+  await Promise.all([
+    api.links(key, from, to).then(ls => {
+      if (key !== props.tab.key) return
+      const seen = new Map(links.value.map(l => [`${l.i}:${l.b}:${l.t}`, l]))
+      for (const l of ls) seen.set(`${l.i}:${l.b}:${l.t}`, l)
+      links.value = [...seen.values()]
+    }).catch(() => { /* links are optional */ }),
+    api.glosses(key, from, to).then(gs => {
+      if (key !== props.tab.key) return
+      const seen = new Map(glosses.value.map(g => [`${g.g}${g.side}`, g]))
+      for (const g of gs) seen.set(`${g.g}${g.side}`, g)
+      glosses.value = [...seen.values()]
+    }).catch(() => { /* older databases have no glosses */ }),
+  ])
 }
-const linked = computed(() => new Set(links.value.map(l => l.i)))
+const spans = computed(() => glossSpans(glosses.value))
+const glossesOf = (ids: number[]) => glosses.value.filter(g => ids.includes(g.g))
 
 defineExpose({
   scrollToPara: (i: number) => column.value?.scrollToPara(i),
@@ -132,6 +146,9 @@ defineExpose({
     return cands[0]?.t
   },
   book: () => info.value?.book ?? -1,
+  coll: () => info.value?.coll,
+  /** the scroll container of the text (columns view) */
+  scrollRoot: () => column.value?.scrollRoot() ?? null,
   /** commentary / mūla nodes linked from the loaded text (for "open commentary" when the node has no mirror) */
   linkedKeys: () => [...new Set(links.value.map(l => l.k))],
 })

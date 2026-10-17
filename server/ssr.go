@@ -25,7 +25,7 @@ import (
 
 // routes of the web app that are not text keys (web/src/router.ts)
 var reservedRoutes = map[string]string{"search": "Search", "titles": "Title search", "dict": "Dictionary", "bookmarks": "Bookmarks",
-	"settings": "Settings", "about": "About", "convert": "Pali script converter"}
+	"settings": "Settings", "about": "About", "convert": "Pali script converter", "names": "Places and people", "map": "Map of the places"}
 
 var scriptLang = map[string]string{"latn": "pi-Latn", "sinh": "pi-Sinh", "deva": "pi-Deva", "thai": "pi-Thai", "mymr": "pi-Mymr",
 	"khmr": "pi-Khmr", "laoo": "pi-Laoo", "beng": "pi-Beng", "tibt": "pi-Tibt", "cyrl": "pi-Cyrl", "guru": "pi-Guru", "gujr": "pi-Gujr",
@@ -145,6 +145,14 @@ func (a *App) renderPath(ctx context.Context, path string) page {
 		return a.simplePage("", "latn", siteName+" – Pāḷi Tipiṭaka", defaultDesc, a.cfg.Site+"/latn")
 	case script != "" && len(rest) == 0:
 		return a.simplePage(script, script, siteName+" – Pāḷi Tipiṭaka", defaultDesc, a.cfg.Site+"/"+script)
+	case len(rest) == 2 && rest[0] == "names" && rest[1] != "":
+		return a.entityPage(ctx, scriptOr(script), rest[1])
+	case len(rest) == 1 && rest[0] == "names":
+		return a.namesPage(ctx, scriptOr(script))
+	case len(rest) == 1 && rest[0] == "map":
+		return a.mapPage(ctx, scriptOr(script))
+	case len(rest) == 2 && rest[0] == "dict" && rest[1] != "":
+		return a.dictPage(ctx, scriptOr(script), rest[1])
 	case len(rest) >= 1 && reservedRoutes[rest[0]] != "":
 		if script == "" {
 			script = "latn"
@@ -157,6 +165,14 @@ func (a *App) renderPath(ctx context.Context, path string) page {
 		return a.textPage(ctx, script, rest[0])
 	}
 	return page{status: 404, html: a.baseHTML("")}
+}
+
+// scriptOr: the script of the url, Roman when none (the client switches to the saved script)
+func scriptOr(s string) string {
+	if s == "" {
+		return "latn"
+	}
+	return s
 }
 
 func (a *App) simplePage(script, lang, title, desc, canonical string) page {
@@ -253,6 +269,23 @@ func (a *App) textPage(ctx context.Context, script, key string) page {
 	if info.Kind == "book" {
 		ld["@type"] = "Book"
 		delete(ld, "isPartOf")
+	}
+	// where it was taught (the setting of the sutta / story)
+	if u, err := a.eng.Settings(ctx, key, -1); err == nil && u != nil {
+		var places []map[string]any
+		for _, r := range u.Rows {
+			if r.Role != "place" {
+				continue
+			}
+			p := map[string]any{"@type": "Place", "name": r.Name, "url": fmt.Sprintf("%s/%s/names/%s", a.cfg.Site, script, r.Slug)}
+			if r.Lat != nil && r.Lon != nil {
+				p["geo"] = map[string]any{"@type": "GeoCoordinates", "latitude": *r.Lat, "longitude": *r.Lon}
+			}
+			places = append(places, p)
+		}
+		if len(places) > 0 {
+			ld["contentLocation"] = places
+		}
 	}
 	ldJSON, _ := json.Marshal(ld)
 	fmt.Fprintf(&head, `<script type="application/ld+json">%s</script>`, ldJSON)

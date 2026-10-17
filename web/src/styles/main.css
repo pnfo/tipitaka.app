@@ -8,6 +8,8 @@
   --c-bg: #fbf8f3; --c-surface: #ffffff; --c-surface2: #f3eee7; --c-fg: #2b2522; --c-muted: #6b625c; --c-line: #e6ddd2;
   --c-highlight: #ffe58a; --c-error: #c62828;
   --c-mula: #c2410c; --c-atta: #4338ca; --c-tika: #15803d; --c-anya: #7e22ce;
+  /* commentary alignment underlines: the collection colours, lighter (no color-mix in old webviews) */
+  --gl-mula: rgba(194, 65, 12, .55); --gl-atta: rgba(67, 56, 202, .5); --gl-tika: rgba(21, 128, 61, .55);
   --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
   --font-text: 'pali-latn', 'Noto Serif', Georgia, serif;
   --text-size: 18px; --text-leading: 1.65; --reading-width: 760px;
@@ -23,6 +25,7 @@
   --c-bg: #141211; --c-surface: #1d1a18; --c-surface2: #27231f; --c-fg: #ece6df; --c-muted: #a69c92; --c-line: #3a342e;
   --c-highlight: #6b5410; --c-error: #ef9a9a;
   --c-mula: #fb923c; --c-atta: #a5b4fc; --c-tika: #86efac; --c-anya: #d8b4fe;
+  --gl-mula: rgba(251, 146, 60, .6); --gl-atta: rgba(165, 180, 252, .6); --gl-tika: rgba(134, 239, 172, .55);
   color-scheme: dark;
 }
 
@@ -85,7 +88,18 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .reading .para.has-num:not(.heading) > .num { display: inline-block; box-sizing: border-box; min-width: calc(var(--ind, 0em) / 0.8);
   margin-left: calc(var(--ind, 0em) / -0.8); margin-right: 0; padding-right: 0.35em; }
 .reading .para.target { background: var(--c-primary-soft); border-radius: 4px; box-shadow: 0 0 0 4px var(--c-primary-soft); }
-.reading .para.linked { box-shadow: -3px 0 0 0 var(--coll, var(--c-primary)); }
+/* commentary alignment (composables/glosses.ts): the words a commentary explains get a dashed underline in the
+   commentary's colour, a commentary's lemmas one in the colour of the text they quote. A border, not
+   text-decoration-style, for the Android 7 webview. Words with both an aṭṭhakathā and a ṭīkā gloss: a thicker line */
+.reading .gl { border-bottom: 1px dashed var(--gl-c, var(--c-muted)); cursor: pointer; }
+.reading .gl-atta { --gl-c: var(--gl-atta); } .reading .gl-tika { --gl-c: var(--gl-tika); }
+.reading .gl-atta.gl-tika { --gl-c: var(--gl-atta); border-bottom-width: 2px; }
+.reading .gl-to-mula { --gl-c: var(--gl-mula); } .reading .gl-to-atta { --gl-c: var(--gl-atta); }
+.reading .gl.gl-hover { background: var(--c-highlight); border-bottom-style: solid; border-radius: 2px; }
+/* ?align=debug: source and confidence of the alignment */
+.align-debug .reading .gl-src-ai { --gl-c: #1e6fd9; border-bottom-style: solid; }
+.align-debug .reading .gl-src-chain { --gl-c: #8a3ffc; }
+.align-debug .reading .gl-lo { --gl-c: #d92d20; border-bottom-width: 2px; }
 .reading .note { font-size: 0.78em; color: var(--c-muted); }
 .reading .note-ptr { color: var(--c-accent); cursor: pointer; padding: 0 2px; font-family: var(--font-ui); font-weight: 600; }
 .reading .pb { font-family: var(--font-ui); font-size: 0.62em; color: var(--c-muted); border: 1px solid var(--c-line); border-radius: 4px; padding: 0 3px; margin: 0 2px; vertical-align: 0.25em; text-indent: 0; }
@@ -98,6 +112,28 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .meaning-html { overflow-wrap: anywhere; }
 .meaning-html p { margin: 0.25em 0; }
 .meaning-html hr { border-color: var(--c-line); margin: 0.4em 0; }
+.meaning-html ul { list-style: disc; padding-left: 1.25em; }
+.meaning-html ol { list-style: decimal; padding-left: 1.5em; }
+.meaning-html blockquote { border-left: 3px solid var(--c-line); padding-left: 0.6em; margin: 0.3em 0; }
+.meaning-html td { padding: 0 0.5em 0 0; vertical-align: top; }
+/* build/dicts/markup.ts: cross references, text references, abbreviations, editorial marks, small caps,
+   CPD line numbers, grammar labels */
+.meaning-html a[data-dict], .meaning-html a[data-ref] { color: var(--c-link); cursor: pointer; text-decoration: underline; text-decoration-color: var(--c-line); text-underline-offset: 2px; }
+.meaning-html a[data-dict]:hover, .meaning-html a[data-ref]:hover { text-decoration-color: currentColor; }
+.meaning-html abbr[data-a] { text-decoration: underline dotted var(--c-muted); text-underline-offset: 2px; cursor: help; }
+.meaning-html .ed-add { color: var(--c-anya); }
+.meaning-html .ed-mod { text-decoration: underline dotted var(--c-anya); text-underline-offset: 2px; cursor: help; }
+.meaning-html .ed-orig { color: var(--c-muted); cursor: help; }
+.meaning-html .ed-orig::before { content: '('; } .meaning-html .ed-orig::after { content: ')'; }
+.meaning-html .ed-add, .meaning-html .ed-mod { cursor: help; }
+.meaning-html .sc { font-variant-caps: small-caps; }
+/* passages translated by AI (Pali-Thai PTS): a faint underline, and a small mark that explains them on tap */
+.meaning-html .ai-add { text-decoration: underline dotted var(--c-line); text-underline-offset: 3px; }
+.meaning-html .ai-mark { display: inline-block; margin-right: 0.2em; padding: 0 0.25em; border: 1px solid var(--c-line); border-radius: 4px;
+  font-family: var(--font-ui); font-size: 0.6em; line-height: 1.4; color: var(--c-muted); vertical-align: 0.3em; cursor: help; text-decoration: none; }
+.meaning-html .lnum { font-size: 0.8em; color: var(--c-muted); }
+.meaning-html .gram { color: var(--c-accent); font-size: 0.9em; }
+.dict-focus { background: var(--c-primary-soft); margin: 0 -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; border-radius: 0.5rem; }
 
 /* paragraph options (tipitaka.lk): a round blue button over the start of the paragraph, shown on hover
    (touch screens: after tapping the paragraph) and while its menu is open */
@@ -108,6 +144,8 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
   align-items: center; justify-content: center; border-radius: 9999px; background: var(--c-surface); color: var(--c-link); box-shadow: 0 1px 3px rgba(0,0,0,.25);
   z-index: 2; visibility: hidden; opacity: 0; transition: opacity .12s, visibility 0s linear .4s; } /* em: the text size (centred on the first line) */
 .dark .para-dots { color: #7cb4ff; }
+/* small screens: equal gutters (px-5), the button fits in the left one */
+@media (max-width: 639px) { .para-dots { left: -1.25rem; } }
 /* shown at once, hidden after a short delay (crossing the gap between paragraphs does not make it flicker) */
 .para-wrap.tapped .para-dots, .para-wrap.menu-open .para-dots { visibility: visible; opacity: 1; transition-delay: 0s; }
 @media (hover: hover) { .para-wrap:hover .para-dots { visibility: visible; opacity: 1; transition-delay: 0s; } }

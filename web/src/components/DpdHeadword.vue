@@ -14,7 +14,7 @@
       </template>
       <template v-if="h.example">
         <dt class="text-muted">{{ t('Example') }}</dt>
-        <dd><i class="pali">{{ conv(h.example) }}</i> <span class="text-muted">{{ h.source }} {{ h.sutta }}</span></dd>
+        <dd><i class="pali" v-html="cleanMeaning(convHtml(h.example, conv))" /> <span class="text-muted">{{ h.source }} {{ h.sutta }}</span></dd>
       </template>
     </dl>
   </article>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { DpdHead } from '@/data/types'
+import { cleanMeaning, convHtml } from '@/composables/dict'
 import { t } from '@/i18n'
 
 const props = defineProps<{ h: DpdHead; conv: (s: string) => string; expanded?: boolean }>()

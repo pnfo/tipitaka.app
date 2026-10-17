@@ -170,3 +170,46 @@ func FuzzSSRPath(f *testing.F) {
 		_ = app.renderPath(t.Context(), p)
 	})
 }
+
+func TestSSRNames(t *testing.T) {
+	h := testApp(t).Handler()
+	res, body := get(t, h, "/latn/names/rajagaha")
+	if res.StatusCode != 200 {
+		t.Fatal(res.StatusCode)
+	}
+	for _, want := range []string{
+		`<title>Rājagaha – Place | Tipiṭaka.app</title>`,
+		`<link rel="canonical" href="https://tipitaka.app/latn/names/rajagaha">`,
+		`hreflang="pi-Sinh" href="https://tipitaka.app/sinh/names/rajagaha"`,
+		`"@type":"Place"`, `"@type":"GeoCoordinates"`,
+		`<h1>Rājagaha</h1>`,
+		`<a href="/latn/dn-1-1#p`, // Brahmajālasuttaṃ, taught between Rājagaha and Nāḷandā
+		`"entity|{\"slug\":\"rajagaha\"}"`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("name page missing %q", want)
+		}
+	}
+	if res, _ := get(t, h, "/latn/names/nope"); res.StatusCode != 404 {
+		t.Errorf("unknown name: %d", res.StatusCode)
+	}
+	if _, body := get(t, h, "/sinh/names"); !strings.Contains(body, `<a href="/sinh/names/rajagaha">`) {
+		t.Error("names index: no link to rajagaha")
+	}
+	if res, body := get(t, h, "/latn/map"); res.StatusCode != 200 || !strings.Contains(body, `<a href="/latn/names/rajagaha">`) {
+		t.Error("map page")
+	}
+	if _, body := get(t, h, "/latn/dict/dhamma"); !strings.Contains(body, `<title>dhamma – Pāḷi dictionary | Tipiṭaka.app</title>`) || !strings.Contains(body, `"dict|{\"limit\":\"100\",\"w\":\"dhamma\"}"`) {
+		t.Error("dictionary page")
+	}
+	// a text page says where it was taught
+	if _, body := get(t, h, "/latn/dn-1-1"); !strings.Contains(body, `"contentLocation":[{"@type":"Place"`) {
+		t.Error("text page: no contentLocation")
+	}
+	if _, body := get(t, h, "/sitemap.xml"); !strings.Contains(body, "sitemaps/names-thai.xml") {
+		t.Error("sitemap index: no names sitemap")
+	}
+	if _, body := get(t, h, "/sitemaps/names-latn.xml"); !strings.Contains(body, "https://tipitaka.app/latn/names/rajagaha</loc>") || !strings.Contains(body, "/latn/map</loc>") {
+		t.Error("names sitemap")
+	}
+}

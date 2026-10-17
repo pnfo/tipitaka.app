@@ -24,6 +24,7 @@ import IconFilter from '~icons/lucide/list-filter'
 import Dialog from './Dialog.vue'
 import { useApi } from '@/data/api'
 import type { Dict } from '@/data/types'
+import { langName } from '@/composables/dict'
 import { useSettings } from '@/stores/settings'
 import { t } from '@/i18n'
 
@@ -32,33 +33,37 @@ const settings = useSettings()
 const open = ref(false)
 const dicts = ref<Dict[]>([])
 useApi().dicts().then(d => { dicts.value = d }).catch(() => {})
-const langName = (code: string) => ({ en: t('English'), my: t('Myanmar'), si: t('Sinhala'), th: t('Thai'), ch: t('Chinese'), hi: t('Hindi'), in: t('Indonesian'), es: t('Spanish'), pt: t('Portuguese'), kh: t('Khmer') } as Record<string, string>)[code] ?? code
+// "all" ([]) is every dictionary but the opt-in ones
 const codes = computed(() => ['dpd', ...dicts.value.map(d => d.code)])
+const defaults = computed(() => ['dpd', ...dicts.value.filter(d => !d.optIn).map(d => d.code)])
 const all = computed(() => settings.dicts.length === 0)
-const isOn = (code: string) => all.value || settings.dicts.includes(code)
+const isOn = (code: string) => (all.value ? defaults.value.includes(code) : settings.dicts.includes(code))
 
 function toggle(code: string) {
-  const on = new Set(all.value ? codes.value : settings.dicts)
+  const on = new Set(all.value ? defaults.value : settings.dicts)
   if (on.has(code)) {
     if (on.size === 1) return // keep at least one
     on.delete(code)
   } else on.add(code)
-  settings.dicts = codes.value.every(c => on.has(c)) ? [] : codes.value.filter(c => on.has(c))
+  const isDefault = on.size === defaults.value.length && defaults.value.every(c => on.has(c))
+  settings.dicts = isDefault ? [] : codes.value.filter(c => on.has(c))
 }
 
 // the checklist, grouped by language (DPD first)
 const DictList = defineComponent(() => () => {
   const groups: Record<string, Dict[]> = {}
   for (const d of dicts.value) (groups[d.lang] ??= []).push(d)
-  const row = (code: string, label: string, sub?: string) => h('label', { class: 'flex cursor-pointer items-center gap-2 py-0.5 text-sm' }, [
-    h('input', { type: 'checkbox', class: 'h-4 w-4', checked: isOn(code), 'data-testid': `dict-${code}`, onChange: () => toggle(code) }),
+  // the abbreviation shown with the results (PN, AB ...) comes first: the list explains them
+  const row = (code: string, short: string, label: string, sub?: string, title?: string) => h('label', { class: 'flex cursor-pointer items-center gap-2 py-0.5 text-sm', title }, [
+    h('input', { type: 'checkbox', class: 'h-4 w-4 shrink-0', checked: isOn(code), 'data-testid': `dict-${code}`, onChange: () => toggle(code) }),
+    h('span', { class: 'w-9 shrink-0 text-center text-xs font-medium text-muted' }, short),
     h('span', label), sub ? h('span', { class: 'text-xs text-muted' }, sub) : null,
   ])
   return h('div', { class: 'space-y-3', 'data-testid': 'dict-list' }, [
     h('div', [h('div', { class: 'section-title' }, t('Pāḷi – English')), row('dpd', 'DPD', t('Digital Pāḷi Dictionary'))]),
     ...Object.entries(groups).map(([lang, ds]) => h('div', [
       h('div', { class: 'section-title' }, langName(lang)),
-      h('div', { class: 'grid grid-cols-1 sm:grid-cols-2' }, ds.map(d => row(d.code, d.name))),
+      h('div', { class: 'grid grid-cols-1 sm:grid-cols-2' }, ds.map(d => row(d.code, d.short, d.name, d.optIn ? t('optional') : undefined, d.desc || undefined))),
     ])),
   ])
 })

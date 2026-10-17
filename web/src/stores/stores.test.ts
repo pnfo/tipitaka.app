@@ -19,6 +19,11 @@ describe('settings', () => {
     localStorage.setItem('settings', JSON.stringify({ paliScript: 'my' }))
     expect(loadSettings().script).toBe('mymr')
   })
+  it('maps dictionaries replaced by a newer edition', () => {
+    expect(migrateV2({ dictList: ['en-buddhadatta', 'en-pts'] }).dicts).toEqual(['dpd', 'en-ncped', 'en-pts'])
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify({ dicts: ['dpd', 'en-buddhadatta', 'en-ncped'] }))
+    expect(loadSettings().dicts).toEqual(['dpd', 'en-ncped'])
+  })
   it('falls back to defaults and guesses from the browser language', () => {
     expect(loadSettings()).toMatchObject({ ...DEFAULTS, ...guessFromBrowser() })
     expect(guessFromBrowser(['th-TH'])).toEqual({ script: 'thai', uiLang: 'th' })

@@ -36,12 +36,19 @@ export interface Settings {
   searchFilter: string[] | null
   /** tap a word to look it up */
   tapLookup: boolean
+  /** underline the words explained in the commentaries (and the commentaries' lemmas) */
+  glosses: boolean
 }
 
 export const DEFAULTS: Settings = {
   script: DEFAULT_SCRIPT, uiLang: 'en', theme: 'light', textSize: 18, leading: 1.65, width: 760, notes: 'pointer', pageRefs: '',
   paraNums: true, dicts: [], tabView: 'single', syncScroll: true, sheetHeight: 45, searchFilter: null, tapLookup: true,
+  glosses: true,
 }
+
+/** dictionaries replaced by a newer edition: old code -> new code */
+export const RENAMED_DICTS: Record<string, string> = { 'en-buddhadatta': 'en-ncped' }
+const renameDicts = (codes: string[]) => [...new Set(codes.map(c => RENAMED_DICTS[c] ?? c))]
 
 /** v2 settings -> v3 (scripts/settings.js keys) */
 export function migrateV2(old: Record<string, unknown>): Partial<Settings> {
@@ -51,12 +58,15 @@ export function migrateV2(old: Record<string, unknown>): Partial<Settings> {
   const ui = String(old.uiLanguage ?? '')
   if (['en', 'si', 'my', 'th', 'kh', 'hi', 'ch'].includes(ui)) out.uiLang = ui
   if (old.colorTheme === 'dark') out.theme = 'dark'
-  if (Array.isArray(old.dictList) && old.dictList.length) out.dicts = ['dpd', ...(old.dictList as string[])]
+  if (Array.isArray(old.dictList) && old.dictList.length) out.dicts = renameDicts(['dpd', ...(old.dictList as string[])])
   if (old.tabViewFormat === 'tabbed' || old.tabViewFormat === 'columns') out.tabView = old.tabViewFormat
   if (old.footnoteFormat === 'hidden') out.notes = 'hidden'
   else if (old.footnoteFormat === 'inline') out.notes = 'inline'
   return out
 }
+
+/** no settings were saved yet (neither v3 nor v2): a new visitor (App.vue asks for the country's defaults) */
+export let firstVisit = false
 
 export function loadSettings(): Settings {
   const saved = readJson<Partial<Settings> | null>(SETTINGS_KEY, null)
@@ -64,11 +74,13 @@ export function loadSettings(): Settings {
   if (saved) s = saved
   else {
     const v2 = readJson<Record<string, unknown> | null>('settings', null)
+    firstVisit = !v2
     s = v2 ? migrateV2(v2) : guessFromBrowser()
   }
   const merged = { ...DEFAULTS, ...s }
   delete (merged as { textSizes?: unknown }).textSizes // per script sizes (v3 beta), dropped
   if (!isScriptCode(merged.script)) merged.script = DEFAULT_SCRIPT
+  if (Array.isArray(merged.dicts)) merged.dicts = renameDicts(merged.dicts)
   return merged
 }
 

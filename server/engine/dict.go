@@ -17,14 +17,20 @@ type Dict struct {
 	Desc    string `json:"desc,omitempty"`
 	Origin  string `json:"origin,omitempty"`
 	Entries int    `json:"entries"`
+	// not used unless chosen: not part of "all dictionaries" (dicts empty)
+	OptIn bool `json:"optIn,omitempty"`
+	// abbreviations used in the meanings (<abbr data-a>), abbreviation -> expansion
+	Abbrevs map[string]string `json:"abbrevs,omitempty"`
 }
 
 // DictEntry is a dictionary meaning.
 type DictEntry struct {
 	Dict    string `json:"dict"`
 	Word    string `json:"word"`
-	Meaning string `json:"meaning"` // html, sanitised by the client
+	Hom     int    `json:"hom,omitempty"` // homonym number
+	Meaning string `json:"meaning"`       // html (build/dicts/markup.ts), sanitised by the client
 	Dist    int    `json:"dist"`
+	id      int64
 }
 
 // DpdHead is a DPD headword.
@@ -91,7 +97,7 @@ func (e *Engine) Dicts(ctx context.Context) ([]Dict, error) {
 	if e.dict == nil {
 		return []Dict{}, nil
 	}
-	rows, err := e.dict.QueryContext(ctx, "SELECT id, code, lang, name, short, descr, origin, entries FROM dict ORDER BY id")
+	rows, err := e.dict.QueryContext(ctx, "SELECT id, code, lang, name, short, descr, origin, entries, opt_in FROM dict ORDER BY id")
 	if err != nil {
 		return nil, err
 	}
@@ -99,18 +105,47 @@ func (e *Engine) Dicts(ctx context.Context) ([]Dict, error) {
 	out := []Dict{}
 	for rows.Next() {
 		var d Dict
-		if err := rows.Scan(&d.ID, &d.Code, &d.Lang, &d.Name, &d.Short, &d.Desc, &d.Origin, &d.Entries); err != nil {
+		if err := rows.Scan(&d.ID, &d.Code, &d.Lang, &d.Name, &d.Short, &d.Desc, &d.Origin, &d.Entries, &d.OptIn); err != nil {
 			return nil, err
 		}
 		out = append(out, d)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	rows.Close()
+	// dict_abbrev is missing in dict.db files built before it
+	if ar, err := e.dict.QueryContext(ctx, "SELECT dict_id, abbr, expansion FROM dict_abbrev"); err == nil {
+		defer ar.Close()
+		byID := map[int]*Dict{}
+		for i := range out {
+			byID[out[i].ID] = &out[i]
+		}
+		for ar.Next() {
+			var id int
+			var a, x string
+			if err := ar.Scan(&id, &a, &x); err != nil {
+				return nil, err
+			}
+			if d := byID[id]; d != nil {
+				if d.Abbrevs == nil {
+					d.Abbrevs = map[string]string{}
+				}
+				d.Abbrevs[a] = x
+			}
+		}
+		if err := ar.Err(); err != nil {
+			return nil, err
+		}
+	}
+	return out, nil
 }
 
 func placeholders(n int) string { return strings.Repeat(",?", n)[1:] }
 
 // Dictionary looks up a typed word: exact (diacritic-insensitive unless it has diacritics) or a * ? pattern,
-// falling back to a prefix search when nothing matches. dicts limits the dictionaries (codes), DPD is "dpd".
+// falling back to a prefix search when nothing matches. dicts limits the dictionaries (codes), DPD is "dpd";
+// none: all but the opt-in dictionaries.
 func (e *Engine) Dictionary(ctx context.Context, word string, dicts []string, limit int) (*DictResult, error) {
 	if e.dict == nil {
 		return nil, ErrNoDict
@@ -134,15 +169,20 @@ func (e *Engine) Dictionary(ctx context.Context, word string, dicts []string, li
 	}
 	f := Fold(w)
 	sensitive := HasDiacritics(w)
-	// run queries the folded column; when the word has diacritics the exact column must match too
+	// run queries the folded column; when the word has diacritics the exact column must match too.
+	// A variant headword (alias_of) shows the entry it belongs to, once.
+	seen := map[int64]bool{}
 	run := func(op, foldPat, wordPat string) error {
-		q := "SELECT d.code, e.word, e.meaning FROM entry e JOIN dict d ON d.id = e.dict_id WHERE e.fold " + op + " ?"
+		q := `SELECT COALESCE(e.alias_of, e.id), d.code, e.word, COALESCE(m.word, e.word), e.hom, COALESCE(m.meaning, e.meaning)
+			FROM entry e JOIN dict d ON d.id = e.dict_id LEFT JOIN entry m ON m.id = e.alias_of WHERE e.fold ` + op + " ?"
 		args := []any{foldPat}
 		if sensitive {
 			q += " AND e.word " + op + " ?"
 			args = append(args, wordPat)
 		}
-		if len(dicts) > 0 {
+		if len(dicts) == 0 {
+			q += " AND d.opt_in = 0"
+		} else {
 			if len(codes) == 0 {
 				return nil
 			}
@@ -159,10 +199,23 @@ func (e *Engine) Dictionary(ctx context.Context, word string, dicts []string, li
 		defer rows.Close()
 		for rows.Next() {
 			var de DictEntry
-			if err := rows.Scan(&de.Dict, &de.Word, &de.Meaning); err != nil {
+			var id int64
+			var matched string
+			if err := rows.Scan(&id, &de.Dict, &matched, &de.Word, &de.Hom, &de.Meaning); err != nil {
 				return err
 			}
-			de.Dist = Levenshtein(Fold(de.Word), strings.Trim(f, "*?"))
+			de.Dist = Levenshtein(Fold(matched), strings.Trim(f, "*?"))
+			if seen[id] {
+				// the entry and its variant both matched: keep the closer one
+				for i := range res.Entries {
+					if res.Entries[i].id == id && de.Dist < res.Entries[i].Dist {
+						res.Entries[i].Dist = de.Dist
+					}
+				}
+				continue
+			}
+			seen[id] = true
+			de.id = id
 			res.Entries = append(res.Entries, de)
 		}
 		return rows.Err()
@@ -284,7 +337,8 @@ func (e *Engine) breakups(ctx context.Context, fold string) ([]Breakup, error) {
 }
 
 // Lookup analyses a word as it occurs in the text (tap on a word): the DPD inflection/deconstruction lookup,
-// the headwords it belongs to and short dictionary entries for the word or its headwords.
+// the headwords it belongs to and short dictionary entries for the word or its headwords. dicts limits the
+// dictionaries as in Dictionary; without "dpd" the DPD headwords and analysis are left out.
 func (e *Engine) Lookup(ctx context.Context, word string, dicts []string, limit int) (*DictResult, error) {
 	if e.dict == nil {
 		return nil, ErrNoDict
@@ -368,7 +422,26 @@ func (e *Engine) Lookup(ctx context.Context, word string, dicts []string, limit 
 	}
 	res.Entries = exact
 	res.Breakups = d.Breakups
+	if !hasDpd(dicts) {
+		// DPD not chosen: its headwords found the dictionary forms above, but are not shown, nor its analysis
+		res.Dpd = []DpdHead{}
+		res.Grammar, res.Deconstructor = nil, nil
+		res.Spelling, res.See, res.Abbrev = "", "", ""
+	}
 	return res, nil
+}
+
+// hasDpd: whether DPD is among the chosen dictionaries (none chosen: all are)
+func hasDpd(dicts []string) bool {
+	if len(dicts) == 0 {
+		return true
+	}
+	for _, d := range dicts {
+		if d == "dpd" {
+			return true
+		}
+	}
+	return false
 }
 
 // nonDpd returns the dictionary codes without dpd (nil = all dictionaries).

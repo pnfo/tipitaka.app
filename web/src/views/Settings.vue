@@ -53,6 +53,7 @@
           <button v-for="e in EDITIONS" :key="e.id" class="chip" :class="{ on: settings.pageRefs.includes(e.id) }" :title="e.title" @click="toggleEdition(e.id)">{{ e.label }}</button></div>
         <label class="flex items-center gap-2"><input v-model="settings.paraNums" type="checkbox"> {{ t('Paragraph numbers') }}</label>
         <label class="flex items-center gap-2"><input v-model="settings.tapLookup" type="checkbox"> {{ t('Tap a word to look it up in the dictionary') }}</label>
+        <label class="flex items-center gap-2"><input v-model="settings.glosses" type="checkbox" data-testid="glosses-setting"> {{ t('Underline the words explained in the commentaries') }}</label>
       </div>
     </section>
 

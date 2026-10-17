@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { submodules: true }
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
       - uses: actions/setup-go@v5
@@ -15,7 +16,9 @@ jobs:
       - run: npm ci
       - uses: actions/cache@v4
         with: { path: .cache/dpd, key: "dpd-${{ hashFiles('data/dpd.lock') }}" }
-      - run: npm run upstream -- --dpd-only
+      - uses: actions/cache@v4
+        with: { path: .cache/dicts, key: "dicts-${{ hashFiles('data/dicts.lock') }}" }
+      - run: npm run upstream -- --dpd-only --dicts
       - run: npm run typecheck
       - run: npm run lint
       - run: node scripts/sync-converter.mjs --check

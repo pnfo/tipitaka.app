@@ -95,7 +95,7 @@ func splitList(p Params, name string) []string {
 }
 
 // Ops are the names accepted by Call (the API, documented in dev-docs/api.md).
-var Ops = []string{"meta", "children", "node", "text", "links", "titles", "fts", "dicts", "dict", "lookup", "legacy"}
+var Ops = []string{"meta", "children", "node", "text", "links", "glosses", "titles", "fts", "dicts", "dict", "lookup", "legacy", "names", "entity", "settings", "mentions", "paranames"}
 
 // Call runs an operation. Errors are *ParamError (bad request), ErrNotFound, *ErrTooBroad or internal.
 func (e *Engine) Call(ctx context.Context, op string, p Params) (any, error) {
@@ -144,6 +144,20 @@ func (e *Engine) Call(ctx context.Context, op string, p Params) (any, error) {
 			return nil, err
 		}
 		return e.Links(ctx, key, from, to)
+	case "glosses":
+		key, err := str(p, "key")
+		if err != nil {
+			return nil, err
+		}
+		from, err := num(p, "from", -1)
+		if err != nil {
+			return nil, err
+		}
+		to, err := num(p, "to", -1)
+		if err != nil {
+			return nil, err
+		}
+		return e.Glosses(ctx, key, from, to)
 	case "titles":
 		q, err := str(p, "q")
 		if err != nil {
@@ -206,6 +220,60 @@ func (e *Engine) Call(ctx context.Context, op string, p Params) (any, error) {
 			return nil, err
 		}
 		return e.Legacy(ctx, file, line)
+	case "names":
+		q, err := str(p, "q")
+		if err != nil {
+			return nil, err
+		}
+		limit, err := num(p, "limit", 0)
+		if err != nil {
+			return nil, err
+		}
+		return e.Names(ctx, q, splitList(p, "types"), limit)
+	case "entity":
+		slug, err := str(p, "slug")
+		if err != nil {
+			return nil, err
+		}
+		return e.EntityPage(ctx, slug)
+	case "settings":
+		key, err := str(p, "key")
+		if err != nil {
+			return nil, err
+		}
+		para, err := num(p, "para", -1)
+		if err != nil {
+			return nil, err
+		}
+		return e.Settings(ctx, key, para)
+	case "mentions":
+		slug, err := str(p, "slug")
+		if err != nil {
+			return nil, err
+		}
+		book, err := num(p, "book", -1)
+		if err != nil {
+			return nil, err
+		}
+		page, err := num(p, "page", 0)
+		if err != nil {
+			return nil, err
+		}
+		return e.Mentions(ctx, slug, book, flag(p, "maybe"), page)
+	case "paranames":
+		key, err := str(p, "key")
+		if err != nil {
+			return nil, err
+		}
+		from, err := num(p, "from", -1)
+		if err != nil {
+			return nil, err
+		}
+		to, err := num(p, "to", -1)
+		if err != nil {
+			return nil, err
+		}
+		return e.ParaNames(ctx, key, from, to)
 	}
 	return nil, ErrNotFound
 }

@@ -1,16 +1,18 @@
 /**
- * npm run upstream [-- --latest] [--dpd] [--dpd-latest]
+ * npm run upstream [-- --latest] [--dpd] [--dpd-latest] [--dicts] [--dicts-latest] [--dicts-only]
  *
  * Fetches the pinned sources into .cache/ (never committed):
  *   VipassanaTech/tipitaka-xml  romn/ + tipitaka.org/romn/ at the commit in data/upstream.lock (sparse, shallow)
  *   digitalpalidictionary/dpd-db release asset dpd.db.tar.xz of the tag in data/dpd.lock (with --dpd)
+ *   the dictionary sources of data/dicts.lock into .cache/dicts/ (with --dicts, see build/dict-sources.ts)
  * --latest / --dpd-latest move the pins to the newest upstream commit / release first (used by the sync
- * workflow, which then builds, tests and opens a PR). Writes `xml_changed` / `dpd_changed` to $GITHUB_OUTPUT.
+ * workflow, which then builds, tests and opens a PR). Writes `xml_changed` / `dpd_changed` / `dicts_changed` to $GITHUB_OUTPUT.
  */
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { syncDicts } from './dict-sources'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const XML_REPO = 'https://github.com/VipassanaTech/tipitaka-xml.git'
@@ -72,5 +74,9 @@ async function syncDpd(latest: boolean) {
   fs.writeFileSync(stamp, tag)
 }
 
-if (!args.includes('--dpd-only')) syncXml(args.includes('--latest'))
+const only = args.includes('--dpd-only') || args.includes('--dicts-only')
+if (!only) syncXml(args.includes('--latest'))
 if (args.includes('--dpd') || args.includes('--dpd-latest') || args.includes('--dpd-only')) await syncDpd(args.includes('--dpd-latest'))
+if (args.includes('--dicts') || args.includes('--dicts-latest') || args.includes('--dicts-only')) {
+  syncDicts(path.join(repo, 'data/dicts.lock'), path.join(cache, 'dicts'), args.includes('--dicts-latest'), output)
+}

@@ -8,12 +8,13 @@
 # previous one are pruned.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-HOST=${DEPLOY_HOST:-pitaka.lk}
+HOST=${DEPLOY_HOST:-tipitaka.lk}
 BASE=${DEPLOY_BASE:-www/tipitaka.app}
 SITE=${DEPLOY_SITE:-https://tipitaka.app}
 BIN=${1:?usage: scripts/deploy.sh <linux amd64 binary>}
 [ -f db/text.db ] && [ -f db/dict.db ] || { echo "build the dbs first (npm run build:data && npm run build:dict)"; exit 1; }
-[ -f web/dist/index.html ] || npm run build:web
+# always a fresh web build: an old web/dist would not match the binary and the dbs
+npm run build:web
 TS=$(date +%Y%m%d-%H%M%S)
 TEXT="text-$(node -p "require('./db/build-info.json').content_hash").db"
 DICT="dict-$(shasum db/dict.db | cut -c1-12).db"
@@ -27,7 +28,14 @@ done
 rsync -az --info=progress2 web/dist/ "$HOST:$REL/dist/"
 rsync -az "$BIN" "$HOST:$REL/tipitaka_app"
 PREV=$(ssh "$HOST" "readlink $BASE/current || true")
-ssh "$HOST" "cd $REL && chmod +x tipitaka_app && ln -sfn ../../../db/$TEXT db/text.db && ln -sfn ../../../db/$DICT db/dict.db \
+# the first v3 deploy: the installed unit still starts the v2 binary - install server/tipitaka_app.service (runs current/)
+if ! ssh "$HOST" "systemctl cat tipitaka_app.service 2>/dev/null | grep -q 'current/tipitaka_app'"; then
+  echo "installing the v3 systemd unit (server/tipitaka_app.service)"
+  rsync -az server/tipitaka_app.service "$HOST:/tmp/tipitaka_app.service"
+  ssh -t "$HOST" "sudo cp /tmp/tipitaka_app.service /etc/systemd/system/tipitaka_app.service && sudo systemctl daemon-reload"
+fi
+# (-t: sudo asks for the password on the droplet)
+ssh -t "$HOST" "cd $REL && chmod +x tipitaka_app && ln -sfn ../../../db/$TEXT db/text.db && ln -sfn ../../../db/$DICT db/dict.db \
   && cd ~/$BASE && ln -sfn releases/$TS current.new && mv -T current.new current && sudo systemctl restart tipitaka_app"
 EXPECTED=$(node -p "require('./db/build-info.json').content_hash")
 for i in $(seq 1 20); do

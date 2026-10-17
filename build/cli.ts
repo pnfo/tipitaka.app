@@ -8,11 +8,17 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCorpus } from './tree'
-import { buildParaLinks } from './links'
+import { buildParaLinks, type ParaLink } from './links'
+import { alignCommentaries } from './align'
+import { readDecisions } from './align/decisions'
+import { reportSection, updateCoverage } from './align/report'
 import { writeDb } from './write-db'
 import { validate } from './validate'
 import { readLegacyMap } from './legacy'
 import { FIXTURE_BOOKS } from './fixture'
+import { readGazetteer } from './names/gazetteer'
+import { extractSettings } from './names/settings'
+import { extractMentions, readMentionDecisions, readVerdicts } from './names/mentions'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -31,8 +37,27 @@ log(`corpus: ${corpus.books.length} books, ${corpus.nodes.length} nodes, ${corpu
 
 const report = validate(corpus)
 const linkWarnings: string[] = []
-const links = buildParaLinks(corpus, path.join(repo, 'data/alignments'), linkWarnings)
-log(`links: ${links.length}`)
+const anchors = buildParaLinks(corpus, path.join(repo, 'data/alignments'), linkWarnings)
+// the fixture db does not use the stored decisions: tests must not change when AI runs add some
+const align = alignCommentaries(corpus, anchors, { decisions: fixture ? [] : readDecisions(path.join(repo, 'data/alignments')) })
+linkWarnings.push(...align.warnings)
+// paragraph links: paranum / manual anchors, then the ones derived from the glosses (every explained paragraph)
+const seenLinks = new Set<string>()
+const links: ParaLink[] = [...anchors, ...align.links].filter(l => {
+  const k = `${l.fromBook}:${l.fromIdx}:${l.toBook}:${l.toIdx}`
+  return !seenLinks.has(k) && !!seenLinks.add(k)
+})
+log(`links: ${anchors.length} anchors, ${links.length} with glosses; ${align.glosses.length} glosses`)
+if (!fixture) updateCoverage(path.join(repo, 'data/align-coverage.tsv'), corpus, align.stats, linkWarnings)
+
+// proper names: the settings of the suttas and stories (data/names, written by npm run names:gazetteer)
+const gazetteer = readGazetteer(path.join(repo, 'data/names'))
+const settings = extractSettings(corpus, gazetteer, anchors)
+// the mentions: the fixture db does not use the AI verdicts and decisions (tests must not change when runs add some)
+const namesDir = path.join(repo, 'data/names')
+const mentioned = extractMentions(corpus, gazetteer, fixture ? new Map() : readVerdicts(namesDir), fixture ? [] : readMentionDecisions(namesDir))
+log(`names: ${gazetteer.entities.size} names, ${settings.length} settings, ${mentioned.mentions.length} mentions (${mentioned.stats.pending} words undecided)`)
+if (mentioned.stats.brokenDecisions) linkWarnings.push(`${mentioned.stats.brokenDecisions} name decisions (data/names/decisions) no longer resolve`)
 
 const legacyWarnings: string[] = []
 const legacy = readLegacyMap(corpus, path.join(repo, 'data/legacy-map.tsv'), legacyWarnings, fixture)
@@ -43,12 +68,19 @@ const upstream = fs.existsSync(upstreamLock) ? fs.readFileSync(upstreamLock, 'ut
 const hash = crypto.createHash('sha256')
 for (const n of corpus.nodes) hash.update(n.key + '\0' + n.title + '\n')
 for (const p of corpus.paras) hash.update(p.rend + '\0' + p.num + '\0' + p.text + '\n')
+// and everything derived that goes into the db: the links, the commentary alignment, the names (they change without the
+// text: the deploy names the db by this hash, the clients version their api cache by it)
+for (const l of links) hash.update(`${l.fromBook},${l.fromIdx},${l.toBook},${l.toIdx},${l.kind},${l.source}\n`)
+for (const g of align.glosses) hash.update(`${g.kind},${g.src},${g.cBook},${g.cIdx},${g.cS},${g.cEIdx},${g.cE},${g.tBook},${g.tIdx},${g.tS},${g.tEIdx},${g.tE}\n`)
+for (const e of gazetteer.entities.values()) hash.update(`${e.slug},${e.type},${e.lemma},${e.meaning},${e.lat ?? ''},${e.lon ?? ''},${e.prec ?? ''}\n`)
+for (const x of settings) hash.update(`${x.entity},${x.role},${x.book},${x.start},${x.end},${x.source}\n`)
+for (const m of mentioned.mentions) hash.update(`${m.entity},${m.book},${m.idx},${m.s},${m.amb}\n`)
 const contentHash = hash.digest('hex').slice(0, 16)
 const now = new Date()
 const dbVersion = now.toISOString().replace(/\D/g, '').slice(2, 10) // yyMMddHH
 const meta = { content_hash: contentHash, db_version: dbVersion, upstream, built_at: now.toISOString(), fixture: fixture ? '1' : '0' }
 
-const res = writeDb(path.join(outDir, 'text.db'), corpus, links, meta, legacy)
+const res = writeDb(path.join(outDir, 'text.db'), corpus, links, meta, legacy, align.glosses, { gazetteer, settings, mentions: mentioned.mentions })
 log(`text.db: ${res.tokenCount} tokens, ${res.postingCount} postings`)
 fs.writeFileSync(path.join(outDir, 'build-info.json'), JSON.stringify({ ...meta, db_version: +dbVersion }, null, 2) + '\n')
 
@@ -78,6 +110,7 @@ const md = [
   `## Changes`, prev.size ? `${changed.length} texts changed, ${added.length} keys added, ${removed.length} removed` : 'no previous build', '',
   ...removed.slice(0, 100).map(k => `- removed \`${k}\``), ...added.slice(0, 100).map(k => `- added \`${k}\``),
   ...changed.slice(0, 200).map(k => `- changed ${k}`), '',
+  ...reportSection(corpus, align.stats, align.glosses.length),
   `## Errors (${report.errors.length})`, ...report.errors.map(e => `- ${e}`), '',
   `## Warnings (${report.warnings.length + linkWarnings.length + legacyWarnings.length})`,
   ...[...report.warnings, ...linkWarnings, ...legacyWarnings].slice(0, 500).map(w => `- ${w}`), '',

@@ -10,11 +10,12 @@
 
     <!-- columns: every tab side by side, each with its own header (no tab strip); the list of open texts and the
          view switch are in the header of the last column -->
-    <div v-if="showColumns" class="mx-auto flex max-w-[1800px]" :style="{ height: 'calc(100vh - 3.5rem)' }" data-testid="columns">
+    <div v-if="showColumns" class="mx-auto flex max-w-[1800px]" :style="{ height: 'calc(100vh - 3.5rem)' }" data-testid="columns"
+      @mouseover="onHover" @mouseout="onHover" @wheel.passive="onUserScroll" @touchstart.passive="onUserScroll" @keydown="onUserScroll" @pointerdown="onUserScroll">
       <div v-for="(tb, i) in tabs.tabs" :key="tb.id" class="min-w-0 flex-1 border-r border-line last:border-r-0">
         <ReaderPane :ref="el => setPane(tb.id, el)" :tab="tb" contained :active="tb.id === tabs.activeId" closable
-          @info="i => onInfo(tb.id, i)" @visible="(k, p, i) => onVisible(tb.id, k, p, i)" @word="onWord" @alongside="openAlongside"
-          @activate="activate(tb.id)" @close="closeTab(tb.id)">
+          :data-pane="tb.id" @info="i => onInfo(tb.id, i)" @visible="(k, p, i) => onVisible(tb.id, k, p, i)" @word="onWord" @alongside="openAlongside"
+          @scrolled="onColumnScroll(tb.id)" @activate="activate(tb.id)" @close="closeTab(tb.id)">
           <template v-if="i === tabs.tabs.length - 1" #actions>
             <TabsBar list-only @activate="activate" @close="closeTab" @close-others="closeOthers" />
           </template>
@@ -35,7 +36,8 @@ import { useWindowSize } from '@vueuse/core'
 import ReaderPane from '@/components/ReaderPane.vue'
 import TabsBar from '@/components/TabsBar.vue'
 import { useApi } from '@/data/api'
-import type { NodeInfo } from '@/data/types'
+import type { Gloss, NodeInfo } from '@/data/types'
+import { collectAnchors, glossIdsAt, mapY, type Anchors } from '@/composables/glosses'
 import { toRoman, useScript } from '@/composables/script'
 import { useSettings } from '@/stores/settings'
 import { useLibrary } from '@/stores/library'
@@ -107,6 +109,11 @@ function closeOthers() {
   activate(tabs.activeId)
 }
 watch(view, v => { if (v === 'single') tabs.closeOthers() })
+// another tab becomes the active one (its pane does not scroll, so no visible event): the Setting tab follows it
+watch(() => tabs.activeId, () => {
+  const tb = tabs.active
+  if (tb?.current) ui.settingTarget = { key: tb.current, para: tb.para ?? -1 }
+})
 
 function onInfo(id: number, i: NodeInfo) {
   const tb = tabs.tabs.find(t => t.id === id)
@@ -130,26 +137,73 @@ function onVisible(id: number, key: string, para: number, info: NodeInfo) {
     syncRoute(key)
     tree.reveal(info.path.map(p => p.key), key, info.coll)
   }
+  // the Setting tab follows the reading position of the active text
+  if (id === tabs.activeId) ui.settingTarget = { key, para }
   if (showColumns.value && settings.syncScroll) syncColumns(id, para)
 }
 
-// linked columns follow the scrolled one
-let syncTimer: ReturnType<typeof setTimeout> | undefined
-let syncSource = -1
-function syncColumns(id: number, para: number) {
-  if (syncSource >= 0 && syncSource !== id) return // the reaction of a synced column
-  clearTimeout(syncTimer)
-  syncTimer = setTimeout(() => {
-    const src = panes.get(id)
-    if (!src) return
-    syncSource = id
+// ---------------- linked columns follow the scrolled one ----------------
+// The column the user scrolls (wheel, touch, keys, scrollbar) drives the others: the line at its top is mapped to
+// the other columns through the gloss underlines both have (interpolated between them), or else through the
+// paragraph links (jump to the linked paragraph).
+let driver = -1
+function onUserScroll(e: Event) {
+  const pane = (e.target as HTMLElement).closest('[data-pane]') as HTMLElement | null
+  if (pane) driver = +pane.dataset.pane!
+}
+const anchorCache = new Map<number, Anchors>()
+function anchorsOf(id: number, root: HTMLElement): Anchors {
+  const a = anchorCache.get(id)
+  if (a && a.height === root.scrollHeight) return a
+  const fresh = collectAnchors(root)
+  anchorCache.set(id, fresh)
+  return fresh
+}
+const TOP = 20 // the reading line, px below the top of a column
+let frame = 0
+function onColumnScroll(id: number) {
+  if (!showColumns.value || !settings.syncScroll || id !== driver || frame) return
+  frame = requestAnimationFrame(() => {
+    frame = 0
+    const srcRoot = panes.get(id)?.scrollRoot()
+    if (!srcRoot) return
+    const src = anchorsOf(id, srcRoot)
     for (const [other, pane] of panes) {
       if (other === id) continue
-      const target = src.linkTarget(para, pane.book())
-      if (target !== undefined) pane.scrollToPara(target)
+      const root = pane.scrollRoot()
+      if (!root) continue
+      const y = mapY(src, anchorsOf(other, root), srcRoot.scrollTop + TOP)
+      if (y !== null) root.scrollTop = y - TOP
     }
-    setTimeout(() => { syncSource = -1 }, 400)
-  }, 150)
+  })
+}
+
+function syncColumns(id: number, para: number) {
+  // paragraph links: only for columns that the gloss anchors could not place (not loaded yet, no glosses)
+  if (id !== driver) return
+  const src = panes.get(id)
+  const srcRoot = src?.scrollRoot()
+  if (!src || !srcRoot) return
+  const a = anchorsOf(id, srcRoot)
+  for (const [other, pane] of panes) {
+    if (other === id) continue
+    const root = pane.scrollRoot()
+    if (root && mapY(a, anchorsOf(other, root), srcRoot.scrollTop + TOP) !== null) continue
+    const target = src.linkTarget(para, pane.book())
+    if (target !== undefined) pane.scrollToPara(target)
+  }
+}
+
+// hovering an underline highlights it and its counterpart in the other columns
+let hovered: Element[] = []
+function onHover(e: MouseEvent) {
+  for (const el of hovered) el.classList.remove('gl-hover')
+  hovered = []
+  if (e.type !== 'mouseover') return
+  const ids = glossIdsAt(e.target as Element)
+  if (!ids.length) return
+  hovered = Array.from(document.querySelectorAll(ids.map(g => `.gl[data-g~="${g}"]`).join(',')))
+  for (const el of hovered) el.classList.add('gl-hover')
 }
 
 /** open the commentary / mūla of a paragraph next to the text (columns on wide screens, a tab otherwise) */
@@ -166,7 +220,15 @@ useHead({
   link: computed(() => (current.value ? [{ rel: 'canonical', href: `https://tipitaka.app/${script.value}/${current.value.key}` }] : [])),
 })
 
-function onWord(shown: string) {
-  ui.openLookup(toRoman(shown))
+function onWord(shown: string, glosses: Gloss[] = [], para?: { key: string; para: number }) {
+  ui.openLookup(shown && toRoman(shown), glosses, para)
 }
+// "open alongside" in the study panel
+watch(() => ui.alongside, a => {
+  if (!a) return
+  ui.alongside = null
+  openAlongside(a.key, a.para)
+})
+// ?align=debug: colour the underlines by alignment source and confidence
+watch(() => route.query.align, v => { document.documentElement.classList.toggle('align-debug', v === 'debug') }, { immediate: true })
 </script>

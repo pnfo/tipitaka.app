@@ -1,0 +1,64 @@
+{
+  "dppn": {
+    "url": "https://ancient-buddhist-texts.net/Textual-Studies/DPPN/DPPN.json",
+    "desc": "Dictionary of Pāli Proper Names, G. P. Malalasekera, revised by Ānandajoti Bhikkhu (2025), CC BY-SA 4.0",
+    "sha256": "30b5cc99dd620f0ca9a6fc55927803bd0077cb8d497ff92e2776849f07a46230"
+  },
+  "dppn-index": {
+    "url": "https://ancient-buddhist-texts.net/Textual-Studies/DPPN/index.htm",
+    "desc": "DPPN page: list of abbreviations",
+    "sha256": "bb6c66c585d3a591182da6e75b67bf6af22f2aff97c9a757bbcf65123f826057"
+  },
+  "pts": {
+    "url": "https://ancient-buddhist-texts.net/Textual-Studies/PTSPED/PTSPED.json",
+    "desc": "PTS Pali-English Dictionary, Rhys Davids & Stede, revised by Ānandajoti Bhikkhu (2025), CC BY-NC 3.0 © PTS",
+    "sha256": "6b491849b0e2f23999db63d4b7afaf1d3f3dfcbaa25ae497a8b57a5f0bdf7057"
+  },
+  "pts-index": {
+    "url": "https://ancient-buddhist-texts.net/Textual-Studies/PTSPED/index.htm",
+    "desc": "PTSPED page: list of books consulted and abbreviations",
+    "sha256": "b0ae0ae2d1c5659928ecac5242f3176b92faa412d1d41df51966b3b55b1ea202"
+  },
+  "cpd": {
+    "repo": "digitalpalidictionary/other-dictionaries",
+    "commit": "52a178f81bddb72ca48f6ca396fa0c39f095673d",
+    "path": "dictionaries/cpd/cpd.tar.zst",
+    "desc": "Critical Pāli Dictionary, scraped from cpd.uni-koeln.de and cleaned by the DPD project",
+    "sha256": "1d5c65e813aa9ca419d3accd16e72d6f698b0a04a0419ddfc00fb86b989e8862"
+  },
+  "nyanatiloka": {
+    "repo": "digitalpalidictionary/other-dictionaries",
+    "commit": "52a178f81bddb72ca48f6ca396fa0c39f095673d",
+    "path": "dictionaries/nyanatiloka/nyanatiloka.tar.zst",
+    "desc": "Buddhist Dictionary, Ven. Nyanatiloka (© BPS), as collected by the DPD project",
+    "sha256": "f5bd2ec8761730ee8cc7d3ff0240129f9d7c4230cb2a88569aba03ef4699baf3"
+  },
+  "ncped": {
+    "repo": "suttacentral/sc-data",
+    "commit": "d4082f073688f258749f0676ab922366f145b1d7",
+    "path": "dictionaries/simple/en/pli2en_ncped.json",
+    "desc": "New Concise Pali-English Dictionary (SuttaCentral)",
+    "sha256": "df096a84464ddcfd15acfb3abe0f9b355003604d0fedfb9700edc47190271c4d"
+  },
+  "pced-vi": {
+    "repo": "palipced/palipced.github.io",
+    "commit": "a12f0da426605092e1069b12e622879ed4c640ba",
+    "path": "pali-mdx/pali-en-cn-viet.mdx",
+    "desc": "PCED Pali-English-Chinese-Vietnamese (Alobha)",
+    "sha256": "a3acc32ac3cab7a712a9dbdbebdc8932420f3824d8f6f273ae35082b8d42affc"
+  },
+  "pced-ko": {
+    "repo": "palipced/palipced.github.io",
+    "commit": "a12f0da426605092e1069b12e622879ed4c640ba",
+    "path": "pali-mdx/pali-korean.mdx",
+    "desc": "PCED Pali-Korean (Alobha)",
+    "sha256": "3fff703380c8aaa1f9615c825eeb05c12a74ab022ea6675e943dea15aaf9b791"
+  },
+  "pced-my": {
+    "repo": "palipced/palipced.github.io",
+    "commit": "a12f0da426605092e1069b12e622879ed4c640ba",
+    "path": "pali-mdx/pali-myanmar-uni.mdx",
+    "desc": "PCED Pali-Myanmar (Alobha): Pali Word Grammar, Tipiṭaka Pāḷi-Myanmar Dictionary, U Hoke Sein, Pali roots (Unicode)",
+    "sha256": "781a83272c59085ba39bd86cb28e479166e14fdace4931ad4af9578f0d696e0f"
+  }
+}
