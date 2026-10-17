@@ -27,11 +27,22 @@ TEXT="text-$(node -p "require('./db/build-info.json').content_hash").db"
 DICT="dict-$(shasum db/dict.db | cut -c1-12).db"
 REL="$BASE/releases/$TS"
 ssh "$HOST" "mkdir -p $BASE/db $REL/db && df -h ~ | tail -1"
+# the dbs go compressed (zstd -19 --long: text 375 -> 107 MB, dict 455 -> 87 MB; slow uplinks): compressed once into
+# .cache/deploy/<name>.zst, uploaded with --partial (an interrupted upload resumes), unpacked on the server
+mkdir -p .cache/deploy
 for pair in "db/text.db:$TEXT" "db/dict.db:$DICT"; do
   src=${pair%%:*}; dst=${pair##*:}
-  if ssh "$HOST" "test -f $BASE/db/$dst"; then echo "$dst already on the server"
-  else rsync -az --info=progress2 "$src" "$HOST:$BASE/db/$dst.part" && ssh "$HOST" "mv $BASE/db/$dst.part $BASE/db/$dst"; fi
+  if ssh "$HOST" "test -f $BASE/db/$dst"; then echo "$dst already on the server"; continue; fi
+  zst=.cache/deploy/$dst.zst
+  if [ ! -f "$zst" ]; then
+    echo "compressing $src"
+    zstd -q -f -T0 -19 --long=27 "$src" -o "$zst.tmp" && mv "$zst.tmp" "$zst"
+  fi
+  rsync --partial --info=progress2 "$zst" "$HOST:$BASE/db/$dst.zst"
+  ssh "$HOST" "cd $BASE/db && zstd -q -d -f --long=27 $dst.zst -o $dst.part && mv $dst.part $dst && rm -f $dst.zst"
 done
+# (compressed dbs of older builds)
+find .cache/deploy -name '*.db.zst' ! -name "$TEXT.zst" ! -name "$DICT.zst" -delete
 rsync -az --info=progress2 web/dist/ "$HOST:$REL/dist/"
 rsync -az "$BIN" "$HOST:$REL/tipitaka_app"
 PREV=$(ssh "$HOST" "readlink $BASE/current || true")
