@@ -1,9 +1,9 @@
 # Deploying
 
 ## Website (droplet `tipitaka.lk`, nginx `conf.d/tipitaka.app.conf` → 127.0.0.1:8402)
-1. Run the **release** workflow (tag `v3.x` or manually). Download the artifacts `data` (text.db, dict.db),
-   `web` and `desktop-ubuntu-latest` (contains the linux `tipitaka_app`) - or build locally (dbs/web) and use the binary.
-2. `scripts/deploy.sh path/to/tipitaka_app` uploads the dbs only when their hash is new (`~/www/tipitaka.app/db/`,
+1. Build the dbs locally (`npm run build:data`, `npm run build:dict`).
+2. `scripts/deploy.sh` cross-compiles the linux binary here (macOS: `brew tap messense/macos-cross-toolchains`,
+   `x86_64-unknown-linux-gnu-gcc`; the binary needs glibc 2.14), builds the web app and uploads the dbs only when their hash is new (`~/www/tipitaka.app/db/`,
    shared by releases), the web build and the binary to `releases/<ts>`, flips `current`, restarts and waits for
    `/api/health` to report the new content hash, then prunes all but the previous release. sudo on tipitaka.lk asks
    for the password (the script uses `ssh -t` for the restart).

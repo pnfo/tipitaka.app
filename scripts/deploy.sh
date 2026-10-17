@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Deploys a release to the droplet (manual step after the release workflow):
-#   scripts/deploy.sh <linux amd64 binary>        (artifact desktop-ubuntu-latest of the release workflow)
+# Deploys a release to the droplet tipitaka.lk:
+#   scripts/deploy.sh [linux amd64 binary]   without one, the binary is cross-compiled here (macOS: brew tap
+#                                            messense/macos-cross-toolchains, x86_64-unknown-linux-gnu-gcc; needs glibc 2.14)
+# The dbs are the local ones (db/, npm run build:data / build:dict).
 # Server layout (~/www/tipitaka.app):
 #   db/text-<content_hash>.db, db/dict-<hash>.db   shared by releases, only uploaded when new (disk is small)
 #   releases/<ts>/{tipitaka_app, dist/, db/ -> symlinks}  and `current` -> releases/<ts>
@@ -11,7 +13,12 @@ cd "$(dirname "$0")/.."
 HOST=${DEPLOY_HOST:-tipitaka.lk}
 BASE=${DEPLOY_BASE:-www/tipitaka.app}
 SITE=${DEPLOY_SITE:-https://tipitaka.app}
-BIN=${1:?usage: scripts/deploy.sh <linux amd64 binary>}
+BIN=${1:-}
+if [ -z "$BIN" ]; then
+  BIN=server/bin/tipitaka_app_linux_amd64
+  echo "building $BIN"
+  (cd server && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=${LINUX_CC:-x86_64-unknown-linux-gnu-gcc} go build -trimpath -ldflags "-s -w" -o bin/tipitaka_app_linux_amd64 .)
+fi
 [ -f db/text.db ] && [ -f db/dict.db ] || { echo "build the dbs first (npm run build:data && npm run build:dict)"; exit 1; }
 # always a fresh web build: an old web/dist would not match the binary and the dbs
 npm run build:web
