@@ -47,6 +47,9 @@ find .cache/deploy -name '*.db.zst' ! -name "$TEXT.zst" ! -name "$DICT.zst" -del
 rsync -az --info=progress2 web/dist/ "$HOST:$REL/dist/"
 rsync -az "$BIN" "$HOST:$REL/tipitaka_app"
 PREV=$(ssh "$HOST" "readlink $BASE/current || true")
+# the running server before the restart: the check below wants a new process (the content hash alone does not change
+# when only the binary or the web app did)
+PID=$(ssh "$HOST" "systemctl show -p MainPID --value tipitaka_app")
 # the systemd units (server/tipitaka_app.service, the watchdog): installed when they differ from the droplet's
 rsync -az server/tipitaka_app.service server/tipitaka_app_watchdog.{service,timer,sh} "$HOST:$REL/systemd/"
 UNITS="cd ~/$REL/systemd && same=1; cmp -s tipitaka_app_watchdog.sh /usr/local/bin/tipitaka_app_watchdog || same=; \
@@ -58,7 +61,8 @@ ssh -t "$HOST" "cd $REL && chmod +x tipitaka_app && ln -sfn ../../../db/$TEXT db
   && cd ~/$BASE && ln -sfn releases/$TS current.new && mv -T current.new current && ($UNITS) && sudo systemctl restart tipitaka_app"
 EXPECTED=$(node -p "require('./db/build-info.json').content_hash")
 for i in $(seq 1 20); do
-  if curl -fsS "$SITE/api/health" 2>/dev/null | grep -q "\"contentHash\":\"$EXPECTED\""; then
+  if curl -fsS "$SITE/api/health" 2>/dev/null | grep -q "\"contentHash\":\"$EXPECTED\"" \
+    && [ "$(ssh "$HOST" "systemctl show -p MainPID --value tipitaka_app")" != "$PID" ]; then
     echo "deployed $TS ($EXPECTED)"
     # keep the current and the previous release and the dbs they use
     ssh "$HOST" "cd ~/$BASE && ls -1d releases/* | head -n -2 | xargs -r rm -rf && \
