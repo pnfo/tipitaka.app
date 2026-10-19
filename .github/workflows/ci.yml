@@ -1,7 +1,8 @@
 name: ci
+# push only: every branch here is pushed, so pull_request would run twice. The pull requests of sync-upstream.yml
+# (opened with GITHUB_TOKEN) would sit as "action_required" runs waiting for approval; that job builds and tests itself.
 on:
   push:
-  pull_request:
 
 jobs:
   test:

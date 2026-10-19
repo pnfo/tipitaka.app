@@ -2,7 +2,8 @@
  * External dictionary sources, pinned in data/dicts.lock and downloaded into .cache/dicts/<name>/ (never committed).
  *
  *  - url sources (ancient-buddhist-texts.net): pinned by sha256; --dicts-latest accepts a changed file and moves the pin
- *  - github sources: pinned by commit; --dicts-latest moves the pin to the branch head
+ *  - github sources: pinned by commit; --dicts-latest moves the pin to the branch head when the file changed there
+ *    (sc-data has commits most days, rarely to the dictionary: a new commit with the same file is no change)
  * .tar.zst files are unpacked next to the download. Writes `dicts_changed` to $GITHUB_OUTPUT.
  */
 import { createHash } from 'node:crypto'
@@ -43,9 +44,10 @@ export function syncDicts(lockFile: string, cacheDir: string, latest: boolean, o
   const lock = readDictLock(lockFile)
   let changed = false
   for (const [name, s] of Object.entries(lock)) {
+    let prev: string | undefined // the pinned commit while the head is tried
     if (latest && s.repo) {
       const head = headCommit(s.repo)
-      if (head !== s.commit) { console.log(`${name}: ${s.commit} -> ${head}`); s.commit = head; s.sha256 = undefined; changed = true }
+      if (head !== s.commit) { prev = s.commit; s.commit = head }
     }
     const file = sourceFile(cacheDir, name, s)
     const have = fs.existsSync(file) ? sha256(file) : ''
@@ -54,8 +56,11 @@ export function syncDicts(lockFile: string, cacheDir: string, latest: boolean, o
       const got = sha256(file)
       if (s.sha256 && got !== s.sha256) {
         if (!latest) throw new Error(`${name}: sha256 ${got} != pinned ${s.sha256} (run npm run upstream -- --dicts-latest to accept)`)
-        console.log(`${name}: new content ${got}`)
+        console.log(`${name}: new content ${got}${prev ? ` (${prev} -> ${s.commit})` : ''}`)
         changed = true
+      } else if (prev && s.sha256) {
+        console.log(`${name}: same content at ${s.commit}, keeping ${prev}`)
+        s.commit = prev
       }
       if (!s.sha256) changed = true
       s.sha256 = got
