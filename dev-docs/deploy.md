@@ -20,6 +20,8 @@ Rollback: `ssh tipitaka.lk 'cd www/tipitaka.app && ln -sfn releases/<previous> c
 **Load and uptime** (after the 2026-10-19 outage: crawlers asked for thousands of server rendered pages in non-Roman
 scripts, each a goja conversion on the 1 CPU droplet; the renders piled up, nginx returned 502 and the process grew to
 580 MB + 1 GB swap without crashing, so systemd never restarted it):
+- The conversion is native Go since (the `server/pali-converter` submodule): ~5 ms a page instead of ~300 ms in goja
+  (DN 1 in any script on an M-series CPU, `npm run bench` there), so the render slots are rarely all busy.
 - `server/guard.go`: at most 2 page renders at once (more wait ≤1.5 s, then a person gets the app shell, a crawler
   503 + `Retry-After`), 3 concurrent full text searches, a 32 MB page cache, `Crawl-delay: 2` in robots.txt.
 - Sitemaps and hreflang links only offer the first 9 scripts of the menu (`seoScripts` in `server/static.go`); pages in

@@ -18,8 +18,10 @@ shared/  pure TS used by build, web and tests: markup, tokenizer, normalisation,
 ## Key decisions
 * **Roman is the stored script.** Upstream romn/ and DPD are Roman; every other script is converted on display with
   `@pnfo/pali-converter` (the same library as open.tipitaka.lk, pinned to a GitHub commit). Roman is shown as stored
-  (the converter would lower-case proper names). The server converts for SSR by running the same JS in goja
-  (`server/convert`, copied by `scripts/sync-converter.mjs`, golden tests JS == Go).
+  (the converter would lower-case proper names). The server converts for SSR with the Go port of the same library
+  (the submodule `server/pali-converter`, github.com/pnfo/pali-converter: tables generated from its `index.js`, 1.8M
+  conversions checked against the JS there; `scripts/check-converter.mjs`: same `index.js` as the npm package;
+  `server/convert` golden tests JS == Go). It replaced running the JS in goja: ~300 ms a page there, ~5 ms in Go.
 * **One engine, everywhere.** Full text search must run next to the data (`*na*` touches ~20k words / 3M offsets), so
   instead of Go + Java (+ Swift) ports the Go engine is compiled into the apps with gomobile. Only small results cross
   the network or the JS bridge. The API is a fixed set of operations (`server/engine/call.go`); no client SQL

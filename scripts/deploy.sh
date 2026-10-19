@@ -17,6 +17,7 @@ BIN=${1:-}
 if [ -z "$BIN" ]; then
   BIN=server/bin/tipitaka_app_linux_amd64
   echo "building $BIN"
+  node scripts/check-converter.mjs
   (cd server && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=${LINUX_CC:-x86_64-unknown-linux-gnu-gcc} go build -trimpath -ldflags "-s -w" -o bin/tipitaka_app_linux_amd64 .)
 fi
 [ -f db/text.db ] && [ -f db/dict.db ] || { echo "build the dbs first (npm run build:data && npm run build:dict)"; exit 1; }

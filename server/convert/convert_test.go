@@ -9,7 +9,8 @@ import (
 )
 
 // golden.json is written by `npx vitest run shared` (shared/converter.test.ts) with the outputs of the
-// JavaScript converter, so Go SSR and the web app convert identically.
+// JavaScript converter of the web app (npm), so Go SSR (the Go port in server/pali-converter) and the web app convert
+// identically.
 func TestGolden(t *testing.T) {
 	b, err := os.ReadFile("golden.json")
 	if err != nil {

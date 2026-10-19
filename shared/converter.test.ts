@@ -1,5 +1,6 @@
 /** Script conversion goldens: the JS converter output for every script, also checked by the Go SSR
- * converter (server/convert/convert_test.go reads golden.json written here). */
+ * converter (server/convert/convert_test.go reads golden.json written here; the Go port itself is checked on 1.8M
+ * conversions in server/pali-converter). */
 import { describe, expect, it } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'

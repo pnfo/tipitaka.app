@@ -21,7 +21,7 @@ jobs:
       - run: npm run upstream -- --dpd-only --dicts
       - run: npm run typecheck
       - run: npm run lint
-      - run: node scripts/sync-converter.mjs --check
+      - run: node scripts/check-converter.mjs
       - run: npm run build:fixture && npm run build:dict:fixture
       - run: npm test
       - run: cd server && go vet ./... && go test -race ./...
@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: git submodule update --init server/pali-converter # the script converter (Go)
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
       - uses: actions/setup-go@v5

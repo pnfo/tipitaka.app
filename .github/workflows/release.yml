@@ -42,6 +42,7 @@ jobs:
     defaults: { run: { shell: bash } }
     steps:
       - uses: actions/checkout@v4
+      - run: git submodule update --init server/pali-converter # the script converter (Go)
       - uses: actions/setup-go@v5
         with: { go-version-file: server/go.mod, cache-dependency-path: server/go.sum }
       - uses: actions/download-artifact@v4
@@ -56,6 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: git submodule update --init server/pali-converter # the script converter (Go)
       - uses: actions/setup-go@v5
         with: { go-version-file: server/go.mod, cache-dependency-path: server/go.sum }
       - uses: actions/setup-java@v4

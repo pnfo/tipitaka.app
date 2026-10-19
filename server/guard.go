@@ -10,9 +10,9 @@ import (
 	"time"
 )
 
-// Load guard. Server side rendering is CPU heavy (a page in a non-Roman script is converted in goja: 10-300 ms on a
-// fast machine, more on the 1 CPU droplet) and crawlers ask for thousands of pages (22 scripts x 37000 texts). Without
-// a bound the renders pile up, nginx times out (502) and memory grows into swap (2026-10-19). So:
+// Load guard. Server side rendering was CPU heavy (a page in a non-Roman script was converted in goja: 10-300 ms on a
+// fast machine, more on the 1 CPU droplet; in Go since, ~5 ms) and crawlers ask for thousands of pages (22 scripts x
+// 37000 texts). Without a bound the renders pile up, nginx times out (502) and memory grows into swap (2026-10-19). So:
 //   - at most ssrSlots renders at once; a request that gets no slot within ssrWait is shed: a person gets the app
 //     shell at once (the app renders in the browser), a crawler 503 + Retry-After (search engines slow down, keep the
 //     page);
