@@ -276,8 +276,8 @@ func TestLoadGuard(t *testing.T) {
 	if _, body := get(t, h, "/api/health"); !strings.Contains(body, `"shedBots":1`) || !strings.Contains(body, `"shedPeople":1`) || !strings.Contains(body, `"apiBusy":1`) {
 		t.Errorf("health load counters: %s", body)
 	}
-	if _, body := get(t, h, "/robots.txt"); !strings.Contains(body, "Crawl-delay: 2") {
-		t.Error("robots crawl-delay")
+	if _, body := get(t, h, "/robots.txt"); strings.Contains(body, "Crawl-delay") {
+		t.Error("robots: no crawl-delay")
 	}
 	browser := httptest.NewRequest("GET", "/", nil)
 	browser.Header.Set("User-Agent", person)

@@ -22,8 +22,9 @@ scripts, each a goja conversion on the 1 CPU droplet; the renders piled up, ngin
 580 MB + 1 GB swap without crashing, so systemd never restarted it):
 - The conversion is native Go since (the `server/pali-converter` submodule): ~5 ms a page instead of ~300 ms in goja
   (DN 1 in any script on an M-series CPU, `npm run bench` there), so the render slots are rarely all busy.
-- `server/guard.go`: at most 2 page renders at once (more wait ≤1.5 s, then a person gets the app shell, a crawler
-  503 + `Retry-After`), 3 concurrent full text searches, a 32 MB page cache, `Crawl-delay: 2` in robots.txt.
+- `server/guard.go`: at most 4 page renders at once (more wait ≤1.5 s, then a person gets the app shell, a crawler
+  503 + `Retry-After`), 3 concurrent full text searches, a 32 MB page cache. Since the converter is Go (~5 ms for DN 1
+  instead of 200-400 ms in goja) this is a safety net: one Mac core renders ~270 of the longest pages a second.
 - Sitemaps and hreflang links only offer the first 9 scripts of the menu (`seoScripts` in `server/static.go`); pages in
   the other 13 still render, but crawlers are not invited to 22 copies of every text.
 - `/api/health` → `load` (renders, cache hits, shed requests, heap); the journal gets the counters every 10 minutes

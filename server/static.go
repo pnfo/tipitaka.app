@@ -44,8 +44,8 @@ func (a *App) handleStatic(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) handleRobots(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	// Crawl-delay: Bing, Yandex, Seznam … wait between requests (Google ignores it: it slows down on the 503s of guard.go)
-	fmt.Fprintf(w, "User-agent: *\nAllow: /\nDisallow: /api/\nCrawl-delay: 2\nSitemap: %s/sitemap.xml\n", a.cfg.Site)
+	// (no Crawl-delay since the Go converter: rendering keeps up, and Bing would need days for the sitemaps)
+	fmt.Fprintf(w, "User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: %s/sitemap.xml\n", a.cfg.Site)
 }
 
 // seoScripts are offered to search engines (sitemaps, hreflang): the first 9 of the script menu, the scripts people

@@ -20,7 +20,7 @@ import (
 //   - counters for /api/health and a log line every 10 minutes.
 
 const (
-	ssrSlots  = 2
+	ssrSlots  = 4 // one CPU: more do not add throughput (Go conversion: ~270 of the longest pages/s on one Mac core), 4 overlap disk reads
 	ssrWait   = 1500 * time.Millisecond
 	apiSlots  = 3
 	apiWait   = 5 * time.Second
