@@ -137,6 +137,20 @@ func TestTitles(t *testing.T) {
 	if hits, _ := e.Titles(ctx, "brahmajala", []string{"atta"}, 10); len(hits) == 0 {
 		t.Fatal("diacritic insensitive title search")
 	}
+	// a query with diacritics matching late in a title (an offset past the end of the shorter folded title panicked)
+	for _, n := range e.nodes {
+		r := []rune(strings.ToLower(n.Title))
+		if n.Kind == "group" || len(r) < 4 || !HasDiacritics(n.Title) {
+			continue
+		}
+		q := string(r[len(r)-4:])
+		if !HasDiacritics(q) {
+			continue
+		}
+		if hits, err := e.Titles(ctx, q, nil, 5); err != nil || len(hits) == 0 {
+			t.Fatalf("titles %q: %v %v", q, hits, err)
+		}
+	}
 }
 
 func TestFts(t *testing.T) {

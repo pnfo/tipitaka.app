@@ -104,21 +104,21 @@ func (e *Engine) Titles(ctx context.Context, q string, filter []string, limit in
 		if n.Kind == "group" || (allowed != nil && !allowed(i)) {
 			continue
 		}
-		var pos int
+		// (pos is a byte offset into the string searched: the lower case title is longer than the folded one)
+		title, needle := n.fold, fq
 		if sensitive {
-			pos = strings.Index(strings.ToLower(n.Title), q)
-		} else {
-			pos = strings.Index(n.fold, fq)
+			title, needle = strings.ToLower(n.Title), q
 		}
+		pos := strings.Index(title, needle)
 		if pos < 0 {
 			continue
 		}
 		score := 2
 		// start of the title (ignoring a leading number "12. ")
-		t := strings.TrimLeft(n.fold, "0123456789.() ")
-		if pos == 0 || strings.HasPrefix(t, fq) {
+		t := strings.TrimLeft(title, "0123456789.() ")
+		if pos == 0 || strings.HasPrefix(t, needle) {
 			score = 0
-		} else if n.fold[pos-1] == ' ' {
+		} else if title[pos-1] == ' ' {
 			score = 1
 		}
 		hits = append(hits, scored{i, score})
