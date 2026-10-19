@@ -136,6 +136,16 @@ func TestSitemapRobots(t *testing.T) {
 	if res, _ := get(t, h, "/sitemaps/nope.xml"); res.StatusCode != 404 {
 		t.Fatal("unknown sitemap")
 	}
+	// only the first 9 scripts of the menu are offered to search engines (sitemaps, hreflang)
+	if _, body := get(t, h, "/sitemap.xml"); strings.Count(body, "<sitemap>") != 18 || !strings.Contains(body, "sitemaps/tibt.xml") || strings.Contains(body, "sitemaps/brah.xml") {
+		t.Fatalf("sitemap index scripts: %s", body)
+	}
+	if res, _ := get(t, h, "/sitemaps/brah.xml"); res.StatusCode != 404 {
+		t.Fatal("no sitemap for scripts not offered to search engines")
+	}
+	if res, body := get(t, h, "/brah/dn-1-1"); res.StatusCode != 200 || !strings.Contains(body, `<article id="ssr"`) || strings.Count(body, `rel="alternate" hreflang=`) != 10 || strings.Contains(body, `hreflang="pi-Brah"`) {
+		t.Fatalf("other scripts still render, with the hreflang of the 9: %d", strings.Count(body, `rel="alternate" hreflang=`))
+	}
 	if _, body := get(t, h, "/robots.txt"); !strings.Contains(body, "Sitemap: https://tipitaka.app/sitemap.xml") {
 		t.Fatal("robots")
 	}
@@ -269,7 +279,9 @@ func TestLoadGuard(t *testing.T) {
 	if _, body := get(t, h, "/robots.txt"); !strings.Contains(body, "Crawl-delay: 2") {
 		t.Error("robots crawl-delay")
 	}
-	if !isBot(httptest.NewRequest("GET", "/", nil)) || isBot(func() *http.Request { r := httptest.NewRequest("GET", "/", nil); r.Header.Set("User-Agent", person); return r }()) {
+	browser := httptest.NewRequest("GET", "/", nil)
+	browser.Header.Set("User-Agent", person)
+	if !isBot(httptest.NewRequest("GET", "/", nil)) || isBot(browser) {
 		t.Error("isBot")
 	}
 }

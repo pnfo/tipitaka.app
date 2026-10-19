@@ -30,13 +30,7 @@ func (a *App) assemble(script, path, fullTitle, desc string, ld map[string]any, 
 	canonical := fmt.Sprintf("%s/%s/%s", a.cfg.Site, script, path)
 	var head strings.Builder
 	fmt.Fprintf(&head, `<meta name="description" content="%s"><link rel="canonical" href="%s">`, html.EscapeString(desc), html.EscapeString(canonical))
-	for _, s := range convert.Scripts {
-		if s == "asse" { // same hreflang as Bengali
-			continue
-		}
-		fmt.Fprintf(&head, `<link rel="alternate" hreflang="%s" href="%s/%s/%s">`, scriptLang[s], a.cfg.Site, s, path)
-	}
-	fmt.Fprintf(&head, `<link rel="alternate" hreflang="x-default" href="%s/latn/%s">`, a.cfg.Site, path)
+	a.alternates(&head, path)
 	fmt.Fprintf(&head, `<meta property="og:title" content="%s"><meta property="og:description" content="%s"><meta property="og:url" content="%s"><meta property="og:type" content="website">`,
 		html.EscapeString(fullTitle), html.EscapeString(desc), html.EscapeString(canonical))
 	if ld != nil {

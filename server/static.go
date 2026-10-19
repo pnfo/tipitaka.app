@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"tipitaka.app/server/convert"
@@ -47,12 +48,27 @@ func (a *App) handleRobots(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "User-agent: *\nAllow: /\nDisallow: /api/\nCrawl-delay: 2\nSitemap: %s/sitemap.xml\n", a.cfg.Site)
 }
 
+// seoScripts are offered to search engines (sitemaps, hreflang): the first 9 of the script menu, the scripts people
+// search Pali in. Pages in the other scripts render too, but every listed script multiplies the crawl (37000 texts
+// each, all converted on the server: the 2026-10-19 outage).
+var seoScripts = convert.Scripts[:9]
+
+func isSEOScript(s string) bool { return slices.Contains(seoScripts, s) }
+
+// alternates writes the hreflang links of a page (path: the url path after the script)
+func (a *App) alternates(head *strings.Builder, path string) {
+	for _, s := range seoScripts {
+		fmt.Fprintf(head, `<link rel="alternate" hreflang="%s" href="%s/%s/%s">`, scriptLang[s], a.cfg.Site, s, path)
+	}
+	fmt.Fprintf(head, `<link rel="alternate" hreflang="x-default" href="%s/latn/%s">`, a.cfg.Site, path)
+}
+
 // sitemap scripts: every script has its own sitemap (text in that script is a separate page for searches)
 func (a *App) handleSitemapIndex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	w.Header().Set("Cache-Control", "public, max-age=86400")
 	fmt.Fprint(w, `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
-	for _, s := range convert.Scripts {
+	for _, s := range seoScripts {
 		fmt.Fprintf(w, "<sitemap><loc>%s/sitemaps/%s.xml</loc></sitemap>", a.cfg.Site, s)
 		fmt.Fprintf(w, "<sitemap><loc>%s/sitemaps/names-%s.xml</loc></sitemap>", a.cfg.Site, s)
 	}
@@ -64,7 +80,7 @@ func (a *App) handleSitemap(w http.ResponseWriter, r *http.Request) {
 	// names-<script>.xml: the names index, the map and every name page (apart: a sitemap holds 50000 urls at most)
 	names := strings.HasPrefix(script, "names-")
 	script = strings.TrimPrefix(script, "names-")
-	if !ok || !convert.IsScript(script) {
+	if !ok || !isSEOScript(script) {
 		http.NotFound(w, r)
 		return
 	}
