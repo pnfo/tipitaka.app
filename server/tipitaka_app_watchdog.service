@@ -1,0 +1,8 @@
+# Health check of tipitaka_app (server/tipitaka_app_watchdog.sh), started by tipitaka_app_watchdog.timer.
+[Unit]
+Description=Tipitaka.app health check
+After=tipitaka_app.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/tipitaka_app_watchdog

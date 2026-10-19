@@ -62,6 +62,17 @@ func (a *App) handleAPI(w http.ResponseWriter, r *http.Request) {
 		}
 		p = engine.URLParams(r.URL.Query())
 	}
+	// the expensive ops have their own slots (guard.go)
+	if heavyOps[op] {
+		if !a.guard.api.acquire(r.Context(), apiWait) {
+			a.guard.stats.apiBusy.Add(1)
+			w.Header().Set("Cache-Control", "no-store")
+			w.Header().Set("Retry-After", "10")
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "busy", "message": "the server is busy, please retry"})
+			return
+		}
+		defer a.guard.api.release()
+	}
 	res, err := a.eng.Call(r.Context(), op, p)
 	if err != nil {
 		code := engine.ErrorCode(err)
@@ -85,7 +96,7 @@ func (a *App) handleAPI(w http.ResponseWriter, r *http.Request) {
 func (a *App) handleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
 	m := a.eng.MetaInfo()
-	writeJSON(w, 200, map[string]any{"status": "ok", "app": APPNAME, "meta": m})
+	writeJSON(w, 200, map[string]any{"status": "ok", "app": APPNAME, "meta": m, "load": a.guard.snapshot()})
 }
 
 func recoverMiddleware(next http.Handler) http.Handler {

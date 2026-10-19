@@ -38,7 +38,9 @@ func main() {
 	}
 	url := "http://" + strings.Replace(*listen, "0.0.0.0", "localhost", 1)
 	printBox(url, root)
-	srv := &http.Server{Addr: *listen, Handler: app.Handler(), ReadHeaderTimeout: 10 * time.Second, WriteTimeout: 60 * time.Second}
+	srv := &http.Server{Addr: *listen, Handler: app.Handler(), ReadHeaderTimeout: 10 * time.Second, WriteTimeout: 60 * time.Second,
+		IdleTimeout: 120 * time.Second}
+	go app.guard.logEvery(10 * time.Minute) // load counters in the journal
 	if !*noOpen {
 		go func() {
 			time.Sleep(300 * time.Millisecond)
@@ -118,6 +120,7 @@ type App struct {
 	indexHTML string
 	etag      string
 	ssr       *ssrCache
+	guard     *guard
 }
 
 func NewApp(cfg Config) (*App, error) {
@@ -132,7 +135,7 @@ func NewApp(cfg Config) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	a := &App{cfg: cfg, eng: eng, distDir: distDir(cfg.Root), indexHTML: cfg.IndexHTML, ssr: newSSRCache(500)}
+	a := &App{cfg: cfg, eng: eng, distDir: distDir(cfg.Root), indexHTML: cfg.IndexHTML, ssr: newSSRCache(32 << 20), guard: newGuard()}
 	a.etag = `W/"` + eng.Meta["content_hash"] + `"`
 	if a.indexHTML == "" {
 		if a.distDir == "" {

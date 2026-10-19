@@ -17,6 +17,19 @@
 
 Rollback: `ssh tipitaka.lk 'cd www/tipitaka.app && ln -sfn releases/<previous> current && sudo systemctl restart tipitaka_app'`.
 
+**Load and uptime** (after the 2026-10-19 outage: crawlers asked for thousands of server rendered pages in non-Roman
+scripts, each a goja conversion on the 1 CPU droplet; the renders piled up, nginx returned 502 and the process grew to
+580 MB + 1 GB swap without crashing, so systemd never restarted it):
+- `server/guard.go`: at most 2 page renders at once (more wait ≤1.5 s, then a person gets the app shell, a crawler
+  503 + `Retry-After`), 3 concurrent full text searches, a 32 MB page cache, `Crawl-delay: 2` in robots.txt.
+- `/api/health` → `load` (renders, cache hits, shed requests, heap); the journal gets the counters every 10 minutes
+  (`journalctl -u tipitaka_app | grep load`).
+- `server/tipitaka_app.service`: `Restart=always`, `MemoryHigh=450M`/`MemoryMax=600M` (killed and restarted instead of
+  swapping the shared droplet).
+- `tipitaka_app_watchdog.timer` (every 2 min, root): restarts the server when `/api/health` does not answer three
+  times in a row (`journalctl -t tipitaka_app_watchdog`, `systemctl list-timers tipitaka_app_watchdog`).
+- deploy.sh installs the units and the watchdog whenever they differ from the droplet's.
+
 **Disk** (checked 2026-10-17): tipitaka.lk has 24 GB, 14 GB free; 1 GB RAM (+2 GB swap), 1 CPU. `~/www` is a symlink
 to `/var/www/html`. The droplet is shared with tipitaka.lk (2.7 GB, of which 1.8 GB are its releases), tipitaka_lk_new,
 arutha.lk and the file server. One v3 db set is ~815 MB (text 375 MB, dict 440 MB); a deploy keeps at most two sets.

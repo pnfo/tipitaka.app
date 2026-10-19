@@ -213,3 +213,63 @@ func TestSSRNames(t *testing.T) {
 		t.Error("names sitemap")
 	}
 }
+
+func TestLoadGuard(t *testing.T) {
+	app := testApp(t)
+	h := app.Handler()
+	// a page rendered before the server gets busy stays in the cache
+	if res, _ := get(t, h, "/latn/dn-1-1"); res.StatusCode != 200 {
+		t.Fatal(res.StatusCode)
+	}
+	for i := 0; i < ssrSlots; i++ { // every render slot taken
+		app.guard.ssr.ch <- struct{}{}
+	}
+	defer func() {
+		for i := 0; i < ssrSlots; i++ {
+			app.guard.ssr.release()
+		}
+	}()
+	page := func(ua, url string) (*http.Response, string) {
+		req := httptest.NewRequest("GET", url, nil)
+		req.Header.Set("User-Agent", ua)
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		b, _ := io.ReadAll(rec.Result().Body)
+		return rec.Result(), string(b)
+	}
+	const person = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/141.0 Safari/537.36"
+	const googlebot = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+	if res, body := page(googlebot, "/latn/dn-1-2"); res.StatusCode != 503 || res.Header.Get("Retry-After") == "" || strings.Contains(body, "ssr") {
+		t.Errorf("busy, crawler: %d %q", res.StatusCode, res.Header.Get("Retry-After"))
+	}
+	if res, body := page(person, "/latn/dn-1-2"); res.StatusCode != 200 || strings.Contains(body, `<article id="ssr"`) || !strings.Contains(body, `<div id="app">`) {
+		t.Errorf("busy, person: %d (want the app shell)", res.StatusCode)
+	}
+	if res, body := page(googlebot, "/latn/dn-1-1"); res.StatusCode != 200 || !strings.Contains(body, `<article id="ssr"`) {
+		t.Errorf("busy, cached page: %d", res.StatusCode)
+	}
+	for i := 0; i < apiSlots; i++ {
+		app.guard.api.ch <- struct{}{}
+	}
+	defer func() {
+		for i := 0; i < apiSlots; i++ {
+			app.guard.api.release()
+		}
+	}()
+	// (apiWait: the request waits for a slot first)
+	if res, body := page(person, "/api/fts?q=dhamma"); res.StatusCode != 503 || !strings.Contains(body, `"busy"`) {
+		t.Errorf("busy search: %d %s", res.StatusCode, body)
+	}
+	if res, body := page(person, "/api/node?key=dn-1-1"); res.StatusCode != 200 {
+		t.Errorf("light api ops are not limited: %d %s", res.StatusCode, body)
+	}
+	if _, body := get(t, h, "/api/health"); !strings.Contains(body, `"shedBots":1`) || !strings.Contains(body, `"shedPeople":1`) || !strings.Contains(body, `"apiBusy":1`) {
+		t.Errorf("health load counters: %s", body)
+	}
+	if _, body := get(t, h, "/robots.txt"); !strings.Contains(body, "Crawl-delay: 2") {
+		t.Error("robots crawl-delay")
+	}
+	if !isBot(httptest.NewRequest("GET", "/", nil)) || isBot(func() *http.Request { r := httptest.NewRequest("GET", "/", nil); r.Header.Set("User-Agent", person); return r }()) {
+		t.Error("isBot")
+	}
+}

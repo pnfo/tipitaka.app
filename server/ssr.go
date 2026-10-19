@@ -59,14 +59,18 @@ func cacheKey(op string, params map[string]string) string {
 	return op + "|" + string(b)
 }
 
+// ssrCache keeps rendered pages, bounded by their size (a text page in a non-Roman script is up to ~300 KB)
 type ssrCache struct {
-	mu    sync.Mutex
-	max   int
-	order []string
-	items map[string]page
+	mu       sync.Mutex
+	maxBytes int
+	bytes    int
+	order    []string
+	items    map[string]page
 }
 
-func newSSRCache(max int) *ssrCache { return &ssrCache{max: max, items: map[string]page{}} }
+func newSSRCache(maxBytes int) *ssrCache {
+	return &ssrCache{maxBytes: maxBytes, items: map[string]page{}}
+}
 
 func (c *ssrCache) get(k string) (page, bool) {
 	c.mu.Lock()
@@ -78,32 +82,43 @@ func (c *ssrCache) get(k string) (page, bool) {
 func (c *ssrCache) put(k string, p page) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if _, ok := c.items[k]; !ok {
+	if old, ok := c.items[k]; ok {
+		c.bytes -= len(old.html)
+	} else {
 		c.order = append(c.order, k)
-		if len(c.order) > c.max {
-			delete(c.items, c.order[0])
-			c.order = c.order[1:]
-		}
 	}
 	c.items[k] = p
+	c.bytes += len(p.html)
+	for c.bytes > c.maxBytes && len(c.order) > 1 {
+		c.bytes -= len(c.items[c.order[0]].html)
+		delete(c.items, c.order[0])
+		c.order = c.order[1:]
+	}
 }
 
-func (a *App) render(ctx context.Context, u *url.URL) page {
+// render: a redirect, a cached page, or a page rendered in one of the ssr slots (guard.go). ok false: no slot in time
+func (a *App) render(ctx context.Context, u *url.URL) (p page, ok bool) {
 	// v2 share links: /?a=<file>-<line>-<script>
 	if q := u.Query().Get("a"); q != "" {
 		if target := a.legacyRedirect(ctx, q); target != "" {
-			return page{status: http.StatusMovedPermanently, redirect: target}
+			return page{status: http.StatusMovedPermanently, redirect: target}, true
 		}
 	}
 	key := u.Path
 	if p, ok := a.ssr.get(key); ok {
-		return p
+		a.guard.stats.cacheHits.Add(1)
+		return p, true
 	}
-	p := a.renderPath(ctx, u.Path)
+	if !a.guard.ssr.acquire(ctx, ssrWait) {
+		return page{}, false
+	}
+	defer a.guard.ssr.release()
+	a.guard.stats.renders.Add(1)
+	p = a.renderPath(ctx, u.Path)
 	if p.status == 200 || p.status == 404 {
 		a.ssr.put(key, p)
 	}
-	return p
+	return p, true
 }
 
 func (a *App) legacyRedirect(ctx context.Context, q string) string {
@@ -358,7 +373,25 @@ func truncate(s string, n int) string {
 }
 
 func (a *App) serveIndex(w http.ResponseWriter, r *http.Request) {
-	p := a.render(r.Context(), r.URL)
+	bot := isBot(r)
+	if bot {
+		a.guard.stats.botRequests.Add(1)
+	}
+	p, ok := a.render(r.Context(), r.URL)
+	if !ok {
+		// busy: a crawler is asked to come back later, a person gets the app (it renders the page in the browser)
+		w.Header().Set("Cache-Control", "no-store")
+		if bot {
+			a.guard.stats.shedBots.Add(1)
+			w.Header().Set("Retry-After", retryBots)
+			http.Error(w, "busy, please retry later", http.StatusServiceUnavailable)
+			return
+		}
+		a.guard.stats.shedPeople.Add(1)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Write([]byte(a.baseHTML("")))
+		return
+	}
 	if p.redirect != "" {
 		http.Redirect(w, r, p.redirect, p.status)
 		return

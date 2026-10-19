@@ -1,0 +1,11 @@
+# Every 2 minutes: restart tipitaka_app when it stops answering. systemctl list-timers tipitaka_app_watchdog
+[Unit]
+Description=Tipitaka.app health check every 2 minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=2min
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target

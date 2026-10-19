@@ -10,10 +10,17 @@ Type=simple
 User=janaka
 WorkingDirectory=/home/janaka/www/tipitaka.app/current
 ExecStart=/home/janaka/www/tipitaka.app/current/tipitaka_app -no-open -listen 127.0.0.1:8402 -root-path /home/janaka/www/tipitaka.app/current
-Restart=on-failure
-RestartSec=5
+# always: also after a kill by the watchdog (tipitaka_app_watchdog.timer) or the memory limit
+Restart=always
+RestartSec=3
 # the dbs are read-only and memory mapped by sqlite; keep the go heap small on the 1 GB droplet
 Environment=GOMEMLIMIT=300MiB
+# the droplet is shared (tipitaka.lk, arutha.lk...): above MemoryHigh the kernel reclaims hard, at MemoryMax the
+# server is killed and restarted instead of pushing the other sites into swap (2026-10-19: 580 MB + 1 GB swap)
+MemoryHigh=450M
+MemoryMax=600M
+MemorySwapMax=100M
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target

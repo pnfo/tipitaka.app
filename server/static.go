@@ -43,7 +43,8 @@ func (a *App) handleStatic(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) handleRobots(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	fmt.Fprintf(w, "User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: %s/sitemap.xml\n", a.cfg.Site)
+	// Crawl-delay: Bing, Yandex, Seznam … wait between requests (Google ignores it: it slows down on the 503s of guard.go)
+	fmt.Fprintf(w, "User-agent: *\nAllow: /\nDisallow: /api/\nCrawl-delay: 2\nSitemap: %s/sitemap.xml\n", a.cfg.Site)
 }
 
 // sitemap scripts: every script has its own sitemap (text in that script is a separate page for searches)

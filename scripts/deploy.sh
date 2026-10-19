@@ -46,15 +46,15 @@ find .cache/deploy -name '*.db.zst' ! -name "$TEXT.zst" ! -name "$DICT.zst" -del
 rsync -az --info=progress2 web/dist/ "$HOST:$REL/dist/"
 rsync -az "$BIN" "$HOST:$REL/tipitaka_app"
 PREV=$(ssh "$HOST" "readlink $BASE/current || true")
-# the first v3 deploy: the installed unit still starts the v2 binary - install server/tipitaka_app.service (runs current/)
-if ! ssh "$HOST" "systemctl cat tipitaka_app.service 2>/dev/null | grep -q 'current/tipitaka_app'"; then
-  echo "installing the v3 systemd unit (server/tipitaka_app.service)"
-  rsync -az server/tipitaka_app.service "$HOST:/tmp/tipitaka_app.service"
-  ssh -t "$HOST" "sudo cp /tmp/tipitaka_app.service /etc/systemd/system/tipitaka_app.service && sudo systemctl daemon-reload"
-fi
-# (-t: sudo asks for the password on the droplet)
+# the systemd units (server/tipitaka_app.service, the watchdog): installed when they differ from the droplet's
+rsync -az server/tipitaka_app.service server/tipitaka_app_watchdog.{service,timer,sh} "$HOST:$REL/systemd/"
+UNITS="cd ~/$REL/systemd && same=1; cmp -s tipitaka_app_watchdog.sh /usr/local/bin/tipitaka_app_watchdog || same=; \
+  for f in *.service *.timer; do cmp -s \$f /etc/systemd/system/\$f || same=; done; [ -n \"\$same\" ] || { echo 'installing the systemd units' \
+  && sudo install -m 644 *.service *.timer /etc/systemd/system/ && sudo install -m 755 tipitaka_app_watchdog.sh /usr/local/bin/tipitaka_app_watchdog \
+  && sudo systemctl daemon-reload && sudo systemctl enable --now tipitaka_app_watchdog.timer; }"
+# (-t: sudo asks for the password on the droplet, once)
 ssh -t "$HOST" "cd $REL && chmod +x tipitaka_app && ln -sfn ../../../db/$TEXT db/text.db && ln -sfn ../../../db/$DICT db/dict.db \
-  && cd ~/$BASE && ln -sfn releases/$TS current.new && mv -T current.new current && sudo systemctl restart tipitaka_app"
+  && cd ~/$BASE && ln -sfn releases/$TS current.new && mv -T current.new current && ($UNITS) && sudo systemctl restart tipitaka_app"
 EXPECTED=$(node -p "require('./db/build-info.json').content_hash")
 for i in $(seq 1 20); do
   if curl -fsS "$SITE/api/health" 2>/dev/null | grep -q "\"contentHash\":\"$EXPECTED\""; then
