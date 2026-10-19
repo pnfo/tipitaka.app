@@ -35,7 +35,7 @@
   },
   "ncped": {
     "repo": "suttacentral/sc-data",
-    "commit": "d4082f073688f258749f0676ab922366f145b1d7",
+    "commit": "2d9ca8da858f94302ed6783e2717bf73d651881b",
     "path": "dictionaries/simple/en/pli2en_ncped.json",
     "desc": "New Concise Pali-English Dictionary (SuttaCentral)",
     "sha256": "df096a84464ddcfd15acfb3abe0f9b355003604d0fedfb9700edc47190271c4d"
