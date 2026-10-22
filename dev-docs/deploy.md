@@ -35,6 +35,15 @@ scripts, each a goja conversion on the 1 CPU droplet; the renders piled up, ngin
   times in a row (`journalctl -t tipitaka_app_watchdog`, `systemctl list-timers tipitaka_app_watchdog`).
 - deploy.sh installs the units and the watchdog whenever they differ from the droplet's.
 
+**Statistics** (`server/stats.go`, `server/stats_page.go`, `web/src/composables/stats.ts`): anonymous daily counts in
+`~/www/tipitaka.app/metrics.db` (no addresses or ids), shown at https://tipitaka.app/stats by week or month. The
+password is in `~/www/tipitaka.app/stats.env` (`STATS_PASSWORD=...`, read by the unit; no file: no /stats). Countries
+(and the first visit's script, `/api/country`) come from DB-IP's country lite csv in `~/www/tipitaka.app/geo/`, which
+deploy.sh fetches when a new month's file is out (CC BY 4.0: credited in PRIVACY.md and on /stats). The server
+counts the api calls of people and the requests of crawlers; the web app sends a beacon with the visit (new /
+returning, first of the day / week / month, script, language), the pages opened and the searches (the last query of
+each).
+
 **Disk** (checked 2026-10-17): tipitaka.lk has 24 GB, 14 GB free; 1 GB RAM (+2 GB swap), 1 CPU. `~/www` is a symlink
 to `/var/www/html`. The droplet is shared with tipitaka.lk (2.7 GB, of which 1.8 GB are its releases), tipitaka_lk_new,
 arutha.lk and the file server. One v3 db set is ~815 MB (text 375 MB, dict 440 MB); a deploy keeps at most two sets.

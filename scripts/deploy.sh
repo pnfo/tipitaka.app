@@ -47,6 +47,11 @@ find .cache/deploy -name '*.db.zst' ! -name "$TEXT.zst" ! -name "$DICT.zst" -del
 rsync -az --info=progress2 web/dist/ "$HOST:$REL/dist/"
 rsync -az "$BIN" "$HOST:$REL/tipitaka_app"
 PREV=$(ssh "$HOST" "readlink $BASE/current || true")
+# the country database (server/geo.go): DB-IP's country lite file of the month, fetched on the droplet once it is out
+ssh "$HOST" "mkdir -p $BASE/geo && cd $BASE/geo && f=dbip-country-lite-\$(date -u +%Y-%m).csv.gz && { [ -s \$f ] \
+  || { curl -fsS -o \$f.part https://download.db-ip.com/free/\$f && mv \$f.part \$f && ln -sfn \$f country.csv.gz \
+       && ls -1 dbip-*.csv.gz | grep -vx \$f | xargs -r rm -f; } \
+  || { rm -f \$f.part; echo 'geoip: no DB-IP file for this month yet, keeping the last one'; }; }"
 # the running server before the restart: the check below wants a new process (the content hash alone does not change
 # when only the binary or the web app did)
 PID=$(ssh "$HOST" "systemctl show -p MainPID --value tipitaka_app")

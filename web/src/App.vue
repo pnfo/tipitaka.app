@@ -32,6 +32,7 @@ import { useUi } from './stores/ui'
 import { useRouter } from 'vue-router'
 import { firstVisit, useSettings } from './stores/settings'
 import { countryDefaults, landingPath } from './composables/country'
+import { startStats } from './composables/stats'
 import { changeScript } from './router'
 import { isScriptCode } from '@shared/scripts'
 import { useLibrary } from './stores/library'
@@ -59,6 +60,7 @@ if (firstVisit && !isNativeApp()) {
     if (!linkScript && settings.script === start.script && d.script !== settings.script) changeScript(router, d.script)
   })
 }
+if (!isNativeApp()) startStats(router, firstVisit, settings) // anonymous usage counts (the website only)
 
 onMounted(() => {
   document.getElementById('ssr')?.remove() // server rendered text is replaced by the app

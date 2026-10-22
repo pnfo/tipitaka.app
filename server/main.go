@@ -36,6 +36,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if err := app.stats.start(*metricsPath, *geoPath, os.Getenv("STATS_PASSWORD")); err != nil {
+		log.Fatal(err)
+	}
 	url := "http://" + strings.Replace(*listen, "0.0.0.0", "localhost", 1)
 	printBox(url, root)
 	srv := &http.Server{Addr: *listen, Handler: app.Handler(), ReadHeaderTimeout: 10 * time.Second, WriteTimeout: 60 * time.Second,
@@ -121,6 +124,7 @@ type App struct {
 	etag      string
 	ssr       *ssrCache
 	guard     *guard
+	stats     *stats
 }
 
 func NewApp(cfg Config) (*App, error) {
@@ -135,7 +139,7 @@ func NewApp(cfg Config) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	a := &App{cfg: cfg, eng: eng, distDir: distDir(cfg.Root), indexHTML: cfg.IndexHTML, ssr: newSSRCache(32 << 20), guard: newGuard()}
+	a := &App{cfg: cfg, eng: eng, distDir: distDir(cfg.Root), indexHTML: cfg.IndexHTML, ssr: newSSRCache(32 << 20), guard: newGuard(), stats: newStats()}
 	a.etag = `W/"` + eng.Meta["content_hash"] + `"`
 	if a.indexHTML == "" {
 		if a.distDir == "" {
@@ -155,9 +159,10 @@ func (a *App) Handler() http.Handler {
 	mux.HandleFunc("GET /api/health", a.handleHealth)
 	mux.HandleFunc("GET /api/{op}", a.handleAPI)
 	mux.HandleFunc("POST /api/{op}", a.handleAPI)
+	a.stats.routes(mux) // /api/country, /api/beacon, /stats (stats.go)
 	mux.HandleFunc("GET /robots.txt", a.handleRobots)
 	mux.HandleFunc("GET /sitemap.xml", a.handleSitemapIndex)
 	mux.HandleFunc("GET /sitemaps/{file}", a.handleSitemap)
 	mux.HandleFunc("GET /", a.handleStatic)
-	return recoverMiddleware(securityHeaders(gzipMiddleware(mux)))
+	return recoverMiddleware(securityHeaders(a.stats.count(gzipMiddleware(mux))))
 }

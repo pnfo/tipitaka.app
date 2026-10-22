@@ -9,7 +9,10 @@ After=network.target
 Type=simple
 User=janaka
 WorkingDirectory=/home/janaka/www/tipitaka.app/current
-ExecStart=/home/janaka/www/tipitaka.app/current/tipitaka_app -no-open -listen 127.0.0.1:8402 -root-path /home/janaka/www/tipitaka.app/current
+ExecStart=/home/janaka/www/tipitaka.app/current/tipitaka_app -no-open -listen 127.0.0.1:8402 -root-path /home/janaka/www/tipitaka.app/current \
+  -metrics /home/janaka/www/tipitaka.app/metrics.db -geoip /home/janaka/www/tipitaka.app/geo/country.csv.gz
+# STATS_PASSWORD=... for /stats (server/stats_page.go); without the file there is no /stats
+EnvironmentFile=-/home/janaka/www/tipitaka.app/stats.env
 # always: also after a kill by the watchdog (tipitaka_app_watchdog.timer) or the memory limit
 Restart=always
 RestartSec=3

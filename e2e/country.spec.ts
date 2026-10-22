@@ -1,10 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
 
 // a new visitor gets the script and interface language of their country (web/src/composables/country.ts); the
-// lookup (ipinfo.io) is answered here, test automation does not ask unless __tipitakaGeoTest is set
+// lookup (/api/country) is answered here, test automation does not ask unless __tipitakaGeoTest is set
 async function from(page: Page, country: string) {
   await page.addInitScript(() => { (window as { __tipitakaGeoTest?: boolean }).__tipitakaGeoTest = true })
-  await page.route('https://ipinfo.io/**', route => route.fulfill({ json: { country } }))
+  await page.route('**/api/country', route => route.fulfill({ json: { country } }))
 }
 
 test.describe('country defaults', () => {

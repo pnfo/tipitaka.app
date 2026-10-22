@@ -1,11 +1,10 @@
 /**
  * First visit on the website (no saved settings): the visitor's country sets the Pāḷi script and the interface
- * language (as v2 did, ipinfo.io). Countries not listed keep the guess from the browser languages (settings.ts
- * guessFromBrowser), else Roman / English. Not in the apps (they follow the device language, offline) and not under
- * test automation (navigator.webdriver; e2e sets window.__tipitakaGeoTest to test it).
- * The free ipinfo plan has 50000 lookups a month (used up 2026-10-21): crawlers that run the app (Googlebot renders
- * pages, every one with empty storage) and browsers that do not keep localStorage (every page load a "first visit")
- * are not asked about - see lookupAllowed.
+ * language, from our server (/api/country: server/geo.go, a local copy of DB-IP's country database; until 2026-10
+ * ipinfo.io, whose free 50000 lookups a month crawlers used up). Countries not listed keep the guess from the browser
+ * languages (settings.ts guessFromBrowser), else Roman / English. Not in the apps (they follow the device language,
+ * offline), not under test automation (navigator.webdriver; e2e sets window.__tipitakaGeoTest to test it), not for
+ * crawlers that run the app and not in browsers that do not keep localStorage (isPersonsBrowser).
  */
 
 /** country code -> [script, interface language] */
@@ -16,16 +15,16 @@ export const COUNTRY_DEFAULTS: Record<string, [string, string]> = {
   KH: ['khmr', 'kh'], LA: ['laoo', 'en'], BD: ['beng', 'en'], RU: ['cyrl', 'en'],
 }
 
-const IPINFO = 'https://ipinfo.io/json?token=2632ab35d5f487'
+const COUNTRY_URL = `${import.meta.env.BASE_URL}api/country`
 
 /** the path the visitor arrived at (before the router redirects /): a shared link names its script */
 export const landingPath = typeof location !== 'undefined' ? location.pathname : ''
 
 const CRAWLER = /bot\b|bot\/|crawl|spider|slurp|headless|lighthouse|inspectiontool|preview|facebookexternalhit|mediapartners|yandex|baidu|bytespider|petal|semrush|ahrefs|phantomjs|prerender/i
 
-/** whether to ask for the country: a person's browser (no crawler user agent) that keeps localStorage, so the
- *  lookup happens once (the settings are saved before this runs: a stored visit is no first visit) */
-export function lookupAllowed(ua: string, storage: Pick<Storage, 'setItem' | 'getItem' | 'removeItem'> | null): boolean {
+/** a person's browser (no crawler user agent) that keeps localStorage: the country is asked for once (the settings
+ *  are saved before: a stored visit is no first visit), and its visits are counted once (stats.ts) */
+export function isPersonsBrowser(ua: string, storage: Pick<Storage, 'setItem' | 'getItem' | 'removeItem'> | null): boolean {
   if (CRAWLER.test(ua)) return false
   try {
     if (!storage) return false
@@ -45,12 +44,12 @@ export async function countryDefaults(fetchImpl: typeof fetch = (...a) => fetch(
     if (navigator.webdriver && !geoTest) return null
     let storage: Storage | null = null
     try { storage = window.localStorage } catch { /* blocked */ }
-    if (!lookupAllowed(geoTest ? '' : navigator.userAgent, storage)) return null
+    if (!isPersonsBrowser(geoTest ? '' : navigator.userAgent, storage)) return null
   }
   try {
     // (no AbortController on the old WebViews: a race)
     const res = await Promise.race([
-      fetchImpl(IPINFO, { headers: { Accept: 'application/json' } }),
+      fetchImpl(COUNTRY_URL, { headers: { Accept: 'application/json' } }),
       new Promise<null>(resolve => setTimeout(() => resolve(null), timeoutMs)),
     ])
     if (!res || !res.ok) return null
