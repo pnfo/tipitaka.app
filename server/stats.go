@@ -1,11 +1,12 @@
 package main
 
 // Usage statistics of the website: anonymous daily counts, nothing about a single visitor.
-//   - the server counts the api calls of people's browsers (the features: texts, searches, dictionary, commentary,
-//     names...), the words looked up in the dictionary and the requests of crawlers;
-//   - the web app sends a beacon (web/src/composables/stats.ts): on arrival whether the visitor is new and whether
-//     this is their first visit of the day / week / month (so the unique visitors of a week are a sum), their script
-//     and language; when the page is hidden the pages opened and the searches made (the last query of each);
+//   - the web app sends beacons (web/src/composables/stats.ts), only once the visitor taps, clicks or types (crawlers
+//     that run the app, ~50 "new visitors" every few minutes on 2026-10-22, never do): whether the visitor is new and
+//     whether this is their first visit of the day / week / month (so the unique visitors of a week are a sum), their
+//     script and language; when the page is hidden the pages opened, the searches made (the last query of each), the
+//     app's requests to the server (the features used) and the words tapped in texts;
+//   - the server counts the requests of crawlers;
 //   - the country comes from the address (geo.go); the address itself is not kept.
 // Counts are rows (day, metric, value, country, n) of a sqlite db (-metrics), saved every minute and on exit.
 // /stats shows them by week or month (stats_page.go). The apps send nothing.
@@ -137,34 +138,21 @@ func (s *stats) save() {
 
 func (s *stats) country(r *http.Request) string { return s.geo.Load().country(clientIP(r)) }
 
-// count is the middleware counting the api calls of people and the requests of crawlers.
+// count is the middleware counting the requests of crawlers (people's are in the beacons).
 func (s *stats) count(next http.Handler) http.Handler {
-	ops := map[string]bool{}
-	for _, op := range engine.Ops {
-		ops[op] = true
-	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		next.ServeHTTP(w, r)
-		if s.db == nil {
+		if s.db == nil || !isBot(r) {
 			return
 		}
-		op, isAPI := strings.CutPrefix(r.URL.Path, "/api/")
-		if isBot(r) {
-			switch {
-			case isAPI:
-				s.add("crawler", "api", "", 1)
-			case strings.Contains(r.URL.Path, "sitemap") || r.URL.Path == "/robots.txt":
-				s.add("crawler", "sitemap", "", 1)
-			case !strings.Contains(r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:], "."): // not a file of the web app
-				s.add("crawler", "page", "", 1)
-			}
-			return
-		}
-		if isAPI && ops[op] && op != "meta" {
-			s.add("api", op, s.country(r), 1)
-			if op == "lookup" { // a word tapped in a text
-				s.add("term:lookup", normTerm(r.URL.Query().Get("w")), "", 1)
-			}
+		path := r.URL.Path
+		switch {
+		case strings.HasPrefix(path, "/api/"):
+			s.add("crawler", "api", "", 1)
+		case strings.Contains(path, "sitemap") || path == "/robots.txt":
+			s.add("crawler", "sitemap", "", 1)
+		case !strings.Contains(path[strings.LastIndex(path, "/")+1:], "."): // not a file of the web app
+			s.add("crawler", "page", "", 1)
 		}
 	})
 }
@@ -193,7 +181,17 @@ type beacon struct {
 	} `json:"visit"`
 	Pages map[string]int64 `json:"pages"`
 	Terms [][2]string      `json:"terms"` // [search kind, query]
+	Ops   map[string]int64 `json:"ops"`   // the app's requests to the server (engine ops)
+	Words []string         `json:"words"` // tapped in texts (op lookup)
 }
+
+var beaconOps = func() map[string]bool {
+	m := map[string]bool{}
+	for _, op := range engine.Ops {
+		m[op] = op != "meta"
+	}
+	return m
+}()
 
 // handleBeacon: POST /api/beacon from the web app (sendBeacon, text/plain json).
 func (s *stats) handleBeacon(w http.ResponseWriter, r *http.Request) {
@@ -228,6 +226,17 @@ func (s *stats) handleBeacon(w http.ResponseWriter, r *http.Request) {
 		if beaconPages[p] {
 			s.add("page", p, c, min(n, 200))
 		}
+	}
+	for op, n := range b.Ops {
+		if beaconOps[op] {
+			s.add("api", op, c, min(n, 500))
+		}
+	}
+	for i, w := range b.Words {
+		if i == 50 {
+			break
+		}
+		s.add("term:lookup", normTerm(w), "", 1)
 	}
 	for i, t := range b.Terms {
 		if i == 20 {

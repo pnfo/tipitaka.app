@@ -176,7 +176,7 @@ func (s *stats) handlePage(w http.ResponseWriter, r *http.Request) {
 			NewH: 100 * float64(nw) / float64(top), Label: p, N: u, New: nw})
 	}
 
-	pg.Tables = append(pg.Tables, statTable{Title: "Visitors", Note: "unique visitors of the " + by + "; new: first visit ever", Rows: []statRow{
+	pg.Tables = append(pg.Tables, statTable{Title: "Visitors", Note: "unique visitors of the " + by + " (counted once they tap, click or type); new: first visit ever", Rows: []statRow{
 		row("unique visitors", func(p string) int64 { return data[users][p] }),
 		row("new visitors", func(p string) int64 { return data["visit:new"][p] }),
 		row("visits (app loads)", func(p string) int64 { return sum(p, "visit:new", "visit:returning") }),
@@ -218,7 +218,7 @@ func (s *stats) handlePage(w http.ResponseWriter, r *http.Request) {
 	for _, t := range []struct{ title, prefix, note string }{
 		{"Pages opened", "page:", "views of the app's pages (texts: every text opened)"},
 		{"Searches", "search:", "searches made (the last query of each)"},
-		{"Server calls", "api:", "what the app asked the server for (repeated requests are answered by the browser's cache)"},
+		{"Features (server requests)", "api:", "what the visitors' app asked the server for (repeats come from its cache)"},
 		{"Scripts", "script:", "the script of each visitor of a day, summed"},
 		{"Interface languages", "lang:", "the language of each visitor of a day, summed"},
 	} {

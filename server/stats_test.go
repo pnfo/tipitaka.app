@@ -78,14 +78,14 @@ func TestStats(t *testing.T) {
 		t.Fatalf("country: %s", body)
 	}
 	visit := `{"visit":{"new":true,"day":true,"week":true,"month":true,"script":"sinh","lang":"si"},
-		"pages":{"read":3,"search":1,"nonsense":5},"terms":[["search","  Dhamma   Cakka "],["titles","metta"],["bogus","x"]]}`
+		"pages":{"read":3,"search":1,"nonsense":5},"terms":[["search","  Dhamma   Cakka "],["titles","metta"],["bogus","x"]],
+		"ops":{"text":2,"lookup":1,"meta":4,"drop_table":1},"words":["Dhammo"]}`
 	if res, _ := do("POST", "/api/beacon", browser, visit); res.StatusCode != 204 {
 		t.Fatal(res.StatusCode)
 	}
 	do("POST", "/api/beacon", browser, `{"visit":{"new":false,"day":true,"week":false,"month":false}}`)
 	do("POST", "/api/beacon", "Googlebot/2.1", visit) // a crawler api request, not a visit
-	do("GET", "/api/text?key=dn-1-1", browser, "")
-	do("GET", "/api/lookup?w=Dhammo", browser, "")
+	do("GET", "/api/text?key=dn-1-1", browser, "")    // people's requests come in the beacons
 	do("GET", "/api/text?key=dn-1-1", "Googlebot/2.1", "")
 	do("GET", "/latn/dn-1-1", "Googlebot/2.1", "")
 	do("GET", "/sitemap.xml", "bingbot/2.0", "")
@@ -106,7 +106,7 @@ func TestStats(t *testing.T) {
 	for k, want := range map[string]int64{
 		"visit|new|LK": 1, "visit|returning|LK": 1, "users|day|LK": 2, "users|week|LK": 1, "users|month|LK": 1,
 		"script|sinh|": 1, "lang|si|": 1, "page|read|LK": 3, "page|search|LK": 1, "search|search|LK": 1, "search|titles|LK": 1,
-		"term:search|dhamma cakka|": 1, "term:titles|metta|": 1, "api|text|LK": 1, "api|lookup|LK": 1, "term:lookup|dhammo|": 1,
+		"term:search|dhamma cakka|": 1, "term:titles|metta|": 1, "api|text|LK": 2, "api|lookup|LK": 1, "term:lookup|dhammo|": 1,
 		"crawler|api|": 2, "crawler|page|": 1, "crawler|sitemap|": 1,
 	} {
 		if counts[k] != want {
@@ -114,7 +114,7 @@ func TestStats(t *testing.T) {
 		}
 	}
 	for k := range counts {
-		if strings.Contains(k, "nonsense") || strings.Contains(k, "bogus") {
+		if strings.Contains(k, "nonsense") || strings.Contains(k, "bogus") || strings.Contains(k, "meta") || strings.Contains(k, "drop_table") {
 			t.Errorf("only the known pages and searches are counted: %s", k)
 		}
 	}

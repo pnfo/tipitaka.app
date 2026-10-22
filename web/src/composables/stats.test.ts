@@ -29,4 +29,12 @@ describe('usage counts (stats.ts)', () => {
     expect(t.take()).toEqual({ pages: { home: 1, read: 2, search: 1, dict: 1 }, terms: [['search', 'dhamma'], ['search', 'dhammo'], ['dict', 'sati']] })
     expect(t.take()).toBeNull()
   })
+  it('counts the requests to the server and the words tapped in texts', () => {
+    const t = new Tally()
+    t.op('meta', {})
+    t.op('text', { key: 'dn-1-1' })
+    t.op('text', { key: 'dn-1-2' })
+    t.op('lookup', { w: 'dhammo' })
+    expect(t.take()).toEqual({ ops: { text: 2, lookup: 1 }, words: ['dhammo'] })
+  })
 })

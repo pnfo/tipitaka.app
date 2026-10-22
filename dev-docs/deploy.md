@@ -40,9 +40,10 @@ scripts, each a goja conversion on the 1 CPU droplet; the renders piled up, ngin
 password is in `~/www/tipitaka.app/stats.env` (`STATS_PASSWORD=...`, read by the unit; no file: no /stats). Countries
 (and the first visit's script, `/api/country`) come from DB-IP's country lite csv in `~/www/tipitaka.app/geo/`, which
 deploy.sh fetches when a new month's file is out (CC BY 4.0: credited in PRIVACY.md and on /stats). The server
-counts the api calls of people and the requests of crawlers; the web app sends a beacon with the visit (new /
-returning, first of the day / week / month, script, language), the pages opened and the searches (the last query of
-each).
+counts the requests of crawlers; the web app sends beacons, only after the first tap, click or key (crawlers that
+run the app with a normal browser user agent never interact: on the first day ~50 "new visitors" every few minutes
+from Singapore): the visit (new / returning, first of the day / week / month, script, language), then when the page
+is hidden the pages opened, the searches (the last query of each), the app's requests and the words tapped.
 
 **Disk** (checked 2026-10-17): tipitaka.lk has 24 GB, 14 GB free; 1 GB RAM (+2 GB swap), 1 CPU. `~/www` is a symlink
 to `/var/www/html`. The droplet is shared with tipitaka.lk (2.7 GB, of which 1.8 GB are its releases), tipitaka_lk_new,
