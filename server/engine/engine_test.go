@@ -416,8 +416,18 @@ func TestNames(t *testing.T) {
 	if roles["place"] != "savatthi" || roles["about"] != "cakkhupala" {
 		t.Fatalf("dhp roles %v", roles)
 	}
-	if u, err := e.Settings(ctx, "kn-dhp-1", 3); err != nil || u != nil {
-		t.Fatalf("vagga title has no setting: %+v %v", u, err)
+	// the headings at the top of a page (the reading position when a sutta or vagga is opened): the setting of the
+	// text after them
+	if u, err := e.Settings(ctx, "kn-dhp-1", 3); err != nil || u == nil || u.Title != "1. Cakkhupālattheravatthu" {
+		t.Fatalf("vagga title: the first verse's setting %+v %v", u, err)
+	}
+	for _, para := range []int{0, 1, 2, 4} { // Namo tassa, Dīghanikāyo, the book, a subhead
+		if u, err := e.Settings(ctx, "dn-1", para); err != nil || u == nil || u.Key != "dn-1-1" || u.Rows[0].Slug != "rajagaha" {
+			t.Fatalf("dn-1 heading %d: %+v %v", para, u, err)
+		}
+	}
+	if u, err := e.Settings(ctx, "vp-prj-2-1-1", 36); err != nil || u != nil {
+		t.Fatalf("a text without a setting: %+v %v", u, err)
 	}
 
 	page, err := e.EntityPage(ctx, "savatthi")

@@ -20,6 +20,39 @@ test.describe('names', () => {
     await expect(page.getByTestId('entity-place').getByTestId('entity-setting')).toHaveText([/Dutiyapārājikaṃ/, /Brahmajālasuttaṃ/, /Sāmaññaphalasuttaṃ/])
   })
 
+  test('the Setting tab follows the active text: new tabs, switching tabs, a book or vagga opened at its top', async ({ page }) => {
+    await page.goto('/latn/settings')
+    await page.getByTestId('tabview-tabbed').click()
+    await page.goto('/latn/mn-1-1-2')
+    await paraOptions(page, page.getByTestId('reader').locator('.para.bodytext').first())
+    await page.getByTestId('para-menu').getByTestId('menu-setting').click()
+    const panel = page.getByTestId('study-panel')
+    const places = panel.getByTestId('setting-place').getByTestId('setting-name')
+    await expect(places).toHaveText([/Sāvatthī/, /Jetavana/])
+    // new tabs from title suggestions. A book or vagga page starts with headings that belong to no sutta (Namo tassa,
+    // the nikāya, the book, the vagga): the setting is that of the first sutta, whose first line names the place
+    const open = async (q: string, title: string) => {
+      await page.getByTestId('search-input').fill(q)
+      await page.getByTestId('search-menu').getByRole('option', { name: new RegExp(`^${title}`) }).click() // (not one under it)
+    }
+    await open('sīlakkhandha', 'Sīlakkhandhavaggapāḷi')
+    await expect(page.getByTestId('tab')).toHaveCount(2)
+    await expect(places).toHaveText([/Rājagaha/, /Nāḷandā/])
+    await open('mūlapariyāyavagg', '1. Mūlapariyāyavaggo')
+    await expect(page.getByTestId('tab')).toHaveCount(3)
+    await expect(places).toHaveText([/Ukkaṭṭhā/, /Subhagavana/])
+    // switching tabs
+    await page.getByTestId('tab').first().click()
+    await expect(places).toHaveText([/Sāvatthī/, /Jetavana/])
+    await page.getByTestId('tab').nth(1).click()
+    await expect(places).toHaveText([/Rājagaha/, /Nāḷandā/])
+    // closing the active tab: the setting of the one that becomes active
+    await page.getByTestId('tab-close').nth(1).click()
+    await expect(page.getByTestId('tab')).toHaveCount(2)
+    await expect(places).not.toHaveText([/Rājagaha/, /Nāḷandā/])
+    await expect(panel.getByTestId('setting-empty')).toHaveCount(0)
+  })
+
   test('a Dhammapada verse has the setting of its commentary story', async ({ page }) => {
     await page.goto('/latn/kn-dhp-1')
     const verse = page.getByTestId('reader').locator('.para', { hasText: 'Manopubbaṅgamā' }).first()

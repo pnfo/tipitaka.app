@@ -430,8 +430,18 @@ func (e *Engine) Settings(ctx context.Context, key string, para int) (*UnitSetti
 	}
 	var start, end, node int
 	var title string
-	err = e.text.QueryRowContext(ctx, `SELECT para_start, para_end, node_id, title FROM setting
+	unit := func(para int) error {
+		return e.text.QueryRowContext(ctx, `SELECT para_start, para_end, node_id, title FROM setting
 		WHERE book_id = ? AND para_start <= ? AND para_end > ? ORDER BY para_end - para_start LIMIT 1`, n.Book, para, para).Scan(&start, &end, &node, &title)
+	}
+	err = unit(para)
+	if err == sql.ErrNoRows {
+		// a heading above a sutta (the nikāya, book, vagga and sutta titles at the top of a page are at the reading
+		// position when a sutta is opened): the setting of the text after the headings
+		if text, ok := e.afterHeadings(ctx, n.Book, para); ok {
+			err = unit(text)
+		}
+	}
 	if err == sql.ErrNoRows {
 		return nil, nil
 	} else if err != nil {
@@ -467,6 +477,29 @@ func (e *Engine) Settings(ctx context.Context, key string, para int) (*UnitSetti
 		u.Rows = append(u.Rows, r)
 	}
 	return u, rows.Err()
+}
+
+var headingRends = map[string]bool{"centre": true, "nikaya": true, "book": true, "chapter": true, "title": true, "subhead": true, "subsubhead": true}
+
+// afterHeadings: when para is a heading, the first paragraph of text after it (at most 8 paragraphs on).
+func (e *Engine) afterHeadings(ctx context.Context, book, para int) (int, bool) {
+	from := book*paraIDShift + para
+	rows, err := e.text.QueryContext(ctx, "SELECT idx, rend FROM para WHERE id >= ? AND id < ? ORDER BY id", from, min(from+8, (book+1)*paraIDShift))
+	if err != nil {
+		return 0, false
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var idx int
+		var rend string
+		if rows.Scan(&idx, &rend) != nil {
+			return 0, false
+		}
+		if !headingRends[rend] {
+			return idx, idx > para
+		}
+	}
+	return 0, false
 }
 
 // NameSlugs lists the names with a setting or a sure mention (sitemaps).
