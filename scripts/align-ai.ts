@@ -25,7 +25,7 @@ import { fileURLToPath } from 'node:url'
 import { Claude, pool, type AskOptions } from './lib/claude'
 import { corpusFromDb } from '../build/align/db-corpus'
 import { alignCommentaries, type Gloss, type SecLemma } from '../build/align'
-import { NodeTexts, makeSelector, readDecisions, writeDecisions, type Decision } from '../build/align/decisions'
+import { NodeTexts, makeSelector, readDecisions, resolveSelector, writeDecisions, type Decision, type Selector } from '../build/align/decisions'
 import { buildParaLinks, paraPos } from '../build/links'
 import { foldWord, stream, words } from '../build/align/text'
 import type { Corpus } from '../build/tree'
@@ -41,7 +41,7 @@ const DRY = flag('--dry')
 const CACHE = path.join(repo, '.cache/align/ai')
 const ALIGN_DIR = path.join(repo, 'data/alignments')
 /** per job kind: changing a prompt changes its version (and so its cache keys) */
-const PROMPT_VERSION: Record<string, number> = { check: 2, resolve: 1, gold: 1, sections: 1, search: 1 }
+const PROMPT_VERSION: Record<string, number> = { recheck: 1, check: 2, resolve: 1, gold: 1, sections: 1, search: 1 }
 
 // ---------------- corpus ----------------
 const { corpus: c } = corpusFromDb(path.join(repo, 'db/text.db'))
@@ -619,11 +619,20 @@ For each commentary section give the key of the section of the explained text th
 async function searchResolve(jobs: ResolveJob[]) {
   exportCorpus()
   const model = arg('--model', 'sonnet')!
-  console.log(`resolve --search: ${jobs.length} sections, ${jobs.reduce((a, j) => a + j.lemmas.length, 0)} lemmas, ${model}`)
+  // calls of up to 8 lemmas: big sections split, small neighbouring sections of a book joined (verse commentaries
+  // leave 2-3 open lemmas per section); the first section's window is the hint
+  const groups: { job: ResolveJob; lemmas: { id: string; sl: SecLemma }[] }[] = []
+  for (const job of jobs) {
+    for (const { sl } of job.lemmas) {
+      const g = groups[groups.length - 1]
+      if (g && g.job.book === job.book && g.lemmas.length < 8 && sl.p0 - g.lemmas[0].sl.p0 < 40) g.lemmas.push({ id: `L${g.lemmas.length + 1}`, sl })
+      else groups.push({ job, lemmas: [{ id: 'L1', sl }] })
+    }
+  }
+  console.log(`resolve --search: ${jobs.length} sections, ${groups.reduce((a, g) => a + g.lemmas.length, 0)} lemmas in ${groups.length} calls, ${model}`)
   const out = new Map<number, Decision[]>()
   let found = 0, notLemma = 0, none = 0, invalid = 0
-  await pool(jobs, JOBS, async job => {
-    const lemmas = job.lemmas.slice(0, 10)
+  await pool(groups, JOBS, async ({ job, lemmas }) => {
     const prompt = `Find what the marked lemmas of a Pāḷi commentary quote. The passage is from ${c.books[job.book].def.title} (file ${c.books[job.book].def.id}), section ${keyOf(job.book, lemmas[0].sl.p0)}. Its lemmas - quotations printed in bold, usually followed by "ti" / "nti" - are marked ⟦L1: …⟧ …; an automatic search in ${c.books[job.tb].def.id} paragraphs ${job.ws}–${job.we - 1}${job.mula ? ` and ${c.books[job.mula.tb].def.id} ${job.mula.ws}–${job.mula.we - 1}` : ''} did not find them.
 
 ${CORPUS_HELP}
@@ -659,10 +668,100 @@ ${markedCommentary(job.book, lemmas)}`
 
 const usageLine = () => claude.usageLine()
 
+// ---------------- recheck: a stronger model reviews the stored AI matches of weak books ----------------
+interface RecheckAnswer { items: { id: string; verdict: 'correct' | 'wrong' | 'not-lemma' | 'unsure'; file?: string; para?: number; quote?: string; before?: string; conf: number; note?: string }[] }
+const RECHECK_SCHEMA = {
+  type: 'object', required: ['items'],
+  properties: {
+    items: {
+      type: 'array', items: {
+        type: 'object', required: ['id', 'verdict', 'conf'],
+        properties: {
+          id: { type: 'string' },
+          verdict: { type: 'string', enum: ['correct', 'wrong', 'not-lemma', 'unsure'] },
+          file: { type: 'string', description: 'wrong: the book file of the right place' },
+          para: { type: 'number', description: 'wrong: its paragraph number (first column)' },
+          quote: { type: 'string', description: 'wrong: the quoted words exactly as in that line' },
+          before: { type: 'string', description: 'wrong: the 1-3 words before them' },
+          conf: { type: 'number' },
+          note: { type: 'string' },
+        },
+      },
+    },
+  },
+}
+
+/** the selector's words marked in their paragraph(s), cut around them */
+function markedSel(sel: Selector, before: number, after: number): string | null {
+  const r = resolveSelector(nt, sel)
+  if (!r) return null
+  const a = r.ws[r.w0], z = r.ws[r.w1]
+  const parts: string[] = []
+  for (let i = a.idx; i <= z.idx; i++) {
+    const marks = [...(i === a.idx ? [{ at: a.s, s: '⟦' }] : []), ...(i === z.idx ? [{ at: z.e, s: '⟧' }] : [])]
+    parts.push(plain(text(r.book, i), marks))
+  }
+  return `${c.books[r.book].def.id} [${a.idx}]: ${around(parts.join(' / '), '⟦', before, after)}`
+}
+
+async function recheck() {
+  exportCorpus()
+  const model = arg('--model', 'opus')!
+  const effort = arg('--effort', 'medium')
+  const ids = arg('--books')!.split(',')
+  for (const id of ids) {
+    const book = c.books.find(b => b.def.id.startsWith(id))
+    if (!book) continue
+    const file = path.join(ALIGN_DIR, `${book.def.id.replace(/\.[a-z]+$/, '')}.jsonl`)
+    const ds = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l) as Decision)
+    // the Sonnet matches (manual decisions, checks and earlier rechecks are left alone)
+    const todo = ds.map((d, i) => ({ d, i })).filter(x => x.d.v === 'match' && x.d.m && /^ai:sonnet/.test(x.d.src))
+    const batches: (typeof todo)[] = []
+    for (let i = 0; i < todo.length; i += 10) batches.push(todo.slice(i, i + 10))
+    console.log(`recheck ${book.def.id}: ${todo.length} AI matches in ${batches.length} calls, ${model}${effort ? ` (effort ${effort})` : ''}`)
+    let ok = 0, fixed = 0, notLemma = 0, unsure = 0, invalid = 0
+    await pool(batches, JOBS, async batch => {
+      const items = batch.map((x, k) => ({ id: `${k + 1}`, x, cm: markedSel(x.d.c, 300, 400), tm: markedSel(x.d.m!, 400, 500) })).filter(it => it.cm && it.tm)
+      if (!items.length) return
+      const prompt = `Check an alignment of a Pāḷi commentary (${book.def.title}, ${book.def.id}) with the text it explains. Each item has a lemma of the commentary - a quotation printed in bold, usually followed by "ti" / "nti" - marked ⟦…⟧ in COMMENTARY, and the words of the explained text an earlier model linked it to, marked ⟦…⟧ in TEXT.
+
+${CORPUS_HELP}
+
+For each item:
+- correct: the TEXT words are the ones the lemma quotes at this place (sandhi and inflection may differ; a mark covering the whole compound or sandhi-joined word that contains the quoted words is correct; a "tiādi" lemma may stand for a longer passage).
+- wrong: the lemma quotes other words: another occurrence, another passage, a wrong span. Search the corpus (Grep in the *.fold.txt files, Read the lines around) and give the right place: "file", "para" (first column), "quote" copied exactly from that line (whole words), "before" (1-3 words before it). If you cannot find it, answer unsure.
+- not-lemma: the marked commentary words are not a quotation (a defined term, a gloss, a title, a reference by name).
+- unsure: you cannot tell.
+Give conf (0..1) and a short note for wrong / not-lemma.
+
+${items.map(it => `ITEM ${it.id}\nCOMMENTARY: ${it.cm}\nTEXT: ${it.tm}`).join('\n\n')}`
+      const res = await ask<RecheckAnswer>('recheck', prompt, RECHECK_SCHEMA, { model, effort, tools: ['Grep', 'Read'], cwd: CORPUS })
+      for (const a of res?.items ?? []) {
+        const it = items.find(x => x.id === a.id)
+        if (!it) continue
+        const d = ds[it.x.i]
+        if (a.verdict === 'correct') { ok++; ds[it.x.i] = { ...d, src: `${d.src}+${model}` } }
+        else if (a.verdict === 'not-lemma') { notLemma++; ds[it.x.i] = { c: d.c, v: 'not-lemma', conf: a.conf, src: `ai:${model}:recheck`, note: a.note } }
+        else if (a.verdict === 'wrong') {
+          const tb = a.file ? bookByFile(a.file) : undefined
+          const f = tb && a.quote && a.para !== undefined ? findQuote(tb.idx, Math.max(0, a.para - 2), Math.min(tb.paraCount, a.para + 3), a.quote, a.before ?? '') : null
+          const mSel = f && tb!.idx !== book.idx ? makeSelector(nt, keyOf(tb!.idx, f.idx), f.idx, f.s, f.e, f.idx2) : null
+          if (mSel) { fixed++; ds[it.x.i] = { c: d.c, m: mSel, v: 'match', conf: Math.min(0.9, a.conf), src: `ai:${model}:recheck`, note: a.note } }
+          else invalid++
+        } else unsure++
+      }
+    })
+    if (DRY) continue
+    writeDecisions(file, ds)
+    console.log(`${book.def.id}: ${ok} confirmed, ${fixed} corrected, ${notLemma} not quotations, ${unsure} unsure, ${invalid} corrections not found -> ${path.relative(repo, file)}`)
+  }
+}
+
 if (cmd === 'spot-check') await spotCheck()
 else if (cmd === 'resolve') await resolve()
 else if (cmd === 'gold') await gold()
 else if (cmd === 'sections') await sectionMaps()
 else if (cmd === 'export') exportCorpus()
+else if (cmd === 'recheck') await recheck()
 else { console.log('usage: npm run align:ai -- spot-check|resolve|gold|sections|export [--books …] [--n …] [--limit …] [--jobs 4] [--model sonnet] [--dry] [--apply] [--repair]'); process.exit(1) }
 if (!DRY) console.log(usageLine())

@@ -1,11 +1,19 @@
+{"c":{"k":"tika-sn-1-0","q":"karunasitalahadaya","pre":"kattukamotassagunatisayayogasandassanattham","o":157},"m":{"k":"atta-sn-1-0","q":"karunasitalahadayam","pre":"gantharambhakatha","o":1},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-0","q":"karunasitalahadaya","pre":"katumtammulakattasesaratananam","o":194},"m":{"k":"atta-sn-1-0","q":"karunasitalahadayam","pre":"gantharambhakatha","o":1},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-0","q":"karunasitalam","pre":"atthokarunayasitalam","o":240},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"karunasitalahadayo","pre":"karunasitalamhadayamassati","o":244},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-0","q":"karunasitalahadaya","pre":"viyasitibhavanimittantivuttam","o":270},"m":{"k":"atta-sn-1-0","q":"karunasitalahadayam","pre":"gantharambhakatha","o":1},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-0","q":"karunasitalahadaya","pre":"abhisayenahadayasitalabhavahetutiaha","o":292},"m":{"k":"atta-sn-1-0","q":"karunasitalahadayam","pre":"gantharambhakatha","o":1},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-0","q":"pannapajjoto","pre":"pakarehidhammasabhavajotanatthenapajjototi","o":347},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"vihatam","pre":"visesenahatamsamugghatitam","o":352},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"pannapajjotavihatam","pre":"vihatampannapajjotenavihatam","o":355},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"moho","pre":"mohanamattamevavatanti","o":364},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"tamo","pre":"andhakarasarikkhatayatamoviyati","o":371},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"pannapajjotavihatamohatamo","pre":"pannapajjotavihatomohatamoetassati","o":375},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-0","q":"pannapajjotavihatamohatama","pre":"bhagavantamthomentoaha","o":401},"m":{"k":"atta-sn-1-0","q":"pannapajjotavihatamohatamam","pre":"gantharambhakathakarunasitalahadayam","o":2},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-0","q":"pannapajjotavihatamohatama","pre":"mohatamavigamenathometabbotiaha","o":428},"m":{"k":"atta-sn-1-0","q":"pannapajjotavihatamohatamam","pre":"gantharambhakathakarunasitalahadayam","o":2},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-0","q":"pannapajjotavihatamohatama","pre":"mohatamavinasotikatvavuttam","o":459},"m":{"k":"atta-sn-1-0","q":"pannapajjotavihatamohatamam","pre":"gantharambhakathakarunasitalahadayam","o":2},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-0","q":"pannapajjotavihatamohatama","pre":"evahotitivuttam","o":525},"m":{"k":"atta-sn-1-0","q":"pannapajjotavihatamohatamam","pre":"gantharambhakathakarunasitalahadayam","o":2},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-0","q":"naramara","pre":"caamaraca","o":531},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"sanaramaro","pre":"naramarasahanaramarehiti","o":534},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"sanaramaraloko","pre":"solokocati","o":540},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
@@ -14,6 +22,7 @@
 {"c":{"k":"tika-sn-1-0","q":"sanara","pre":"pannapiyatitisahanarehiti","o":611},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"sanaramara","pre":"teamaracati","o":617},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"sanaramaralokoti","pre":"sanaramaratesamlokoti","o":620},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-0","q":"sanaramaralokagaru","pre":"garavatthanamtenavuttam","o":662},"m":{"k":"atta-sn-1-0","q":"sanaramaralokagarum","pre":"gantharambhakathakarunasitalahadayampannapajjotavihatamohatamam","o":3},"v":"match","conf":0.9,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-0","q":"sugato","pre":"gatamgamanametassati","o":668},"v":"not-lemma","conf":0.7,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"sugato","pre":"sammagatoavagatoti","o":698},"v":"not-lemma","conf":0.7,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"sugato","pre":"sammagatoatitoti","o":708},"v":"not-lemma","conf":0.7,"src":"ai:sonnet"}
@@ -23,6 +32,8 @@
 {"c":{"k":"tika-sn-1-0","q":"sugato","pre":"sammagadativadatiti","o":765},"v":"not-lemma","conf":0.7,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"sugato","pre":"katvaitisobhanagamanatadihi","o":773},"v":"not-lemma","conf":0.7,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"gatiyo","pre":"punnapapakehiupapajjanavasenagantabbato","o":779},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-0","q":"gativimutta","pre":"muttovisamyuttotiaha","o":799},"m":{"k":"atta-sn-1-0","q":"gativimuttam","pre":"sanaramaralokagarumvandesugatam","o":6},"v":"match","conf":0.9,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-0","q":"gativimuttanti","pre":"atthoathava","o":850},"m":{"k":"atta-sn-1-0","q":"gativimuttam","pre":"sanaramaralokagarumvandesugatam","o":6},"v":"match","conf":0.9,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-0","q":"attahitasampatti","pre":"parahitapatipattitocatesu","o":865},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"upakaro","pre":"lakkhananubyanjanaparipuriyavinatadabhavato","o":966},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-0","q":"bhavetvasacchikatvati","pre":"kattuniddesobuddhabhavantikammaniddeso","o":1311},"m":{"k":"atta-sn-1-0","q":"bhavetvacevasacchikatva","pre":"gativimuttambuddhopibuddhabhavam","o":9},"v":"match","conf":0.8,"src":"ai:sonnet"}
@@ -76,6 +87,7 @@
 {"c":{"k":"tika-sn-1-1-1-1","q":"sattavatibhagava","pre":"bhagavamatokatham","o":3135},"v":"not-lemma","conf":0.7,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1","q":"bhagevamitibhagava","pre":"tenavuccatitikatham","o":3285},"v":"not-lemma","conf":0.7,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1","q":"bhagevamitibhagava","pre":"bhagavatatokatham","o":3360},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-1-1-1","q":"bhagevamiti","pre":"bhagavaathava","o":3475},"v":"not-lemma","conf":0.6,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-1-1-1","q":"savakasampattimniddisati","pre":"evantinidassanato","o":3584},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1","q":"kalasampattimniddisati","pre":"paramparabhatantiimassatthassadipanato","o":3605},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1","q":"bhagavatidesakasampattimniddisati","pre":"hutavahamajjhejatamsamuditamakarandamaravindanti","o":3624},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
@@ -117,6 +129,8 @@
 {"c":{"k":"tika-sn-1-1-1-1-1","q":"sadharanamabbhantarasamutthanam","pre":"abbhantarabahirabhedatoduvidhamtattha","o":37},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1-1","q":"bahiram","pre":"veneyyajjhasayanurupamvicittanayadesanampavattesiti","o":100},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1-1","q":"sadharanamsamutthanam","pre":"pavattesitibahirampana","o":102},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-1-1-1-1","q":"abbhantaram","pre":"abbhantarabahirabhedatoduvidhamevatattha","o":119},"v":"not-lemma","conf":0.85,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-1-1-1-1","q":"bahiram","pre":"pavattitamtadubhayamveditabbam","o":130},"v":"not-lemma","conf":0.85,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-1-1-1-1","q":"payojanampi","pre":"tayidampaliyamagatameva","o":141},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1-1","q":"sadharanam","pre":"sadharanasadharanatoduvidhamtattha","o":145},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-1-1-1","q":"asadharanam","pre":"etadatthamantanatiadipari","o":158},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
@@ -231,6 +245,7 @@
 {"c":{"k":"tika-sn-1-1-4-2","q":"bala","pre":"maccharitamevaadanasila","o":90},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-4-3","q":"ya","pre":"vuttamsaddhayatiettha","o":31},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-4-3","q":"pi","pre":"visesapaccayoassaddhassatadabhavato","o":40},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-1-4-3","q":"evambhogerakkhissamiti","pre":"ussahantotiviriyamkaronto","o":77},"m":{"k":"atta-sn-1-1-4-3","q":"bhogecarakkhissami","pre":"issariyantiussahantovayujjhati","o":99},"v":"match","conf":0.6,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-1-4-3","q":"panesusamyamoti","pre":"sukhettagahanatopidakkhineyyavicinanamdatthabbam","o":243},"m":{"k":"sn-1-1-4-3","q":"panesupisadhusamyamo","pre":"danamapica","o":222},"v":"match","conf":0.5,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-4-3","q":"papamnakarontidhammapadamevati","pre":"naupavadeyyuntiasisanta","o":297},"m":{"k":"atta-sn-1-1-4-3","q":"danacakhodhammapadamvaseyyoti","pre":"upavadabhayenabhayatiupavadabhaya","o":295},"v":"match","conf":0.3,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-4-4","q":"pasurasuttenavibhavetabbo","pre":"tassevidhavisesatokamabhavasiddhito","o":93},"m":{"k":"atta-sn-1-1-4-4","q":"pasurasuttena","pre":"vuttoayampanattho","o":68},"v":"match","conf":0.6,"src":"ai:sonnet"}
@@ -271,6 +286,7 @@
 {"c":{"k":"tika-sn-1-1-5-7","q":"adi","pre":"vapapatalakaditi","o":72},"m":{"k":"atta-sn-1-1-5-7","q":"pokkharanitalakadim","pre":"paniyadanasalamudapanantiyamkinci","o":42},"v":"match","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-5-8","q":"isisangho","pre":"caisinamsangho","o":10},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-5-9","q":"kimtuyhampadarujjanti","pre":"dassentassamacchariyantikatva","o":35},"m":{"k":"atta-sn-1-1-5-9","q":"kimmayhampadarujjantitiadini","pre":"therathitativutte","o":96},"v":"match","conf":0.85,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-1-5-9","q":"itiadihi","pre":"mulabhutassadanassanisedhato","o":75},"v":"not-lemma","conf":0.6,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-1-5-9","q":"attanoupaghatakoti","pre":"nisedhatoitiadihivacanehi","o":77},"m":{"k":"atta-sn-1-1-5-9","q":"attanoupaghatoti","pre":"saggantarayopatiggahakanamlabhantarayo","o":151},"v":"match","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-5-9","q":"iti","pre":"paralokamupapajjaretiettha","o":109},"m":{"k":"sn-1-1-5-9","q":"nirayamtiracchanayonimyamalokamupapajjare","pre":"dadamananamantarayakaranara","o":31},"v":"match","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-5-9","q":"yacanti","pre":"nirayamtiracchanayonincasanganhati","o":118},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
@@ -278,6 +294,9 @@
 {"c":{"k":"tika-sn-1-1-6-1","q":"yepilokecittikata","pre":"cittikatamvatthunamsahassagghanatadivasena","o":60},"m":{"k":"atta-sn-1-1-6-1","q":"yecalokecittikata","pre":"bhagavacittikatopurisasiho","o":70},"v":"match","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-6-10","q":"akkharanhipadamjanetiti","pre":"satijananamviyapavattitagatha","o":29},"m":{"k":"atta-sn-1-1-6-10","q":"akkharamhipadamjaneti","pre":"arabhativiyanjanantijananam","o":16},"v":"match","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-7-10","q":"lokouppannotivuccati","pre":"kismimuppanneti","o":12},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-1-7-9","q":"vinayayati","pre":"icchasuttavannananavame","o":2},"m":{"k":"sn-1-1-7-9","q":"vinayaya","pre":"bajjhatilokokissa","o":5},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-1-7-9","q":"kissassuti","pre":"hiidamsampadanavacanam","o":8},"m":{"k":"sn-1-1-7-9","q":"kissa","pre":"kenassubajjhatiloko","o":4},"v":"match","conf":0.5,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-1-7-9","q":"su","pre":"sampadanavacanamkissassutikissa","o":10},"v":"not-lemma","conf":0.85,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-1-8-10","q":"sajivino","pre":"jivosahajivenati","o":44},"m":{"k":"sn-1-1-8-10","q":"sajivanam","pre":"jagarogavokamme","o":32},"v":"match","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-8-11","q":"sekkha","pre":"tiputhujjanakalyanakalelokiyaparinnaya","o":36},"m":{"k":"atta-sn-1-1-8-11","q":"sekha","pre":"parijanantitiputhujjanakalyanakatopatthaya","o":25},"v":"match","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-1-8-2","q":"ratthamrannapannayati","pre":"ratthamcolaratthantievam","o":10},"m":{"k":"atta-sn-1-1-8-2","q":"ratthampirannapannayati","pre":"colaratthampanduratthantievam","o":32},"v":"match","conf":0.85,"src":"ai:sonnet"}
@@ -303,6 +322,7 @@
 {"c":{"k":"tika-sn-1-10-12","q":"bhavaneevati","pre":"pariyosanesotibhagava","o":196},"m":{"k":"atta-sn-1-10-12","q":"bhavaneyeva","pre":"vihasiudahubhavaneyevati","o":514},"v":"match","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"bhagavapipassati","pre":"evativimaneeva","o":200},"m":{"k":"atta-sn-1-10-12","q":"bhagavapi","pre":"bhavanampassantitatha","o":522},"v":"match","conf":0.55,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"sitambyapagatamhotiunhancaupasammati","pre":"satagirihemavatanamkaladipadesakulajanettiayuppamanavisayampancamahavilokitam","o":214},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-10-12","q":"kassapampeuggahesu","pre":"uggahitamevanamatiaha","o":319},"m":{"k":"atta-sn-1-10-12","q":"uggahesum","pre":"panhesahavissajjanena","o":1826},"v":"match","conf":0.8,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-10-12","q":"da","pre":"metiadidutiyavikappe","o":355},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"iti","pre":"samudayadassanamsamuddapabbatanidassanamviya","o":445},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"dhammarasoveditabborupacaratiadisu","pre":"uppajjanakasukhamattharasotatha","o":771},"v":"not-lemma","conf":0.85,"src":"ai:sonnet"}
@@ -311,7 +331,10 @@
 {"c":{"k":"tika-sn-1-10-12","q":"paramatthasaccaraso","pre":"vadatinibbanasukhampiva","o":843},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"andho","pre":"lokiyancaatthamajananto","o":889},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"andho","pre":"parahitamattahitancaajananto","o":899},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-10-12","q":"etayati","pre":"patipakkhamsaddhadinamokasatta","o":1010},"m":{"k":"atta-sn-1-10-12","q":"cetaya","pre":"vuttaevamvuttaya","o":2407},"v":"match","conf":0.25,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-10-12","q":"tatiyammaggamaradhetva","pre":"ahaviriyenati","o":1130},"m":{"k":"atta-sn-1-10-12","q":"tatiyamaggamaradhetva","pre":"casakadagamiviriyena","o":2455},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-10-12","q":"adi","pre":"adinanayenatiettha","o":1507},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-10-12","q":"dadampiyohoti","pre":"ghatetidanassapiyabhavakaranato","o":1605},"m":{"k":"sn-1-10-12","q":"dadam","pre":"saccenakittimpappoti","o":219},"v":"match","conf":0.5,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-10-12","q":"pancakamagune","pre":"kamagunavuccantitiaha","o":1649},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"atthuddharo","pre":"agatatiadinapannadiatthassauddharanam","o":1732},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"paduddharo","pre":"savevacanapadanamuddharanam","o":1742},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
@@ -319,6 +342,7 @@
 {"c":{"k":"tika-sn-1-10-12","q":"sanghutthasadhukarasaddutthananca","pre":"buddhasubodhitadhammassavanatthamsannipatitadevatahi","o":1853},"v":"not-lemma","conf":0.5,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"paripunnabyanjanamtamyakkhopepuresiti","pre":"angapaccanganitesamparipunnatta","o":1874},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-12","q":"tamevaalavakasuttamkathesi","pre":"katvativuttam","o":1928},"v":"not-lemma","conf":0.5,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-10-12","q":"catuhivatthuhiti","pre":"peahositi","o":1941},"m":{"k":"atta-sn-1-10-12","q":"catuhisangahavatthuhi","pre":"mamasavakanamupasakanam","o":3527},"v":"match","conf":0.85,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-10-12","q":"itaranca","pre":"parisantiattanoparisam","o":1948},"v":"not-lemma","conf":0.5,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-2","q":"marapakkhikoyadannanti","pre":"marassapakkhegato","o":16},"m":{"k":"atta-sn-1-10-2","q":"yadannanti","pre":"tihibhavehivippamuttassa","o":14},"v":"match","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-10-2","q":"anukampitumnarahati","pre":"purisamsappannosambuddho","o":46},"m":{"k":"sn-1-10-2","q":"natamarahatisappannomanasaanukampitum","pre":"samvasosakkajayati","o":34},"v":"match","conf":0.5,"src":"ai:sonnet"}
@@ -353,6 +377,7 @@
 {"c":{"k":"tika-sn-1-11-2-8","q":"pi","pre":"pancahiniyamasilavasenadasahi","o":44},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-11-2-9","q":"yakkho","pre":"tathabhutohutvayajitabbato","o":11},"m":{"k":"atta-sn-1-11-2-9","q":"yakkhoti","pre":"thapetvanamassatiso","o":15},"v":"match","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-11-2-9","q":"apacayo","pre":"atikkamanenakilesarinamapetacayoti","o":63},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-11-3-2","q":"naupanayhamiti","pre":"cirakalamnakujjhami","o":115},"m":{"k":"sn-1-11-2-1","q":"khippamevanampativineyyanti","pre":"mekodhouppajjeyya","o":53},"v":"match","conf":0.6,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-11-3-4","q":"nappatiganhatitinakhamati","pre":"patigganhatotasmavuttam","o":28},"m":{"k":"atta-sn-1-11-3-4","q":"nappatigganhatiti","pre":"avocatiatthoyathadhammam","o":16},"v":"match","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-11-3-4","q":"agarayhamanavajjamsabbasopahinakilesamtenahakhinasavapuggala","pre":"amittadhammojarapariyayenavutto","o":65},"m":{"k":"atta-sn-1-11-3-4","q":"agarahiyam","pre":"mahotutiattho","o":59},"v":"match","conf":0.5,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-2-1-1","q":"devanamhi","pre":"devaputtotivuccatitiaha","o":10},"m":{"k":"atta-sn-1-2-1-1","q":"devananhiankenibbattapurisadevaputta","pre":"devaputtasamyuttassapathamedevaputtoti","o":4},"v":"match","conf":0.6,"src":"ai:sonnet"}
@@ -390,6 +415,8 @@
 {"c":{"k":"tika-sn-1-2-3-9","q":"visuddhimagge","pre":"sankhepovittharopana","o":319},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-2-3-9","q":"akankheyyasuttadisu","pre":"panavisuddhimaggevisuddhi","o":321},"v":"not-lemma","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-2-3-9","q":"viharasamapattinam","pre":"mahavisayatabahudhatukasuttadisuagatanayena","o":345},"m":{"k":"atta-sn-1-2-3-9","q":"mahaviharasamapattiyo","pre":"mahapannamahantanithanatthanani","o":309},"v":"match","conf":0.5,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-2-3-9","q":"abhinnanam","pre":"nipphattibhavatosantapanitanipunaatakkavacarapanditavedaniyabhavatoca","o":381},"v":"not-lemma","conf":0.8,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-2-3-9","q":"nibbanassa","pre":"mahanubhavatomahanipphattitoca","o":388},"v":"not-lemma","conf":0.8,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-2-3-9","q":"atthesuti","pre":"paticcananampavattati","o":566},"m":{"k":"atta-sn-1-2-3-9","q":"nanaatthesu","pre":"puthunanasunnatamanupalabbhesuputhu","o":361},"v":"match","conf":0.4,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-2-3-9","q":"puthujanasadharanedhammesamatikkamma","pre":"puthuttamgahetabbantiaha","o":644},"m":{"k":"atta-sn-1-2-3-9","q":"puthunanajanasadharanedhammesamatikkamma","pre":"nanaariyamaggesusamannaphalesuabhinnasu","o":388},"v":"match","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-2-3-9","q":"sabbamrupamaniccalakkhanatokhippamjavatiti","pre":"therassahasapannatatidasseti","o":715},"m":{"k":"atta-sn-1-2-3-9","q":"sabbamrupamaniccatokhippamjavatiti","pre":"duresantikeva","o":478},"v":"match","conf":0.7,"src":"ai:sonnet"}
@@ -434,6 +461,7 @@
 {"c":{"k":"tika-sn-1-3-1-6","q":"kuto","pre":"atikkamantisadhumariyadavitikkamalakkhanamdosam","o":18},"m":{"k":"atta-sn-1-3-1-6","q":"kutanti","pre":"majjantiatisarantiatikkamam","o":13},"v":"match","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-3-1-8","q":"sati","pre":"tassatirannopasenadissa","o":41},"m":{"k":"atta-sn-1-3-1-8","q":"sa","pre":"agamanamagamesitassa","o":81},"v":"match","conf":0.5,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-3-1-9","q":"vattukamoahosi","pre":"yannamrajakarapetiti","o":67},"m":{"k":"atta-sn-1-3-1-9","q":"vatthukamoahosi","pre":"jaimamgatham","o":477},"v":"match","conf":0.6,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-3-1-9","q":"sattavisatipenassati","pre":"pavattetabbehidvihiparivarayannehi","o":174},"m":{"k":"atta-sn-1-3-1-9","q":"sattanavutipancapasusataghatabhimsanassa","pre":"ekavisatiyupassaekasmimmajjhimadivaseyeva","o":815},"v":"match","conf":0.8,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-3-1-9","q":"yago","pre":"tiayupoappakadivaso","o":243},"v":"not-lemma","conf":0.6,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-3-1-9","q":"satrayago","pre":"sayupobahudivasamsadheyyo","o":247},"m":{"k":"atta-sn-1-3-1-9","q":"satrayagassetam","pre":"patilomamgacchantenayajitabbassa","o":854},"v":"match","conf":0.4,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-3-1-9","q":"vajamiti","pre":"satrayagomantapadabhisankhatanamsappimadhunam","o":250},"v":"not-lemma","conf":0.5,"src":"ai:sonnet"}
@@ -479,6 +507,8 @@
 {"c":{"k":"tika-sn-1-4-1-1","q":"sammavayamasatisamadhayogahita","pre":"samadhinohigahanena","o":192},"m":{"k":"atta-sn-1-4-1-1","q":"sammavayamasatisamadhayo","pre":"sammavacakammantajivagahitasamadhina","o":144},"v":"match","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-4-1-4","q":"sammasaddo","pre":"etassaatthassadipako","o":25},"v":"not-lemma","conf":0.75,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-4-1-5","q":"evamhigatesuti","pre":"anukkamenagamanasankhatamcarikam","o":6},"m":{"k":"atta-sn-1-4-1-5","q":"evanhigatesu","pre":"janamaagamittha","o":30},"v":"match","conf":0.95,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-4-1-5","q":"sasanassaadisilam","pre":"adikalyanamtathasesesu","o":20},"m":{"k":"atta-sn-1-4-1-5","q":"sasanassasilamadi","pre":"vasenaduvidhamtattha","o":57},"v":"match","conf":0.8,"src":"ai:sonnet:search"}
+{"c":{"k":"tika-sn-1-4-1-5","q":"samathadayomajjham","pre":"silammulakattatassa","o":25},"m":{"k":"atta-sn-1-4-1-5","q":"samathavipassanamaggamajjham","pre":"sasanassasilamadi","o":60},"v":"match","conf":0.75,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-4-1-5","q":"catuppadikagathayatavapathamapado","pre":"viyakatvadassento","o":139},"m":{"k":"atta-sn-1-4-1-5","q":"catuppadikayagathayatavapathamapado","pre":"pariyosanamdesanayapana","o":80},"v":"match","conf":0.9,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-4-1-6","q":"urasmimcarayeyyunti","pre":"sattisallantisattisankhatamputhusallam","o":87},"v":"not-lemma","conf":0.5,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-4-1-7","q":"vattasisethatvadhovanti","pre":"namanatthidhammassamibhavato","o":17},"m":{"k":"atta-sn-1-4-1-7","q":"vattasisepanathatvadhovanti","pre":"vattabhedonamanatthi","o":32},"v":"match","conf":0.85,"src":"ai:sonnet"}
@@ -564,6 +594,7 @@
 {"c":{"k":"tika-sn-1-7-1-9","q":"magganatthangikosettho","pre":"tathacahabhagava","o":555},"v":"not-lemma","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-7-1-9","q":"paramatthasaccamgahitam","pre":"samadhidhammotivutto","o":633},"m":{"k":"atta-sn-1-7-1-9","q":"paramatthasaccam","pre":"athavasaccanti","o":894},"v":"match","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-7-1-9","q":"setthappattiti","pre":"hetthapadhanatayanidassanamattam","o":683},"m":{"k":"atta-sn-1-7-1-9","q":"setthapatti","pre":"majjhenissitabrahmapattiti","o":927},"v":"match","conf":0.6,"src":"ai:sonnet"}
+{"c":{"k":"tika-sn-1-7-1-9","q":"sadujjubhutesuti","pre":"takaropadasandhikaro","o":695},"m":{"k":"sn-1-7-1-9","q":"tujjubhutesu","pre":"brahmanabrahmapattisa","o":357},"v":"match","conf":0.6,"src":"ai:sonnet:search"}
 {"c":{"k":"tika-sn-1-7-2-1","q":"kilantaparivattanam","pre":"mocetvaakilantassayojanam","o":38},"m":{"k":"atta-sn-1-7-2-1","q":"kilantaparivattanattham","pre":"cattarocattaroavasesa","o":157},"v":"match","conf":0.8,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-7-2-1","q":"kadaciekotiadi","pre":"phalasamapattiyakalamvitinametva","o":62},"m":{"k":"atta-sn-1-7-2-1","q":"kadaciekako","pre":"civaramparupitvapattamadaya","o":318},"v":"match","conf":0.85,"src":"ai:sonnet"}
 {"c":{"k":"tika-sn-1-7-2-1","q":"vicitrapataparikkhittaniviyaca","pre":"tahampitamissitamsandhaya","o":117},"m":{"k":"atta-sn-1-7-2-1","q":"citrapataparikkhittaniviyaca","pre":"nikkhamitvasuvannarasasincananiviya","o":384},"v":"match","conf":0.8,"src":"ai:sonnet"}

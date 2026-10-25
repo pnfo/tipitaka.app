@@ -72,9 +72,15 @@ the next run prints the change): run it after every matcher change.
 2026-10-15: deterministic precision 92.4%, recall 86.7% (F1 89.4%); with the AI decisions 92.5% / 87.9%.
 2026-10-16, after the AI resolve of all Tipiṭaka commentaries (≈ 10k calls, ≈ $420 API equivalent on the plan, two
 waits for the session limit): 92.3% / 90.5% (F1 91.4%). Lemmas matched or found to be no quotation: aṭṭhakathā 94.4%,
-ṭīkā 95.0%. Not run yet: the Abhidhānappadīpikā- and Subodhālaṅkāra-ṭīkās (lexicon, poetics), and
-`resolve --search` (Sonnet with Grep over the corpus) for the lemmas that quote outside their window (~$0.10 per
-call of ~6 lemmas; very good answers in a test). Most
+ṭīkā 95.0%. 2026-10-21, `resolve --search` (Sonnet with Grep / Read over the corpus, up to 8 lemmas per call) on the seven books
+with the most lemmas outside their windows (Pārājika-, Pācittiyādi-, Vibhaṅga-ṭīkā, Jātaka, Theragāthā, Apadāna,
+Suttanipāta): 5225 of ~6350 lemmas matched (verse commentaries ~95%: their misses were windows, not quotations), 950
+calls, ~1.6 h, ~$57 API equivalent; spot check of the AI matches in the verse books 94%. Eval 92.4% / 91.5% (F1
+91.9%); aṭṭhakathā lemmas matched 91.0%. 2026-10-21/22, --search on the remaining 43 books (≥ 30 open
+lemmas): 7906 matched, 1123 not quotations, 418 not found (~$113, one wait for the session limit); spot check of
+their AI matches 80% (Vinayavinicchaya-ṭīkā 63%, the others 82-94%). Eval 92.2% / 92.0% (F1 92.1%). Lemmas matched
+or found to be no quotation: aṭṭhakathā 99.6%, ṭīkā 99.3%. Not run: the Abhidhānappadīpikā- and Subodhālaṅkāra-ṭīkās
+(lexicon, poetics, ~7.7k lemmas) and 34 books with < 30 open lemmas. Most
 remaining errors are repeated passages (refrains, question and answer) where the commentary explains another
 occurrence than the one chosen.
 

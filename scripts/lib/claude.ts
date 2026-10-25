@@ -21,8 +21,8 @@ export function claudeBin(): string {
 }
 
 export interface Usage { input: number; output: number; cacheRead: number; cacheWrite: number; cost: number; ms: number }
-/** model (default: the client's), tools the model may use (Grep / Read over cwd) */
-export interface AskOptions { model?: string; tools?: string[]; cwd?: string }
+/** model (default: the client's), tools the model may use (Grep / Read over cwd), effort (low / medium / high; default: the CLI's) */
+export interface AskOptions { model?: string; tools?: string[]; cwd?: string; effort?: string }
 
 export interface ClaudeOptions {
   system: string
@@ -48,7 +48,7 @@ export class Claude {
 
   cacheFile(kind: string, prompt: string, o: AskOptions = {}): string {
     const model = o.model ?? this.o.model
-    const hash = crypto.createHash('sha1').update(`${kind}\n${this.o.versions?.[kind] ?? 1}\n${model}\n${o.tools?.length ? `tools ${o.tools.join(',')}\n` : ''}${prompt}`).digest('hex')
+    const hash = crypto.createHash('sha1').update(`${kind}\n${this.o.versions?.[kind] ?? 1}\n${model}\n${o.tools?.length ? `tools ${o.tools.join(',')}\n` : ''}${o.effort ? `effort ${o.effort}\n` : ''}${prompt}`).digest('hex')
     return path.join(this.o.cacheDir, `${hash}.json`)
   }
 
@@ -88,9 +88,12 @@ export class Claude {
   private run(prompt: string, schema: object, o: AskOptions & { model: string }): Promise<{ out: unknown; usage: Usage } | { error: string }> {
     return new Promise(resolve => {
       const tools = o.tools?.length ? ['--tools', o.tools.join(','), '--allowedTools', ...o.tools] : ['--tools', '']
-      const p = spawn(claudeBin(), ['-p', '--model', o.model, '--output-format', 'json', ...tools, '--no-session-persistence',
+      const effort = o.effort ? ['--effort', o.effort] : []
+      const p = spawn(claudeBin(), ['-p', '--model', o.model, ...effort, '--output-format', 'json', ...tools, '--no-session-persistence',
         '--strict-mcp-config', '--system-prompt', this.o.system, '--json-schema', JSON.stringify(schema)], { cwd: o.cwd ?? os.tmpdir(), stdio: ['pipe', 'pipe', 'pipe'] })
       let out = '', err = ''
+      p.stdout.setEncoding('utf8') // a chunk can end inside a multi-byte character
+      p.stderr.setEncoding('utf8')
       p.stdout.on('data', d => { out += d })
       p.stderr.on('data', d => { err += d })
       p.on('close', () => {
