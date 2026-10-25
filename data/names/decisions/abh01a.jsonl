@@ -195,3 +195,6 @@
 {"c":{"k":"atta-ap-dhs-4-1","q":"vipassi","pre":"maggaphalanibbanapaccavekkhanatopiappamanarammanamatite","o":639},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-ap-dhs-4-1","q":"mallikaya","pre":"hasituppadavasenapavattaajjhattarammana","o":2115},"e":"mallika-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-ap-dhs-4-3","q":"therena","pre":"buddhaghosotigaruhigahitanamadheyyena","o":104},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-ap-dhs-1-2-1","q":"kanha","pre":"pabhassarabhavakaranakanhabhijatihetutova","o":117},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-ap-dhs-0a","q":"sama","pre":"buddhijonamaupatthako","o":5794},"e":"sama-3","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-ap-dhs-1-2-1","q":"kanhati","pre":"balapanditakarattapandita","o":107},"e":null,"conf":0.9,"src":"ai"}

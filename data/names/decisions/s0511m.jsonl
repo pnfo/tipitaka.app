@@ -245,3 +245,8 @@
 {"c":{"k":"kn-bv-28","q":"asama","pre":"phussocasambuddha","o":154},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-bv-28","q":"vipassi","pre":"appatipuggalaekanavutitokappe","o":158},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-bv-28","q":"sikhi","pre":"duveasumvinayaka","o":173},"e":"sikhi-3","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-bv-8","q":"uggam","pre":"hatthosamviggamanasotamevatthamanuppattiya","o":143},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"kn-bv-11","q":"uggam","pre":"manasamadhitthahimvatam","o":144},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"kn-bv-14","q":"uggam","pre":"janesahamadhitthahimvatam","o":148},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"kn-bv-24","q":"sama","pre":"namupatthakokakusandhassasatthuno","o":190},"e":"sama-3","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-bv-25","q":"sama","pre":"aggupatthakasivalaceva","o":218},"e":"sama-4","conf":0.6,"src":"ai"}

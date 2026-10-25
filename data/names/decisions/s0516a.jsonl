@@ -49,3 +49,4 @@
 {"c":{"k":"atta-kn-nc-2-1-4-1","q":"therena","pre":"sugataputtanamadhipatibhutenahitaratina","o":6},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-nc-2-1-4-1","q":"mahaviharo","pre":"tassadakkhinebhage","o":27},"e":"maha-vihara","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-nc-2-1-4-1","q":"therena","pre":"lekhokusalakammikovasantenettha","o":60},"e":null,"conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-nc-1-10","q":"kanho","pre":"maroakusalakammeniyuttatta","o":202},"e":"kanha-1-2","conf":0.6,"src":"ai"}

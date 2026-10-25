@@ -64,3 +64,6 @@
 {"c":{"k":"atta-sn-4-8-13","q":"gamani","pre":"jayaggahoayamkho","o":101},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-sn-4-10-1","q":"khemati","pre":"khemasuttavannanaabyakatasamyuttassapathame","o":3},"e":"khema","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-sn-4-10-1","q":"khemati","pre":"bhikkhuninammahapannanamyadidam","o":16},"e":"khema","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-4-1-13-1","q":"uggoti","pre":"vesalisuttadivannanagahapativaggassapathame","o":3},"e":"ugga-2-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-4-1-13-9","q":"kanhati","pre":"ahamsuibbhatigahapatika","o":67},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-4-1-13-9","q":"kanha","pre":"ibbhatigahapatikakanhati","o":68},"e":null,"conf":0.9,"src":"ai"}

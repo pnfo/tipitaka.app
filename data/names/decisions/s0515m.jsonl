@@ -155,3 +155,7 @@
 {"c":{"k":"kn-mn-16","q":"renu","pre":"nacapana","o":9550},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-mn-16","q":"renu","pre":"nacapana","o":9568},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-mn-16","q":"renu","pre":"nacapana","o":9580},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"kn-mn-14","q":"kanho","pre":"lohitakocavanno","o":2392},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"kn-mn-16","q":"kanho","pre":"lohitakocavanno","o":641},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"kn-mn-16","q":"kanhoti","pre":"kanhassapakkhotivinodayeyyati","o":6916},"e":"kanha-1-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-mn-16","q":"kanho","pre":"yosomaro","o":6920},"e":"kanha-1-2","conf":0.6,"src":"ai"}

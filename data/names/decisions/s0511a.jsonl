@@ -632,3 +632,9 @@
 {"c":{"k":"atta-kn-bv-28-1","q":"sujatassa","pre":"padumuttaraphussanamatthattimsahattha","o":397},"e":"sujata-3","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-bv-28-1","q":"tissa","pre":"sujatassadvattimsahatthosiddhattha","o":400},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-bv-28-3","q":"channo","pre":"saddhimrahulamataanandatthero","o":15},"e":"channa-2-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-bv-8","q":"uggam","pre":"hatthosamviggamanasotamevatthamanuppattiya","o":660},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-bv-11","q":"uggam","pre":"manasamadhitthahimvatam","o":1037},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-bv-11","q":"uggam","pre":"adhitthahimvatamugganti","o":1095},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-bv-14","q":"uggam","pre":"janesahamadhitthahimvatam","o":526},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-bv-24","q":"sama","pre":"aggasavakabuddhijonamupatthako","o":639},"e":"sama-3","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-bv-24","q":"sama","pre":"namupatthakokakusandhassasatthuno","o":701},"e":"sama-3","conf":0.6,"src":"ai"}

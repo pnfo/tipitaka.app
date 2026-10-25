@@ -15,3 +15,7 @@
 {"c":{"k":"ap-dhs-4-2-10","q":"citta","pre":"manovinnanadhatuimedhamma","o":37},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"ap-dhs-4-2-10","q":"citta","pre":"katamedhammano","o":41},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"ap-dhs-4-2-10","q":"citta","pre":"imedhammano","o":50},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"ap-dhs-0-2-14","q":"kanha","pre":"panditadhammaka","o":20},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"ap-dhs-3-3","q":"kanha","pre":"panditakatamedhamma","o":65},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"ap-dhs-3-3","q":"kanha","pre":"anottappancaimedhamma","o":70},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"ap-dhs-3-3","q":"kanha","pre":"sabbepiakusaladhamma","o":74},"e":null,"conf":0.9,"src":"ai"}

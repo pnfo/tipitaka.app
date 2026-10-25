@@ -42,3 +42,6 @@
 {"c":{"k":"atta-sn-5-3-2-2","q":"therena","pre":"silasamathadihipakatabhavoettavata","o":795},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-sn-5-3-2-3","q":"sakko","pre":"kalenavessavanamaharajakalena","o":387},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-sn-5-3-2-3","q":"sakko","pre":"therassapujamkarissamiti","o":1321},"e":"sakka-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-5-2-1-2","q":"kanha","pre":"nayosappatibhagatikanhasukkayeva","o":259},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-5-2-1-2","q":"kanha","pre":"sukkapatipakkhabhagasukkananca","o":278},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-5-7-1-10","q":"kanho","pre":"papadhammasamannagatattapapimativuccati","o":264},"e":"kanha-1-2","conf":0.9,"src":"ai"}

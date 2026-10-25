@@ -23,7 +23,7 @@ import Database from 'better-sqlite3'
 import { slug } from '../shared/normalize'
 import { parseDppnEntry } from '../build/dicts/dppn'
 import { stripTags } from '../build/dicts/markup'
-import { classifyDppn, dppnBase, firstSentence, inflect, patternsFor, readTemplates } from '../build/names/dppn'
+import { DPPN_LINKS, classifyDppn, dppnBase, inflect, patternsFor, readDppnEntries, readDppnLinks, readTemplates, type DppnLink } from '../build/names/dppn'
 import type { EntityType } from '../build/names/gazetteer'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -51,7 +51,11 @@ const SAME = new Set(['thera', 'therī', 'tthera', 'bhikkhu', 'bhikkhunī', 'up�
   'nāgarāja', 'sāmaṇera', 'vatthu'])
 
 interface Head { id: number; lemma: string; base: string; pos: string; fam: string; cons: string; word: string; meaning: string; freq: number }
-interface Entity { slug: string; type: string; lemma: string; dpd: number; fam: string; meaning: string; dppn: string; freq: number }
+interface Entity {
+  slug: string; type: string; lemma: string; dpd: number; fam: string; meaning: string; dppn: string; freq: number
+  /** links: a DPPN namesake of DPD names; the DPD name a DPPN name is about; no name */
+  namesake?: boolean; merged?: Entity; dropped?: boolean
+}
 
 const dpd = new Database(path.join(repo, '.cache/dpd/dpd.db'), { readonly: true })
 const heads = new Map<number, Head>()
@@ -115,56 +119,83 @@ const words = text.prepare(`SELECT DISTINCT t.w FROM token t JOIN posting p ON p
   WHERE b.coll IN ('mula', 'atta')`).pluck().all() as string[]
 const corpus = new Set(words)
 
-// DPPN names DPD does not have (a name of the same spelling and kind in DPD covers all DPPN homonyms of it)
+// DPPN names DPD does not have: a DPPN name is added when DPD has no name of its spelling and kind (person and deity as
+// one) and its forms occur in the texts.
 const templates = readTemplates(dpd.prepare('SELECT pattern, data FROM inflection_templates').all() as { pattern: string; data: string }[])
 const raw = JSON.parse(fs.readFileSync(path.join(repo, '.cache/dicts/dppn/DPPN.json'), 'utf8')) as { name: string; entry?: string }[]
 const being = (t: string) => (t === 'deity' ? 'person' : t)
-const seeAlias = new Map<string, string[]>() // "Akitti: see Akatti"
-const dppnNames: { word: string; hom: number; base: string; aliases: string[]; type: EntityType; noun: string; sentence: string }[] = []
-for (const x of raw) {
-  const p = parseDppnEntry(x)
-  if (!p) continue
-  const sentence = firstSentence(stripTags(p.body))
-  const see = /^see\s+([^.;,(]+)/i.exec(sentence)
-  if (see) {
-    const target = dppnBase(see[1].trim().toLowerCase())
-    seeAlias.set(target, [...(seeAlias.get(target) ?? []), dppnBase(p.word)])
-    continue
-  }
-  const c = classifyDppn(p.word, sentence)
+const { entries: dppnEntries, seeAlias } = readDppnEntries(raw, parseDppnEntry, stripTags)
+const dppnNames: { word: string; hom: number; ref: string; base: string; aliases: string[]; type: EntityType; noun: string; sentence: string }[] = []
+for (const d of dppnEntries) {
+  const c = classifyDppn(d.word, d.sentence)
   if (c.type === 'other') continue
-  dppnNames.push({ word: p.word, hom: p.hom, base: dppnBase(p.word), aliases: p.aliases.map(dppnBase), type: c.type, noun: c.noun, sentence })
+  dppnNames.push({ word: d.word, hom: d.hom, ref: d.ref, base: dppnBase(d.word), aliases: d.aliases.map(dppnBase), type: c.type, noun: c.noun, sentence: d.sentence })
+}
+const formsOf = (bases: string[], type: EntityType) => {
+  const forms = new Set<string>()
+  for (const b of new Set(bases)) for (const f of inflect(b, patternsFor(b, type), templates)) if (corpus.has(f)) forms.add(f)
+  return forms
 }
 const dppnForms = new Map<string, Entity[]>()
-const refSeen = new Map<string, number>()
 // DPD headwords that are no names, by their lemma: a DPPN name of the same spelling is a common word too
 const commonLemma = new Map<string, string>()
 for (const h of heads.values()) if (!typeOf(h) && !commonLemma.has(h.base)) commonLemma.set(h.base, h.lemma)
-const commonBase = new Map<string, string>()
+const commonBase = new Map<Entity, string>()
 let dppnCovered = 0
 for (const d of dppnNames) {
   if ((byBase.get(d.base) ?? []).some(e => being(e.type) === being(d.type))) { dppnCovered++; continue }
-  const forms = new Set<string>()
-  for (const b of new Set([d.base, ...d.aliases, ...(seeAlias.get(d.base) ?? [])])) {
-    for (const f of inflect(b, patternsFor(b, d.type), templates)) if (corpus.has(f)) forms.add(f)
-  }
+  const forms = formsOf([d.base, ...d.aliases, ...(seeAlias.get(d.base) ?? [])], d.type)
   if (!forms.size) continue
-  // (a few headwords are in the DPPN twice without a homonym number: Amaragiri the place and the person)
-  const ref0 = `${d.word}#${d.hom}`
-  const n = (refSeen.get(ref0) ?? 0) + 1
-  refSeen.set(ref0, n)
-  const ref = n > 1 ? `${ref0}~${n}` : ref0
   const common = commonLemma.get(d.base)
-  const e: Entity = { slug: prevSlug.get(`dppn:${ref}`) ?? '', type: d.type, lemma: d.hom ? `${d.word} ${d.hom}` : d.word, dpd: 0,
-    fam: `DPPN: ${d.noun}`, meaning: d.sentence, dppn: ref, freq: 0 }
+  const e: Entity = { slug: prevSlug.get(`dppn:${d.ref}`) ?? '', type: d.type, lemma: d.hom ? `${d.word} ${d.hom}` : d.word, dpd: 0,
+    fam: `DPPN: ${d.noun}`, meaning: d.sentence, dppn: d.ref, freq: 0 }
   entities.push(e)
   byBase.set(d.base, [...(byBase.get(d.base) ?? []), e])
   for (const f of forms) dppnForms.set(f, [...(dppnForms.get(f) ?? []), e])
-  if (common) commonBase.set(e.slug, common)
+  if (common) commonBase.set(e, common)
 }
 
+// The links of the DPPN entries of names DPD also has (data/names/dppn-links.tsv, npm run names:ai -- link), applied to
+// the names above, so that the words keep how they are read: a DPPN name about a DPD name is that name, a namesake (another
+// one: Yasa the palace) keeps its forms but is never the default for a word (rankEntities), one that is no name goes.
+// The namesakes the spelling rule left out (Ānanda the banker) are added; their forms, and the DPPN spellings of the
+// linked entries (lumbinīvane: Lumbinī), only name the words DPD does not know - other words only get them as namesakes.
+const links = fs.existsSync(path.join(OUT, DPPN_LINKS)) ? readDppnLinks(fs.readFileSync(path.join(OUT, DPPN_LINKS), 'utf8')) : new Map<string, DppnLink>()
+let dppnLinked = 0
+for (const e of entities) {
+  const l = !e.dpd && links.get(e.dppn)
+  if (!l) continue
+  const target = l.dpd ? byHead.get(l.dpd) : undefined
+  if (target) { e.merged = target; if (!target.dppn) target.dppn = e.dppn; dppnLinked++ } else if (l.kind === 'other') e.dropped = true
+  else { e.namesake = true; e.type = l.kind }
+}
+const added = new Set(entities.map(e => e.dppn))
+const extraForms = new Map<string, Entity[]>()
+// namesakes of the kind of a DPD name of their spelling (Jetavana the monastery of Anurādhapura): no word is theirs alone
+// (jetavanavihāro is the Jetavana of Sāvatthī)
+const sameKind = new Set<Entity>()
+for (const d of dppnEntries) {
+  const l = links.get(d.ref)
+  if (!l || added.has(d.ref) || (!l.dpd && l.kind === 'other')) continue
+  const target = l.dpd ? byHead.get(l.dpd) : undefined
+  if (l.dpd && !target) continue
+  const base = dppnBase(d.word)
+  const forms = formsOf([base, ...d.aliases.map(dppnBase), ...(seeAlias.get(base) ?? [])], (target?.type ?? l.kind) as EntityType)
+  if (!forms.size) continue
+  let e = target
+  if (e) { if (!e.dppn) e.dppn = d.ref; dppnLinked++ } else {
+    e = { slug: prevSlug.get(`dppn:${d.ref}`) ?? '', type: l.kind, lemma: d.hom ? `${d.word} ${d.hom}` : d.word, dpd: 0,
+      fam: `DPPN: ${classifyDppn(d.word, d.sentence).noun || l.kind}`, meaning: d.sentence, dppn: d.ref, freq: 0, namesake: true }
+    entities.push(e)
+    if ((byBase.get(base) ?? []).some(x => x.dpd && being(x.type) === being(l.kind))) sameKind.add(e)
+  }
+  for (const f of forms) extraForms.set(f, [...(extraForms.get(f) ?? []), e])
+}
+const live = (e: Entity) => !e.merged && !e.dropped
+const resolve = (e: Entity) => e.merged ?? e
+
 // assign new slugs after the kept ones, in DPD order, then the DPPN ones
-for (const e of entities.sort((a, b) => (a.dpd || 1e9) - (b.dpd || 1e9) || a.dppn.localeCompare(b.dppn))) if (!e.slug) e.slug = newSlug(e.lemma)
+for (const e of entities.sort((a, b) => (a.dpd || 1e9) - (b.dpd || 1e9) || a.dppn.localeCompare(b.dppn))) if (!e.slug && live(e)) e.slug = newSlug(e.lemma)
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 /** how a non-name headword refers to names: compounds with a title or place word, and derived words */
@@ -218,25 +249,35 @@ for (const w of words.sort()) {
   const ids = hw ? JSON.parse(hw) as number[] : []
   const es = new Map<string, string>()
   const other: string[] = []
+  // (a DPPN name linked to a DPD name counts as that name; how and the common words stay as they were without the links)
+  const before = new Map<Entity, string>() // (the names as without the links)
+  const put = (x: Entity, how: string) => {
+    if (!before.has(x)) before.set(x, how)
+    const y = resolve(x)
+    if (!y.dropped && !es.has(y.slug)) es.set(y.slug, how)
+  }
   for (const id of ids) {
     const e = byHead.get(id)
-    if (e) { es.set(e.slug, 'n'); continue }
+    if (e) { es.set(e.slug, 'n'); before.set(e, 'n'); continue }
     const elder = elderOf.get(id)
-    if (elder) { if (!es.has(elder.slug)) es.set(elder.slug, 'c'); continue }
+    if (elder) { put(elder, 'c'); continue }
     const d = derived.get(id)
-    if (d) { for (const x of d.es) if (!es.has(x.slug)) es.set(x.slug, d.how); continue }
+    if (d) { for (const x of d.es) put(x, d.how); continue }
     const h = heads.get(id)
     if (h) other.push(h.lemma)
   }
   for (const e of dppnForms.get(w) ?? []) {
-    if (!es.has(e.slug)) es.set(e.slug, 'n')
+    put(e, 'n')
     // a DPPN name that is a common word (Loka, Jarā, Sumana): all its forms are ambiguous
-    const word = commonBase.get(e.slug)
+    const word = commonBase.get(e)
     if (word && !other.length) other.push(word)
   }
-  if (!es.size) for (const e of titled(w)) es.set(e.slug, 'c')
+  if (!es.size) for (const e of titled(w)) put(e, 'c')
+  const extra = extraForms.get(w) ?? []
+  if (!es.size && !ids.length) for (const e of extra) if (!sameKind.has(e)) put(e, 'n')
   if (!es.size) continue
-  const how = [...es.values()].sort()[0] // n before c before d
+  const how = [...before.values()].sort()[0] // n before c before d
+  for (const e of extra) if (e.namesake) put(e, how)
   stats[how as 'n' | 'c' | 'd']++
   if (other.length) stats.ambiguous++
   rows.push([w, [...es.keys()].join(','), how, [...new Set(other)].join(',')].join('\t'))
@@ -244,9 +285,9 @@ for (const w of words.sort()) {
 
 fs.mkdirSync(OUT, { recursive: true })
 const clean = (s: string) => s.replace(/[\t\n]+/g, ' ')
-fs.writeFileSync(ENTITIES, ['slug\ttype\tlemma\tdpd\tfamily\tmeaning\tdppn\tfreq',
-  ...entities.sort((a, b) => a.slug.localeCompare(b.slug)).map(e => [e.slug, e.type, e.lemma, e.dpd, clean(e.fam), clean(e.meaning), e.dppn, e.freq].join('\t'))].join('\n') + '\n')
+fs.writeFileSync(ENTITIES, ['slug\ttype\tlemma\tdpd\tfamily\tmeaning\tdppn\tfreq\tnamesake',
+  ...entities.filter(live).sort((a, b) => a.slug.localeCompare(b.slug)).map(e => [e.slug, e.type, e.lemma, e.dpd, clean(e.fam), clean(e.meaning), e.dppn, e.freq, e.namesake ? 1 : ''].join('\t'))].join('\n') + '\n')
 fs.writeFileSync(FORMS, ['form\tentities\thow\tnot_names', ...rows].join('\n') + '\n')
-const types = entities.reduce<Record<string, number>>((m, e) => ({ ...m, [e.type]: (m[e.type] ?? 0) + 1 }), {})
-console.log(`DPPN: ${dppnNames.length} names, ${dppnCovered} in DPD, ${entities.filter(e => !e.dpd).length} added`)
-console.log(`${entities.length} names ${JSON.stringify(types)}; ${rows.length} forms of ${words.length} words ${JSON.stringify(stats)}`)
+const types = entities.filter(live).reduce<Record<string, number>>((m, e) => ({ ...m, [e.type]: (m[e.type] ?? 0) + 1 }), {})
+console.log(`DPPN: ${dppnEntries.length} entries, ${dppnCovered} covered by a DPD name of the same spelling, ${dppnLinked} linked to DPD names, ${entities.filter(e => !e.dpd && live(e)).length} added (${entities.filter(e => e.namesake && live(e)).length} namesakes)`)
+console.log(`${entities.filter(live).length} names ${JSON.stringify(types)}; ${rows.length} forms of ${words.length} words ${JSON.stringify(stats)}`)

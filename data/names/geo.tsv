@@ -4,7 +4,7 @@ agariya-vimana	25.03	85.42	4	in
 aggalapura	26.5339	79.301	4	in
 aggalava	26.927	80.1909	4	in
 ajapalanigrodhamula	24.7013	85.0091	2	at:ajapalanigrodha
-alaka-1	19.6115	74.4983	2	sc-dppn
+alaka	19.6115	74.4983	2	sc-dppn
 alara-2	26.7122	85.9217	4	in
 alavi-1	26.927	80.1909	2	sc-dppn
 allakappa	24.7269	84.9133	4	dppn-near
@@ -23,13 +23,12 @@ anga-4	25.25	87	1	sc-dppn
 anguttarapa	25.4656	87.1326	1	sc-dppn
 anguttarapa-2	25.4656	87.1326	3	sc-dppn
 anjanavana	26.7989	82.1967	1	sc-map:añjanavana
-annabhara-1	25.03	85.42	4	in
-anupiya-2	26.7394	83.89	4	in
+annabhara-2	25.03	85.42	4	in
+anupiya	26.7394	83.89	4	in
 apana-3	25.4656	87.1326	1	sc-map:āpaṇa
 arannakutika	25.0383	85.4379	1	sc-map:araññakuṭikā
 asokarama	24.7269	84.9133	4	in
 assaka	19.2904	76.4868	3	sc-dppn
-assaka-4	19.2904	76.4868	1	sc-dppn
 assapura	25.25	87	4	dppn-near
 atuma	27.0249	82.9633	2	sc-dppn
 avanti	22.6748	75.6244	3	sc-dppn
@@ -110,7 +109,6 @@ kajangala	25.0489	87.838	1	sc-map:kajangala
 kakkarapatta	27.5156	83.7735	3	sc-map:kakkarapatta
 kakudha	26.7371	83.8835	4	dppn-near
 kakudha-7	26.7371	83.8835	4	dppn-near
-kakuttha	26.7371	83.8835	4	in
 kalanda	26.0145	85.1095	4	in
 kalandagama	26.0087	85.2676	3	sc-map:kalandagāma
 kalandakanivapa	25.03	85.42	4	in
@@ -135,7 +133,6 @@ kapilavatthu	27.5499	83.063	1	sc-map:kapilavatthu
 kapinaccana	26.0145	85.1095	4	dppn-near
 kapitthavana	18.9128	77.6445	4	in
 kapotakandara	25.0265	85.486	1	sc-map:kapotakandara
-kapotakandara-2	25.0265	85.486	1	sc-map:kapotakandara
 kappasikavanasanda	24.6932	84.9381	1	sc-map:kappāsika vanasaṇḍa
 kasi	25.3291	82.4139	1	sc-dppn
 kasi-2	25.3291	82.4139	3	sc-dppn
@@ -164,6 +161,7 @@ kosalarattha	27.5171	82.0506	4	in
 kosambi	25.339	81.3929	1	sc-map:kosambī
 kotigama	25.6555	85.2031	1	sc-map:koṭigāma
 kukkutarama	25.535	85.2003	1	sc-map:kukkuṭārāma
+kukuttha	26.7371	83.8835	4	in
 kuraraghara	22.6748	75.6244	4	in
 kuru	29.17	78.02	1	sc-dppn
 kuru-2	29.17	78.02	3	sc-dppn
@@ -173,11 +171,8 @@ kutagarasala-2	25.9864	85.1111	1	sc-map:kūṭāgārasālā
 lambaculaka	22.6748	75.6244	4	in
 latthivana	25.03	85.42	4	dppn-near
 licchavi	26.0605	85.2127	1	sc-dppn
-licchavi-2	26.0605	85.2127	3	sc-dppn
 lumbini	27.4672	83.2749	1	sc-map:lumbineyya
-lumbini-2	27.4672	83.2749	1	sc-map:lumbineyya
 maccha	27.45	76.18	3	sc-dppn
-maccha-2	27.45	76.18	1	sc-dppn
 macchikasanda	25.3291	82.4139	4	dppn-near
 maddakucchi	25.0097	85.4637	1	sc-map:maddakucchi
 madhura	27.4925	77.6736	1	sc-map:madhurā
@@ -210,7 +205,6 @@ mithiluyyana	26.7122	85.9217	4	in
 moranivapa	25.0183	85.4049	4	dppn-near
 mukheluvana	25.0116	87.8321	1	sc-map:mukheluvana
 nadika-1	25.7356	85.2113	1	sc-journey:5) nādika
-nagadatta-1	27.5171	82.0506	4	in
 nagaraka	27.6069	82.9344	3	sc-map:nagaraka
 nagaraka-2	27.6069	82.9344	3	sc-map:nagaraka
 nagaravinda	27.5171	82.0506	4	dppn-near
@@ -253,12 +247,10 @@ payaga-1-2	25.45	81.85	1	sc-map:payāga
 pilakkhaguha	25.2919	81.3661	1	sc-map:pilakkhaguhā
 pippaliguha	25.019	85.4302	1	sc-map:pippaliguhā
 pokkharaniya	27.692	82.9962	4	dppn-near
-pota	25.3291	82.4139	4	in
+potana	25.3291	82.4139	4	in
 pubbakotthaka	27.5101	82.0912	1	sc-map:pubbakoṭṭhakā
-pubbakotthaka-2	27.5101	82.0912	1	sc-map:pubbakoṭṭhakā
 pubbarama	27.5253	82.0898	1	sc-map:pubbārāma
 rajagaha	25.03	85.42	1	sc-map:rājagaha
-rakkhita-1	25.4079	81.6274	3	sc-map:rakkhita
 rakkhita-2-2	25.4079	81.6274	1	sc-map:rakkhita
 rakkhitavanasanda	25.4079	81.6274	1	sc-map:rakkhita
 ramagama	26.1468	84.0983	3	sc-map:rāmagāmaka
@@ -284,7 +276,6 @@ sattapanniguha	25.0071	85.4108	1	sc-map:sattapaṇṇiguhā
 savatthi	27.5195	82.063	1	sc-map:sāvatthī
 setabya	27.6689	82.5481	1	sc-map:setabyā
 silavati	27.6835	83.1253	3	sc-map:silāvatī
-silavati-2	27.6835	83.1253	3	sc-map:silāvatī
 silavati-2-2	27.6835	83.1253	3	sc-map:silāvatī
 simsapavana-1	26.927	80.1909	4	in
 sitavana	25.0313	85.3863	1	sc-map:sītavana
@@ -298,11 +289,10 @@ surasena-2	27.5521	77.3163	3	sc-dppn
 surasena-2-2	27.5521	77.3163	1	sc-dppn
 surundhana	25.3291	82.4139	4	in
 sutanu-2	27.5195	82.063	4	dppn-near
-suvideha-2	26.7122	85.9217	4	dppn-near
+suvideha	26.7122	85.9217	4	dppn-near
 takkasila	33.7253	72.9138	1	sc-map:takkasilā
 tandulapalidvara	25.03	85.42	4	in
 tankitamanca	24.7381	85.0781	3	sc-map:ṭaṅkitamañca
-tapoda	25.0128	85.4183	1	sc-map:tapodā
 tapoda-2	25.0128	85.4183	1	sc-map:tapodā
 tapodakandara	25.03	85.42	4	in
 tapodarama	25.0094	85.4242	1	sc-map:tapodārāma
@@ -322,9 +312,7 @@ ugga-8	27.5171	82.0506	4	in
 ujjeni	23.1954	75.7772	1	sc-map:ujjenī
 ujunna	27.5171	82.0506	4	in
 ukkacela	25.7232	85.0397	2	sc-dppn
-ukkacela-2	25.7232	85.0397	2	sc-dppn
 ukkattha	27.5935	82.8172	1	sc-map:ukkaṭṭha
-upavatta	26.7301	83.8986	1	sc-map:upavatta
 upavattana-1	26.7301	83.8986	1	sc-map:upavatta
 urunna	27.5171	82.0506	4	dppn-near
 uruvela	24.6951	84.9913	1	sc-map:uruvelā
@@ -336,7 +324,6 @@ vajji-1	26.2392	85.4352	3	sc-dppn
 vajji-3	26.2392	85.4352	1	sc-dppn
 valikarama	26.0145	85.1095	4	in
 vamsa	25.9383	79.6399	3	sc-dppn
-vamsa-2	25.9383	79.6399	2	sc-dppn
 vamsabhumi	25.9383	79.6399	4	in
 vanasa	24.699	80.1727	1	sc-map:vanasavhaya
 vankaka-2	24.9674	85.3869	4	in
@@ -344,7 +331,7 @@ varana	22.6748	75.6244	4	dppn-near
 vasabhagama	25.3291	82.4139	4	in
 vebhara	24.9964	85.389	1	sc-map:vebhāra
 vedeharajja	26.7122	85.9217	4	in
-vediya	25.0044	85.5042	4	in
+vediyaka	25.0044	85.5042	4	in
 vekalinga	27.5171	82.0506	4	dppn-near
 veludvara	27.5171	82.0506	4	dppn-near
 velugama	22.6748	75.6244	4	in
@@ -359,4 +346,3 @@ videha-2	26.7122	85.9217	3	sc-dppn
 yavamajjhaka	26.7122	85.9217	4	in
 yona	37.45	26.5	2	sc-dppn
 yona-2	37.45	26.5	3	sc-dppn
-yona-3	37.45	26.5	2	sc-dppn

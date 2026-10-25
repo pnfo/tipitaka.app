@@ -137,3 +137,7 @@
 {"c":{"k":"atta-an-4-4-5-8","q":"yaso","pre":"udakepakkhittatelabinduviya","o":1785},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-4-5-8","q":"selam","pre":"vivittamrukkhamulampabbatanti","o":1930},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-5-4-1","q":"pandarakam","pre":"nibbattanatokalakavipakamsukkanti","o":11},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-an-2-1-1-7","q":"kanhati","pre":"kanhasuttavannanasattame","o":2},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-an-2-1-1-7","q":"kanha","pre":"kanhatinakalavannataya","o":5},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-an-2-1-1-7","q":"kanha","pre":"panaupanentitinipphattikalataya","o":10},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-an-2-1-1-7","q":"kanha","pre":"sarasenapivasabbakusaladhamma","o":14},"e":null,"conf":0.9,"src":"ai"}

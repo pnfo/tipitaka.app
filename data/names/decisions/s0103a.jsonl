@@ -86,3 +86,9 @@
 {"c":{"k":"atta-dn-3","q":"sumangala","pre":"atthakathamyamarabhim","o":43758},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-dn-3","q":"mahavihare","pre":"evamsamayampakasayantim","o":43793},"e":"maha-vihara","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-3","q":"therena","pre":"buddhaghosotigaruhigahitanamadheyyena","o":43832},"e":null,"conf":0.6,"src":"ai"}
+{"c":{"k":"atta-dn-3-4-1","q":"kanhoti","pre":"vadantisukkotipandaro","o":502},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-3-4-1","q":"kanheti","pre":"sandhayaibbhetigahapatike","o":551},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-3-4-2","q":"kanhati","pre":"alamariyatiariyabhaveasamattha","o":38},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-3-4-2","q":"kanho","pre":"kanhavipakativipakopinesam","o":43},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-3-4-2","q":"kanha","pre":"tavasaddhacalanatthantiaha","o":360},"e":"kanha-1-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-3-10-25","q":"kanhe","pre":"jatiyokanhabhijatikosamanoti","o":5},"e":null,"conf":0.9,"src":"ai"}

@@ -181,3 +181,5 @@
 {"c":{"k":"atta-sn-1-11-1-6","q":"deva","pre":"pucchirathasaddamte","o":44},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-sn-1-11-1-6","q":"simbalivanam","pre":"hotievamtampi","o":98},"e":"simbalivana","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-sn-1-11-1-7","q":"sakko","pre":"sattameupasankamitiayam","o":4},"e":"sakka-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-1-3-1-1","q":"kanho","pre":"maggoagginagatamaggo","o":827},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-sn-1-4-1-1","q":"kanho","pre":"niyuttotipapimaannanipissa","o":35},"e":"kanha-1-2","conf":0.9,"src":"ai"}

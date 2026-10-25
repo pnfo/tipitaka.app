@@ -6,6 +6,10 @@
  *       always), word (nearly never a name), context (both) -> data/names/form-verdicts.tsv
  *   npm run names:ai -- mentions [--books s0101m,s0502a] [--limit 100]
  *       the occurrences of the context forms, one by one: which name (or none) -> data/names/decisions/<book>.jsonl
+ *   npm run names:ai -- link [--limit 50] [--model opus]
+ *       which DPD name each DPPN entry of the same name is about, or another one (a namesake), and its kind
+ *       -> data/names/dppn-links.tsv (npm run names:gazetteer then uses them). Opus, low effort for one DPD name and up
+ *       to 3 entries, medium for the others
  *   npm run names:ai -- check [--n 300] [--seed 1]
  *       spot check of the mentions the build accepts (by source): precision -> db/names-check.md
  *   common: --jobs 5 (parallel calls) --model sonnet --dry (print the first prompt, no calls)
@@ -25,6 +29,9 @@ import { paraPos } from '../build/links'
 import { displayName, readGazetteer, type Entity } from '../build/names/gazetteer'
 import { extractMentions, occurrences, readMentionDecisions, readVerdicts, type MentionDecision, type Occurrence, type Verdict } from '../build/names/mentions'
 import { plainText } from '../shared/markup'
+import { parseDppnEntry } from '../build/dicts/dppn'
+import { stripTags } from '../build/dicts/markup'
+import { DPPN_LINKS, classifyDppn, linkKey, readDppnEntries, readDppnLinks, type DppnEntry, type DppnLink } from '../build/names/dppn'
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -182,7 +189,80 @@ async function check() {
   console.log(claude.usageLine())
 }
 
+// ---------------- link ----------------
+async function link() {
+  const LINKS = path.join(DATA, DPPN_LINKS)
+  const manual = new Map([...(fs.existsSync(LINKS) ? readDppnLinks(fs.readFileSync(LINKS, 'utf8')) : new Map<string, DppnLink>())].filter(([, l]) => l.src === 'manual'))
+  const { entries } = readDppnEntries(JSON.parse(fs.readFileSync(path.join(repo, '.cache/dicts/dppn/DPPN.json'), 'utf8')), parseDppnEntry, stripTags)
+  // the names of both dictionaries, by their spelling
+  const groups = new Map<string, { dpd: Entity[]; dppn: DppnEntry[] }>()
+  for (const e of g.entities.values()) {
+    if (!e.dpd) continue
+    const k = linkKey(e.lemma.replace(/ [\d.]+$/, ''))
+    groups.set(k, { dpd: [...(groups.get(k)?.dpd ?? []), e], dppn: [] })
+  }
+  for (const d of entries) for (const k of new Set([d.word, ...d.aliases].map(linkKey))) {
+    const gr = groups.get(k)
+    if (gr && !gr.dppn.includes(d)) gr.dppn.push(d)
+  }
+  const being = (t: string) => (t === 'deity' ? 'person' : t)
+  const out = new Map<string, DppnLink & { slug: string; text: string }>()
+  const set = (d: DppnEntry, l: DppnLink & { slug: string }) => {
+    const prev = out.get(d.ref)
+    if (!prev || (!prev.dpd && l.dpd)) out.set(d.ref, { ...l, text: d.sentence.slice(0, 80) }) // (in two names' groups: a link wins)
+  }
+  const todo: { key: string; dpd: Entity[]; dppn: DppnEntry[] }[] = []
+  for (const [key, gr] of groups) {
+    if (!gr.dppn.length) continue
+    const d = gr.dppn[0], guess = classifyDppn(d.word, d.sentence).type
+    if (gr.dpd.length === 1 && gr.dppn.length === 1 && being(guess) === being(gr.dpd[0].type)) {
+      set(d, { dpd: gr.dpd[0].dpd, slug: gr.dpd[0].slug, kind: gr.dpd[0].type, sure: true, src: 'auto' })
+      continue
+    }
+    for (let i = 0; i < gr.dppn.length; i += 12) todo.push({ key, dpd: gr.dpd, dppn: gr.dppn.slice(i, i + 12) })
+  }
+  const asks = todo.slice(0, +arg('--limit', '100000')!)
+  console.log(`${[...groups.values()].filter(x => x.dppn.length).length} names in both, ${out.size} linked by spelling alone, asking ${asks.length} (of ${todo.length})`)
+  const ai = new Claude({ system: LINK_SYSTEM, cacheDir: path.join(repo, '.cache/names/ai'), model: arg('--model', 'opus')!, dry: DRY, versions: { link: 1 } })
+  const schema = { type: 'object', properties: { links: { type: 'array', items: { type: 'object', properties: {
+    entry: { type: 'string' }, dpd: { type: 'string', description: 'the DPD slug of the same one, or "new"' },
+    kind: { type: 'string', enum: ['person', 'deity', 'place', 'group', 'animal', 'other'] }, sure: { type: 'boolean' } },
+    required: ['entry', 'dpd', 'kind', 'sure'] } } }, required: ['links'] }
+  await pool(asks, JOBS, async t => {
+    const prompt = `The name "${t.key}" in two dictionaries.
+
+DPD (Digital Pāḷi Dictionary) names, each a separate being or place:
+${t.dpd.map(e => `- ${e.slug}: ${e.lemma} (${e.type}; ${e.family}): ${e.meaning.slice(0, 160)}`).join('\n')}
+
+DPPN entries:
+${t.dppn.map(d => `- [${d.ref}] ${d.body.slice(0, 450)}`).join('\n')}
+
+For every DPPN entry: which DPD name is it about (its slug), or "new" when it is about another one than all of them (a namesake: another monk, a different place, a palace, a previous life of a different person ...). Several DPPN entries may be about the same DPD name. A DPD name for a group of namesakes ("name of several monks") takes the entries it covers. Also give the kind of the entry's subject: person, deity (devas, yakkhas, nāgas, Māra), place (also monasteries, palaces, heavens), group (peoples, clans, families), animal, or other (a text, a list, a thing). sure: false when the entry says too little to tell.`
+    const effort = t.dpd.length === 1 && t.dppn.length <= 3 ? 'low' : 'medium'
+    const r = await ai.ask<{ links: { entry: string; dpd: string; kind: DppnLink['kind']; sure: boolean }[] }>('link', prompt, schema, { effort })
+    for (const a of r?.links ?? []) {
+      const d = t.dppn.find(x => x.ref === a.entry)
+      if (!d) continue
+      const e = a.dpd === 'new' ? null : t.dpd.find(x => x.slug === a.dpd)
+      if (e === undefined) continue
+      set(d, { dpd: e?.dpd ?? 0, slug: e?.slug ?? '', kind: a.kind, sure: a.sure, src: 'ai' })
+    }
+  })
+  if (DRY) return
+  for (const [ref, l] of manual) out.set(ref, { ...l, slug: [...g.entities.values()].find(e => e.dpd === l.dpd)?.slug ?? '', text: out.get(ref)?.text ?? '' })
+  const lines = ['dppn\tdpd\tslug\tkind\tsure\tsrc\tentry']
+  for (const [ref, l] of [...out].sort((a, b) => a[0].localeCompare(b[0]))) {
+    lines.push([ref, l.dpd || 'new', l.slug, l.kind, l.sure ? 1 : 0, l.src, l.text.replace(/\s+/g, ' ')].join('\t'))
+  }
+  fs.writeFileSync(LINKS, lines.join('\n') + '\n')
+  const n = (f: (l: DppnLink) => boolean) => [...out.values()].filter(f).length
+  console.log(`${LINKS}: ${out.size} entries, ${n(l => !!l.dpd)} linked to a DPD name, ${n(l => !l.dpd)} namesakes, ${n(l => !l.sure)} unsure`)
+  console.log(ai.usageLine())
+}
+const LINK_SYSTEM = `You are an expert in Pāḷi, the Theravāda canon and its commentaries, and the Dictionary of Pāli Proper Names (DPPN). You decide which entries of two dictionaries are about the same being or place. Answer only through the requested JSON. Be precise: link only when the descriptions are clearly about the same one.`
+
 if (cmd === 'forms') await forms()
 else if (cmd === 'mentions') await mentions()
 else if (cmd === 'check') await check()
+else if (cmd === 'link') await link()
 else console.log('npm run names:ai -- forms | mentions | check (see scripts/names-ai.ts)')

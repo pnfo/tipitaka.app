@@ -148,3 +148,6 @@
 {"c":{"k":"an-5-8-9","q":"devadhammiko","pre":"tedandikoaruddhakogotamako","o":14},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"an-5-8-9","q":"devadhammiko","pre":"pancahidhammehisamannagato","o":34},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"an-5","q":"sumanam","pre":"sekhabalambalancevapancangikanca","o":43255},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"an-5-1-5-4","q":"uggam","pre":"ekamantamthitamkho","o":309},"e":null,"conf":0.6,"src":"ai"}
+{"c":{"k":"an-5-1-5-4","q":"ugga","pre":"etadavocakaccite","o":315},"e":null,"conf":0.6,"src":"ai"}
+{"c":{"k":"an-5-1-5-4","q":"uggam","pre":"athakhobhagava","o":324},"e":null,"conf":0.6,"src":"ai"}

@@ -256,3 +256,5 @@
 {"c":{"k":"kn-nc","q":"punnako","pre":"nitthitoajitotissametteyyo","o":51610},"e":"punnaka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-nc","q":"nando","pre":"dhotakoupasivoca","o":51616},"e":"nanda-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-nc","q":"udayo","pre":"capanditobhadravudho","o":51627},"e":"udaya-3","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-nc-1-10","q":"kanho","pre":"yosomaro","o":1246},"e":"kanha-1-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-nc-1-15","q":"kanho","pre":"lohitakocavanno","o":177},"e":null,"conf":0.9,"src":"ai"}

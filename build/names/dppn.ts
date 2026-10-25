@@ -32,6 +32,9 @@ export function classifyDppn(word: string, sentence: string): { type: DppnType; 
     const m = re.exec(sentence)
     if (m && (!best || m.index < best.at)) best = { type, noun: m[0].toLowerCase(), at: m.index }
   }
+  // an entry about someone ("He went after the Third Council to the Yona country", "She belonged to a family of
+  // Kosambī"): a person, not the place or family the sentence names (a deity or an animal stays what it is)
+  if (/^(?:he|she|his|her)\b/i.test(sentence.trim()) && (!best || best.type === 'place' || best.type === 'group' || best.type === 'other')) return { type: 'person', noun: 'person' }
   return best ? { type: best.type, noun: best.noun } : { type: 'other', noun: '' }
 }
 
@@ -95,3 +98,56 @@ export function sandhi(f: string): string[] {
 
 /** the name of a headword without its title: "sunīta thera" -> sunīta, "mahā kassapa" -> mahākassapa */
 export const dppnBase = (word: string) => word.replace(/ (?:thera|therī)$/, '').replace(/\s+/g, '')
+
+/** an entry of the DPPN (no "see" reference): ref "word#hom" (~n for a headword repeated without a homonym number) */
+export interface DppnEntry { word: string; hom: number; ref: string; aliases: string[]; body: string; sentence: string }
+
+/** the entries of DPPN.json in order, and the "see" references (Akitti: see Akatti) as aliases of their target */
+export function readDppnEntries(raw: { name: string; entry?: string }[], parse: (x: { name: string; entry?: string }) => { word: string; hom: number; aliases: string[]; body: string } | null,
+  strip: (html: string) => string): { entries: DppnEntry[]; seeAlias: Map<string, string[]> } {
+  const entries: DppnEntry[] = []
+  const seeAlias = new Map<string, string[]>()
+  const seen = new Map<string, number>()
+  for (const x of raw) {
+    const p = parse(x)
+    if (!p) continue
+    const body = strip(p.body)
+    const sentence = firstSentence(body)
+    const see = /^see\s+([^.;,(]+)/i.exec(sentence)
+    if (see) {
+      const target = dppnBase(see[1].trim().toLowerCase())
+      seeAlias.set(target, [...(seeAlias.get(target) ?? []), dppnBase(p.word)])
+      continue
+    }
+    const ref0 = `${p.word}#${p.hom}`
+    const n = (seen.get(ref0) ?? 0) + 1
+    seen.set(ref0, n)
+    entries.push({ word: p.word, hom: p.hom, ref: n > 1 ? `${ref0}~${n}` : ref0, aliases: p.aliases, body, sentence })
+  }
+  return { entries, seeAlias }
+}
+
+/** the spelling of a name for matching DPPN and DPD names: no title, no spaces, the final vowel short, ṁ as ṃ
+ *  ("Vipassī Buddha" = vipassī, "Mahā Koṭṭhita Thera" = mahākoṭṭhita) */
+export function linkKey(w: string): string {
+  return w.toLowerCase().replace(/ṁ/g, 'ṃ')
+    .replace(/\s+(?:thera|therī|buddha|paccekabuddha|kumāra|kumārī|bhikkhu|bhikkhunī|upāsaka|upāsikā|yakkha|devaputta|nāgarāja|rājā)$/, '')
+    .replace(/\s+/g, '').replace(/ā$/, 'a').replace(/ī$/, 'i').replace(/ū$/, 'u')
+}
+
+/**
+ * Which DPD name a DPPN entry is about (data/names/dppn-links.tsv, scripts/names-ai.ts link): a DPD headword id, or 0
+ * for another one of the same name (a namesake: its own name, never the default for a word). kind: the subject's type
+ * (other: no name). src: auto (the only DPD and DPPN entry of a name, of one kind), ai, manual.
+ */
+export interface DppnLink { dpd: number; kind: DppnType; sure: boolean; src: string }
+export const DPPN_LINKS = 'dppn-links.tsv'
+
+export function readDppnLinks(text: string): Map<string, DppnLink> {
+  const out = new Map<string, DppnLink>()
+  for (const l of text.split('\n').slice(1)) {
+    const [ref, dpd, , kind, sure, src] = l.split('\t')
+    if (ref) out.set(ref, { dpd: dpd === 'new' ? 0 : +dpd, kind: kind as DppnType, sure: sure === '1', src })
+  }
+  return out
+}

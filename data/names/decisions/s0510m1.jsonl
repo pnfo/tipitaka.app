@@ -569,3 +569,5 @@
 {"c":{"k":"kn-thiap-4-6","q":"vipassi","pre":"abhirupanandatheriapadanamekanavutitokappe","o":3},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-thiap-4-6","q":"nanda","pre":"kapilavhayedhitakhemakasakkassa","o":76},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"kn-thiap-4-6","q":"nande","pre":"asucimputimpassa","o":139},"e":"nanda-2-2","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-ap-40-2","q":"ugga","pre":"pugadhammamakamsute","o":40},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"kn-ap-41-8","q":"ugga","pre":"cammayodhinodhanuggahaca","o":38},"e":null,"conf":0.9,"src":"ai"}

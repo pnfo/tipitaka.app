@@ -16,6 +16,8 @@ export interface Entity {
   dppn?: string
   /** DPD's count in the early texts: the prominence of a namesake */
   freq: number
+  /** a DPPN namesake of DPD names (data/names/dppn-links.tsv): another one than all of them (Yasa the palace) */
+  namesake?: boolean
   /** places: coordinates (data/names/geo.tsv) */
   lat?: number
   lon?: number
@@ -38,8 +40,9 @@ export function readGazetteer(dir: string): Gazetteer {
   const entities = new Map<string, Entity>()
   const forms = new Map<string, Form>()
   if (!fs.existsSync(path.join(dir, 'entities.tsv'))) return { entities, forms }
-  for (const [slug, type, lemma, dpd, family, meaning, dppn, freq] of rows(path.join(dir, 'entities.tsv'))) {
-    entities.set(slug, { slug, type: type as EntityType, lemma, dpd: +dpd, family, meaning: meaning ?? '', ...(dppn ? { dppn } : {}), freq: +freq || 0 })
+  for (const [slug, type, lemma, dpd, family, meaning, dppn, freq, namesake] of rows(path.join(dir, 'entities.tsv'))) {
+    entities.set(slug, { slug, type: type as EntityType, lemma, dpd: +dpd, family, meaning: meaning ?? '', ...(dppn ? { dppn } : {}), freq: +freq || 0,
+      ...(namesake === '1' ? { namesake: true } : {}) })
   }
   // place coordinates (npm run names:geo): slug, lat, lon, prec, source
   if (fs.existsSync(path.join(dir, 'geo.tsv'))) {
@@ -86,8 +89,11 @@ const familyOf = (hints: string[]) => TITLE_FAMILY.find(([t]) => hints.some(h =>
  * outside Vesālī" next to vesāliyaṃ), else the most prominent one. sure: the choice did not rest on prominence alone.
  */
 export function rankEntities(f: Form, types: EntityType[], context: Entity[] = [], hints: string[] = []): { best: Entity | null; sure: boolean } {
-  const cands = f.entities.filter(e => types.includes(e.type))
-  if (cands.length <= 1) return { best: cands[0] ?? null, sure: true }
+  // a DPPN namesake of DPD names (Ānanda the banker, Yasa the palace) is never picked over them: only an AI decision
+  // about the word names it (the words around it are no evidence: "ānanda, rañño cakkavattissa" is no king Ānanda)
+  const fit = f.entities.filter(e => types.includes(e.type))
+  const cands = fit.some(e => !e.namesake) ? fit.filter(e => !e.namesake) : fit
+  if (cands.length <= 1) return { best: cands[0] ?? null, sure: fit.length <= 1 }
   const near = context.map(displayName)
   const fam = familyOf(hints)
   // a meaning that names a name of the passage (Brahmadatta "student of Suppiya") says more than a title's family

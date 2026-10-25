@@ -180,3 +180,7 @@
 {"c":{"k":"atta-dn-1-13","q":"canda","pre":"ayacantitiudehibhavam","o":547},"e":"canda-2-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-1-13-1","q":"indam","pre":"tabbiparitaabrahmanakarakaindamavhayamati","o":46},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-dn-1-13-1","q":"vasavatti","pre":"vattantinatadisoti","o":242},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-1-3-4","q":"kanhati","pre":"ahaibbhatigahapatika","o":84},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-1-3-4","q":"kanha","pre":"ibbhatigahapatikakanhati","o":85},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-1-3-8","q":"kanho","pre":"rannotiidamvacanam","o":157},"e":"kanha-4-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-dn-1-2-3","q":"ugga","pre":"parivisantitesampetamnamam","o":884},"e":null,"conf":0.9,"src":"ai"}

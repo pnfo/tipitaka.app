@@ -40,3 +40,5 @@
 {"c":{"k":"an-10-4-2-10","q":"ambavane","pre":"viharaticundassakammaraputtassa","o":11},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-5-6","q":"nakula","pre":"ahivicchikasatapadi","o":99},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-5-6","q":"nakula","pre":"ahivicchikasatapadi","o":207},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"an-10-4-4-2","q":"kanho","pre":"katamocabhikkhave","o":12},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"an-10-4-4-2","q":"kanho","pre":"ayamvuccatibhikkhave","o":20},"e":null,"conf":0.9,"src":"ai"}

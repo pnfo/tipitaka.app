@@ -98,6 +98,19 @@ ending and type (-a masc, a place also nt; -ā fem; -ī fem / masc …) with the
 -mpi …). Slugs keep the DPPN entry (`dppn` column `word#hom`); a DPPN name that is a common word of DPD (Loka,
 Sumana) makes all its forms ambiguous.
 
+**Links** (`data/names/dppn-links.tsv`, `npm run names:ai -- link`): for a name both dictionaries have (matched by
+`linkKey`: no title, no spaces, the final vowel short, so "Vipassī Buddha" is vipassī), each DPPN entry is linked to
+the DPD homonym it is about, or marked as a namesake (another one: Yasa the palace, Ānanda the banker), with the kind of
+its subject. A name with one DPD and one DPPN entry of the same kind is linked without asking (`auto`); the others were
+decided by Opus (`ai`, 2026-10: 2.9k entries, 1.4k linked, 1.5k namesakes; `sure` 0 for 254 whose entry says too
+little); `manual` rows are kept. The gazetteer first makes the DPPN names as without the links (so every word keeps how
+it is read: kind, common words), then applies them: a DPPN name about a DPD name becomes that name, a namesake keeps its
+forms (`namesake` column) and one that is no name goes; the namesakes the spelling rule left out are added. Their forms,
+and the DPPN spellings of linked entries, name only words DPD does not know (lumbinīvane, kosalanagaraṃ), never for a
+namesake of the kind of a DPD name of its spelling (jetavanavihāro is not the Jetavana of Anurādhapura). A namesake is
+never picked over the DPD names of a word (`rankEntities`; it is no "may be another" either): only an AI decision about
+the word names it, or being the only candidate.
+
 ## Mentions (`build/names/mentions.ts`)
 Every word of the mūla and aṭṭhakathā that is a name: `mention(para_id, s, e, entity_id, amb, src)` with the UTF-16
 offsets of the word in the stored markup.
@@ -134,7 +147,7 @@ setting as `contentLocation` in their JSON-LD. Sitemaps: `/sitemaps/names-<scrip
 a sure mention), apart from the text sitemaps (50000 urls at most per file).
 
 ## Next
-* After an upstream or DPD update: `names:gazetteer`, then `names:ai -- forms` and `-- mentions` ask only for what is
-  new (verdicts and decisions are kept; cached calls cost nothing).
+* After an upstream or DPD update: `names:ai -- link`, `names:gazetteer`, then `names:ai -- forms` and `-- mentions`
+  ask only for what is new (links, verdicts and decisions are kept; cached calls cost nothing).
 * SSR of the name pages (titles, descriptions, sitemaps); more journeys from the mentions (the Buddha's first journey
   from Bodhgayā to Isipatana, the Vinaya's travels).

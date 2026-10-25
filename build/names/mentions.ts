@@ -126,7 +126,8 @@ export function extractMentions(c: Corpus, g: Gazetteer, verdicts: Map<string, V
     context.push(entity)
     const name = displayName(entity)
     // namesakes it was not told apart from (shown on all their pages as "may be another …")
-    const amb = sure ? 0 : o.f.entities.filter(e => e !== entity && e.type === entity!.type && displayName(e) === name).length
+    // (DPPN namesakes are no candidates: rankEntities never picks them, an AI decision names them)
+    const amb = sure ? 0 : o.f.entities.filter(e => e !== entity && !e.namesake && e.type === entity!.type && displayName(e) === name).length
     mentions.push({ book: o.book, idx: o.idx, s: o.s, e: o.e, entity: entity.slug, amb, src })
   }
   return { mentions, pending, stats }

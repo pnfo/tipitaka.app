@@ -324,3 +324,5 @@
 {"c":{"k":"atta-dn-2-7-2","q":"sahadhamma","pre":"umapupphanibhasinotivuccantivaruna","o":1682},"e":"sahadhamma","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-2-7-2","q":"khiddapadosika","pre":"camanusuttamaca","o":1726},"e":"khiddapadosika","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-2-7-2","q":"khiddapadosika","pre":"agumagummanopadosikati","o":1730},"e":"khiddapadosika","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-2-3-11","q":"kanho","pre":"papadhammasamannagatattapapimativuccati","o":18},"e":"kanha-1-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-2-7-2","q":"kanho","pre":"ititatthamahaseno","o":2173},"e":"kanha-1-2","conf":0.9,"src":"ai"}

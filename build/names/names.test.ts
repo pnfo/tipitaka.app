@@ -12,6 +12,9 @@ describe('DPPN names', () => {
     expect(classifyDppn('guḷavaṇṇa', 'A horse belonging to King Kuṭakaṇṇatissa.').type).toBe('animal')
     expect(classifyDppn('sukkā', 'A class of Devas who were present at the preaching.').type).toBe('deity')
     expect(classifyDppn('sunīta thera', 'He belonged to a family of flower-scavengers in Rājagaha.').type).toBe('person')
+    // the place or family an entry about someone names is not its type
+    expect(classifyDppn('mahā rakkhita', 'He went after the Third Council to the Yona country, and there preached.').type).toBe('person')
+    expect(classifyDppn('dhammā', 'She belonged to a respectable family in Sāvatthī.').type).toBe('person')
     // texts, summaries and lists are no names
     expect(classifyDppn('dukkhasutta', 'The Buddha teaches suffering.').type).toBe('other')
     expect(classifyDppn('jīvaka', 'Preached at Jetavana to the wanderer Vacchagotta.').type).toBe('other')
@@ -62,5 +65,18 @@ describe('mentions', () => {
     expect(rankEntities(f, ['person'], [], ['bārāṇasiyaṃ', 'rajjaṃ'])).toEqual({ best: king, sure: true })
     expect(rankEntities(f, ['person'], [], ['āyasmā', 'thero'])).toEqual({ best: monk, sure: true })
     expect(rankEntities(f, ['person'], [], ['so', 'āha'])).toEqual({ best: king, sure: false })
+  })
+  it('a DPPN namesake is never picked over the DPD names (only an AI decision names it)', () => {
+    const yasa: Entity = { slug: 'yasa', type: 'person', lemma: 'yasa', dpd: 1, family: 'names of monks', meaning: 'name of an arahant monk', freq: 9 }
+    const palace: Entity = { slug: 'yasa-7', type: 'place', lemma: 'yasa 7', dpd: 0, family: 'DPPN: palace', meaning: 'A palace occupied by Kassapa Buddha.', freq: 0, namesake: true }
+    const slave: Entity = { slug: 'punna-3-2', type: 'person', lemma: 'puṇṇa 3', dpd: 0, family: 'DPPN: slave', meaning: 'Slave of Meṇḍaka.', freq: 0, namesake: true }
+    const kassapa: Entity = { slug: 'kassapa-1', type: 'person', lemma: 'kassapa 1', dpd: 2, family: 'previous Buddhas', meaning: '', freq: 0 }
+    const mendaka: Entity = { slug: 'mendaka', type: 'person', lemma: 'meṇḍaka', dpd: 3, family: 'names of laypeople', meaning: '', freq: 0 }
+    const all = ['person', 'place'] as Entity['type'][]
+    expect(rankEntities({ entities: [yasa, palace], how: 'n', notNames: [] }, all, [kassapa]).best).toBe(yasa)
+    expect(rankEntities({ entities: [yasa, slave], how: 'n', notNames: [] }, all, [mendaka]).best).toBe(yasa)
+    const banker: Entity = { slug: 'ananda-10', type: 'person', lemma: 'ānanda 10', dpd: 0, family: 'DPPN: seṭṭhi', meaning: 'A banker of Sāvatthī.', freq: 0, namesake: true }
+    expect(rankEntities({ entities: [yasa, banker], how: 'n', notNames: [] }, all, [], ['seṭṭhi'])).toEqual({ best: yasa, sure: false })
+    expect(rankEntities({ entities: [banker], how: 'n', notNames: [] }, all).best).toBe(banker) // the only one
   })
 })

@@ -36,3 +36,5 @@
 {"c":{"k":"an-9-1-4-8","q":"asurava","pre":"tatiyampikhobhikkhave","o":79},"e":"asura","conf":0.6,"src":"ai"}
 {"c":{"k":"an-9-1-4-8","q":"asurehiti","pre":"attanaviharamaakaraniya","o":103},"e":"asura","conf":0.6,"src":"ai"}
 {"c":{"k":"an-9-1-4-8","q":"asuranampi","pre":"viharamaakaraniyaasurehiti","o":104},"e":"asura","conf":0.6,"src":"ai"}
+{"c":{"k":"an-9-1-1-5","q":"kanha","pre":"anavajjasankhatayedhamma","o":31},"e":null,"conf":0.9,"src":"ai"}
+{"c":{"k":"an-9-1-1-5","q":"kanha","pre":"savajjasankhatayedhamma","o":76},"e":null,"conf":0.9,"src":"ai"}
