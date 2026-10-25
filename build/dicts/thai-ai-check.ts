@@ -29,23 +29,39 @@ export function keptRatio(bb: string, out: string): number {
   return n / a.size
 }
 
+/** books whose Roman numeral is part of the title (Pj II = Paramatthajotikā II), not a volume */
+const TITLE_NUMERAL = new Set(['Pj', 'Nidd'])
+
 export function englishRefs(en: string): { label: string; vol: number; page: number }[] {
-  return [...aiText(en).matchAll(/(?<![\p{L}-])([A-Z][\w-]*) (?:([IVXL]+) )?(\d+)/gu)].map(m => ({ label: m[0], vol: m[2] ? romanToInt(m[2]) : 0, page: +m[3] }))
+  // verse numbers in superscript are not part of the page (Pv I 8<sup>06</sup>)
+  const text = aiText(en.replace(/<sup>[^<]*<\/sup>/g, ' '))
+  return [...text.matchAll(/(?<![\p{L}-])([A-Z][\w-]*) (?:([IVXL]+) )?(\d+)/gu)].map(m => ({
+    label: m[0], vol: m[2] && !TITLE_NUMERAL.has(m[1]) ? romanToInt(m[2]) : 0, page: +m[3],
+  }))
 }
 
 export function checkThai(out: string, en: string, bb: string, knownRoman: (w: string) => boolean): ThaiCheck {
   const text = aiText(out)
+  const numText = aiText(out.replace(/<sup>[^<]*<\/sup>/g, ' ')) // verse numbers in superscript are not part of a page
   const issues: string[] = []
   if (!text.trim()) issues.push('empty')
   if (/[-]/.test(text)) issues.push('private use glyph')
   if (/ฺ(?=[ะ-ูํ็-๎])/.test(text)) issues.push('pinthu before a vowel')
+  // a vowel or tone mark, nikhahit or pinthu with no letter to sit on (°ํ for °ṃ: the word is written out)
+  if (/(?<![ก-ฮะ-ฺเ-๎])[ัิ-ฺ็-๎]/.test(text)) issues.push('Thai mark without a letter')
+  if (text.includes('\ufffd')) issues.push('broken character')
   const enText = aiText(en)
   const enWords = new Set((enText.match(/[\p{L}\p{M}]+/gu) ?? []).map(w => fold(w.toLowerCase())))
-  for (const w of new Set(text.match(/[A-Za-z]{4,}/g) ?? [])) if (!enWords.has(fold(w.toLowerCase())) && !aiText(bb).includes(w)) issues.push(`latin ${w}`)
+  // Latin letters: words of the English, of BB, and abbreviations of English words (Goth. for Gothic, Dial. for Dialogues)
+  const enList = [...enWords]
+  for (const w of new Set((text.match(/[\p{Script=Latin}\p{M}]+/gu) ?? []).filter(w => /[A-Za-z]{4}/.test(w)))) { // Halāyudha whole
+    const f = fold(w.toLowerCase())
+    if (!enWords.has(f) && !aiText(bb).includes(w) && !enList.some(e => e.startsWith(f))) issues.push(`latin ${w}`)
+  }
   // references: the numbers of each English reference should be in the Thai
   const nums = new Set<string>()
-  for (const m of text.matchAll(/(\d+)\/(\d+)/g)) nums.add(`${+m[1]}/${+m[2]}`)
-  for (const m of text.matchAll(/\d+/g)) nums.add(String(+m[0]))
+  for (const m of numText.matchAll(/(\d+)\/(\d+)/g)) nums.add(`${+m[1]}/${+m[2]}`)
+  for (const m of numText.matchAll(/\d+/g)) nums.add(String(+m[0]))
   const missingRefs = englishRefs(en).filter(r => !(r.vol ? nums.has(`${r.vol}/${r.page}`) : nums.has(String(r.page)))).map(r => r.label)
   // Pāḷi: Thai words with pinthu or nikhahit, and bold words
   const pali = new Set<string>()

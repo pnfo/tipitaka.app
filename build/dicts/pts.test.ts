@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parsePtsEntry, restoreFromOld } from './pts'
+import { cleanHead, parsePtsEntry, restoreFromOld } from './pts'
 
 describe('parsePtsEntry', () => {
   it('reads headword, homonym and variants', () => {
@@ -37,5 +37,12 @@ describe('restoreFromOld', () => {
   })
   it('matches ṁ, ṃ and ŋ', () => {
     expect(restoreFromOld('<p>lokaṃ x</p>', '<b>lokaŋ</b> x', grammar).html).toBe('<p><b>lokaṃ</b> x</p>')
+  })
+})
+
+describe('headword slips of the source', () => {
+  it('drops trailing punctuation, stray carons and breves, and a bracketed ending', () => {
+    expect(['lañcaka:', 'tadaṅga.', 'kolāpa)', 'paccākoṭita;', 'hirī̌mant', 'santā̆neti)', 'mana(s)', 'abhiniḥta'].map(cleanHead))
+      .toEqual(['lañcaka', 'tadaṅga', 'kolāpa', 'paccākoṭita', 'hirīmant', 'santāneti', 'mana', 'abhinihata'])
   })
 })

@@ -161,3 +161,56 @@ The gate failed in every round, so the run uses **Opus** with the round-2 prompt
 needless rewording of BB, which the round-1/2 rules address.
 
 **Scale:** at pilot rates, the whole dictionary is about 2,300 Opus calls, about 20M input and 13M output tokens.
+
+### The run (2026-10-16 to 10-24)
+* **Coverage:** all 16,629 headwords were done with Opus (round-2 prompt) in five session windows, giving 17,495 BB
+  entries, 1,209 of them new headwords.
+* **Checks:** `npm run dict:ai -- check` (no calls) flags 534. The flagged entries:
+  * 412 keep less than 60% of BB's text;
+  * 119 have Latin-letter words, mostly titles and botanical names;
+  * 3 miss English references.
+  See `db/dict-ai/check-report.md`.
+* **Opus spot check, 100 random headwords:** mean 4.76, 11 with a major error (formatting 4, reference 3, style 3).
+* **Opus spot check, 40 entries keeping < 60% of BB (`spot --kept`):** mean 4.72, 7 with a major error. The rewrites
+  were mostly justified.
+* **Fix run (`dict:ai -- fix`, 2026-10-24):**
+  * **Input:** the 424 headwords the checks or the spot checks flagged. The Latin-word flags are left out: they are
+    etymologies, scholars and titles.
+  * **Process:** Opus revised its earlier revision, given the findings. A blind A/B review (`th-judge-ab`) kept the
+    better of the two.
+  * **Result:** 382 replaced, 42 kept; review score 4.52 → 4.88 (`db/dict-ai/fix-report.md`).
+  * **"[0]" findings:** the review prompt now says that [n] and (a) are its own labels. The "[0]" formatting findings
+    of the first spot check came from them.
+* **Low "kept" ratio:** many BB entries run on into the next headword (an extraction fault). The revision rightly
+  drops that text, which lowers the ratio. The build leaves out an "others" entry whose text its own headword already
+  has (211).
+* **Reference abbreviations:** the build normalises the variants of BB's book abbreviations (`normalizeThaiRefs`):
+  ทาฐา./ทา.ว./ทา.วิ. → ทา.วํ., ปญฺจ.ที./ปญ.ที./ปัญ.ที. → ปญฺ.ที., ธา.มา. → ธา.ม.
+* **Headword slips:**
+  * BB (v2) headwords with junk ("jayati.", "anussuta<sup>1 </sup>", "ja paka", "kaḷimbaka หรือ ...") are mapped in
+    `data/dict-fixes/th-bhumibol-words.tsv` (raw → headword, `-` = a stray piece, left out).
+  * The English PTS 2025 headwords lose a trailing `:.;)`, stray carons and breves, and a bracketed ending
+    (`cleanHead`). A bold page number that the source took for a headword ("499") is joined to the entry before.
+  * After a rename: `dict:ai -- run --model opus` (the stale headwords), then `dict:ai -- jobs --prune`.
+* **Gemini comparison (`dict:ai -- compare`, GEMINI_API_KEY, 2026-10-24):**
+  * **Setup:** gemini-4-argon translated 30 pilot headwords with the same prompt. Both Opus and Gemini judged the
+    pairs blind against the stored Opus results.
+  * **Opus as judge:** Opus 4.66 vs Gemini 4.45; Opus better 15 times, Gemini 9.
+  * **Gemini as judge:** Opus 4.88 vs Gemini 4.67; Opus better 16 times, Gemini 6.
+  * **Main difference:** Gemini more often kept a wrong BB rendering (28 mistranslation findings to Opus's 7).
+  * **Cost:** about $1.10 in all, ~$0.02 per headword to translate. Opus stays.
+* **Broken Thai characters (fixed 2026-10-24):**
+  * **° with an ending:** BB's "°ํ / °ี / °ู" (°ṃ, °ī, °ū) are a Thai mark with no letter to sit on, so the result
+    shows a box. They are written out from the headword: วิหารํ กปฺเปติ, นวมี. Optional letters in brackets are written
+    as two forms: โอสฺสชติ, โอสฺสชฺชติ.
+  * **"�" characters:** a few came from `scripts/lib/claude.ts`, which decoded the CLI's output per chunk (a chunk can
+    end inside a Thai character). It now uses setEncoding('utf8').
+  * **Check:** `checkThai` reports both ("Thai mark without a letter", "broken character").
+* **Other Thai dictionaries (v2 data):** `build/dict.ts` applies `data/dict-fixes/<code>.tsv` (word, from, to) and
+  `<code>-words.tsv` (raw headword → headword, `-` = left out) to a dictionary without its own importer.
+  * **th-etipitaka:** 21 text fixes and 21 headwords. The text fixes are mostly a space before a mark ("โสตุ ํ" →
+    โสตุํ); a mark named on its own is written on a dotted circle (◌ํ). The headwords had Thai letters in them
+    ("kākaบāda" → kākapāda).
+  * **th-thaiware:** 19 headwords plus one left out.
+  * **th-dhamma-cheti-2:** 3 fixes (a lost ย).
+  * **Result:** no Thai dictionary has a mark without a letter or a "�".

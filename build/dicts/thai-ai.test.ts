@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { markRefs, THAI_ABBREVS } from './refs'
+import { markRefs, normalizeThaiRefs, THAI_ABBREVS } from './refs'
 import { batches, cleanAiHtml, promptForm, splitEnglish, units, type AiJob } from './thai-ai'
 import { checkThai, keptRatio } from './thai-ai-check'
 import { aiMarked } from './thai-pts'
@@ -13,6 +13,11 @@ describe('Thai references (BB notation)', () => {
   })
   it('prefers the longer abbreviation', () => {
     expect(markRefs('ธ.อ.3/104', THAI_ABBREVS, 'thai').html).toBe('<abbr data-a="ธ.อ.">ธ.อ.</abbr>3/104')
+  })
+  it('spells the variants of an abbreviation as BB mostly does', () => {
+    expect(normalizeThaiRefs('ทาฐา.1/27; ทา.ว. 4/49; ปญฺจ.ที.101; ปัญ.ที.10; ธา.ป. (64) และ ธา.มา. (82)'))
+      .toBe('ทา.วํ.1/27; ทา.วํ. 4/49; ปญฺ.ที.101; ปญฺ.ที.10; ธา.ป. (64) และ ธา.ม. (82)')
+    expect(normalizeThaiRefs('ทา.ว. ของ')).toBe('ทา.ว. ของ') // not before a page
   })
 })
 
@@ -53,5 +58,8 @@ describe('AI answers', () => {
     expect(c.missingRefs).toEqual(['D I 168'])
     expect(c.issues).toEqual([])
     expect(checkThai('ปติฏฺาสิ Xqeoc', 'Greek ὦμος', '', () => false).issues).toEqual(['pinthu before a vowel', 'latin Xqeoc'])
+    expect(checkThai('(°ํ กปฺเปติ); อิต. <b>°ี</b>; โอสฺสช(ฺช)ติ', '', '', () => false).issues).toEqual(['Thai mark without a letter'])
+    expect(checkThai('บังคั\ufffd\ufffdได้', '', '', () => false).issues).toEqual(['broken character'])
+    expect(checkThai('(วิหารํ กปฺเปติ) นวมี สงฺฆฏฺฏิต เจ้าที่ ๆ', '', '', () => false).issues).toEqual([])
   })
 })

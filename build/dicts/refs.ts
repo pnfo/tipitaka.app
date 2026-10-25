@@ -60,7 +60,16 @@ export const THAI_BOOKS: Record<string, [string | null, string]> = {
   'อิติ.อ.': ['It-a', 'อรรถกถาอิติวุตตกะ'], 'วิมาน.อ.': ['Vv-a', 'อรรถกถาวิมานวัตถุ'], 'เปต.อ.': ['Pv-a', 'อรรถกถาเปตวัตถุ'], 'เถร.อ.': ['Thag-a', 'อรรถกถาเถรคาถา'],
   'เถรี.อ.': ['Thig-a', 'อรรถกถาเถรีคาถา'], 'ธ.ส.อ.': ['Dhs-a', 'อรรถกถาธัมมสังคณี (อัฏฐสาลินี)'], 'วิภงฺค.อ.': ['Vibh-a', 'อรรถกถาวิภังค์ (สัมโมหวิโนทนี)'],
   'ปุํ.อ.': [null, 'อรรถกถาปุคคลบัญญัติ'], 'เน.ป.อ.': [null, 'อรรถกถาเนตติ'],
+  'ทา.วํ.': [null, 'ทาฐาวงศ์, Dāṭhāvaṃsa'], 'ปญฺ.ที.': [null, 'ปัญจคติทีปนี, Pañcagatidīpanī'], 'ธา.ป.': [null, 'ธาตุปาฐะ, Dhātupāṭha'],
+  'ธา.ม.': [null, 'ธาตุมัญชูสา, Dhātumañjūsā'],
 }
+/** spellings of BB's book abbreviations, in BB or the AI revision, for the one of THAI_BOOKS */
+const THAI_BOOK_VARIANTS: Record<string, string> = {
+  'ทาฐา.': 'ทา.วํ.', 'ทา.ว.': 'ทา.วํ.', 'ทา.วิ.': 'ทา.วํ.', 'ปญฺจ.ที.': 'ปญฺ.ที.', 'ปญ.ที.': 'ปญฺ.ที.', 'ปัญ.ที.': 'ปญฺ.ที.', 'ธา.มา.': 'ธา.ม.',
+}
+const variantRe = new RegExp(`(?<![\u0e01-\u0e4e.])(${Object.keys(THAI_BOOK_VARIANTS).map(a => a.replace(/\./g, '\\.')).join('|')})(?= ?[\\d(])`, 'gu')
+/** BB's book abbreviations in the spelling of THAI_BOOKS (before a page, verse or parenthesis) */
+export const normalizeThaiRefs = (html: string) => html.replace(variantRe, a => THAI_BOOK_VARIANTS[a])
 export const THAI_ABBREVS: Record<string, string> = Object.fromEntries(Object.entries(THAI_BOOKS).map(([a, [, title]]) => [a, title]))
 
 export type RefStyle = 'dppn' | 'pts' | 'thai'

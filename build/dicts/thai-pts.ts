@@ -17,8 +17,9 @@ import { fold } from '../../shared/normalize'
 import { lcsPairs } from './diff'
 import { stripTags } from './markup'
 import { readV2 } from './v2'
-import { markRefs, THAI_ABBREVS, type Resolver } from './refs'
+import { markRefs, normalizeThaiRefs, THAI_ABBREVS, type Resolver } from './refs'
 import { aiJobs, readAiStore, thaiKey, type AiResult } from './thai-ai'
+import { keptRatio } from './thai-ai-check'
 import type { DictRow, ImportCtx, ImportResult } from './types'
 
 /** the Thai glyph variants of the Microsoft / Adobe Thai fonts' private use area */
@@ -154,6 +155,13 @@ function manualFixes(dataDir: string): Map<string, [string, string][]> {
   return out
 }
 
+/** BB headwords with junk of the extraction (data/dict-fixes/th-bhumibol-words.tsv): raw -> headword, '-' = left out */
+function headwordFixes(dataDir: string): Map<string, string> {
+  const f = path.join(dataDir, 'dict-fixes', 'th-bhumibol-words.tsv')
+  if (!fs.existsSync(f)) return new Map()
+  return new Map(fs.readFileSync(f, 'utf8').split('\n').filter(l => l && !l.startsWith('#')).slice(1).map(l => l.split('\t') as [string, string]))
+}
+
 /** the English PTS entries and their headwords (and variants) -> row indexes, homonyms in order */
 export interface English { rows: DictRow[]; byWord: Map<string, number[]> }
 export function englishIndex(rows: DictRow[]): English {
@@ -179,7 +187,10 @@ export function pairThai(ctx: ImportCtx, english: English, knownRoman: (w: strin
   const stats = { gaps: 0, ety: 0, left: 0, man: 0 }
   const seen = new Map<string, number>()
   const used = new Set<number>()
-  const pairs = readV2(ctx.dictDir, 'th-bhumibol').map((r): ThaiPair => {
+  const words = headwordFixes(ctx.dataDir)
+  const fixedWord = (w: string) => words.get(w) ?? words.get(w.replace(/[-\s\d]+$/, '')) ?? w
+  const pairs = readV2(ctx.dictDir, 'th-bhumibol').filter(r => fixedWord(r.word) !== '-').map((raw): ThaiPair => {
+    const r = { ...raw, word: fixedWord(raw.word) }
     const key = r.word.replace(/[-\s\d]+$/, '')
     // the n-th entry of a headword translates the n-th English entry (homonyms are in the same order)
     const n = (seen.get(key) ?? 0) + 1
@@ -204,7 +215,7 @@ export function pairThai(ctx: ImportCtx, english: English, knownRoman: (w: strin
       m = e.html
       stats.ety += e.fixed
     }
-    for (const [from, to] of manual.get(r.word) ?? []) if (m.includes(from)) { m = m.split(from).join(to); stats.man++ }
+    for (const [from, to] of manual.get(raw.word) ?? []) if (m.includes(from)) { m = m.split(from).join(to); stats.man++ }
     if (/[-]/.test(m)) report.push(`pua\t${r.word}\t`)
     return { word: r.word, n, raw: r.meaning, html: m, en }
   })
@@ -229,13 +240,28 @@ export function importThaiPts(ctx: ImportCtx, english: English, knownRoman: (w: 
     if (r?.src === j.src) current.set(j.id, r)
     else if (r) { stale++; report.push(`ai-stale\t${j.id}\t`) }
   }
-  const refs = (html: string) => markRefs(html, THAI_ABBREVS, 'thai', resolve).html
+  const refs = (html: string) => markRefs(normalizeThaiRefs(html), THAI_ABBREVS, 'thai', resolve).html
   const rows: DictRow[] = []
   const done = new Set<string>()
+  // BB's text of a headword can run on into the next one: an "other" whose text the entries of its own headword already
+  // have (or that was given already) is left out
+  const ownText = new Map<string, string>()
+  for (const p of pairs) { const k = thaiKey(p.word); ownText.set(k, (ownText.get(k) ?? '') + ' ' + p.html) }
+  for (const [k, r] of current) ownText.set(k, r.entries.map(e => e.html).join(' '))
+  const otherDone = new Set<string>()
+  let dupOthers = 0
   const addAi = (id: string, r: AiResult) => {
     const several = r.entries.length > 1
     for (const e of r.entries) rows.push({ word: id, hom: several ? e.hom : 0, meaning: refs(aiMarked(e.html)) })
-    for (const o of r.others ?? []) rows.push({ word: o.word, meaning: refs(aiMarked(o.html)) })
+    for (const o of r.others ?? []) {
+      // the AI's word can carry a note: "kalla (2)", "ussuyā, ussuyaka", "de°", "(unidentified stray bb line)"
+      const word = o.word.replace(/\s*\(.*$/, '').split(',')[0].replace(/°/g, '').trim()
+      if (!/^[\p{L}\p{M}-]+$/u.test(word)) continue
+      const own = ownText.get(thaiKey(word))
+      if ((own && keptRatio(o.html, own) >= 0.7) || otherDone.has(word)) { dupOthers++; continue }
+      otherDone.add(word)
+      rows.push({ word, meaning: refs(aiMarked(o.html)) })
+    }
     done.add(id)
   }
   for (const p of pairs) {
@@ -250,6 +276,6 @@ export function importThaiPts(ctx: ImportCtx, english: English, knownRoman: (w: 
   for (const [id, r] of current) if (!done.has(id)) { addAi(id, r); added++ }
   ctx.report('th-bhumibol', report)
   ctx.log(`th-bhumibol: ${rows.length} entries, ${stats.gaps} missing consonants restored (${stats.left} left), ${stats.ety} Greek etymologies, ` +
-    `${stats.man} manual fixes; AI revised ${current.size} headwords (${added} new, ${stale} stale)`)
+    `${stats.man} manual fixes; AI revised ${current.size} headwords (${added} new, ${stale} stale, ${dupOthers} entries of other headwords they repeat left out)`)
   return { rows, abbrevs: THAI_ABBREVS }
 }

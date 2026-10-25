@@ -30,17 +30,24 @@ const headKey = (s: string) => norm(stripTags(s)).split(/[&=]/)[0].replace(/â/g
 /** "<span class="Head"><b>Kalla</b><sup>01</sup> and <b>Kalya</b><sup>,,</sup> " (the </span> is sometimes missing) */
 const HEAD = /^<p><span class="Head">((?:\s*(?:<b>[^<]*<\/b>|<sup>[^<]*<\/sup>|and|\((?=\s*(?:and\s*)?<b>)|(?<=<\/b>|<\/sup>)\)|,,?|\*|-|–|°)\s*)+)(?:<\/span>|\]|\s)*/
 
+/** slips of the source's headwords: "lañcaka:", "tadaṅga.", "kolāpa)", "hirī̌mant" (a stray caron), "mana(s)" */
+const HEAD_FIXES: Record<string, string> = { 'abhiniḥta': 'abhinihata' }
+export const cleanHead = (w: string) => {
+  const c = w.normalize('NFD').replace(/[\u0306\u030c]/g, '').normalize('NFC').replace(/\([a-z]*\)$/, '').replace(/[.:;)’]+$/, '')
+  return HEAD_FIXES[c] ?? c
+}
+
 export function parsePtsEntry(x: Raw): PtsEntry | null {
   const html = (x.name + (x.entry ?? '')).replace(/<(\/?)I>/g, '<$1i>').replace(/<(\/?)SUP>/g, '<$1sup>')
   const m = HEAD.exec(html)
   if (!m) return null
   const head = m[1]
   const bolds = [...head.matchAll(/<b>([^<]*)<\/b>/g)].map(b => b[1])
-  const word = norm(bolds[0].replace(/^[*\-–°\s]+|[\-–°\s]+$/g, ''))
+  const word = cleanHead(norm(bolds[0].replace(/^[*\-–°\s]+|[\-–°\s]+$/g, '')))
   if (!word) return null
   const homM = /^<b>[^<]*<\/b>-?<sup>(\d+)<\/sup>/.exec(head.trim())
   const hom = homM ? Number(homM[1]) : 0
-  const aliases = [...new Set(bolds.slice(1).map(b => norm(b.replace(/^[*\-–°\s]+|[\-–°\s]+$/g, ''))).filter(a => a && a !== word))]
+  const aliases = [...new Set(bolds.slice(1).map(b => cleanHead(norm(b.replace(/^[*\-–°\s]+|[\-–°\s]+$/g, '')))).filter(a => a && a !== word))]
   const headRest = aliases.length ? niggahita(head.trim().replace(/^<b>[^<]*<\/b>-?(?:<sup>[^<]*<\/sup>)?\s*/, '')).replace(/<sup>,,<\/sup>/g, '') : ''
   let body = '<p>' + html.slice(m[0].length).replace(/<\/span>/, '')
   // stray tags (Latin "<sequor>") are text
@@ -183,9 +190,16 @@ export function importPts(ctx: ImportCtx, resolve?: Resolver): ImportResult {
   const report: string[] = ['kind\tword\thom\tdetail']
   let bold = 0, fixes = 0, paired = 0, refs = 0
   const rows: DictRow[] = []
+  const entries: PtsEntry[] = []
   for (const x of raw) {
     const e = parsePtsEntry(x)
     if (!e) continue
+    // a page number in bold taken for a headword ("<b>499</b> = V 180; …"): the rest of the entry before
+    const prev = entries.at(-1)
+    if (/^\d+$/.test(e.word) && prev) { prev.body = prev.body.replace(/<\/p>\s*$/, '') + ` ${e.word} ${e.body.replace(/^<p>/, '')}`; continue }
+    entries.push(e)
+  }
+  for (const e of entries) {
     let html = e.body
     const k = findOld(old, folded, usedOld, e)
     if (k) {

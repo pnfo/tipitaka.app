@@ -24,7 +24,7 @@ import { importNyanatiloka } from './dicts/nyanatiloka'
 import { importNcped } from './dicts/ncped'
 import { importPcedKo, importPcedVi } from './dicts/pced'
 import { importAndroid, myanmarImporter, readGrammarBreakups } from './dicts/myanmar'
-import type { ImportCtx, Importer } from './dicts/types'
+import type { DictRow, ImportCtx, Importer } from './dicts/types'
 import { readTextIndex } from './dicts/text-index'
 
 export { sinhToRoman }
@@ -147,6 +147,8 @@ export function buildDictDb(out: string, src: DictSources, log = (m: string) => 
     DICTS.forEach((d, i) => {
       const id = i + 1
       const res = (d.importer ?? v2Importer(d.code))(ctx)
+      // corrections of a v2 dictionary: data/dict-fixes/<code>.tsv (word, from, to; th-bhumibol's own importer applies its file)
+      if (!d.importer) applyFixes(d.code, res.rows, ctx.dataDir, log)
       let n = 0
       for (const r of res.rows) {
         const words = [r.word, ...(r.aliases ?? [])].filter(Boolean)
@@ -240,4 +242,29 @@ export function buildDictDb(out: string, src: DictSources, log = (m: string) => 
   db.close()
   fs.renameSync(tmp, out)
   return meta
+}
+
+/** corrections of a dictionary's headwords and text (word \t from \t to); a text correction that no longer applies is logged */
+function applyFixes(code: string, rows: DictRow[], dataDir: string, log: (s: string) => void) {
+  // headwords with junk of the extraction: data/dict-fixes/<code>-words.tsv (raw \t word; - = left out)
+  const wf = path.join(dataDir, 'dict-fixes', `${code}-words.tsv`)
+  if (fs.existsSync(wf)) {
+    const words = new Map(fs.readFileSync(wf, 'utf8').split('\n').slice(1).filter(Boolean).map(l => l.split('\t') as [string, string]))
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const w = words.get(rows[i].word)
+      if (w === '-') rows.splice(i, 1)
+      else if (w) rows[i].word = w
+    }
+  }
+  const f = path.join(dataDir, 'dict-fixes', `${code}.tsv`)
+  if (!fs.existsSync(f)) return
+  const fixes = fs.readFileSync(f, 'utf8').split('\n').slice(1).filter(Boolean).map(l => l.split('\t'))
+  let done = 0
+  for (const [word, from, to = ''] of fixes) {
+    let hit = false
+    for (const r of rows) if (r.word === word && r.meaning.includes(from)) { r.meaning = r.meaning.split(from).join(to); hit = true }
+    if (hit) done++
+    else log(`${code}: fix not applied: ${word}\t${from}`)
+  }
+  log(`${code}: ${done} of ${fixes.length} fixes`)
 }
