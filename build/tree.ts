@@ -230,6 +230,12 @@ export function buildCorpus(xmlDir: string, opts: { books?: BookDef[]; parse?: (
 
   assignHeadingKeys(nodes, keyToNode, warnings)
   for (const n of nodes) {
+    // a div without a <head> (atta-mn-1-0, tika-dn-1-0: the introductions) is named by its first heading, as the
+    // introductions of the other books are (Ganthārambhakathā); its children and their keys stay
+    if (!n.title && n.kind === 'div' && n.children.length && nodes[n.children[0]].kind === 'heading' && nodes[n.children[0]].start === n.start) {
+      n.title = nodes[n.children[0]].title
+      n.rend = nodes[n.children[0]].rend
+    }
     if (!n.title) n.title = n.kind === 'book' ? (tbooks[n.book]?.def.title ?? n.key) : n.key
     if (n.kind !== 'group' && n.start < 0) warnings.push(`empty node ${n.key} ${n.title}`)
   }

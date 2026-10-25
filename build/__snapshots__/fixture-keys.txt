@@ -192,7 +192,7 @@ atta-kn-dhp-1-2	2. Maṭṭhakuṇḍalīvatthu
 atta-kn-dhp-1-3	3. Tissattheravatthu
 atta-kn-dhp-1-4	4. Kāḷayakkhinīvatthu
 tika-dn-1	Sīlakkhandhavaggaṭīkā
-tika-dn-1-0	tika-dn-1-0
+tika-dn-1-0	Ganthārambhakathāvaṇṇanā
 tika-dn-1-0-1	Ganthārambhakathāvaṇṇanā
 tika-dn-1-0-2	Nidānakathāvaṇṇanā
 tika-dn-1-0-3	Paṭhamamahāsaṅgītikathāvaṇṇanā

@@ -81,6 +81,7 @@ describe('fixture corpus', () => {
     const n = (k: string) => c.nodes[c.keyToNode.get(k)!]
     expect(n('dn-1-1').title).toBe('1. Brahmajālasuttaṃ')
     expect(n('dn-1-1-1').title).toBe('Paribbājakakathā')
+    expect(n('tika-dn-1-0').title).toBe('Ganthārambhakathāvaṇṇanā') // a div without a <head>: its first heading
     expect(n('mn-1-1-2').title).toBe('2. Sabbāsavasuttaṃ')
     expect(n('mn-1-1-2-1').title).toBe('Dassanā pahātabbāsavā') // unnumbered subhead nested under the sutta
     expect(n('kn-dhp-1').title).toBe('1. Yamakavaggo')
