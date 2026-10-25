@@ -10,7 +10,6 @@ NAME="tipitaka_app_${OS}_${ARCH}"
 EXT=""; [ "$OS" = "windows" ] && EXT=".exe"
 OUT="release/$NAME"
 rm -rf "$OUT" && mkdir -p "$OUT/db"
-[ "$OS" = darwin ] && [ -f scripts/go-env.sh ] && source scripts/go-env.sh
 (cd server && CGO_ENABLED=1 go build -trimpath -ldflags "-s -w" -o "../$OUT/tipitaka_app$EXT" .)
 cp -R web/dist "$OUT/dist"
 cp db/text.db "$OUT/db/"

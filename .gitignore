@@ -4,7 +4,7 @@
 dev
 node_modules
 dist
-Android
+/Android
 dict-all.db
 
 
@@ -26,3 +26,7 @@ dist-desktop
 /web/public/sitemap*
 /server/testdata/fuzz
 /server/mobile/build
+/release
+/server/rsrc_windows_*.syso
+/apple/build
+/apple/Tipitaka.xcodeproj

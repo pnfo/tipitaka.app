@@ -1,6 +1,6 @@
 // tipitaka.app server: the web app (web/dist), the read-only API over the engine (/api/<op>), server side
-// rendering of text pages for SEO, sitemaps and redirects of v2 links. The same binary is the desktop app
-// (it opens the browser unless -no-open).
+// rendering of text pages for SEO, sitemaps and redirects of v2 links. Built with -tags desktop it is the
+// desktop app (desktop.go: the same handler in a Wails window, server mode with -server).
 package main
 
 import (
@@ -20,7 +20,8 @@ import (
 // APPNAME is shown in the console box and /api/health.
 const APPNAME = "Tipitaka.app v3.0"
 
-func main() {
+// serverMain runs the http server (the server binary, and the desktop app with -server).
+func serverMain() {
 	listen := flag.String("listen", "127.0.0.1:8402", "address to listen on (0.0.0.0:8402 allows LAN access)")
 	noOpen := flag.Bool("no-open", false, "do not open the browser")
 	rootPath := flag.String("root-path", "", "folder containing dist/ (or web/dist/) and db/, relative to the binary or absolute")
@@ -62,7 +63,8 @@ func findRoot(rootPath, dbDir string) (string, error) {
 		candidates = append(candidates, rootPath)
 	} else {
 		if exe, err := os.Executable(); err == nil {
-			candidates = append(candidates, filepath.Join(filepath.Dir(exe), rootPath))
+			candidates = append(candidates, filepath.Join(filepath.Dir(exe), rootPath),
+				filepath.Join(filepath.Dir(exe), "..", "Resources", rootPath)) // macOS .app bundle
 		}
 		if cwd, err := os.Getwd(); err == nil {
 			candidates = append(candidates, filepath.Join(cwd, rootPath), cwd, filepath.Join(cwd, ".."))
@@ -93,8 +95,8 @@ func distDir(root string) string {
 
 func printBox(url, root string) {
 	lines := []string{APPNAME, "┈┈┈┈┈┈┈┈┈┈┈┈", url, "Visit the above URL in your browser to see the App.", "┄┄┄┄┄┄┄┄┄┈┈┈",
-		"Suggestions and Errors - path.nirvana@gmail.com", "┄┄┄┄┄┄┄┄┄┈┈┈", "You can check if there is a newer version at",
-		"https://github.com/pnfo/tipitaka.app/releases"}
+		"Suggestions and Errors - path.nirvana@gmail.com", "┄┄┄┄┄┄┄┄┄┈┈┈", "The apps and the newest version are at",
+		"https://tipitaka.app"}
 	const width = 60
 	fmt.Println("┏" + strings.Repeat("━", width) + "┓")
 	for _, l := range lines {

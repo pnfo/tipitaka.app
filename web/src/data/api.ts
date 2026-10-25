@@ -82,6 +82,9 @@ export function nativeSender(): ((id: string, request: string) => void) | null {
 
 export const isNativeApp = () => __IS_APP__ || nativeSender() !== null
 
+/** the desktop app (server/desktop.go): the web build in a Wails window, the api is same-origin as on the site */
+export const isDesktopApp = () => typeof window !== 'undefined' && !!window.runtime?.BrowserOpenURL
+
 /** content hash of the data: from the server page (SSR) or the app build */
 export function contentVersion(): string {
   if (typeof document !== 'undefined') {

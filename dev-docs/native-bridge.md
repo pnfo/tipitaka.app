@@ -50,11 +50,17 @@ webView.loadUrl("file:///android_asset/dist-app/index.html");   // or WebViewAss
 * minSdk 24 (Android 7). ABIs in the AAR: arm64-v8a, armeabi-v7a, x86_64 (emulator).
 * Back key: `webView.canGoBack() ? webView.goBack() : finish()`; external links open in the browser.
 
-## iOS (future)
-`scripts/build-mobile.sh ios` → `Engine.xcframework` (`MobileOpen(text, dict, &err)`, `engine.query(_:)`).
-A `WKWebView` with a `WKScriptMessageHandler` named `tipitaka` runs `query` on a background queue and calls
-`webView.evaluateJavaScript("window.__tipitakaResolve(id, response)")` on the main queue. Load `dist-app` with
-`loadFileURL(_:allowingReadAccessTo:)`. iOS 12+ (the web build's target).
+## iOS (`apple/iOS/App.swift`, `app.tipitaka.main`)
+`scripts/build-apple.sh` builds `Engine.xcframework` (`MobileOpen(text, dict, &err)`, `engine.query(_:)`), the app web
+build and the Xcode project (XcodeGen, `apple/project.yml`). A `WKWebView` loads `dist-app` from the bundle through a
+`WKURLSchemeHandler` at `app://tipitaka/` (a real origin for localStorage and fonts); the `WKScriptMessageHandler`
+named `tipitaka` runs `query` on a background queue and calls `window.__tipitakaResolve(id, response)` on the main
+queue. The databases are in the bundle (`db/`). A second handler, `chrome`, reports the header and page colours so the
+status bar area follows the theme. iOS 15+. Debug builds take `-start <route> -theme <theme>` launch arguments
+(`xcrun simctl launch <device> app.tipitaka.main -start /latn/dn-1-1`), for screenshots.
+
+The macOS App Store app is the Wails desktop app (`server/desktop.go`) in the same Xcode project: the Go universal
+binary replaces the placeholder executable of the `Tipitaka-macOS` target, so Xcode signs, archives and uploads it.
 
 ## Testing
 `e2e/android.spec.ts` (`android-sim` project) runs the app build with a simulated bridge (async answers, the page

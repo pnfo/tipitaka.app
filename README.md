@@ -21,7 +21,6 @@ npm run build:web && npm run build:server
 server/bin/tipitaka_app -root-path .        # http://localhost:8402
 npm run dev                                  # vite dev server on :5155, proxies /api to :8402
 ```
-On macOS, if cgo linking fails with `tapi error`, `source scripts/go-env.sh` first.
 
 ## Tests
 ```bash

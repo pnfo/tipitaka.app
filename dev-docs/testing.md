@@ -13,7 +13,6 @@
 The fixture corpus is `e2e/fixtures/xml` (truncated copies of 8 upstream files, `tsx build/make-fixtures.ts`).
 The fixture dict.db contains only the fixture text's words (needs `.cache/dpd`: `npm run upstream -- --dpd-only`).
 
-On macOS with a newer SDK than the Command Line Tools, `source scripts/go-env.sh` before cgo builds.
 Firefox may not start in sandboxed environments; CI runs it.
 
 ## Script converter against native texts
