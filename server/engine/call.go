@@ -101,6 +101,17 @@ var Ops = []string{"meta", "children", "node", "text", "links", "glosses", "titl
 func (e *Engine) Call(ctx context.Context, op string, p Params) (any, error) {
 	ctx, cancel := context.WithTimeout(ctx, callTimeout)
 	defer cancel()
+	res, err := e.call(ctx, op, p)
+	// the descriptions of the names in the interface language (names_tr.go)
+	if err == nil && nameOps[op] {
+		if lang := p.Get("lang"); lang != "" && len(lang) <= 8 {
+			e.localizeNames(ctx, res, lang)
+		}
+	}
+	return res, err
+}
+
+func (e *Engine) call(ctx context.Context, op string, p Params) (any, error) {
 	switch op {
 	case "meta":
 		return e.MetaInfo(), nil

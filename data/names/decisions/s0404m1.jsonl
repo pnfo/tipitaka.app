@@ -32,7 +32,7 @@
 {"c":{"k":"an-8-1-2-2","q":"nigantham","pre":"nataputtotenupasankamiupasankamitva","o":193},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-8-1-2-2","q":"siha","pre":"kimpanatvam","o":205},"e":"siha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-8-1-2-2","q":"siha","pre":"upasankamissasisamanohi","o":215},"e":"siha-2","conf":0.9,"src":"ai"}
-{"c":{"k":"an-8-1-2-2","q":"niganthe","pre":"vayamnunahamanapaloketvava","o":294},"e":"nigantha","conf":0.9,"src":"ai"}
+{"c":{"k":"an-8-1-2-2","q":"niganthe","pre":"vayamnunahamanapaloketvava","o":294},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-8-1-2-2","q":"siha","pre":"bhantebhagavantantiatthi","o":394},"e":"siha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-8-1-2-2","q":"siha","pre":"savakevinetitiatthi","o":413},"e":"siha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-8-1-2-2","q":"siha","pre":"savakevinetitiatthi","o":432},"e":"siha-2","conf":0.9,"src":"ai"}
@@ -192,7 +192,7 @@
 {"c":{"k":"an-8-2-2-1","q":"accuto","pre":"nacapamadi","o":457},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-8-2-2-10","q":"cetiye","pre":"khobhagavacapale","o":555},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"an-8-2-2-10","q":"udanam","pre":"tayamvelayamimam","o":579},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"an-8-2-2-10","q":"tusita","pre":"anandayadabodhisatto","o":741},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"an-8-2-2-10","q":"tusita","pre":"anandayadabodhisatto","o":741},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"an-8-2","q":"abhibhuna","pre":"alancasamkhittamgaya","o":6105},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"an-8-2-3-7","q":"accuto","pre":"nacaparidevi","o":287},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-8-2-3-7","q":"accuto","pre":"nacapamadi","o":338},"e":null,"conf":0.9,"src":"ai"}

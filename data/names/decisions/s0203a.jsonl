@@ -44,11 +44,11 @@
 {"c":{"k":"atta-mn-3-2-6","q":"sudassano","pre":"uparitthotagarasikhiyasassi","o":235},"e":"sudassana-5","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-3-2-6","q":"gandharo","pre":"yasassisudassanopiyadassi","o":237},"e":"gandhara-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-3-2-6","q":"pindolo","pre":"sudassanopiyadassigandharo","o":238},"e":"pindola-1","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"kilanatthanemahaudakarahadotato","o":29},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"mahalohakumbhinirayanamantarenaayam","o":49},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"cetamyatayambhikkhave","o":59},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"pupphantiapicayambhikkhave","o":76},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"antarikayaagacchatitenayam","o":82},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"kilanatthanemahaudakarahadotato","o":29},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"mahalohakumbhinirayanamantarenaayam","o":49},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"cetamyatayambhikkhave","o":59},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"pupphantiapicayambhikkhave","o":76},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-mn-3-4-3","q":"tapoda","pre":"antarikayaagacchatitenayam","o":82},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-3-4-3","q":"samiddhiti","pre":"viharotapodaramotivuccati","o":98},"e":"samiddhi-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-3-4-3","q":"samiddho","pre":"kiratherassaattabhavo","o":103},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-3-4-3","q":"therena","pre":"pananayamlabhantena","o":163},"e":null,"conf":0.6,"src":"ai"}
@@ -127,7 +127,7 @@
 {"c":{"k":"atta-mn-3-3-4","q":"therena","pre":"nasasanavacanamidani","o":425},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-3-3-4","q":"therena","pre":"nibaddhamevaahosianubyanjanasoti","o":658},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-3-3-4","q":"vappam","pre":"vupasamikassapasammasambuddhakalepipathamavappadivase","o":757},"e":null,"conf":0.6,"src":"ai"}
-{"c":{"k":"atta-mn-3-3-7","q":"parittabhati","pre":"catassokhoimatiadimaha","o":120},"e":"parittabha-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-mn-3-3-7","q":"parittabhati","pre":"catassokhoimatiadimaha","o":120},"e":"parittabha","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-mn-3-3-7","q":"parisuddhabha","pre":"samkilitthabhahontisiya","o":141},"e":"parisuddhabha","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-mn-3-3-7","q":"appamanabha","pre":"hontisiyaparisuddhabha","o":142},"e":"appamanabha","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-mn-3-3-7","q":"parisuddhabha","pre":"samkilitthabhahontisiya","o":147},"e":"parisuddhabha","conf":0.6,"src":"ai"}

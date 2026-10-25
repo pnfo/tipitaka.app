@@ -12,17 +12,20 @@ import (
 
 // Entity is a proper name (a DPD name headword).
 type Entity struct {
-	Slug     string   `json:"slug"`
-	Type     string   `json:"type"` // person | deity | group | place | animal
-	Name     string   `json:"name"`
-	Lemma    string   `json:"lemma"` // DPD headword with its homonym number
-	Family   string   `json:"family,omitempty"`
-	Meaning  string   `json:"meaning,omitempty"`
-	Lat      *float64 `json:"lat,omitempty"`
-	Lon      *float64 `json:"lon,omitempty"`
-	Prec     int      `json:"prec,omitempty"` // 1 located, 2 probable, 3 approximate, 4 in or near the place its meaning names
-	Units    int      `json:"units"`          // suttas / stories with a setting of the name
-	Mentions int      `json:"mentions"`       // words of the mūla and aṭṭhakathā that name it (sure or not)
+	Slug    string `json:"slug"`
+	Type    string `json:"type"` // person | deity | group | place | animal
+	Name    string `json:"name"`
+	Lemma   string `json:"lemma"` // DPD headword with its homonym number
+	Family  string `json:"family,omitempty"`
+	Meaning string `json:"meaning,omitempty"`
+	// the meaning and family in the interface language (lang=, names_tr.go); the English fields stay (the client's rules)
+	MeaningLocal string   `json:"meaningLocal,omitempty"`
+	FamilyLocal  string   `json:"familyLocal,omitempty"`
+	Lat          *float64 `json:"lat,omitempty"`
+	Lon          *float64 `json:"lon,omitempty"`
+	Prec         int      `json:"prec,omitempty"` // 1 located, 2 probable, 3 approximate, 4 in or near the place its meaning names
+	Units        int      `json:"units"`          // suttas / stories with a setting of the name
+	Mentions     int      `json:"mentions"`       // words of the mūla and aṭṭhakathā that name it (sure or not)
 }
 
 // SettingRef is one unit (sutta, story) a name is part of the setting of.

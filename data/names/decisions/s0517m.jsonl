@@ -37,7 +37,7 @@
 {"c":{"k":"kn-ps-1-2-2","q":"karandako","pre":"ayammaniayam","o":2250},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ps-1-2-2","q":"karandako","pre":"annomanianno","o":2254},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ps-2-6-1","q":"yama","pre":"tavatimsadevape","o":479},"e":"yama","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-ps-2-6-1","q":"tusita","pre":"yamadevape","o":482},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-ps-2-6-1","q":"tusita","pre":"yamadevape","o":482},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ps-2-6-1","q":"nimmanarati","pre":"tusitadevape","o":485},"e":"nimmanarati","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ps-2-6-1","q":"paranimmitavasavatti","pre":"nimmanaratidevape","o":488},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ps-2-6-1","q":"udanam","pre":"khobhagavaimam","o":546},"e":null,"conf":0.9,"src":"ai"}

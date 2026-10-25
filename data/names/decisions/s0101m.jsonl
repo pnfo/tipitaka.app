@@ -279,7 +279,7 @@
 {"c":{"k":"dn-1-11-5","q":"kevatta","pre":"athakhoso","o":264},"e":"kevatta-2","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-1-11-5","q":"kevatta","pre":"vayodhatutievamvutte","o":290},"e":"kevatta-2","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-1-11-5","q":"yama","pre":"atthikhobhikkhu","o":314},"e":"yama","conf":0.9,"src":"ai"}
-{"c":{"k":"dn-1-11-5","q":"tusita","pre":"suyamonamadevaputto","o":321},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"dn-1-11-5","q":"tusita","pre":"suyamonamadevaputto","o":321},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"dn-1-11-5","q":"santussito","pre":"tusitanamadeva","o":324},"e":"santussita-1","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-1-11-5","q":"nimmanarati","pre":"santussitonamadevaputto","o":327},"e":"nimmanarati","conf":0.6,"src":"ai"}
 {"c":{"k":"dn-1-11-5","q":"paranimmitavasavatti","pre":"sunimmitonamadevaputto","o":333},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}

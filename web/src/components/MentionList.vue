@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+import { meaningOf } from '@/composables/names'
 import { computed, ref } from 'vue'
 import { plainText } from '@shared/markup'
 import { useApi } from '@/data/api'
@@ -44,7 +45,7 @@ function snip(markup: string, n: number): string {
   const sp = p.indexOf(' ', cut)
   return p.slice(sp > 0 ? sp : cut)
 }
-const namesake = (slug: string) => props.namesakes?.find(e => e.slug === slug)?.meaning ?? slug
+const namesake = (slug: string) => { const e = props.namesakes?.find(x => x.slug === slug); return e ? meaningOf(e) || slug : slug }
 
 async function load() {
   loading.value = true

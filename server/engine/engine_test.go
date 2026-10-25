@@ -398,7 +398,7 @@ func TestNames(t *testing.T) {
 	e := fixture(t)
 	// a sutta's nidāna: "ekaṃ samayaṃ bhagavā antarā ca rājagahaṃ antarā ca nāḷandaṃ …"
 	u, err := e.Settings(ctx, "dn-1-1", -1)
-	if err != nil || u == nil || u.Key != "dn-1-1" || len(u.Rows) != 2 || u.Rows[0].Slug != "rajagaha" || u.Rows[0].Role != "place" || u.Rows[1].Slug != "nalanda-2" {
+	if err != nil || u == nil || u.Key != "dn-1-1" || len(u.Rows) != 2 || u.Rows[0].Slug != "rajagaha" || u.Rows[0].Role != "place" || u.Rows[1].Slug != "nalanda" {
 		t.Fatalf("dn-1-1 setting %+v %v", u, err)
 	}
 	// a Dhammapada verse has the setting of its story (Dhp-a: "kattha bhāsitāti? Sāvatthiyaṃ. Kaṃ ārabbhāti? Cakkhupālattheraṃ.")
@@ -479,7 +479,7 @@ func TestMentions(t *testing.T) {
 		}
 		found[n.Slug] = true
 	}
-	for _, s := range []string{"rajagaha", "nalanda-2", "suppiya-1", "brahmadatta-5"} {
+	for _, s := range []string{"rajagaha", "nalanda", "suppiya-1", "brahmadatta-5"} {
 		if !found[s] {
 			t.Fatalf("no mention of %s in %v", s, found)
 		}

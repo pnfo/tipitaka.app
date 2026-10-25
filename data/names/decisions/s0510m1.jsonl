@@ -29,13 +29,13 @@
 {"c":{"k":"kn-ap-3-9","q":"sumano","pre":"mahamatimdisvapasanno","o":15},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ap-4-1","q":"sumano","pre":"sayambhumaggapuggalampasannacitto","o":6},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ap-4-2","q":"sobhito","pre":"sagatattheraapadanam","o":1},"e":"sobhita-5","conf":0.6,"src":"ai"}
-{"c":{"k":"kn-ap-4-2","q":"tusita","pre":"satasahassamdevalokeramissati","o":89},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-ap-4-2","q":"tusita","pre":"satasahassamdevalokeramissati","o":89},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ap-4-3","q":"pabhassaroti","pre":"manussalokamagantvacakkavattibhavissati","o":61},"e":"pabhassara","conf":0.6,"src":"ai"}
-{"c":{"k":"kn-ap-4-3","q":"tusita","pre":"satthalokebhavissati","o":84},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-ap-4-3","q":"tusita","pre":"satthalokebhavissati","o":84},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ap-4-4","q":"mallikanca","pre":"karissatiuppalampadumancapi","o":58},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ap-4-5","q":"atthadassi","pre":"mogharajattheraapadanam","o":1},"e":"atthadassi-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ap-4-5","q":"atthadassi","pre":"antalikkhethitosattha","o":112},"e":"atthadassi-2","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-ap-5-1","q":"tusita","pre":"satthalokebhavissati","o":154},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-ap-5-1","q":"tusita","pre":"satthalokebhavissati","o":154},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ap-5-1","q":"sakyaputto","pre":"cagotamobuddho","o":177},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ap-5-2","q":"sono","pre":"coditoagantvanamanussattam","o":211},"e":"sona-4","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ap-5-2","q":"angiraso","pre":"sabbonibbutomhianasavo","o":254},"e":null,"conf":0.9,"src":"ai"}
@@ -410,7 +410,7 @@
 {"c":{"k":"kn-ap-53-10","q":"vimalo","pre":"sakkogarusupivirago","o":152},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ap-53-10","q":"sikhiva","pre":"nipunatthavipassakosabbasavaparikkhinotinnasamsarasagaro","o":410},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ap-54-1","q":"ajitam","pre":"namajinoanejo","o":5},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-ap-54-1","q":"candima","pre":"vedaparagumataca","o":193},"e":"candima-1","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-ap-54-1","q":"candima","pre":"vedaparagumataca","o":193},"e":"candimasa","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ap-54-2","q":"amito","pre":"uppajjinayakoanomanamo","o":7},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ap-54-2","q":"jalina","pre":"bhitanamsaranomuni","o":195},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ap-54-2","q":"rakkhito","pre":"pabhutitenahamarakkheyyena","o":202},"e":null,"conf":0.9,"src":"ai"}

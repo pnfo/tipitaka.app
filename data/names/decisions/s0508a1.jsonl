@@ -314,9 +314,9 @@
 {"c":{"k":"atta-kn-thag-3-5","q":"sakyaputtiyati","pre":"sukhajivinoimesamana","o":66},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-thag-3-5","q":"dabbam","pre":"sukhanavihayati","o":318},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thag-3-6","q":"kakudham","pre":"apadaneapathera","o":61},"e":null,"conf":0.6,"src":"ai"}
-{"c":{"k":"atta-kn-thag-3-7","q":"tusita","pre":"tissassabhagavatobodhisattabhutassa","o":43},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-thag-3-7","q":"tusita","pre":"tissassabhagavatobodhisattabhutassa","o":43},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-thag-3-7","q":"varanoti","pre":"kosalaratthebrahmanakulenibbattitva","o":87},"e":"varana-3","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-thag-3-7","q":"tusita","pre":"vasantitecavitva","o":355},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-thag-3-7","q":"tusita","pre":"vasantitecavitva","o":355},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-thag-3-8","q":"vassikoti","pre":"kosalaratthebrahmanakulenibbattitva","o":40},"e":"vassika-3","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thag-3-8","q":"sumano","pre":"atthadassimmahayasampasannacitto","o":79},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-thag-3-9","q":"kevattassa","pre":"savatthinagaradvarekevattagamepancakulasatajetthakassa","o":41},"e":null,"conf":0.6,"src":"ai"}

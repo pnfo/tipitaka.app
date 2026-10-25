@@ -149,10 +149,10 @@
 {"c":{"k":"kn-ud-7-6","q":"udanam","pre":"tayamvelayamimam","o":51},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ud-7-7","q":"udanam","pre":"tayamvelayamimam","o":31},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ud-7-8","q":"udanam","pre":"tayamvelayamimam","o":57},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-ud-7-9","q":"thunam","pre":"bhikkhusanghenasaddhimyena","o":14},"e":"thuna-3","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-ud-7-9","q":"thunam","pre":"bhikkhusanghenasaddhimyena","o":14},"e":"thuna-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ud-7-9","q":"brahmanagamo","pre":"thunamnamamallanam","o":17},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ud-7-9","q":"sakyaputto","pre":"khalubhogotamo","o":27},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-ud-7-9","q":"thunam","pre":"mahatabhikkhusanghenasaddhim","o":36},"e":"thuna-3","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-ud-7-9","q":"thunam","pre":"mahatabhikkhusanghenasaddhim","o":36},"e":"thuna-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-ud-7-9","q":"udanam","pre":"tayamvelayamimam","o":243},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ud-7-10","q":"udanam","pre":"tayamvelayamimam","o":97},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-ud-8-1","q":"udanam","pre":"tayamvelayamimam","o":45},"e":null,"conf":0.9,"src":"ai"}

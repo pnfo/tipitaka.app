@@ -185,7 +185,7 @@
 {"c":{"k":"atta-dn-2-4-14","q":"devi","pre":"khoanandasubhadda","o":152},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-2-4-14","q":"devi","pre":"deviassunipunchitvati","o":155},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-2-5-4","q":"sudhammaya","pre":"dvisudevalokesudeva","o":20},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"atta-dn-2-6","q":"candima","pre":"obhasetvatiabhayapharitva","o":117},"e":"candima-1","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-dn-2-6","q":"candima","pre":"obhasetvatiabhayapharitva","o":117},"e":"candimasa","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-dn-2-6-1","q":"sudhammaya","pre":"devasabhavannanasudhammayamsabhayanti","o":3},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-2-6-1","q":"sudhammam","pre":"sampaticchanakavatosampaticchatipavesanakavato","o":316},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-2-6-1","q":"sakko","pre":"sanankumarovamahabrahma","o":391},"e":"sakka-2","conf":0.9,"src":"ai"}

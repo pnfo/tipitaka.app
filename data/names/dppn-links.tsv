@@ -256,7 +256,7 @@ avanti#0~2	new		person	1	ai	King of Ujjenī in a past age.
 avantiputta#0	10302	avantiputta	person	1	auto	King of Madhurā.
 avīci#0	10730	avici-2	place	1	ai	One of the eight great purgatories (mahāniraya,
 avihā#0	10705	aviha-1	deity	1	ai	A class of Devas.
-ayojjhā#0	8795	ayojjha	place	1	ai	A city of the Ganges (but see below in this article).
+ayojjhā#0	8795	ayojjha-2	place	1	ai	A city of the Ganges (but see below in this article).
 ayojjhā#0~2	new		place	1	ai	Capital of Siam.
 badarikārāma#0	47870	badarikarama	place	1	auto	A park about three miles from Kosambī where Khemaka stayed during his illness (S
 bāhiya#1	48332	bahiya-1	person	1	ai	Bāhiya Dārucīriya.
@@ -343,7 +343,7 @@ bhātaragāma#0	49696	bhataragama	place	1	auto	A village in Ceylon, residence of
 bhāvitatta#1	new		person	1	ai	One of the two chief disciples of Sumana Buddha (Ja.i.34;
 bhāvitatta#2	new		person	1	ai	A king who heard Paduma Buddha preach, and became a monk with a retinue of one h
 bhāvitatta#3	49837	bhavitatta-1-3	person	1	ai	The name of two Pacceka Buddhas.
-bhesakalāvana#0	50319	bhesakalavana	place	1	auto	A grove in the Bhagga country.
+bhesakalāvana#0	50319	bhesakalavana-2	place	1	auto	A grove in the Bhagga country.
 bhesikā#0	50330	bhesika	person	1	auto	The barber of Lohicca.
 bhoja#1	new		person	1	ai	A Brahmin, one of the eight who read the auspicious marks on the Buddha’s body o
 bhoja#2	new		person	1	ai	A physician of old.
@@ -498,7 +498,7 @@ cunda#4	new		person	1	ai	A rājakumāra, brother of Cundī and, therefore, son o
 cundī#0	26927	cundi	person	1	auto	A princess.
 dabbila#0	31946	dabbila	person	1	auto	A Pacceka Buddha, mentioned in a nominal list.
 dadhimukha#0	31862	dadhimukha	deity	1	auto	A Yakkha chieftain who should be invoked by disciples of the Buddha in times of 
-dakkhiṇāgiri#0	31696	dakkhinagiri	place	1	auto	A janapada (district) in India, the capital of which was Ujjenī, and over which 
+dakkhiṇāgiri#0	31696	dakkhinagiri-2	place	1	auto	A janapada (district) in India, the capital of which was Ujjenī, and over which 
 daḷhanemi#0	32213	dalhanemi	person	1	ai	A Cakkavatti of long ago.
 daḷhika#0	32224	dalhika	person	1	auto	A monk of Sāgala.
 dāmali#0	32305	damali	deity	1	auto	A Devaputta who visits the Buddha at Jetavana and tells him that an Arahant has 
@@ -806,7 +806,7 @@ kaccānā#1	new		person	1	ai	A Sākiyan princess, daughter of Devadahasakka of D
 kaccāyana#1	new		person	1	ai	Author of the Kaccāyanavyākaraṇa, the oldest of the Pāli grammars extant.
 kaccāyana#2	new		person	1	ai	An Arahant.
 kaccāyana#3	new		deity	1	ai	In the Vidhurapaṇḍitajātaka (Ja 545), the Yakkha Puṇṇaka calls himself and is ad
-kajaṅgala#0	19293	kajangala	place	1	ai	A township which formed the eastern boundary of the Majjhimadesa.
+kajaṅgala#0	19293	kajangala-2	place	1	ai	A township which formed the eastern boundary of the Majjhimadesa.
 kajaṅgalā#0	new		person	1	ai	A nun who lived in Kajaṅgala.
 kakkarapatta#0	71977	kakkarapatta	place	1	ai	A township of the Koḷiyans.
 kakkaṭa#1	new		person	1	ai	An eminent monk mentioned, with Cāla, Upacāla, Kalimbha, Nikaṭa and Kaṭissaha, a
@@ -935,7 +935,7 @@ kaṭissabha#0	19343	katissabha	person	1	auto	A lay disciple of the Buddha at N�
 kaṭissaha#1	new		person	1	ai	An Arahant.
 kaṭissaha#2	new		person	1	ai	One of the chief supporters of Dhammadassī Buddha.
 kātiyāna#1	new		deity	1	ai	A name by which the Yakkha Puṇṇaka (q.v.) is addressed (Ja.vi.299, 306, 308).
-kātiyāna#2	20925	katiyana-1	group	1	ai	The name of a gotta, probably a variant of Kaccāyana, Kaccāna (q.v.).
+kātiyāna#2	20925	katiyana-1-2	group	1	ai	The name of a gotta, probably a variant of Kaccāyana, Kaccāna (q.v.).
 kātiyāna#3	76386	katiyana-2	person	1	ai	The son of a Brahmin of the Kosiyagotta in Sāvatthī, he was called Kātiyāna afte
 kātiyānī#1	20927	katiyani	person	1	auto	A lay devotee, declared by the Buddha to be most eminent among women for unwaver
 keka#0	new		place	0	ai	A kingdom in Mahiṁsakaraṭṭha.
@@ -1188,7 +1188,7 @@ mahinda#8	new		person	1	ai	Son of the Ādipāda Dāṭhāsīva of Rohaṇa.
 mahinda#9	new		person	1	ai	Son of Udaya I.; he was, however, known by the name of Dhammikasilāmegha and was
 mahisavatthu#0	71766	mahisavatthu	place	1	ai	A place on the Saṅkheyya Mountain where Uttara is said to have stayed, in Dhavaj
 māhissati#0	52515	mahissati	place	1	auto	A city in the Buddha’s day, mentioned as lying on the route from Bāvari’s hermit
-makkarakaṭa#0	50457	makkarakata	place	1	auto	A locality in Avanti.
+makkarakaṭa#0	50457	makkarakata-2	place	1	auto	A locality in Avanti.
 makkhali gosāla#0	75296	makkhaligosala	person	1	auto	One of the six heretical teachers contemporaneous with the Buddha.
 makuṭabandhana#0	50442	makutabandhana	place	1	auto	A “shrine” of the Mallas to the east of Kusināra, where Gotama Buddha’s body was
 malitavambha thera#0	76279	malitavambha	person	1	auto	He was the son of a Brahmin of Bhārukaccha and entered the Saṅgha under Pacchābh
@@ -1334,7 +1334,7 @@ nālaka thera#0	new		person	0	ai	Given as an example of an ugghatitaññūpuggal
 nālaka#0	36523	nalaka	person	1	ai	Nephew of Asita (Kāḷadevala).
 naḷakapāna#0	36001	nalakapana	place	1	auto	A village in Kosala, where the Buddha once stayed and preached the Naḷakapānasut
 naḷakāragāma#0	36007	nalakaragama	place	1	auto	A village mentioned in the Subhasutta (MN.ii.206) as being not far from Sāvatthī
-nālandā#1	36532	nalanda	place	1	ai	A town near Rājagaha, one league away (according to Buddhaghosa,
+nālandā#1	36532	nalanda-3	place	1	ai	A town near Rājagaha, one league away (according to Buddhaghosa,
 nālandā#2	new		place	1	ai	A village in the central province of Ceylon.
 namuci#0	35799	namuci	deity	1	ai	A name for Māra (q.v.), given because he does not allow either gods or men to es
 nandā#0	new		person	1	ai	Chief woman disciple of Dīpaṅkara Buddha.
@@ -1445,7 +1445,7 @@ nikaṭa#2	new		person	1	ai	One of several eminent Theras mentioned as staying i
 nīlavāhinī#0	74839	nilavahini	place	1	auto	A channel branching off from the Mālatipuppha sluice in the Parakkamasamudda.
 nimi#1	37756	nimi	person	1	ai	The Bodhisatta born as king of Mithilā.
 nimi#2	new		person	1	ai	A Pacceka Buddha.
-niṅka#0	36648	nika	deity	1	auto	A Deva who visits the Buddha in the company of several other Devas and utters a 
+niṅka#0	36648	nika-2	deity	1	auto	A Deva who visits the Buddha in the company of several other Devas and utters a 
 nisabhā#0	new		place	1	ai	One of the palaces occupied by Tissa Buddha in his last lay life.
 nisabha#1	new		person	1	ai	One of the two chief disciples of Anomadassī Buddha (Bv.viii.22;
 nisabha#2	new		person	1	ai	One of the chief lay supporters of Atthadassi Buddha.
@@ -1560,7 +1560,7 @@ pāvārikambavana#1	new		place	0	ai	The Mango grove of Pāvārika (q.v.) of Kosa
 pāvārikambavana#2	45937	pavarikambavana	place	1	ai	A Mango grove at Nālandā where the Buddha stayed when on a visit there (e.g.,
 pavattā#0	new		person	1	ai	A Pacceka Buddha.
 paviṭṭha thera#0	44961	pavittha-2	person	1	auto	A Brahmin of Magadha who, following his own inclination, became a Paribbājaka.
-payāga#0	42790	payagapatitthana	place	1	auto	A ford on the Ganges, on the direct route from Verañjā to Benares, the road pass
+payāga#0	42788	payaga-1	place	1	manual	A ford on the Ganges, on the direct route from Verañjā to Benares, the road pass
 pāyāgā#0	45707	payaga	deity	1	auto	A class of Nāgas (DN.ii.258).
 pāyāsi#0	45712	payasi-2	person	1	auto	A chieftain (rājañña) of Setavyā, who lived on a royal domain gifted by Pasenadi
 pessa#0	47377	pessa-2	person	1	ai	An elephant trainer of Campā.
@@ -1856,7 +1856,7 @@ sañjaya#3	new		person	1	ai	Father of Vessantara.
 sañjaya#4	76222	sanjaya-3	person	1	ai	He was the son of a wealthy Brahmin of Sāvatthī, and, following the example of B
 sañjaya#5	57337	sanjaya-2	person	1	ai	In the Kaṇṇakatthalasutta Viḍūḍabha tells the Buddha that it was Sañjaya who sta
 sañjaya#6	new		person	1	ai	Son of the Brahmin Vidhura and younger brother of Bhadrakāra.
-sañjaya#7	57336	sanjaya-1	person	1	ai	One of the six famous heretical teachers of the Buddha’s day.
+sañjaya#7	57336	sanjaya-1-2	person	1	ai	One of the six famous heretical teachers of the Buddha’s day.
 sañjaya#8	new		person	1	ai	One of the ten sons of Kāḷāsoka (q.v.).
 sañjikāputta#0	57356	sanjikaputta	person	1	auto	A young Brahmin, friend of Bodhirājakumāra.
 sañjīva#1	57359	sanjiva-2	person	1	ai	One of the two chief disciples of Kakusandha Buddha (DN.ii.4;
@@ -1972,14 +1972,14 @@ sirī#1	new		deity	1	ai	The goddess of Luck; she was the daughter of Dhataraṭ�
 siri#2	new		place	1	ai	One of the palaces of Sujāta Buddha in his last lay life.
 sirī#2	new		deity	1	ai	One of the four daughters of Sakka (Ja.v.392).
 siri#3	new		person	0	ai	One of the patrons of Tissa Buddha.
-sirimaṇḍa thera#0	76394	sirimanda-2	person	1	auto	He belonged to a Brahmin family of Suṁsumāragiri and entered the Saṅgha, after h
+sirimaṇḍa thera#0	76394	sirimanda	person	1	auto	He belonged to a Brahmin family of Suṁsumāragiri and entered the Saṅgha, after h
 sirimitta thera#0	76400	sirimitta	person	1	auto	He belonged to a rich landowner’s family of Rājagaha and was the nephew of Sirig
 sirivaḍḍhā#0	new		person	1	ai	A seṭṭhi’s daughter who gave milk-rice to Phussa Buddha.
 sirivaḍḍha#1	new		person	1	ai	The name of Mahā Moggallāna (q.v.) in the time of Anomadassī Buddha.
 sirivaḍḍha#10	76213	sirivaddha-3	person	1	ai	His father was a rich man of Rājagaha and he was present when the Buddha visited
 sirivaḍḍha#11	new		person	1	ai	A seṭṭhi of Mithilā, father of Mahosadha.
 sirivaḍḍha#12	63005	sirivaddha-1	person	1	ai	A minister of Pasenadi, who once sent a message through him to Ānanda.
-sirivaḍḍha#13	63006	sirivaddha-2	person	1	ai	A householder of Rājagaha.
+sirivaḍḍha#13	63006	sirivaddha-2-2	person	1	ai	A householder of Rājagaha.
 sirivaḍḍha#14	new		person	1	ai	Father of Siggava Thera (q.v.).
 sirivaḍḍha#15	new		person	1	ai	The name by which Soṇa Koḷivisa (q.v.) was known in the time of Padumuttara Budd
 sirivaḍḍha#2	new		person	1	ai	Chief lay supporter of Sikhī Buddha.
@@ -1989,7 +1989,7 @@ sirivaḍḍha#5	new		person	1	ai	An ascetic who gave grass for his seat to Phus
 sirivaḍḍha#6	new		place	1	ai	A palace occupied by Anomadassī Buddha in his last lay life.
 sirivaḍḍha#7	new		place	1	ai	A palace occupied by Sumedha Buddha in his last lay life.
 sirivaḍḍha#8	new		place	1	ai	A palace that will be occupied by Metteyya Buddha before his renunciation.
-sirivaḍḍha#9	63006	sirivaddha-2	person	0	ai	The brother of Sirimā Thera.
+sirivaḍḍha#9	63006	sirivaddha-2-2	person	0	ai	The brother of Sirimā Thera.
 sīsupacālā therī#0	63299	sisupacala	person	1	auto	One of the sisters of Sāriputta.
 sītavana#0	63101	sitavana	place	1	auto	A grove near Rājagaha where Anāthapiṇḍika first met Gotama Buddha.
 siva#1	63063	siva-2	deity	1	ai	The name of a god (Cv.xciii. 9, 10).
@@ -2098,7 +2098,7 @@ subrahmā#1	64204	subrahma-1	deity	0	ai	A Devaputta.
 subrahmā#2	64205	subrahma-2	deity	0	ai	A Pacceka Brahma.
 subrahmā#3	new		person	1	ai	A Brahmin who will be the father of Metteyya Buddha.
 suciloma#0	75081	suciloma-2	deity	1	auto	A Yakkha.
-sucimukhī#0	63685	sucimukhi	person	1	ai	A Paribbājikā.
+sucimukhī#0	63685	sucimukhi-2	person	1	ai	A Paribbājikā.
 sucitti#0	63676	sucitti	deity	1	auto	An Asura, one of the Dānaveghasas, present at the preaching of the Mahā Samayasu
 sudassana#1	new		place	1	ai	The city of birth of Sumedha Buddha.
 sudassanā#1	new		person	1	ai	Mother of Atthadassī Buddha.
@@ -2300,10 +2300,10 @@ suppiyā#3	new		person	1	ai	One of the five daughters of the third Okkāka and B
 sūra#0	82863	sura-4	deity	0	ai	A messenger of Kuvera (q.v.).
 surādha thera#0	64356	suradha	person	1	ai	The younger brother of Rādha.
 surādhā#0	new		person	1	ai	An Aggasāvikā of Paduma Buddha.
-surasena#1	64347	surasena	place	1	ai	One of the sixteen Mahā Janapadā (q.v.).
+surasena#1	64347	surasena-3	place	1	ai	One of the sixteen Mahā Janapadā (q.v.).
 surasena#2	new		place	1	ai	A city in the time of Siddhattha Buddha, where the Bodhisatta was born as the Br
 sūrasena#2	new		person	1	ai	Another name for Dhanañjaya Korabba.
-suriya#1	64385	suriya-2	deity	1	ai	A Devaputta.
+suriya#1	64385	suriya-2-2	deity	1	ai	A Devaputta.
 suriya#2	new		deity	0	ai	A son of Sakka (q.v.).
 suriyavaccasā#0	64394	suriyavaccasa	deity	1	auto	A Gandhabba maiden, daughter of Timbaru.
 susārada thera#0	76250	susarada	person	1	auto	He was born in the family of a kinsman of Sāriputta and was given his name becau
@@ -2639,7 +2639,7 @@ vajjiputta thera#1	76239	vajjiputta-1	person	0	ai	He belonged to the family of a
 vajjiputta thera#2	76291	vajjiputta-2	person	0	ai	He belonged to a Licchavī rājā’s family, and while still young, and learning var
 vajjiputta#0	new		other	1	ai	Contains the story of the discontent of Vajjiputta (1).
 vajjita thera#0	76340	vajjita-3	person	1	auto	He belonged to a retainer’s (ibbha) family in Kosala, and, because he had come f
-vajjiyamāhita#0	72302	vajjiyamahita-2	person	1	auto	A householder of Campā, a devout and skilled follower of the Buddha.
+vajjiyamāhita#0	72302	vajjiyamahita	person	1	auto	A householder of Campā, a devout and skilled follower of the Buddha.
 vakkali#1	65514	vakkali	person	1	ai	He belonged to a Brahmin family of Sāvatthī and became proficient in the three V
 vakkali#2	new		person	0	ai	A monk in the time of Padumuttara Buddha, declared chief of those having implici
 valāhaka#1	new		group	1	ai	A family of horses from which the Assaratana of a Cakkavatti is supplied (Khp-a.
@@ -2656,7 +2656,7 @@ vanavaccha thera#2	76286	vanavaccha-2	person	1	ai	The son of a rich Brahmin of R
 vaṅga#0	65564	vanga	place	1	ai	The name of a people and their country, the modern Bengal.
 vaṅganta#0	65565	vanganta	person	1	auto	A Brahmin, father of Sāriputta (Snp-a.i.331;
 vaṅgantaputta#0	65566	vangantaputta	person	1	ai	The epithet applied to Sāriputta’s brother Upasena, to distinguish him from othe
-vaṅgīsa thera#0	65569	vangisa-2	person	1	auto	He belonged to a Brahmin family and was proficient in the Vedas.
+vaṅgīsa thera#0	65569	vangisa	person	1	auto	He belonged to a Brahmin family and was proficient in the Vedas.
 vaṅkahāra#0	75005	vankahara	place	1	auto	A district in India, the birthplace of the Therī Cāpā.
 vaṅkaka#0	65555	vankaka-2	place	1	auto	The name of Mount Vepulla in the time of Koṇāgamana Buddha.
 vappa#1	76238	vappa-4	person	1	ai	One of the Pañcavaggiyā.
@@ -2667,7 +2667,7 @@ varaṇā#0	66354	varana	place	1	ai	A city on the banks of the Kaddamadaha, wher
 vāraṇa#0	76348	varana-3	person	1	ai	He was born in a Brahmin family of Kosala, and having heard a forest-dwelling mo
 vāraṇavatī#0	77584	varanavati	place	1	auto	The capital of Anikaratta, the king to whom Sumedhā was to be given in marriage.
 varuṇā#0	66393	varuna-2	deity	1	ai	A class of deities present at the preaching of the Mahā Samayasutta (DN.ii.259, 
-vāruṇā#0	66939	varuna-3	deity	1	auto	A class of deities, followers of Varuṇa, who were present at the preaching of th
+vāruṇā#0	66939	varuna-3-2	deity	1	auto	A class of deities, followers of Varuṇa, who were present at the preaching of th
 varuṇa#1	new		person	1	ai	One of the chief lay disciple’s of Sumana Buddha.
 varuṇa#10	new		person	1	ai	A king of forty kappas ago, a previous birth of Ekasaññaka Thera.
 varuṇa#11	new		person	0	ai	A king in the time of Atthadassī Buddha, a previous birth of Sīvalī (Ekāsaniya) 

@@ -41,7 +41,7 @@
 {"c":{"k":"atta-kn-bv-1","q":"nimmanarati","pre":"tatotusitatato","o":5220},"e":"nimmanarati","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-bv-1","q":"paranimmitavasavatti","pre":"tatonimmanaratitato","o":5222},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-bv-1","q":"appamanabha","pre":"tatoparittabhatato","o":5232},"e":"appamanabha","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-bv-1","q":"aviha","pre":"tatovehapphalatato","o":5244},"e":"aviha","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-bv-1","q":"aviha","pre":"tatovehapphalatato","o":5244},"e":"aviha-1","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-bv-1","q":"sudassa","pre":"tatoatappatato","o":5248},"e":"sudassa","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-bv-1","q":"sudassi","pre":"tatosudassatato","o":5250},"e":"sudassi","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-bv-1","q":"sumedha","pre":"yamtathupamamdhammamayam","o":6367},"e":"sumedha-4","conf":0.9,"src":"ai"}

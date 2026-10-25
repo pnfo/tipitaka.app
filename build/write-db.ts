@@ -12,6 +12,7 @@ import { dfsOrder, type Corpus } from './tree'
 import type { LegacyEntry } from './legacy'
 import type { Gloss } from './align'
 import { displayName, type Gazetteer } from './names/gazetteer'
+import { translateEntity, type NameTexts } from './names/translations'
 import type { Setting } from './names/settings'
 import type { Mention } from './names/mentions'
 
@@ -84,11 +85,13 @@ CREATE TABLE mention (para_id INTEGER NOT NULL, s INTEGER NOT NULL, e INTEGER NO
 CREATE INDEX mention_entity ON mention(entity_id, para_id);
 -- the names most often mentioned in the same paragraphs as a name (sure mentions; the 40 most frequent)
 CREATE TABLE comention (entity_id INTEGER NOT NULL, other_id INTEGER NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (entity_id, other_id)) WITHOUT ROWID;
+-- the meaning and family of the names in the interface languages (build/names/translations.ts; '' = the English)
+CREATE TABLE entity_tr (entity_id INTEGER NOT NULL, lang TEXT NOT NULL, meaning TEXT NOT NULL, family TEXT NOT NULL, PRIMARY KEY (lang, entity_id)) WITHOUT ROWID;
 `
 
 export interface WriteResult { nodeIds: Map<number, number>; tokenCount: number; postingCount: number; linkCount: number }
 
-export interface Names { gazetteer: Gazetteer; settings: Setting[]; mentions: Mention[] }
+export interface Names { gazetteer: Gazetteer; settings: Setting[]; mentions: Mention[]; translations?: Map<string, NameTexts> }
 
 export function writeDb(file: string, c: Corpus, links: ParaLink[], meta: Record<string, string>, legacy: LegacyEntry[] = [], glosses: Gloss[] = [],
   names?: Names): WriteResult {
@@ -152,7 +155,7 @@ export function writeDb(file: string, c: Corpus, links: ParaLink[], meta: Record
   return { nodeIds, tokenCount: tokens.length, postingCount: postings.length, linkCount: links.length }
 }
 
-function writeNames(db: Database.Database, { gazetteer: g, settings, mentions }: Names, nodeIds: Map<number, number>) {
+function writeNames(db: Database.Database, { gazetteer: g, settings, mentions, translations }: Names, nodeIds: Map<number, number>) {
   const mentionCount = new Map<string, number>()
   // (sure mentions: an unsure one may be a namesake)
   for (const m of mentions) if (!m.amb) mentionCount.set(m.entity, (mentionCount.get(m.entity) ?? 0) + 1)
@@ -164,11 +167,20 @@ function writeNames(db: Database.Database, { gazetteer: g, settings, mentions }:
   }
   const ids = new Map<string, number>()
   const insEntity = db.prepare('INSERT INTO entity VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-  for (const e of [...g.entities.values()].sort((a, b) => a.slug.localeCompare(b.slug))) {
+  // (a name spelled differently is no page: its mentions and settings are the other one's)
+  for (const e of [...g.entities.values()].filter(e => !e.sameAs).sort((a, b) => a.slug.localeCompare(b.slug))) {
     ids.set(e.slug, ids.size + 1)
     const name = displayName(e)
     insEntity.run(ids.size, e.slug, e.type, name, fold(name), e.lemma, e.family, e.meaning, e.lat ?? null, e.lon ?? null, e.prec ?? null, units.get(e.slug)?.size ?? 0,
       mentionCount.get(e.slug) ?? 0)
+  }
+  const insTr = db.prepare('INSERT INTO entity_tr VALUES (?, ?, ?, ?)')
+  for (const [lang, t] of translations ?? []) {
+    for (const e of g.entities.values()) {
+      if (e.sameAs) continue
+      const tr = translateEntity(t, e)
+      if (tr.meaning || tr.family) insTr.run(ids.get(e.slug), lang, tr.meaning, tr.family)
+    }
   }
   const insSetting = db.prepare('INSERT INTO setting VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
   const sorted = [...settings].sort((a, b) => a.book - b.book || a.start - b.start || a.role.localeCompare(b.role) || a.ord - b.ord)

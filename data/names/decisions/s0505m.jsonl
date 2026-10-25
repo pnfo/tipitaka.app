@@ -91,7 +91,7 @@
 {"c":{"k":"kn-snp-4-7","q":"yaso","pre":"lokehinamahuputhujjanam","o":38},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-snp-4-9","q":"kandakam","pre":"vadeyyanagojalambujam","o":197},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-snp-4-16","q":"tusita","pre":"evamvagguvadosattha","o":15},"e":null,"conf":0.6,"src":"ai"}
-{"c":{"k":"kn-snp-5-0","q":"assakassa","pre":"brahmanomantaparaguso","o":11},"e":"assaka-4","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-snp-5-0","q":"assakassa","pre":"brahmanomantaparaguso","o":11},"e":"assaka","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-snp-5-0","q":"sakyaputto","pre":"lokanayakoapaccookkakarajassa","o":174},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-snp-5-7","q":"nando","pre":"lokemunayoiccayasma","o":5},"e":"nanda-6","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-snp-5-7","q":"nando","pre":"kecimesamanabrahmanaseiccayasma","o":41},"e":"nanda-6","conf":0.6,"src":"ai"}

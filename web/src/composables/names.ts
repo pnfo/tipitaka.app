@@ -2,7 +2,8 @@
 import type { Entity, EntityType, SettingRole } from '@/data/types'
 import type { MapPlace } from '@/map/draw'
 import { useApi } from '@/data/api'
-import { t } from '@/i18n'
+import { t, uiLang } from '@/i18n'
+import { shownFamily } from '@shared/names'
 
 // functions: t() must run after the interface language is loaded
 export const ROLE_LABEL: Record<SettingRole, () => string> = {
@@ -26,20 +27,26 @@ export const JOURNEYS = [
   { id: 'parayana', key: 'kn-snp-5', title: () => t('The journey of Bāvarī’s students (Sn 5)') },
 ]
 
-let located: Promise<Entity[]> | null = null
-/** the places (and peoples) with coordinates and a setting, the most frequent first (one request per session) */
+let located: { lang: string; places: Promise<Entity[]> } | null = null
+/** the places (and peoples) with coordinates and a setting, the most frequent first (one request per session and language) */
 export function locatedPlaces(): Promise<Entity[]> {
-  located ??= useApi().names('', ['place', 'group']).then(es => es.filter(e => e.lat !== undefined && e.lon !== undefined))
-    .catch(() => { located = null; return [] })
-  return located
+  if (located?.lang !== uiLang.value) {
+    located = { lang: uiLang.value, places: useApi().names('', ['place', 'group']).then(es => es.filter(e => e.lat !== undefined && e.lon !== undefined))
+      .catch(() => { located = null; return [] }) }
+  }
+  return located.places
 }
+
+/** the description and category of a name in the interface language, else the English */
+export const meaningOf = (e: Entity) => e.meaningLocal || e.meaning || ''
+export const familyOf = (e: Entity) => e.familyLocal || shownFamily(e.family)
 
 /** a country, kingdom, district …: an area, drawn as a region (SuttaCentral's mahājanapadas), not as a point */
 export const isArea = (e: Entity) => /countries|continents|country|kingdom|district|region|province|janapada/.test(e.family ?? '')
 
 /** an entity as a map place */
 export const mapPlace = (e: Entity, kind: MapPlace['kind'], extra: Partial<MapPlace> = {}): MapPlace =>
-  ({ slug: e.slug, name: e.name, lat: e.lat!, lon: e.lon!, prec: e.prec, kind, meaning: e.meaning, ...extra })
+  ({ slug: e.slug, name: e.name, lat: e.lat!, lon: e.lon!, prec: e.prec, kind, meaning: meaningOf(e), ...extra })
 
 /** the big cities as faint points of orientation (not the given slugs) */
 export async function contextPlaces(skip: string[] = [], n = 12): Promise<MapPlace[]> {

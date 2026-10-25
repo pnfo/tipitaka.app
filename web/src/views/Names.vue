@@ -20,7 +20,7 @@
         <li v-for="e in shown" :key="e.slug">
           <RouterLink :to="{ name: 'names', params: { script, slug: e.slug } }" class="flex items-baseline gap-3 py-2 hover:text-primary">
             <span class="pali font-medium">{{ conv(e.name) }}</span>
-            <span class="min-w-0 flex-1 truncate text-xs text-muted">{{ e.meaning }}</span>
+            <span class="min-w-0 flex-1 truncate text-xs text-muted">{{ meaningOf(e) }}</span>
             <span class="whitespace-nowrap text-xs text-muted" :title="t('suttas / stories taught there, by, to or about them · mentions')">{{ e.units ? `${e.units} · ` : '' }}{{ e.mentions }}</span>
           </RouterLink>
         </li>
@@ -34,12 +34,12 @@
       <div v-else-if="!info" class="py-8 text-center text-muted">{{ t('Not found') }}</div>
       <template v-else>
         <h1 class="pali mb-1 text-2xl font-semibold" data-testid="entity-name">{{ conv(info.name) }}</h1>
-        <p class="mb-1 text-sm">{{ info.meaning }}</p>
-        <p class="mb-4 text-xs text-muted">{{ TYPE_LABEL[info.type]() }}<template v-if="info.family"> · {{ info.family }}</template></p>
+        <p class="mb-1 text-sm">{{ meaningOf(info) }}</p>
+        <p class="mb-4 text-xs text-muted">{{ TYPE_LABEL[info.type]() }}<template v-if="familyOf(info)"> · {{ familyOf(info) }}</template></p>
         <p v-if="info.homonyms.length" class="mb-4 text-sm" data-testid="entity-homonyms">
           {{ t('Others of this name:') }}
           <template v-for="(h, i) in info.homonyms" :key="h.slug">
-            <span v-if="i">, </span><RouterLink :to="{ name: 'names', params: { script, slug: h.slug } }" class="underline hover:text-primary">{{ h.meaning || h.lemma }}</RouterLink>
+            <span v-if="i">, </span><RouterLink :to="{ name: 'names', params: { script, slug: h.slug } }" class="underline hover:text-primary">{{ meaningOf(h) || h.lemma }}</RouterLink>
           </template>
         </p>
 
@@ -83,7 +83,7 @@
         <section v-if="info.comentions.length" class="mb-6" data-testid="entity-comentions">
           <h2 class="section-title">{{ t('Often named with') }}</h2>
           <div class="flex flex-wrap gap-1.5">
-            <RouterLink v-for="r in info.comentions.slice(0, 30)" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="r.meaning">
+            <RouterLink v-for="r in info.comentions.slice(0, 30)" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="meaningOf(r)">
               <span class="pali">{{ conv(r.name) }}</span><span class="text-xs text-muted">{{ r.count }}</span>
             </RouterLink>
           </div>
@@ -93,7 +93,7 @@
           <h2 class="section-title">{{ t('In the same suttas') }}</h2>
           <div v-for="g in related" :key="g.role" class="mb-2 flex flex-wrap items-center gap-1.5">
             <span class="mr-1 text-xs text-muted">{{ ROLE_LABEL[g.role]() }}</span>
-            <RouterLink v-for="r in g.items" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="r.meaning">
+            <RouterLink v-for="r in g.items" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="meaningOf(r)">
               <span class="pali">{{ conv(r.name) }}</span><span class="text-xs text-muted">{{ r.count }}</span>
             </RouterLink>
           </div>
@@ -119,10 +119,10 @@ import MentionList from '@/components/MentionList.vue'
 import { useApi } from '@/data/api'
 import type { Coll, Entity, EntityInfo, EntityType, SettingRef, SettingRole } from '@/data/types'
 import { toRoman, useScript } from '@/composables/script'
-import { ROLE_LABEL, TYPE_LABEL, contextPlaces, isArea, mapPlace } from '@/composables/names'
+import { ROLE_LABEL, TYPE_LABEL, contextPlaces, familyOf, isArea, mapPlace, meaningOf } from '@/composables/names'
 import type { MapPlace } from '@/map/draw'
 import { fold } from '@shared/normalize'
-import { t } from '@/i18n'
+import { t, uiLang } from '@/i18n'
 
 const route = useRoute()
 const api = useApi()
@@ -137,7 +137,9 @@ const all = ref<Entity[]>([])
 const info = ref<EntityInfo | null>(null)
 const loading = ref(false)
 
-watch(slug, async s => {
+// (again in another interface language: the descriptions)
+watch([slug, uiLang], async ([s], old) => {
+  if (old && old[1] !== uiLang.value) all.value = []
   loading.value = true
   try {
     if (s) info.value = await api.entity(s).catch(() => null)

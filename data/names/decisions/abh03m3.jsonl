@@ -1,6 +1,6 @@
 {"c":{"k":"ap-kvu-2-3","q":"selo","pre":"karaniyamnavijjati","o":96},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"ap-kvu-5-2-8","q":"ukkala","pre":"tebhikkhaveahesum","o":276},"e":null,"conf":0.6,"src":"ai"}
-{"c":{"k":"ap-kvu-10-8-16","q":"tusitanam","pre":"devanamyamanamdevanam","o":440},"e":"tusita-2","conf":0.9,"src":"ai"}
+{"c":{"k":"ap-kvu-10-8-16","q":"tusitanam","pre":"devanamyamanamdevanam","o":440},"e":"tusita","conf":0.9,"src":"ai"}
 {"c":{"k":"ap-kvu-10-8-16","q":"paranimmitavasavattinam","pre":"devanamnimmanaratinamdevanam","o":444},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"ap-kvu-10-8-16","q":"abhassaranam","pre":"devanamappamanabhanamdevanam","o":456},"e":"abhassara","conf":0.9,"src":"ai"}
 {"c":{"k":"ap-kvu-11-3-23","q":"sacetanam","pre":"pesasannampe","o":53},"e":null,"conf":0.9,"src":"ai"}

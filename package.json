@@ -32,6 +32,8 @@
     "test:go": "cd server && go test ./...",
     "test:e2e": "npm run build:fixture && npm run build:dict:fixture && npm run build:web && npm run build:web:app && npm run build:server && playwright test -c e2e/playwright.config.ts",
     "check:css": "node scripts/check-css.mjs",
+    "names:translate": "tsx scripts/names-translate.ts",
+    "names:same": "tsx scripts/names-same.ts",
     "i18n:missing": "tsx scripts/i18n-missing.ts"
   },
   "dependencies": {

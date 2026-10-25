@@ -75,7 +75,7 @@
 {"c":{"k":"atta-kn-ps-3-50","q":"samiddhi","pre":"tesamdhammanamiddhi","o":207},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-3-50","q":"candassa","pre":"candamandalanidissantipakatikameva","o":1566},"e":"canda-2-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-3-52","q":"citta","pre":"kamavacaradibhedamcittampajanati","o":105},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-ps-3-53","q":"abhassare","pre":"tayopibrahmalokejhapetva","o":2254},"e":"abhassara-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-ps-3-53","q":"abhassare","pre":"tayopibrahmalokejhapetva","o":2254},"e":"abhassara","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-ps-3-55","q":"atthakassa","pre":"atthasumaggaphalesuekekassa","o":306},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-3-56","q":"pajjoto","pre":"pannaobhasopajjotanatthenapannava","o":276},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-3-56","q":"therena","pre":"desitanitadanurupenevaidhapi","o":336},"e":null,"conf":0.9,"src":"ai"}
@@ -117,7 +117,7 @@
 {"c":{"k":"atta-kn-ps-4-15-6-1","q":"unhavalahaka","pre":"khiddapadosikamanopadosikasitavalahaka","o":719},"e":"unhavalahaka","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-4-15-6-1","q":"tavatimsati","pre":"uppannatitavatimsaapica","o":734},"e":"tavatimsa","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-4-15-6-1","q":"yama","pre":"yatapayatasampattati","o":763},"e":"yama","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-ps-4-15-6-1","q":"tusita","pre":"yamatutthapahatthati","o":766},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-ps-4-15-6-1","q":"tusita","pre":"yamatutthapahatthati","o":766},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-ps-4-15-6-1","q":"nimmanarati","pre":"nimminitvanimminitvaramantiti","o":775},"e":"nimmanarati","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-4-15-6-1","q":"paranimmitavasavatti","pre":"bhogesuvasamvattentiti","o":782},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ps-4-15-6-1","q":"udanassa","pre":"bhokondannotiimassapi","o":936},"e":null,"conf":0.9,"src":"ai"}

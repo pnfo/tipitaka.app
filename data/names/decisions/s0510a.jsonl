@@ -393,7 +393,7 @@
 {"c":{"k":"atta-kn-ap-30-9","q":"kutumbiko","pre":"kalemahakalonama","o":84},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-ap-30-9","q":"brahmanagame","pre":"kapilavatthunagarassaaviduredonavatthunamake","o":149},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-ap-30-9","q":"pancavaggiyanam","pre":"sattasattahambodhimandeyevavitinametva","o":268},"e":"pancavaggiya","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-ap-30-9","q":"tusita","pre":"dinnamahositiattho","o":476},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-ap-30-9","q":"tusita","pre":"dinnamahositiattho","o":476},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-ap-30-9","q":"sakko","pre":"vasantamtheramekadivasam","o":723},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ap-30-9","q":"sakko","pre":"desesitamsutva","o":747},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-ap-30-10","q":"padumo","pre":"sesagathasuvinneyyamevanamena","o":372},"e":null,"conf":0.6,"src":"ai"}

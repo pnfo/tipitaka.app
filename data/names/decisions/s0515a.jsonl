@@ -86,9 +86,9 @@
 {"c":{"k":"atta-kn-mn-10","q":"sihena","pre":"hatthinakotthukotijiranasingalo","o":1329},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-mn-10","q":"indena","pre":"kacavarachaddanatthanenibbattakoyakkho","o":1366},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-mn-10","q":"samiddho","pre":"lokattayavitthatanantakittighosoaddhotipannadhanasamiddhiya","o":1568},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-mn-18","q":"tusita","pre":"pubbevagguvadotisundaravado","o":15},"e":"tusita-2","conf":0.6,"src":"ai"}
-{"c":{"k":"atta-kn-mn-18","q":"tusita","pre":"cavitvamatukucchimagatatta","o":21},"e":"tusita-2","conf":0.6,"src":"ai"}
-{"c":{"k":"atta-kn-mn-18","q":"tusitanam","pre":"devalokaganimagato","o":31},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-mn-18","q":"tusita","pre":"pubbevagguvadotisundaravado","o":15},"e":"tusita","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-mn-18","q":"tusita","pre":"cavitvamatukucchimagatatta","o":21},"e":"tusita","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-mn-18","q":"tusitanam","pre":"devalokaganimagato","o":31},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-mn-18","q":"karaviko","pre":"visuddhoatthangasamannagatavasamutthati","o":185},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-mn-18","q":"kullo","pre":"navauttarasetuca","o":683},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-mn-18","q":"sandhanam","pre":"nayuttantiadinivatva","o":1709},"e":null,"conf":0.9,"src":"ai"}

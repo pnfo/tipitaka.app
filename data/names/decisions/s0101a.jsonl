@@ -8,7 +8,7 @@
 {"c":{"k":"atta-dn-1-0-2","q":"udanam","pre":"geyyamveyyakaranamgatha","o":3693},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-dn-1-1-1","q":"mallikaya","pre":"samayappavadaketindukacireekasalake","o":1033},"e":"mallika-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-1-1-1","q":"bhaggava","pre":"apicabhagyava","o":1387},"e":null,"conf":0.6,"src":"ai"}
-{"c":{"k":"atta-dn-1-1-1","q":"tapoda","pre":"apicayambhikkhave","o":1536},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-dn-1-1-1","q":"tapoda","pre":"apicayambhikkhave","o":1536},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-1-1-1","q":"chaddanto","pre":"kannikaatthanagasahassaparivaritoviya","o":2592},"e":"chaddanta-4","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-dn-1-1-1","q":"sakko","pre":"cakkavattirajadevaganaparivaritoviya","o":2603},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-dn-1-1-1","q":"renum","pre":"udakaphusitanimuncantamagge","o":3463},"e":null,"conf":0.9,"src":"ai"}

@@ -55,6 +55,9 @@ interface Entity {
   slug: string; type: string; lemma: string; dpd: number; fam: string; meaning: string; dppn: string; freq: number
   /** links: a DPPN namesake of DPD names; the DPD name a DPPN name is about; no name */
   namesake?: boolean; merged?: Entity; dropped?: boolean
+  /** a DPD name that is another one spelled differently (same.tsv): its words are read as before (its homonym number
+   *  among its namesakes), then counted as that one */
+  sameAs?: Entity
 }
 
 const dpd = new Database(path.join(repo, '.cache/dpd/dpd.db'), { readonly: true })
@@ -103,6 +106,36 @@ const isElder = (h: Head) => { const p = h.cons.split(' + '); return p.length ==
 for (const h of heads.values()) {
   const t = typeOf(h)
   if (t && !isElder(h)) addEntity(h, t)
+}
+// DPD has some names twice, as headwords of variant spellings (nālandā / nāḷandā, mahāmoggalāna / mahāmoggallāna):
+// data/names/same.tsv (npm run names:same). Each group is one name: the one most named in the texts (its mentions and
+// settings in the last db/text.db; else DPD's count in the early texts) gets the mentions and settings of the others
+// (same_as), which stay in the forms, so that a word is told from its namesakes as before
+const SAME_NAMES = path.join(OUT, 'same.tsv')
+if (fs.existsSync(SAME_NAMES)) {
+  const up = new Map<number, number>()
+  const find = (x: number): number => { const p = up.get(x) ?? x; return p === x ? x : find(p) }
+  for (const l of fs.readFileSync(SAME_NAMES, 'utf8').split('\n').slice(1).filter(Boolean)) {
+    const [a, b, , , verdict] = l.split('\t')
+    if (verdict === 'same' && byHead.has(+a) && byHead.has(+b)) up.set(find(+a), find(+b))
+  }
+  const groups = new Map<number, Entity[]>()
+  for (const id of up.keys()) groups.set(find(id), [...new Set([...(groups.get(find(id)) ?? []), byHead.get(id)!, byHead.get(find(id))!])])
+  const used = new Map<string, number>()
+  try {
+    const db = new Database(path.join(repo, 'db/text.db'), { readonly: true })
+    // (by the DPD lemma: a name merged away has no slug of its own any more)
+    for (const r of db.prepare("SELECT lemma, mentions + units * 10 AS n FROM entity WHERE family NOT LIKE 'DPPN:%'").all() as { lemma: string; n: number }[]) used.set(r.lemma, r.n)
+    db.close()
+  } catch { /* no names in the db yet */ }
+  const use = (e: Entity) => used.get(e.lemma) ?? -1
+  for (const es of groups.values()) {
+    // (never two homonyms of one headword: DPD numbers them as different ones - khitaka 1, 2 through the variant nitaka)
+    const bases = es.map(e => e.lemma.replace(/ [\d.]+$/, ''))
+    if (new Set(bases).size < bases.length) { console.log(`same.tsv: not merged, homonyms of one headword: ${es.map(e => e.lemma).join(', ')}`); continue }
+    const keep = [...es].sort((x, y) => use(y) - use(x) || y.freq - x.freq || x.dpd - y.dpd)[0]
+    for (const e of es) if (e !== keep) e.sameAs = keep
+  }
 }
 const elderOf = new Map<number, Entity>()
 for (const h of heads.values()) {
@@ -166,7 +199,7 @@ for (const e of entities) {
   const l = !e.dpd && links.get(e.dppn)
   if (!l) continue
   const target = l.dpd ? byHead.get(l.dpd) : undefined
-  if (target) { e.merged = target; if (!target.dppn) target.dppn = e.dppn; dppnLinked++ } else if (l.kind === 'other') e.dropped = true
+  if (target) { e.merged = target.merged ?? target; if (!target.dppn) target.dppn = e.dppn; dppnLinked++ } else if (l.kind === 'other') e.dropped = true
   else { e.namesake = true; e.type = l.kind }
 }
 const added = new Set(entities.map(e => e.dppn))
@@ -177,7 +210,8 @@ const sameKind = new Set<Entity>()
 for (const d of dppnEntries) {
   const l = links.get(d.ref)
   if (!l || added.has(d.ref) || (!l.dpd && l.kind === 'other')) continue
-  const target = l.dpd ? byHead.get(l.dpd) : undefined
+  const linked = l.dpd ? byHead.get(l.dpd) : undefined
+  const target = linked?.merged ?? linked
   if (l.dpd && !target) continue
   const base = dppnBase(d.word)
   const forms = formsOf([base, ...d.aliases.map(dppnBase), ...(seeAlias.get(base) ?? [])], (target?.type ?? l.kind) as EntityType)
@@ -196,6 +230,23 @@ const resolve = (e: Entity) => e.merged ?? e
 
 // assign new slugs after the kept ones, in DPD order, then the DPPN ones
 for (const e of entities.sort((a, b) => (a.dpd || 1e9) - (b.dpd || 1e9) || a.dppn.localeCompare(b.dppn))) if (!e.slug && live(e)) e.slug = newSlug(e.lemma)
+// a page takes the plain slug of its lemma when no other page has it (a name merged away gives it up: nāḷandā was
+// nalanda-2 next to nālandā); the names merged away (same_as, no page) move aside
+const pageSlugs = new Set(entities.filter(e => live(e) && !e.sameAs).map(e => e.slug))
+for (const e of entities) {
+  if (!live(e) || e.sameAs) continue
+  const plain = slug(e.lemma.replace(/\./g, '-'))
+  if (plain === e.slug || pageSlugs.has(plain)) continue
+  pageSlugs.delete(e.slug)
+  pageSlugs.add(plain)
+  e.slug = plain
+}
+const taken = new Set(pageSlugs)
+for (const e of entities) {
+  if (!live(e) || !e.sameAs) continue
+  if (taken.has(e.slug)) { let i = 2; while (taken.has(`${e.slug}-${i}`)) i++; e.slug = `${e.slug}-${i}` }
+  taken.add(e.slug)
+}
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 /** how a non-name headword refers to names: compounds with a title or place word, and derived words */
@@ -258,7 +309,7 @@ for (const w of words.sort()) {
   }
   for (const id of ids) {
     const e = byHead.get(id)
-    if (e) { es.set(e.slug, 'n'); before.set(e, 'n'); continue }
+    if (e) { es.set(resolve(e).slug, 'n'); before.set(e, 'n'); continue }
     const elder = elderOf.get(id)
     if (elder) { put(elder, 'c'); continue }
     const d = derived.get(id)
@@ -285,8 +336,8 @@ for (const w of words.sort()) {
 
 fs.mkdirSync(OUT, { recursive: true })
 const clean = (s: string) => s.replace(/[\t\n]+/g, ' ')
-fs.writeFileSync(ENTITIES, ['slug\ttype\tlemma\tdpd\tfamily\tmeaning\tdppn\tfreq\tnamesake',
-  ...entities.filter(live).sort((a, b) => a.slug.localeCompare(b.slug)).map(e => [e.slug, e.type, e.lemma, e.dpd, clean(e.fam), clean(e.meaning), e.dppn, e.freq, e.namesake ? 1 : ''].join('\t'))].join('\n') + '\n')
+fs.writeFileSync(ENTITIES, ['slug\ttype\tlemma\tdpd\tfamily\tmeaning\tdppn\tfreq\tnamesake\tsame_as',
+  ...entities.filter(live).sort((a, b) => a.slug.localeCompare(b.slug)).map(e => [e.slug, e.type, e.lemma, e.dpd, clean(e.fam), clean(e.meaning), e.dppn, e.freq, e.namesake ? 1 : '', e.sameAs?.slug ?? ''].join('\t'))].join('\n') + '\n')
 fs.writeFileSync(FORMS, ['form\tentities\thow\tnot_names', ...rows].join('\n') + '\n')
 const types = entities.filter(live).reduce<Record<string, number>>((m, e) => ({ ...m, [e.type]: (m[e.type] ?? 0) + 1 }), {})
 console.log(`DPPN: ${dppnEntries.length} entries, ${dppnCovered} covered by a DPD name of the same spelling, ${dppnLinked} linked to DPD names, ${entities.filter(e => !e.dpd && live(e)).length} added (${entities.filter(e => e.namesake && live(e)).length} namesakes)`)

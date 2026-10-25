@@ -20,7 +20,7 @@
       <div v-for="g in groups" :key="g.role" class="mb-3" :data-testid="`setting-${g.role}`">
         <div class="section-title">{{ ROLE_LABEL[g.role]() }}</div>
         <div class="flex flex-wrap gap-1.5">
-          <RouterLink v-for="r in g.rows" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="r.meaning"
+          <RouterLink v-for="r in g.rows" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="meaningOf(r)"
             data-testid="setting-name">
             <span class="pali">{{ conv(r.name) }}</span><span v-if="r.units > 1" class="text-xs text-muted">{{ r.units }}</span>
           </RouterLink>
@@ -30,7 +30,7 @@
       <div v-if="named.length" class="mb-3 mt-4" data-testid="setting-named">
         <div class="section-title">{{ t('Named in this paragraph') }}</div>
         <div class="flex flex-wrap gap-1.5">
-          <RouterLink v-for="r in named" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="r.meaning"
+          <RouterLink v-for="r in named" :key="r.slug" :to="{ name: 'names', params: { script, slug: r.slug } }" class="chip hover:border-primary" :title="meaningOf(r)"
             data-testid="named-name">
             <span class="pali">{{ conv(r.name) }}</span><span v-if="r.amb" class="text-xs text-muted" :title="t('May be a namesake')">?</span>
             <span v-if="r.n > 1" class="text-xs text-muted">×{{ r.n }}</span>
@@ -54,8 +54,8 @@ import type { ParaName, SettingRole, UnitSetting } from '@/data/types'
 import type { JourneyInfo, MapPlace } from '@/map/draw'
 import { useScript } from '@/composables/script'
 import { useUi } from '@/stores/ui'
-import { JOURNEYS, ROLE_LABEL, contextPlaces, isArea, mapPlace } from '@/composables/names'
-import { t } from '@/i18n'
+import { JOURNEYS, ROLE_LABEL, contextPlaces, isArea, mapPlace, meaningOf } from '@/composables/names'
+import { t, uiLang } from '@/i18n'
 
 const ui = useUi()
 const api = useApi()
@@ -70,6 +70,8 @@ watch(() => ui.settingTarget, st => {
   clearTimeout(timer)
   if (st) timer = setTimeout(() => load(st), unit.value || names.value.length ? 250 : 0)
 }, { immediate: true })
+// another interface language: the descriptions again (a new object: the map is redrawn)
+watch(uiLang, () => { if (ui.settingTarget) { unit.value = null; load(ui.settingTarget) } })
 async function load(st: { key: string; para: number }) {
   if (ui.settingTarget !== st) return
   if (!unit.value && !names.value.length) loading.value = true

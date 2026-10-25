@@ -17,6 +17,7 @@ import { validate } from './validate'
 import { readLegacyMap } from './legacy'
 import { FIXTURE_BOOKS } from './fixture'
 import { readGazetteer } from './names/gazetteer'
+import { readNameTranslations } from './names/translations'
 import { extractSettings } from './names/settings'
 import { extractMentions, readMentionDecisions, readVerdicts } from './names/mentions'
 
@@ -55,6 +56,7 @@ const gazetteer = readGazetteer(path.join(repo, 'data/names'))
 const settings = extractSettings(corpus, gazetteer, anchors)
 // the mentions: the fixture db does not use the AI verdicts and decisions (tests must not change when runs add some)
 const namesDir = path.join(repo, 'data/names')
+const nameTexts = readNameTranslations(namesDir)
 const mentioned = extractMentions(corpus, gazetteer, fixture ? new Map() : readVerdicts(namesDir), fixture ? [] : readMentionDecisions(namesDir))
 log(`names: ${gazetteer.entities.size} names, ${settings.length} settings, ${mentioned.mentions.length} mentions (${mentioned.stats.pending} words undecided)`)
 if (mentioned.stats.brokenDecisions) linkWarnings.push(`${mentioned.stats.brokenDecisions} name decisions (data/names/decisions) no longer resolve`)
@@ -73,6 +75,7 @@ for (const p of corpus.paras) hash.update(p.rend + '\0' + p.num + '\0' + p.text 
 for (const l of links) hash.update(`${l.fromBook},${l.fromIdx},${l.toBook},${l.toIdx},${l.kind},${l.source}\n`)
 for (const g of align.glosses) hash.update(`${g.kind},${g.src},${g.cBook},${g.cIdx},${g.cS},${g.cEIdx},${g.cE},${g.tBook},${g.tIdx},${g.tS},${g.tEIdx},${g.tE}\n`)
 for (const e of gazetteer.entities.values()) hash.update(`${e.slug},${e.type},${e.lemma},${e.meaning},${e.lat ?? ''},${e.lon ?? ''},${e.prec ?? ''}\n`)
+for (const [lang, t] of nameTexts) for (const [en, tr] of [...t.meaning, ...t.family]) hash.update(`${lang},${en},${tr}\n`)
 for (const x of settings) hash.update(`${x.entity},${x.role},${x.book},${x.start},${x.end},${x.source}\n`)
 for (const m of mentioned.mentions) hash.update(`${m.entity},${m.book},${m.idx},${m.s},${m.amb}\n`)
 const contentHash = hash.digest('hex').slice(0, 16)
@@ -80,7 +83,7 @@ const now = new Date()
 const dbVersion = now.toISOString().replace(/\D/g, '').slice(2, 10) // yyMMddHH
 const meta = { content_hash: contentHash, db_version: dbVersion, upstream, built_at: now.toISOString(), fixture: fixture ? '1' : '0' }
 
-const res = writeDb(path.join(outDir, 'text.db'), corpus, links, meta, legacy, align.glosses, { gazetteer, settings, mentions: mentioned.mentions })
+const res = writeDb(path.join(outDir, 'text.db'), corpus, links, meta, legacy, align.glosses, { gazetteer, settings, mentions: mentioned.mentions, translations: nameTexts })
 log(`text.db: ${res.tokenCount} tokens, ${res.postingCount} postings`)
 fs.writeFileSync(path.join(outDir, 'build-info.json'), JSON.stringify({ ...meta, db_version: +dbVersion }, null, 2) + '\n')
 

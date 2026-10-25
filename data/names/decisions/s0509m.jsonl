@@ -7,7 +7,7 @@
 {"c":{"k":"kn-thig-5-2","q":"vimala","pre":"sabbesitibhutamhinibbutati","o":52},"e":"vimala","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-thig-5-4","q":"nande","pre":"asucimputimpassa","o":5},"e":"nanda-2-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-thig-5-5","q":"candanca","pre":"nanduttaratherigathaaggim","o":2},"e":"canda-2-2","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-thig-5-5","q":"suriyanca","pre":"nanduttaratherigathaaggimcandanca","o":3},"e":"suriya-2-2","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-thig-5-5","q":"suriyanca","pre":"nanduttaratherigathaaggimcandanca","o":3},"e":"suriya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-thig-5-9","q":"anga","pre":"measupasampadacinna","o":32},"e":"anga-4","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-thig-5-9","q":"bhaddaya","pre":"vatayamupasakoyo","o":51},"e":"bhadda-4-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-thig-5-9","q":"bhadda","pre":"adasivippamuttayasabbaganthehiti","o":56},"e":"bhadda-4-2","conf":0.9,"src":"ai"}

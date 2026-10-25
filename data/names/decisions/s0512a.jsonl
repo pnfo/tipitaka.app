@@ -56,7 +56,7 @@
 {"c":{"k":"atta-kn-cp-1-5","q":"yasava","pre":"mahapurisopucchivannava","o":491},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-5","q":"brahmaloketi","pre":"mamkumarotijananti","o":625},"e":"brahmaloka","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-5","q":"paranimmitavasavattinam","pre":"ajanimsuteappekacce","o":1053},"e":null,"conf":0.6,"src":"ai"}
-{"c":{"k":"atta-kn-cp-1-5","q":"tusitanam","pre":"appekaccenimmanaratinampe","o":1060},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-cp-1-5","q":"tusitanam","pre":"appekaccenimmanaratinampe","o":1060},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-6","q":"disampati","pre":"palitamdisvamaghadevo","o":130},"e":"disampati-1","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-6","q":"sakko","pre":"bhavanamunhakaramdassesi","o":741},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-6","q":"sakko","pre":"vuttetamatthamarocesi","o":768},"e":"sakka-2","conf":0.9,"src":"ai"}
@@ -101,7 +101,7 @@
 {"c":{"k":"atta-kn-cp-1-9","q":"sakko","pre":"papunitasmimkhane","o":2591},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-9","q":"sakkena","pre":"pavisitvaakkharanioloketva","o":2661},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-9","q":"deva","pre":"mahasattampivaramyaci","o":2726},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-cp-1-9","q":"jali","pre":"santikamgamissatitata","o":3214},"e":"jali-1","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-cp-1-9","q":"jali","pre":"santikamgamissatitata","o":3214},"e":"jali-2-3","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-9","q":"deva","pre":"bodhisattassasantikamgantva","o":3463},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-9","q":"deva","pre":"patilabhitvahirottappampaccupatthapetva","o":3582},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-cp-1-9","q":"deva","pre":"vatvatayakasma","o":3602},"e":null,"conf":0.9,"src":"ai"}

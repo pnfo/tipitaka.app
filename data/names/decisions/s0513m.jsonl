@@ -150,9 +150,9 @@
 {"c":{"k":"kn-jat-14-489","q":"sumedhaya","pre":"sassudevapatibbatatadisaya","o":238},"e":"sumedha","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-14-489","q":"sumedhe","pre":"idhajiviteciram","o":267},"e":"sumedha","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-14-490","q":"digha","pre":"kasmabhavamposathikonu","o":54},"e":"digha-2","conf":0.6,"src":"ai"}
-{"c":{"k":"kn-jat-14-491","q":"suriyo","pre":"badhayamicandoca","o":121},"e":"suriya-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-jat-14-491","q":"suriyo","pre":"badhayamicandoca","o":121},"e":"suriya-2-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-14-491","q":"sudassana","pre":"suriyocaubho","o":124},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-14-491","q":"suriyo","pre":"manussalokecandoca","o":139},"e":"suriya-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-jat-14-491","q":"suriyo","pre":"manussalokecandoca","o":139},"e":"suriya-2-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-14-491","q":"sudassana","pre":"suriyocaubho","o":142},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-14-492","q":"asoko","pre":"natibhiappossukkonirasanki","o":29},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-14-492","q":"indo","pre":"napatthayeekova","o":160},"e":null,"conf":0.6,"src":"ai"}
@@ -253,7 +253,7 @@
 {"c":{"k":"kn-jat-15-510","q":"sambhuta","pre":"cuddasamamtassuddanammatanga","o":397},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-16-513","q":"deva","pre":"kammakubbamtava","o":143},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-16-513","q":"somo","pre":"parammukhovandatipanjaliko","o":250},"e":"soma-2-2","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-16-513","q":"candima","pre":"carajapajapati","o":257},"e":"candima-1","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-jat-16-513","q":"candima","pre":"carajapajapati","o":257},"e":"candimasa","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-16-514","q":"nandane","pre":"kamaidhalokasmi","o":26},"e":"nandana-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-16-514","q":"deva","pre":"dammidohalamludda","o":36},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-16-514","q":"selam","pre":"supupphitokimpurisanucinnoaruyha","o":123},"e":"sela-3","conf":0.9,"src":"ai"}
@@ -333,10 +333,10 @@
 {"c":{"k":"kn-jat-12-470","q":"kosiya","pre":"tamtamvadami","o":30},"e":"kosiya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-12-470","q":"kosiya","pre":"tamtamvadami","o":54},"e":"kosiya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-12-470","q":"kosiya","pre":"tamtamvadami","o":78},"e":"kosiya-2","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-12-470","q":"bahukaya","pre":"sarancajuhatiposo","o":91},"e":"bahuka-2","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-jat-12-470","q":"bahukaya","pre":"sarancajuhatiposo","o":91},"e":"bahuka","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-12-470","q":"kosiya","pre":"tamtamvadami","o":114},"e":"kosiya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-12-470","q":"kosiya","pre":"tamtamvadami","o":138},"e":"kosiya-2","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-12-470","q":"suriyo","pre":"tumhecandoca","o":168},"e":"suriya-2","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-jat-12-470","q":"suriyo","pre":"tumhecandoca","o":168},"e":"suriya-2-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-12-470","q":"sakka","pre":"tatoahampabbajissami","o":277},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat","q":"padumo","pre":"kanhasukosiyamendavaro","o":25261},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-13-476","q":"sumano","pre":"vayopubbe","o":86},"e":null,"conf":0.9,"src":"ai"}
@@ -504,7 +504,7 @@
 {"c":{"k":"kn-jat-21-535","q":"kosiya","pre":"tamtamvadami","o":30},"e":"kosiya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-21-535","q":"kosiya","pre":"tamtamvadami","o":54},"e":"kosiya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-21-535","q":"kosiya","pre":"tamtamvadami","o":78},"e":"kosiya-2","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-21-535","q":"bahukaya","pre":"sarancajuhatiposo","o":91},"e":"bahuka-2","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-jat-21-535","q":"bahukaya","pre":"sarancajuhatiposo","o":91},"e":"bahuka","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-21-535","q":"kosiya","pre":"tamtamvadami","o":114},"e":"kosiya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-21-535","q":"kosiya","pre":"tamtamvadami","o":138},"e":"kosiya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-21-535","q":"sakka","pre":"tatoahampabbajissami","o":277},"e":"sakka-2","conf":0.9,"src":"ai"}
@@ -578,7 +578,7 @@
 {"c":{"k":"kn-jat-22-543","q":"punna","pre":"satamdamsatvajamukhi","o":1196},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-22-543","q":"vidhata","pre":"vasinatiahudhata","o":1403},"e":"vidhata","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-543","q":"somo","pre":"vidhatavarunokuvero","o":1406},"e":"soma-2-2","conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-22-543","q":"candima","pre":"kuverosomoyamo","o":1408},"e":"candima-1","conf":0.6,"src":"ai"}
+{"c":{"k":"kn-jat-22-543","q":"candima","pre":"kuverosomoyamo","o":1408},"e":"candimasa","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-22-543","q":"ajjuno","pre":"capasatanipancayo","o":1422},"e":"ajjuna-2","conf":0.6,"src":"ai"}
 {"c":{"k":"kn-jat-22-543","q":"sudassano","pre":"yocagijjho","o":1525},"e":"sudassana-4","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-543","q":"nisabho","pre":"cagijjhosudassano","o":1526},"e":"nisabha-5","conf":0.9,"src":"ai"}
@@ -631,7 +631,7 @@
 {"c":{"k":"kn-jat-22-546-1","q":"angesu","pre":"anunanamoitimavhayanti","o":552},"e":"anga","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-546-1","q":"manava","pre":"akkhadhuttoekomani","o":593},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-546-2","q":"sikhandi","pre":"kunalakabahucitra","o":79},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-22-546-2","q":"suriyanca","pre":"nimmitampassacandam","o":275},"e":"suriya-2-2","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-jat-22-546-2","q":"suriyanca","pre":"nimmitampassacandam","o":275},"e":"suriya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-546-2","q":"cittalatam","pre":"passanimmitampharusakam","o":305},"e":"cittalata","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-546-2","q":"nandanam","pre":"pharusakamcittalatammissakam","o":307},"e":"nandana-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-546-2","q":"sudhammam","pre":"manimhipassanimmitam","o":314},"e":"sudhamma-1-2","conf":0.6,"src":"ai"}
@@ -762,13 +762,13 @@
 {"c":{"k":"kn-jat-22-547-10","q":"sakka","pre":"vareputtome","o":377},"e":"sakka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-11","q":"deva","pre":"mayhamtedaraka","o":43},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-11","q":"dabbena","pre":"janethamamnikkinissami","o":244},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-22-547-11","q":"jali","pre":"ubhoarogate","o":330},"e":"jali-1","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-jat-22-547-11","q":"jali","pre":"ubhoarogate","o":330},"e":"jali-2-3","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-11","q":"deva","pre":"ubhoarogame","o":355},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-11","q":"deva","pre":"siviratthepasasatuna","o":463},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-22-547-11","q":"jalina","pre":"asiuyyuttasivivahini","o":660},"e":"jali-1","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-jat-22-547-11","q":"jalina","pre":"asiuyyuttasivivahini","o":660},"e":"jali-2-3","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-11","q":"payasi","pre":"jalinamagganayenavankam","o":663},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-11","q":"matango","pre":"pabbatamkoncamnadati","o":667},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-22-547-11","q":"jalina","pre":"asiuyyuttaharaharini","o":690},"e":"jali-1","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-jat-22-547-11","q":"jalina","pre":"asiuyyuttaharaharini","o":690},"e":"jali-2-3","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-11","q":"payasi","pre":"jalinamagganayenavankam","o":693},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-12","q":"deva","pre":"maddiahanhite","o":115},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-12","q":"deva","pre":"atthinojivika","o":153},"e":null,"conf":0.9,"src":"ai"}
@@ -795,7 +795,7 @@
 {"c":{"k":"kn-jat-22-547-7","q":"rammo","pre":"tatthadissantievam","o":539},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-7","q":"nakula","pre":"bahukhaggavaraha","o":617},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-7","q":"sikhandi","pre":"dijamanjussarasita","o":704},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"kn-jat-22-547-8","q":"jali","pre":"darakapabbamutthehi","o":2},"e":"jali-1","conf":0.9,"src":"ai"}
+{"c":{"k":"kn-jat-22-547-8","q":"jali","pre":"darakapabbamutthehi","o":2},"e":"jali-2-3","conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-8","q":"sumano","pre":"manjukepiyabhaninepatito","o":261},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-8","q":"asito","pre":"khuddenamissitamtadayam","o":1133},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"kn-jat-22-547-9","q":"ramam","pre":"tamcahamnatimannami","o":180},"e":null,"conf":0.6,"src":"ai"}

@@ -200,8 +200,8 @@
 {"c":{"k":"atta-vp-prj-5-2-1","q":"dhammarakkhito","pre":"pathamassajhanassalabhi","o":62},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-vp-prj-5-2-9","q":"lakkhanoti","pre":"yvayamayasmaca","o":653},"e":"lakkhana-6","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-vp-prj-5-2-9","q":"lakkhanoti","pre":"attabhavenasamannagatotasma","o":674},"e":"lakkhana-6","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-vp-prj-5-2-9","q":"tapoda","pre":"udakadahotatoayam","o":1610},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-vp-prj-5-2-9","q":"tapoda","pre":"mahalohakumbhinirayanamantarenaayam","o":1625},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-vp-prj-5-2-9","q":"tapoda","pre":"udakadahotatoayam","o":1610},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-vp-prj-5-2-9","q":"tapoda","pre":"mahalohakumbhinirayanamantarenaayam","o":1625},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-vp-prj-5-2-9","q":"sobhitassa","pre":"ujjhayimsuatthesabhikkhave","o":1827},"e":"sobhita-4","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-vp-prj-5-2-9","q":"sobhito","pre":"ekayevajatitiyam","o":1834},"e":"sobhita-4","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-vp-prj-5-2-9","q":"sobhitassa","pre":"ahaatthesajati","o":1840},"e":"sobhita-4","conf":0.9,"src":"ai"}

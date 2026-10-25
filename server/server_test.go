@@ -285,3 +285,24 @@ func TestLoadGuard(t *testing.T) {
 		t.Error("isBot")
 	}
 }
+
+func TestNamesLang(t *testing.T) {
+	h := testApp(t).Handler()
+	var en, si struct {
+		Meaning      string `json:"meaning"`
+		MeaningLocal string `json:"meaningLocal"`
+		FamilyLocal  string `json:"familyLocal"`
+		Homonyms     []struct {
+			MeaningLocal string `json:"meaningLocal"`
+		} `json:"homonyms"`
+	}
+	_, body := get(t, h, "/api/entity?slug=rajagaha")
+	if err := json.Unmarshal([]byte(body), &en); err != nil || en.Meaning == "" || en.MeaningLocal != "" {
+		t.Fatalf("english: %v %+v", err, en)
+	}
+	// the description in the interface language, the English kept (data/names/i18n/si)
+	_, body = get(t, h, "/api/entity?slug=rajagaha&lang=si")
+	if err := json.Unmarshal([]byte(body), &si); err != nil || si.Meaning != en.Meaning || si.MeaningLocal == "" || si.FamilyLocal == "" {
+		t.Fatalf("sinhala: %v %+v", err, si)
+	}
+}

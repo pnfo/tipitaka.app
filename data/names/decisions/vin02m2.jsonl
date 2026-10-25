@@ -18,7 +18,7 @@
 {"c":{"k":"vp-mv-1-6","q":"pancavaggiyanam","pre":"padhanapahitattamupatthahimsuyamnunaham","o":177},"e":"pancavaggiya","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-mv-1-6","q":"sabbabhibhu","pre":"ajivakamgathahiajjhabhasi","o":261},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"vp-mv-1-6","q":"yama","pre":"tavatimsadevape","o":1213},"e":"yama","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-mv-1-6","q":"tusita","pre":"yamadevape","o":1216},"e":"tusita-2","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-mv-1-6","q":"tusita","pre":"yamadevape","o":1216},"e":"tusita","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-mv-1-6","q":"nimmanarati","pre":"tusitadevape","o":1219},"e":"nimmanarati","conf":0.6,"src":"ai"}
 {"c":{"k":"vp-mv-1-6","q":"paranimmitavasavatti","pre":"nimmanaratidevape","o":1222},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-mv-1-6","q":"udanam","pre":"khobhagavaimam","o":1279},"e":null,"conf":0.9,"src":"ai"}
@@ -192,7 +192,7 @@
 {"c":{"k":"vp-mv-6-178","q":"nigantham","pre":"nataputtotenupasankamiupasankamitva","o":185},"e":"nigantha-2","conf":0.6,"src":"ai"}
 {"c":{"k":"vp-mv-6-178","q":"siha","pre":"kimpanatvam","o":197},"e":"siha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-mv-6-178","q":"siha","pre":"upasankamissasisamanohi","o":207},"e":"siha-2","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-mv-6-178","q":"niganthe","pre":"vayamnunahamanapaloketvava","o":286},"e":"nigantha","conf":0.6,"src":"ai"}
+{"c":{"k":"vp-mv-6-178","q":"niganthe","pre":"vayamnunahamanapaloketvava","o":286},"e":"nigantha-2","conf":0.6,"src":"ai"}
 {"c":{"k":"vp-mv-6-178","q":"siha","pre":"manoduccaritamyassakho","o":830},"e":"siha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-mv-6-178","q":"siha","pre":"vadamitathagatassakho","o":846},"e":"siha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-mv-6-178","q":"siha","pre":"anuppadadhammaayamkho","o":859},"e":"siha-2","conf":0.9,"src":"ai"}

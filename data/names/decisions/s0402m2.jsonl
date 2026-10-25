@@ -52,9 +52,9 @@
 {"c":{"k":"an-3-2-2-10","q":"yama","pre":"tavatimsasantideva","o":923},"e":"yama","conf":0.9,"src":"ai"}
 {"c":{"k":"an-3-2-2-10","q":"tusita","pre":"yamasantideva","o":926},"e":"tusita","conf":0.9,"src":"ai"}
 {"c":{"k":"an-3-2-2-10","q":"nimmanaratino","pre":"tusitasantideva","o":929},"e":"nimmanaratino","conf":0.6,"src":"ai"}
-{"c":{"k":"an-3-2-2-10","q":"tusitanam","pre":"manusakanicattarivassasatani","o":1657},"e":"tusita-2","conf":0.6,"src":"ai"}
-{"c":{"k":"an-3-2-2-10","q":"tusitanam","pre":"dibbanicattarivassasahassani","o":1675},"e":"tusita-2","conf":0.6,"src":"ai"}
-{"c":{"k":"an-3-2-2-10","q":"tusitanam","pre":"bhedaparammarana","o":1696},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"an-3-2-2-10","q":"tusitanam","pre":"manusakanicattarivassasatani","o":1657},"e":"tusita","conf":0.6,"src":"ai"}
+{"c":{"k":"an-3-2-2-10","q":"tusitanam","pre":"dibbanicattarivassasahassani","o":1675},"e":"tusita","conf":0.6,"src":"ai"}
+{"c":{"k":"an-3-2-2-10","q":"tusitanam","pre":"bhedaparammarana","o":1696},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"an-3-2-2-10","q":"paranimmitavasavattinam","pre":"manusakanisolasavassasatani","o":1777},"e":"paranimmitavasavatti","conf":0.6,"src":"ai"}
 {"c":{"k":"an-3-2-2-10","q":"paranimmitavasavattinam","pre":"dibbanisolasavassasahassani","o":1795},"e":"paranimmitavasavatti","conf":0.6,"src":"ai"}
 {"c":{"k":"an-3-2-2-10","q":"paranimmitavasavattinam","pre":"bhedaparammarana","o":1816},"e":"paranimmitavasavatti","conf":0.6,"src":"ai"}
@@ -78,7 +78,7 @@
 {"c":{"k":"an-3-2-3-4","q":"phussa","pre":"puranancakammamphussa","o":254},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-3-2-3-4","q":"abhaya","pre":"vinnuhitiimakho","o":266},"e":"abhaya-3","conf":0.9,"src":"ai"}
 {"c":{"k":"an-3-2-3-4","q":"abhaya","pre":"panatvamsamma","o":298},"e":"abhaya-3","conf":0.9,"src":"ai"}
-{"c":{"k":"an-3-2-3-10","q":"tusitanam","pre":"sahassamyamanamsahassam","o":193},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"an-3-2-3-10","q":"tusitanam","pre":"sahassamyamanamsahassam","o":193},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"an-3-2-3-10","q":"paranimmitavasavattinam","pre":"sahassamnimmanaratinamsahassam","o":197},"e":"paranimmitavasavatti","conf":0.6,"src":"ai"}
 {"c":{"k":"an-3-2","q":"channo","pre":"anandavaggotatiyotassuddanam","o":14355},"e":"channa-2-3","conf":0.9,"src":"ai"}
 {"c":{"k":"an-3-2","q":"sakko","pre":"tassuddanamchannoajivako","o":14357},"e":null,"conf":0.9,"src":"ai"}

@@ -23,7 +23,7 @@
         <RouterLink :to="{ name: 'names', params: { script, slug: selected.slug } }" class="pali text-lg font-semibold hover:text-primary" data-testid="map-card-name">
           {{ conv(selected.name) }}
         </RouterLink>
-        <p class="mb-2 text-xs text-muted">{{ selected.meaning }}</p>
+        <p class="mb-2 text-xs text-muted">{{ meaningOf(selected) }}</p>
         <div v-if="info" class="mb-1 section-title">{{ t('Taught here') }} · {{ info.units }}</div>
         <ul v-if="info">
           <li v-for="s in taughtHere" :key="s.key + s.para">
@@ -62,9 +62,9 @@ import { useApi } from '@/data/api'
 import type { Entity, EntityInfo } from '@/data/types'
 import type { JourneyInfo, MapPlace } from '@/map/draw'
 import { YOJANA_KM } from '@/map/geo'
-import { JOURNEYS, isArea, locatedPlaces, mapPlace } from '@/composables/names'
+import { JOURNEYS, isArea, locatedPlaces, mapPlace, meaningOf } from '@/composables/names'
 import { useScript } from '@/composables/script'
-import { t } from '@/i18n'
+import { t, uiLang } from '@/i18n'
 
 const route = useRoute(), router = useRouter()
 const api = useApi()
@@ -73,7 +73,8 @@ const all = ref<Entity[]>([])
 const info = ref<EntityInfo | null>(null)
 const journey = ref<JourneyInfo | null>(null)
 
-locatedPlaces().then(es => { all.value = es.filter(e => e.type === 'place') })
+// (again in another interface language: the descriptions)
+watch(uiLang, () => locatedPlaces().then(es => { all.value = es.filter(e => e.type === 'place') }), { immediate: true })
 
 const placeSlug = computed(() => (typeof route.query.place === 'string' ? route.query.place : ''))
 const journeyId = computed(() => (typeof route.query.journey === 'string' && JOURNEYS.some(j => j.id === route.query.journey) ? route.query.journey : null))
@@ -84,7 +85,7 @@ const selected = computed(() => all.value.find(e => e.slug === placeSlug.value) 
 const places = computed<MapPlace[]>(() => all.value.filter(e => ((e.prec ?? 1) < 4 && !isArea(e)) || e.slug === placeSlug.value).map((e, i) => mapPlace(e, e.slug === placeSlug.value ? 'main' : 'related',
   { count: e.units, label: i < 14 || e.slug === placeSlug.value })))
 
-watch(placeSlug, async s => {
+watch([placeSlug, uiLang], async ([s]) => {
   info.value = null
   if (s) info.value = await api.entity(s).catch(() => null)
 }, { immediate: true })

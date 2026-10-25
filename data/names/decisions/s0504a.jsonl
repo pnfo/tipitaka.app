@@ -31,12 +31,12 @@
 {"c":{"k":"atta-kn-iti-3-4-4","q":"yaso","pre":"saddhosilenasampanno","o":550},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-iti-3-4-4","q":"deva","pre":"icchantitenahaehi","o":738},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-iti-3-4-4","q":"deva","pre":"yathavuttayaanukampayadukkhapanayanakamyataya","o":964},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-iti-3-4-5","q":"thunam","pre":"majjhepacchimayadisaya","o":83},"e":"thuna-3","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-kn-iti-3-4-5","q":"thunam","pre":"majjhepacchimayadisaya","o":83},"e":"thuna-2","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-iti-3-4-5","q":"brahmanagamo","pre":"disayathunamnama","o":85},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-kn-iti-3-4-5","q":"majjhimadese","pre":"addhateyyayojanasateparikkhepatonavayojanasate","o":112},"e":"majjhimadesa","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-iti-3-4-5","q":"uttaroti","pre":"lokavidunatthietassa","o":547},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-iti-3-4-6","q":"subhaya","pre":"asubhanupassinantiadimahatattha","o":163},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-iti-3-4-9","q":"tapoda","pre":"nikhaneapicayam","o":33},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-iti-3-4-9","q":"tapoda","pre":"nikhaneapicayam","o":33},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-iti-1-2-7","q":"netti","pre":"nocatthaneniyojakoti","o":127},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-iti-1-2-8","q":"vajjiputtake","pre":"janamsannapentopancasate","o":88},"e":"vajjiputtaka","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-iti-1-2-10","q":"siham","pre":"tvasaddoyatha","o":346},"e":null,"conf":0.9,"src":"ai"}

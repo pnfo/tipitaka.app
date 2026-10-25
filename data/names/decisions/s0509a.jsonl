@@ -36,11 +36,11 @@
 {"c":{"k":"atta-kn-thig-5-4","q":"nandati","pre":"tamkulamtena","o":423},"e":"nanda-2-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thig-5-4","q":"nande","pre":"kunapamputimpassa","o":682},"e":"nanda-2-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thig-5-5","q":"candanca","pre":"paccavekkhitvaudanavasenaaggim","o":59},"e":"canda-2-2","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-thig-5-5","q":"suriyanca","pre":"udanavasenaaggimcandanca","o":60},"e":"suriya-2-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-thig-5-5","q":"suriyanca","pre":"udanavasenaaggimcandanca","o":60},"e":"suriya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thig-5-5","q":"candanca","pre":"abhasitatthaaggim","o":114},"e":"canda-2-2","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-thig-5-5","q":"suriyanca","pre":"tatthaaggimcandanca","o":115},"e":"suriya-2-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-thig-5-5","q":"suriyanca","pre":"tatthaaggimcandanca","o":115},"e":"suriya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thig-5-5","q":"candanca","pre":"masesukkapakkhassadutiyaya","o":131},"e":"canda-2-2","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-kn-thig-5-5","q":"suriyanca","pre":"divasesayampatam","o":136},"e":"suriya-2-2","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-kn-thig-5-5","q":"suriyanca","pre":"divasesayampatam","o":136},"e":"suriya-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thig-5-5","q":"visuddhimaggam","pre":"hirannagabbhadayodevataca","o":143},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thig-5-7","q":"nandati","pre":"nibbattasatthuvematikabhagini","o":19},"e":"nanda-2-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-kn-thig-1-11","q":"netti","pre":"yasmasabbassapibhavassa","o":293},"e":null,"conf":0.9,"src":"ai"}

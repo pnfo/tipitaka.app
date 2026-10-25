@@ -1,7 +1,7 @@
 {"c":{"k":"atta-an-2-1-4","q":"vasavatti","pre":"devatasunimmitodevaraja","o":1172},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-an-2-1-4","q":"vasavatti","pre":"devarajavasavattidevata","o":1174},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-an-2-1-4","q":"appamanabha","pre":"brahmapurohitamahabrahmanoparittabha","o":1180},"e":"appamanabha","conf":0.6,"src":"ai"}
-{"c":{"k":"atta-an-2-1-4","q":"aviha","pre":"appamanasubhasubhakinhavehapphala","o":1186},"e":"aviha","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-an-2-1-4","q":"aviha","pre":"appamanasubhasubhakinhavehapphala","o":1186},"e":"aviha-1","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-an-2-1-4","q":"sudassa","pre":"vehapphalaavihaatappa","o":1188},"e":"sudassa","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-an-2-1-4","q":"sudassi","pre":"avihaatappasudassa","o":1189},"e":"sudassi","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-an-2-1-4","q":"suddhavasesveva","pre":"kathitaannataramdevanikayanti","o":2091},"e":"suddhavasa-1","conf":0.6,"src":"ai"}
@@ -107,7 +107,7 @@
 {"c":{"k":"atta-an-4-1-4-3","q":"pancavaggiyanam","pre":"kalakatabhavamnatvadhammadesanatthaya","o":606},"e":"pancavaggiya","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-1-4-3","q":"pancavaggiyanam","pre":"attanopattacivaramadaya","o":617},"e":"pancavaggiya","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-1-4-6","q":"ukkatthati","pre":"casetabyantiettha","o":9},"e":"ukkattha","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-an-4-1-4-6","q":"tapoda","pre":"antaravosanamapaditiadisuvemajjheapicayam","o":62},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-an-4-1-4-6","q":"tapoda","pre":"antaravosanamapaditiadisuvemajjheapicayam","o":62},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-1-4-6","q":"dono","pre":"donopisudambrahmanoti","o":170},"e":"dona-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-1-4-6","q":"dono","pre":"bhaveyyasoantaradhayateva","o":266},"e":"dona-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-1-5-2","q":"sakkati","pre":"gahitaggahanamvissajjapetumna","o":48},"e":null,"conf":0.9,"src":"ai"}
@@ -115,7 +115,7 @@
 {"c":{"k":"atta-an-4-2-1-8","q":"yasava","pre":"karananianuppavesetidadati","o":25},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-2-2-7","q":"virupakkhehiti","pre":"virupakkhehimetiadimahatattha","o":42},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-an-4-2-3-8","q":"kevatto","pre":"visujjhatitietthakalyaninadimukhadvaravasi","o":33},"e":"kevatta-2","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-an-4-3-2-1","q":"kesiti","pre":"kesisuttavannanadutiyassapathame","o":3},"e":"kesi-1","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-an-4-3-2-1","q":"kesiti","pre":"kesisuttavannanadutiyassapathame","o":3},"e":"kesi","conf":0.6,"src":"ai"}
 {"c":{"k":"atta-an-4-3-3-3","q":"kappoti","pre":"aharitvaatthoveditabbo","o":135},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-3-3-4","q":"suddhavasanam","pre":"tiniphalanisacchikaroti","o":59},"e":"suddhavasa-1","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-an-4-4-1-9","q":"sambhuto","pre":"avocaaharasambhutotiaharena","o":33},"e":null,"conf":0.9,"src":"ai"}

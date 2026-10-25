@@ -168,7 +168,7 @@
 {"c":{"k":"dn-2-1-13","q":"purohitaputto","pre":"rajaputtotissoca","o":337},"e":"purohitaputta-2","conf":0.6,"src":"ai"}
 {"c":{"k":"dn-2-1-13","q":"vipassi","pre":"alatthumupasampadamte","o":347},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-14","q":"vipassi","pre":"rajadhaniyamahajanakayocaturasitipanasahassani","o":8},"e":"vipassi-1","conf":0.9,"src":"ai"}
-{"c":{"k":"dn-2-1-14","q":"kheme","pre":"bandhumatimrajadhanimanuppatto","o":16},"e":"khema-5-2","conf":0.9,"src":"ai"}
+{"c":{"k":"dn-2-1-14","q":"kheme","pre":"bandhumatimrajadhanimanuppatto","o":16},"e":"khema-4","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-14","q":"khando","pre":"khememigadayeviharati","o":19},"e":"khanda-5","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-14","q":"purohitaputto","pre":"rajaputtotissoca","o":25},"e":"purohitaputta-2","conf":0.6,"src":"ai"}
 {"c":{"k":"dn-2-1-14","q":"khando","pre":"orakapabbajjayattha","o":53},"e":"khanda-5","conf":0.9,"src":"ai"}
@@ -179,7 +179,7 @@
 {"c":{"k":"dn-2-1-14","q":"vipassi","pre":"ekamantamnisidimsutesam","o":111},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-14","q":"vipassi","pre":"alatthumupasampadamte","o":245},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-15","q":"vipassi","pre":"tanipurimanicaturasitipabbajitasahassani","o":8},"e":"vipassi-1","conf":0.9,"src":"ai"}
-{"c":{"k":"dn-2-1-15","q":"kheme","pre":"bandhumatimrajadhanimanuppatto","o":16},"e":"khema-5-2","conf":0.9,"src":"ai"}
+{"c":{"k":"dn-2-1-15","q":"kheme","pre":"bandhumatimrajadhanimanuppatto","o":16},"e":"khema-4","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-15","q":"vipassi","pre":"khemomigadayoyena","o":34},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-15","q":"vipassi","pre":"ekamantamnisidimsutesam","o":48},"e":"vipassi-1","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-1-15","q":"vipassi","pre":"alatthumupasampadamte","o":182},"e":"vipassi-1","conf":0.9,"src":"ai"}
@@ -422,7 +422,7 @@
 {"c":{"k":"dn-2-4-14","q":"valahako","pre":"samayenaabhiruhamiyadidam","o":284},"e":"valahaka-2","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-5-4","q":"punnaya","pre":"tadahuposathepannarasevassupanayikaya","o":8},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-5-5","q":"paranimmitavasavattinam","pre":"parammaranaappekacce","o":387},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
-{"c":{"k":"dn-2-5-5","q":"tusitanam","pre":"sahabyatamupapajjantiappekacce","o":397},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"dn-2-5-5","q":"tusitanam","pre":"sahabyatamupapajjantiappekacce","o":397},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"dn-2-6-1","q":"punnaya","pre":"tadahuposathepannarasepavaranaya","o":8},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-6-5","q":"disampati","pre":"bhutapubbambhoraja","o":16},"e":"disampati-1","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-2-6-5","q":"renu","pre":"ahosidisampatissaranno","o":28},"e":"renu-3","conf":0.9,"src":"ai"}

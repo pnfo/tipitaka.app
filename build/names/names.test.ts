@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { classifyDppn, dppnBase, firstSentence, inflect, patternsFor, readTemplates, sandhi } from './dppn'
 import { AFTER_NAME, BEFORE_NAME, confirmedByRule, wordForm, type Occurrence } from './mentions'
 import { rankEntities, type Entity, type Form } from './gazetteer'
+import { translateEntity } from './translations'
+import { shownFamily } from '../../shared/names'
 
 describe('DPPN names', () => {
   it('reads the type from the first sentence', () => {
@@ -78,5 +80,14 @@ describe('mentions', () => {
     const banker: Entity = { slug: 'ananda-10', type: 'person', lemma: 'ānanda 10', dpd: 0, family: 'DPPN: seṭṭhi', meaning: 'A banker of Sāvatthī.', freq: 0, namesake: true }
     expect(rankEntities({ entities: [yasa, banker], how: 'n', notNames: [] }, all, [], ['seṭṭhi'])).toEqual({ best: yasa, sure: false })
     expect(rankEntities({ entities: [banker], how: 'n', notNames: [] }, all).best).toBe(banker) // the only one
+  })
+  it('shows no category that repeats the type, in every language', () => {
+    expect(shownFamily('place names; holy sites')).toBe('holy sites')
+    expect(shownFamily('names of deities')).toBe('')
+    const t = { meaning: new Map(), family: new Map([['place names; holy sites', 'ස්ථාන; පූජනීය ස්ථාන']]) }
+    // (the items of a list translated as a whole, as readNameTranslations learns them)
+    t.family.set('holy sites', 'පූජනීය ස්ථාන')
+    const e: Entity = { slug: 'payaga-1', type: 'place', lemma: 'payāga 1', dpd: 1, family: 'place names; holy sites', meaning: '', freq: 0 }
+    expect(translateEntity(t, e).family).toBe('පූජනීය ස්ථාන')
   })
 })

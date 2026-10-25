@@ -99,4 +99,4 @@
 {"c":{"k":"atta-ap-vbh-18-6-1","q":"nimmanarati","pre":"bhogenimminitvaramantiti","o":207},"e":"nimmanarati","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-ap-vbh-18-6-1","q":"paranimmitavasavatti","pre":"bhogesuvasamvattentiti","o":215},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-ap-vbh-18-6-2","q":"appamanabha","pre":"appamanaabhaetesanti","o":63},"e":"appamanabha","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-ap-vbh-18-6-2","q":"aviha","pre":"hayantinavihayantiti","o":268},"e":"aviha","conf":0.6,"src":"ai"}
+{"c":{"k":"atta-ap-vbh-18-6-2","q":"aviha","pre":"hayantinavihayantiti","o":268},"e":"aviha-1","conf":0.6,"src":"ai"}

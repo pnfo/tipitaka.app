@@ -224,8 +224,8 @@
 {"c":{"k":"vp-pct-1-6-4","q":"channa","pre":"bhikkhuevamahamsumavuso","o":19},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"vp-pct-1-6-4","q":"channa","pre":"saccamkiratvam","o":47},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"vp-pct-1-6-4","q":"uggaho","pre":"evamamhakamacariyanam","o":197},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"vp-pct-1-6-7","q":"tapode","pre":"panasamayenabhikkhu","o":14},"e":"tapoda","conf":0.6,"src":"ai"}
-{"c":{"k":"vp-pct-1-6-7","q":"tapodam","pre":"bimbisarosisamnahayissamiti","o":26},"e":"tapoda","conf":0.6,"src":"ai"}
+{"c":{"k":"vp-pct-1-6-7","q":"tapode","pre":"panasamayenabhikkhu","o":14},"e":"tapoda-2","conf":0.6,"src":"ai"}
+{"c":{"k":"vp-pct-1-6-7","q":"tapodam","pre":"bimbisarosisamnahayissamiti","o":26},"e":"tapoda-2","conf":0.6,"src":"ai"}
 {"c":{"k":"vp-pct-1-6-9","q":"sakyaputto","pre":"samayenaayasmaupanando","o":16},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"vp-pct-1-6-9","q":"sakyaputto","pre":"avusoayasmaupanando","o":36},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"vp-pct-1-6-9","q":"sakyaputto","pre":"namaayasmaupanando","o":56},"e":null,"conf":0.9,"src":"ai"}

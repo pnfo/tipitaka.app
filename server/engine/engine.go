@@ -43,6 +43,9 @@ type Engine struct {
 	ftsCache    *lru
 	hasNames    bool // the entity / setting tables exist (dbs built before them have none)
 	hasMentions bool // the mention tables exist
+
+	nameTrMu sync.Mutex
+	nameTr   map[string]map[string]nameText // lang -> slug -> the meaning and family in it (entity_tr, lazy)
 }
 
 // Node is a tree node (group, book, div or heading).
@@ -251,6 +254,12 @@ func (e *Engine) load(ctx context.Context) error {
 		return err
 	}
 	e.hasMentions = n > 0
+	if err := e.text.QueryRowContext(ctx, "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'entity_tr'").Scan(&n); err != nil {
+		return err
+	}
+	if n > 0 {
+		e.nameTr = map[string]map[string]nameText{}
+	}
 	e.bookAnc = make([][]string, len(e.books))
 	for i, b := range e.books {
 		for n := b.Root; n >= 0; n = e.nodes[n].Parent {

@@ -4,6 +4,7 @@
  *  - NativeSource: the engine compiled into the Android / iOS app, reached through the native bridge
  * The front door (Api) adds a small LRU cache, request de-duplication and the SSR prefill.
  */
+import { uiLang } from '@/i18n'
 import type { DictResult, Dict, Entity, EntityInfo, EntityType, FtsResult, LegacyTarget, Link, MentionRef, Meta, NodeInfo, ParaName, TextChunk, TitleHit, TNode, Gloss, UnitSetting } from './types'
 
 export type Params = Record<string, string | number | boolean | undefined>
@@ -120,6 +121,9 @@ export function readSsrData(): Record<string, unknown> {
 // ops that are not cached (search paging is cached by the engine)
 const NO_CACHE = new Set(['meta'])
 
+/** the interface language of the descriptions of the names (none for English: those responses are shared) */
+const nameLang = () => (uiLang.value !== 'en' ? uiLang.value : undefined)
+
 export class Api {
   private cache = new Lru<unknown>(300)
   private inflight = new Map<string, Promise<unknown>>()
@@ -152,13 +156,13 @@ export class Api {
   dict = (w: string, dicts?: string[], limit?: number) => this.call<DictResult>('dict', { w, dicts: dicts?.join(','), limit })
   lookup = (w: string, dicts?: string[], limit?: number) => this.call<DictResult>('lookup', { w, dicts: dicts?.join(','), limit })
   legacy = (file: string, line: number) => this.call<LegacyTarget>('legacy', { file, line })
-  names = (q = '', types?: EntityType[], limit?: number) => this.call<Entity[]>('names', { q, types: types?.join(','), limit })
-  entity = (slug: string) => this.call<EntityInfo>('entity', { slug })
+  names = (q = '', types?: EntityType[], limit?: number) => this.call<Entity[]>('names', { q, types: types?.join(','), limit, lang: nameLang() })
+  entity = (slug: string) => this.call<EntityInfo>('entity', { slug, lang: nameLang() })
   /** the setting of the sutta / story around a paragraph (null: none) */
-  settings = (key: string, para?: number) => this.call<UnitSetting | null>('settings', { key, para })
+  settings = (key: string, para?: number) => this.call<UnitSetting | null>('settings', { key, para, lang: nameLang() })
   /** the mentions of a name in a book (maybe: those that may be it or a namesake), 100 a page */
   mentions = (slug: string, book: number, maybe = false, page = 0) => this.call<MentionRef[]>('mentions', { slug, book, maybe, page })
-  paranames = (key: string, from?: number, to?: number) => this.call<ParaName[]>('paranames', { key, from, to })
+  paranames = (key: string, from?: number, to?: number) => this.call<ParaName[]>('paranames', { key, from, to, lang: nameLang() })
 }
 
 let api: Api | null = null

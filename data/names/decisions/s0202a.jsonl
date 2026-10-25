@@ -145,7 +145,7 @@
 {"c":{"k":"atta-mn-2-1-8","q":"abhayassa","pre":"nasakkhissatitiso","o":74},"e":"abhaya-4","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-2-1-8","q":"abhayo","pre":"vadamaropessatititato","o":122},"e":"abhaya-4","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-2-1-8","q":"abhayo","pre":"uppajjissatiyavamaccharivayam","o":202},"e":"abhaya-4","conf":0.9,"src":"ai"}
-{"c":{"k":"atta-mn-2-1-8","q":"niganthati","pre":"ekavacanenevasamcunnesianassum","o":263},"e":"nigantha","conf":0.9,"src":"ai"}
+{"c":{"k":"atta-mn-2-1-8","q":"niganthati","pre":"ekavacanenevasamcunnesianassum","o":263},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"atta-mn-2-1-8","q":"nando","pre":"chajanatvam","o":707},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-mn-2-1-8","q":"punno","pre":"nandonamatvam","o":710},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"atta-mn-2-1-8","q":"citto","pre":"vaddhamanonamatvam","o":716},"e":null,"conf":0.6,"src":"ai"}

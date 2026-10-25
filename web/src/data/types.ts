@@ -80,6 +80,8 @@ export type EntityType = 'person' | 'deity' | 'group' | 'place' | 'animal'
 export type SettingRole = 'place' | 'teacher' | 'with' | 'about'
 export interface Entity {
   slug: string; type: EntityType; name: string; lemma: string; family?: string; meaning?: string
+  /** meaning and family in the interface language (api lang=; composables/names.ts meaningOf, familyOf) */
+  meaningLocal?: string; familyLocal?: string
   /** places: coordinates; prec 1 located, 2 probable, 3 approximate, 4 in or near the place its meaning names */
   lat?: number; lon?: number; prec?: number
   /** suttas / stories with a setting of the name */

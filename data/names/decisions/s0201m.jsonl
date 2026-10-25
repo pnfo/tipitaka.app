@@ -37,9 +37,9 @@
 {"c":{"k":"mn-1-1-7","q":"maya","pre":"upakkilesotiitividitva","o":384},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-2-4","q":"sakko","pre":"athakhomahanamo","o":14},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-2-4","q":"sakko","pre":"nisinnokhomahanamo","o":27},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"mn-1-2-4","q":"niganthe","pre":"tenupasankamimupasankamitvate","o":882},"e":"nigantha","conf":0.9,"src":"ai"}
+{"c":{"k":"mn-1-2-4","q":"niganthe","pre":"tenupasankamimupasankamitvate","o":882},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-2-4","q":"nigantho","pre":"niganthamametadavocum","o":904},"e":"nigantha-2","conf":0.9,"src":"ai"}
-{"c":{"k":"mn-1-2-4","q":"niganthe","pre":"ahammahanamate","o":989},"e":"nigantha","conf":0.9,"src":"ai"}
+{"c":{"k":"mn-1-2-4","q":"niganthe","pre":"ahammahanamate","o":989},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-2-4","q":"sakko","pre":"bhagavaattamanomahanamo","o":1420},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-2-8","q":"sakko","pre":"nisididandapanipikho","o":37},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-2-8","q":"sakko","pre":"thitokhodandapani","o":66},"e":null,"conf":0.9,"src":"ai"}
@@ -109,7 +109,7 @@
 {"c":{"k":"mn-1-4-1","q":"nandiyam","pre":"tenupasankamiupasankamitvaayasmantanca","o":89},"e":"nandiya","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-4-1","q":"nandiyam","pre":"ayasmantancaanuruddhamayasmantanca","o":905},"e":"nandiya","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-4-1","q":"yama","pre":"tavatimsadevape","o":1087},"e":"yama","conf":0.9,"src":"ai"}
-{"c":{"k":"mn-1-4-1","q":"tusita","pre":"yamadevape","o":1090},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"mn-1-4-1","q":"tusita","pre":"yamadevape","o":1090},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"mn-1-4-1","q":"nimmanarati","pre":"tusitadevape","o":1093},"e":"nimmanarati","conf":0.6,"src":"ai"}
 {"c":{"k":"mn-1-4-1","q":"paranimmitavasavatti","pre":"nimmanaratidevape","o":1096},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-4-1","q":"digha","pre":"viditaahesumevametam","o":1139},"e":null,"conf":0.6,"src":"ai"}
@@ -208,11 +208,11 @@
 {"c":{"k":"mn-1-4-10","q":"maya","pre":"pahinamhotimayavissa","o":539},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-5-1","q":"brahmanagamo","pre":"salanamakosalanam","o":17},"e":null,"conf":0.6,"src":"ai"}
 {"c":{"k":"mn-1-5-1","q":"sakyaputto","pre":"khalubhogotamo","o":27},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"mn-1-5-1","q":"tusitanam","pre":"peyamanamdevanam","o":1024},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"mn-1-5-1","q":"tusitanam","pre":"peyamanamdevanam","o":1024},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"mn-1-5-1","q":"paranimmitavasavattinam","pre":"devanamnimmanaratinamdevanam","o":1028},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-5-1","q":"abhassaranam","pre":"peappamanabhanamdevanam","o":1109},"e":"abhassara","conf":0.6,"src":"ai"}
 {"c":{"k":"mn-1-5-2","q":"sakyaputto","pre":"khalubhogotamo","o":30},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"mn-1-5-2","q":"tusitanam","pre":"devanamyamanamdevanam","o":754},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"mn-1-5-2","q":"tusitanam","pre":"devanamyamanamdevanam","o":754},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"mn-1-5-2","q":"paranimmitavasavattinam","pre":"devanamnimmanaratinamdevanam","o":758},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-1-5-2","q":"abhassaranam","pre":"peappamanabhanamdevanam","o":839},"e":"abhassara","conf":0.6,"src":"ai"}
 {"c":{"k":"mn-1-5-9","q":"bako","pre":"khomambhikkhave","o":102},"e":"baka-1","conf":0.9,"src":"ai"}

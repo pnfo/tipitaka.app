@@ -80,8 +80,9 @@ export function extractSettings(c: Corpus, g: Gazetteer, links: ParaLink[]): Set
     if (!es.length || has.has(k)) return
     has.add(k)
     const seen = new Set<string>()
-    es.filter(e => !seen.has(e.slug) && !!seen.add(e.slug)).forEach((e, ord) =>
-      out.push({ ...u, role, entity: e.slug, ord, evBook: p.book, evIdx: p.idx, source, conf }))
+    // (a name spelled differently is counted as the one it is: same.tsv)
+    es.map(e => e.sameAs ?? e.slug).filter(s => !seen.has(s) && !!seen.add(s)).forEach((entity, ord) =>
+      out.push({ ...u, role, entity, ord, evBook: p.book, evIdx: p.idx, source, conf }))
   }
 
   /** the names among tokens [i, j) of the given types (compounds and titles too, not derived words) */

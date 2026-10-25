@@ -24,7 +24,7 @@
 {"c":{"k":"vp-prj-2-3-2","q":"alavaka","pre":"khopanasamayena","o":2066},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-3-2","q":"alavaka","pre":"khopanasamayena","o":2097},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4","q":"kutagarasala","pre":"yenavesalimahavanam","o":336},"e":"kutagarasala-2","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-prj-2-4-1","q":"tapoda","pre":"pabbajampapakammamakarimsutavade","o":91},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-prj-2-4-1","q":"tapoda","pre":"pabbajampapakammamakarimsutavade","o":91},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4-1","q":"sobhito","pre":"yuddhamnaganogahanenaca","o":96},"e":"sobhita-4","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4-2","q":"lakkhano","pre":"samayenaayasmaca","o":924},"e":"lakkhana-6","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4-2","q":"lakkhano","pre":"pattacivaramadayayenayasma","o":940},"e":"lakkhana-6","conf":0.9,"src":"ai"}
@@ -32,12 +32,12 @@
 {"c":{"k":"vp-prj-2-4-2","q":"lakkhana","pre":"akalokhoavuso","o":989},"e":"lakkhana-6","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4-2","q":"lakkhano","pre":"khoayasmaca","o":1002},"e":"lakkhana-6","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4-2","q":"hariko","pre":"sattoimasmimyevarajagahe","o":1682},"e":"harika-2","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"amantesiyatayamavuso","o":1891},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"vakkhatiyatayamavuso","o":1918},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"athacapanayam","o":1936},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"arocesumyatayambhikkhave","o":1948},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"apicayambhikkhave","o":1966},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"antarikayaagacchatitenayam","o":1972},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"amantesiyatayamavuso","o":1891},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"vakkhatiyatayamavuso","o":1918},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"athacapanayam","o":1936},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"arocesumyatayambhikkhave","o":1948},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"apicayambhikkhave","o":1966},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"vp-prj-2-4-2","q":"tapoda","pre":"antarikayaagacchatitenayam","o":1972},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4-2","q":"sobhitassa","pre":"arocesumatthesabhikkhave","o":2156},"e":"sobhita-4","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-2-4-2","q":"sobhito","pre":"jatisaccambhikkhave","o":2164},"e":"sobhita-4","conf":0.9,"src":"ai"}
 {"c":{"k":"vp-prj-3-2","q":"angassa","pre":"vaannatarassava","o":355},"e":null,"conf":0.9,"src":"ai"}

@@ -49,11 +49,11 @@
 {"c":{"k":"ap-vbh-18-3-3","q":"citta","pre":"chacetanacha","o":106},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"ap-vbh-18-3-4","q":"citta","pre":"chacetanacha","o":88},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"ap-vbh-18-5","q":"paranimmitavasavatti","pre":"pariyantamkaritvauparito","o":28},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
-{"c":{"k":"ap-vbh-18-6-1","q":"tusitanam","pre":"sahabyatamupapajjantiappekacce","o":65},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"ap-vbh-18-6-1","q":"tusitanam","pre":"sahabyatamupapajjantiappekacce","o":65},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"ap-vbh-18-6-1","q":"paranimmitavasavattinam","pre":"sahabyatamupapajjantiappekacce","o":75},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
-{"c":{"k":"ap-vbh-18-6-2","q":"tusitanam","pre":"vassakotiyocattarisancavassasatasahassani","o":119},"e":"tusita-2","conf":0.6,"src":"ai"}
-{"c":{"k":"ap-vbh-18-6-2","q":"tusitanam","pre":"manusakanicattarivassasatani","o":127},"e":"tusita-2","conf":0.6,"src":"ai"}
-{"c":{"k":"ap-vbh-18-6-2","q":"tusitanam","pre":"dibbanicattarivassasahassani","o":145},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"ap-vbh-18-6-2","q":"tusitanam","pre":"vassakotiyocattarisancavassasatasahassani","o":119},"e":"tusita","conf":0.6,"src":"ai"}
+{"c":{"k":"ap-vbh-18-6-2","q":"tusitanam","pre":"manusakanicattarivassasatani","o":127},"e":"tusita","conf":0.6,"src":"ai"}
+{"c":{"k":"ap-vbh-18-6-2","q":"tusitanam","pre":"dibbanicattarivassasahassani","o":145},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"ap-vbh-18-6-2","q":"paranimmitavasavattinam","pre":"vassakotiyocattarisancavassasatasahassani","o":196},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"ap-vbh-18-6-2","q":"paranimmitavasavattinam","pre":"manusakanisolasavassasatani","o":204},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}
 {"c":{"k":"ap-vbh-18-6-2","q":"paranimmitavasavattinam","pre":"dibbanisolasavassasahassani","o":222},"e":"paranimmitavasavatti","conf":0.9,"src":"ai"}

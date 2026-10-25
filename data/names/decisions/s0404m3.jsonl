@@ -4,7 +4,7 @@
 {"c":{"k":"an-10-1-2-5","q":"mahi","pre":"yamunaaciravatisarabhu","o":207},"e":"mahi-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-1-2-10","q":"sumano","pre":"rupamdisvaneva","o":84},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-1-2-10","q":"sumano","pre":"dhammamvinnayaneva","o":108},"e":null,"conf":0.9,"src":"ai"}
-{"c":{"k":"an-10-1-3-9","q":"tusitanam","pre":"sahassamyamanamsahassam","o":74},"e":"tusita-2","conf":0.6,"src":"ai"}
+{"c":{"k":"an-10-1-3-9","q":"tusitanam","pre":"sahassamyamanamsahassam","o":74},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"an-10-1-3-9","q":"paranimmitavasavattinam","pre":"sahassamnimmanaratinamsahassam","o":78},"e":"paranimmitavasavatti","conf":0.6,"src":"ai"}
 {"c":{"k":"an-10-1-3-10","q":"payasi","pre":"yenaaramotena","o":29},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-1-5-6","q":"sakke","pre":"ekamantamnisinnekho","o":25},"e":"sakka-2-2","conf":0.9,"src":"ai"}
@@ -18,7 +18,7 @@
 {"c":{"k":"an-10-2-2-8","q":"candassa","pre":"seyyathapisariputtakalapakkhe","o":331},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-2-2-8","q":"candassa","pre":"seyyathapisariputtajunhapakkhe","o":416},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-2-3-2","q":"kukkutena","pre":"upacalenaayasmataca","o":22},"e":null,"conf":0.6,"src":"ai"}
-{"c":{"k":"an-10-2-3-8","q":"niganthati","pre":"dasahiasaddhammehisamannagata","o":46},"e":"nigantha","conf":0.6,"src":"ai"}
+{"c":{"k":"an-10-2-3-8","q":"niganthati","pre":"dasahiasaddhammehisamannagata","o":46},"e":"nigantha-2","conf":0.6,"src":"ai"}
 {"c":{"k":"an-10-2-4-1","q":"vahana","pre":"viharatitidasahikho","o":42},"e":"vahana-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-2-4-1","q":"vahana","pre":"dasahirupenakho","o":55},"e":"vahana-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-2-4-1","q":"vahana","pre":"viharativedanayakho","o":65},"e":"vahana-2","conf":0.9,"src":"ai"}
@@ -33,8 +33,8 @@
 {"c":{"k":"an-10-2-4-1","q":"vahana","pre":"cetasaviharatiseyyathapi","o":99},"e":"vahana-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-2-4-1","q":"vahana","pre":"udakenaevamevamkho","o":117},"e":"vahana-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-2-4-9","q":"padumo","pre":"pundarikanirayaevameko","o":547},"e":"paduma-2","conf":0.9,"src":"ai"}
-{"c":{"k":"an-10-2-5-6","q":"tapoda","pre":"paccusasamayampaccutthayayena","o":16},"e":"tapoda","conf":0.9,"src":"ai"}
-{"c":{"k":"an-10-2-5-6","q":"tapoda","pre":"paccusasamayampaccutthayayena","o":35},"e":"tapoda","conf":0.9,"src":"ai"}
+{"c":{"k":"an-10-2-5-6","q":"tapoda","pre":"paccusasamayampaccutthayayena","o":16},"e":"tapoda-2","conf":0.9,"src":"ai"}
+{"c":{"k":"an-10-2-5-6","q":"tapoda","pre":"paccusasamayampaccutthayayena","o":35},"e":"tapoda-2","conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-3","q":"ajito","pre":"tassuddanamtayoadhamma","o":4076},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-4-2-6","q":"gavesi","pre":"purisosaratthikosaram","o":299},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"an-10-4-2-10","q":"ambavane","pre":"viharaticundassakammaraputtassa","o":11},"e":null,"conf":0.9,"src":"ai"}

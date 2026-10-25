@@ -18,6 +18,8 @@ export interface Entity {
   freq: number
   /** a DPPN namesake of DPD names (data/names/dppn-links.tsv): another one than all of them (Yasa the palace) */
   namesake?: boolean
+  /** a DPD name that is another one spelled differently (data/names/same.tsv): its mentions and settings are that one's */
+  sameAs?: string
   /** places: coordinates (data/names/geo.tsv) */
   lat?: number
   lon?: number
@@ -40,9 +42,9 @@ export function readGazetteer(dir: string): Gazetteer {
   const entities = new Map<string, Entity>()
   const forms = new Map<string, Form>()
   if (!fs.existsSync(path.join(dir, 'entities.tsv'))) return { entities, forms }
-  for (const [slug, type, lemma, dpd, family, meaning, dppn, freq, namesake] of rows(path.join(dir, 'entities.tsv'))) {
+  for (const [slug, type, lemma, dpd, family, meaning, dppn, freq, namesake, sameAs] of rows(path.join(dir, 'entities.tsv'))) {
     entities.set(slug, { slug, type: type as EntityType, lemma, dpd: +dpd, family, meaning: meaning ?? '', ...(dppn ? { dppn } : {}), freq: +freq || 0,
-      ...(namesake === '1' ? { namesake: true } : {}) })
+      ...(namesake === '1' ? { namesake: true } : {}), ...(sameAs ? { sameAs } : {}) })
   }
   // place coordinates (npm run names:geo): slug, lat, lon, prec, source
   if (fs.existsSync(path.join(dir, 'geo.tsv'))) {
@@ -50,6 +52,11 @@ export function readGazetteer(dir: string): Gazetteer {
       const e = entities.get(slug)
       if (e && lat && lon) { e.lat = +lat; e.lon = +lon; e.prec = +prec || 3 }
     }
+  }
+  // a name another one is spelled differently from: its place if it has none (same.tsv)
+  for (const e of entities.values()) {
+    const keep = e.sameAs ? entities.get(e.sameAs) : undefined
+    if (keep && keep.lat === undefined && e.lat !== undefined) Object.assign(keep, { lat: e.lat, lon: e.lon, prec: e.prec })
   }
   for (const [form, es, how, notNames] of rows(path.join(dir, 'forms.tsv'))) {
     const list = es.split(',').map(s => entities.get(s)).filter((e): e is Entity => !!e)

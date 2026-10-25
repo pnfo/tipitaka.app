@@ -207,7 +207,7 @@
 {"c":{"k":"dn-3-10-5","q":"udanam","pre":"tekadacikarahaci","o":396},"e":null,"conf":0.9,"src":"ai"}
 {"c":{"k":"dn-3-10-5","q":"tusita","pre":"paripphutatesantamyeva","o":417},"e":"tusita","conf":0.6,"src":"ai"}
 {"c":{"k":"dn-3-10-7","q":"suddhavasa","pre":"nibbedhikayasammadukkhakkhayagaminiyapanca","o":498},"e":"suddhavasa-1","conf":0.9,"src":"ai"}
-{"c":{"k":"dn-3-10-7","q":"aviha","pre":"sammadukkhakkhayagaminiyapancasuddhavasa","o":499},"e":"aviha","conf":0.6,"src":"ai"}
+{"c":{"k":"dn-3-10-7","q":"aviha","pre":"sammadukkhakkhayagaminiyapancasuddhavasa","o":499},"e":"aviha-1","conf":0.6,"src":"ai"}
 {"c":{"k":"dn-3-10-7","q":"sudassa","pre":"suddhavasaavihaatappa","o":501},"e":"sudassa","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-3-10-7","q":"sudassi","pre":"avihaatappasudassa","o":502},"e":"sudassi","conf":0.9,"src":"ai"}
 {"c":{"k":"dn-3-10-8","q":"tissa","pre":"somahevam","o":633},"e":null,"conf":0.6,"src":"ai"}

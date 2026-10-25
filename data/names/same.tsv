@@ -1,0 +1,330 @@
+dpd	same_as	lemma	lemma2	verdict	src
+7646	12022	abhijika	ābhijjika	same	ai
+7646	12023	abhijika	ābhiñjika	same	ai
+8771	8795	ayujjhā	ayojjhā	same	ai
+12022	12023	ābhijjika	ābhiñjika	same	ai
+14030	18350	ukkāmukha 2	okkāmukha	same	ai
+14403	14947	ujuññā	udaññā	same	ai
+14403	17011	ujuññā	uruññā	same	ai
+14835	15080	udaka 2.1	uddaka	same	ai
+14947	17011	udaññā	uruññā	same	ai
+14983	15016	udayabhadda	udāyibhadda	same	ai
+15073	74328	udena 1	utena	same	ai
+16168	16173	upasikhi	upasīdarī	different	ai
+16236	16246	upavāṇa	upavāna	same	ai
+17015	76380	uruvelakassapa	uruveḷakassapa	same	ai
+17017	17019	uruvelā	uruveḷā	same	ai
+18346	80010	okkāka	ukkāka	same	ai
+19183	22132	kakudha 5	kukkuṭa 2	different	ai
+19183	39047	kakudha 5	pakudha	different	ai
+19183	39048	kakudha 5	pakudhaka	different	ai
+19188	74336	kakudhā	kukuṭṭhā	same	ai
+19255	19261	kaccāna	kaccāyana 1	same	ai
+19261	20925	kaccāyana 1	kātiyāna 1	same	ai
+19293	24055	kajaṅgalā	gajaṅgalā	same	ai
+19330	19331	kaṭamodakatissaka	kaṭamorakatissaka	same	ai
+19330	19653	kaṭamodakatissaka	katamodakatissaka	same	ai
+19330	19655	kaṭamodakatissaka	katamorakatissaka	same	ai
+19331	19653	kaṭamorakatissaka	katamodakatissaka	same	ai
+19331	19655	kaṭamorakatissaka	katamorakatissaka	same	ai
+19343	19344	kaṭissabha	kaṭissaha	same	ai
+19460	19478	kaṇṭakīvana	kaṇḍakīvana	same	ai
+19478	30448	kaṇḍakīvana	tikaṇḍakīvana	same	ai
+19653	19655	katamodakatissaka	katamorakatissaka	same	ai
+20052	20784	kapivanta	kasivanta	different	ai
+20395	20396	kammāsadamma	kammāsadhamma	same	ai
+20434	20435	karakaṇḍa	karakaṇḍu	same	ai
+20488	20548	karambhā	karumhā	same	ai
+20621	77918	kaliṅga	kāliṅga 3	different	ai
+20754	20773	kasikabhāradvāja	kasibhāradvāja	same	ai
+20947	20948	kāpaṭika	kāpaṭhika	same	ai
+21338	21473	kāraḷimba	kāliṅga 2	different	ai
+21338	21581	kāraḷimba	kāḷimba	same	ai
+21401	21403	kālakañcā	kālakañjā	same	ai
+21402	21403	kālakañcikā	kālakañjā	same	ai
+21402	21404	kālakañcikā	kālakañjikā	same	ai
+21403	21404	kālakañjā	kālakañjikā	same	ai
+21473	21581	kāliṅga 2	kāḷimba	different	ai
+21543	23230	kāḷakārāma	koḷikārāma	different	ai
+21578	74120	kāḷigodhā	kāḷīgodhā	same	ai
+21596	22021	kikī 2	kī 1.1	same	ai
+21736	21738	kinnighaṇḍu	kinnughaṇḍu	same	ai
+21779	21799	kimila 1	kimbila 1	same	ai
+21779	76306	kimila 1	kimbila 2	different	ai
+21787	21800	kimilā	kimbilā	same	ai
+21787	21801	kimilā	kimmilā	same	ai
+21799	76307	kimbila 1	kimila 2	different	ai
+21800	21801	kimbilā	kimmilā	same	ai
+21916	77250	kisāgotamī	gotamī 2	different	ai
+22273	79108	kuṇḍadhāna	koṇḍadhāna	same	ai
+22500	72144	kuraraghara	kururaghara	same	ai
+22687	46283	kusinārā	pisinārā	different	ai
+22866	22872	kesaputta	kesamutta	same	ai
+22888	22893	kesi	kesī 3	different	ai
+23153	23231	koliya	koḷiya	same	ai
+23153	23233	koliya	koḷīya	same	ai
+23231	23233	koḷiya	koḷīya	same	ai
+23232	82394	koḷivisa 1	koḷivīsa	same	ai
+24941	75744	girimekhala	grīmekhala	same	ai
+25134	25397	gulissāni	goliyāni	same	ai
+25134	25399	gulissāni	golissāni	same	ai
+25301	25309	godāvarī	godhāvarī	same	ai
+25397	25399	goliyāni	golissāni	same	ai
+26442	45938	cāpāla	pāvāla	same	ai
+26942	26959	cullakokanadā	cūḷakokanadā	same	ai
+26944	26976	cullapanthaka	cūḷapanthaka	same	ai
+27900	27926	janavasabha	janesabha	same	ai
+27900	27929	janavasabha	janosabha	same	ai
+27926	27929	janesabha	janosabha	same	ai
+28001	76284	jayanta 2	jenta 2	different	ai
+28171	28177	jāṇussoṇi	jāṇussoṇī	same	ai
+28171	72348	jāṇussoṇi	jānussoni	same	ai
+28171	80644	jāṇussoṇi	jāṇusoṇi	same	ai
+28177	72348	jāṇussoṇī	jānussoni	same	ai
+28177	80644	jāṇussoṇī	jāṇusoṇi	same	ai
+29225	29226	tagarasikhī	taggarasikhī	same	ai
+29928	29936	tapassa	tapussa	same	ai
+29933	29937	tapassubhallikā	tapussabhallikā	same	ai
+30340	30343	tālapuṭa 1	tālaputta	same	ai
+30343	79216	tālaputta	tālapuṭa 2	same	ai
+31003	31053	tudu	turū	same	ai
+31101	31105	tuvaṭaka	tuvaṭṭaka	same	ai
+31536	31578	thullakoṭṭhika 1	thūlakoṭṭhika	same	ai
+31560	74327	thūṇā 2	thūnā	same	ai
+31587	48616	thūli	buli	same	ai
+31588	48615	thūlū	bumū	same	ai
+31696	31710	dakkhiṇagiri	dakkhiṇāgiri	same	ai
+31775	31778	daṇḍakārañña	daṇḍakīrañña	same	ai
+34559	34560	dhanapāla	dhanapālaka	same	ai
+35407	36071	nagaraka	nāgaraka	same	ai
+35635	64046	nandā 2	sundarīnandā	different	ai
+35799	35802	namuci	namucī	same	ai
+36139	36142	nāṭapariyā	nāṭapuriyā	same	ai
+36139	36143	nāṭapariyā	nāṭasuriyā	same	ai
+36140	36148	nāṭaputta	nātaputta	same	ai
+36140	36195	nāṭaputta	nāthaputta	same	ai
+36142	36143	nāṭapuriyā	nāṭasuriyā	same	ai
+36148	36195	nātaputta	nāthaputta	same	ai
+36151	36201	nātika	nādika 1	same	ai
+36151	88676	nātika	ñātika	same	ai
+36532	36624	nālandā	nāḷandā	same	ai
+36648	36971	nika	niṅka	same	ai
+36648	38535	nika	nīka	same	ai
+36971	38535	niṅka	nīka	same	ai
+36975	70557	niculavana	veḷuvana	different	ai
+38796	53288	neru 1	meru	same	ai
+38797	53288	neru 2	meru	different	manual
+39046	39047	pakuddha 1	pakudha	same	ai
+39047	39048	pakudha	pakudhaka	same	ai
+39238	56637	paṅkadhā	saṅkavā	same	ai
+39287	57117	pacetana	sacetana 2	same	ai
+39724	39725	pajjanika	pajjanela	same	ai
+39724	57213	pajjanika	sajjanela	same	ai
+39725	57213	pajjanela	sajjanela	same	ai
+39928	39929	pañcālaputta	pañcāliputta	same	ai
+39928	76336	pañcālaputta	visākhapañcālaputta	same	ai
+42788	42791	payāga 1	payāgā 1	same	ai
+42792	45707	payāgā 2	pāyāgā	same	ai
+44435	47592	palagaṇḍa 2	phalagaṇḍa 1	same	ai
+44435	88006	palagaṇḍa 2	phalagaṇḍa 2	same	ai
+44961	61339	paviṭṭha 2	saviṭṭha	same	ai
+45306	45479	pāṭikaputta	pāthikaputta	same	ai
+45765	76289	pārāpariya 1	pārāsariya 1	same	ai
+45765	76416	pārāpariya 1	pārāsariya 2	different	ai
+45811	45858	pārileyyaka	pālileyyaka 1	same	ai
+45939	72009	pāvālacetiya	cāpālacetiya	same	ai
+45978	56976	piṅgaya	saṅgiya	same	ai
+45978	62827	piṅgaya	siṅgiya	same	ai
+45984	56976	piṅgiya 1	saṅgiya	same	ai
+46161	74069	pippaliguhā	pipphaliguhā	same	ai
+46260	76183	pilindavaccha	pilindivaccha	same	ai
+46848	46899	pubbajira	pubbavijjana	same	ai
+47310	47377	peya	pessa 2	different	ai
+47855	56378	bakulā	sakulā 1	same	ai
+47856	48232	bakkula	bākula 1	same	ai
+47856	76344	bakkula	bākkula	same	ai
+48136	48386	bahudantī	bāhudantī	same	ai
+48136	48391	bahudantī	bāhuraggi	different	ai
+48155	48157	bahuputta 1	bahuputtaka	same	ai
+48232	76344	bākula 1	bākkula	same	ai
+48277	48278	bālakaloṇakagāma	bālakaloṇakāragāma	same	ai
+48618	70163	begabbhari	vegabbhari	same	ai
+48621	48624	belaṭṭhasīsa	belaṭṭhisīsa	same	ai
+48621	70535	belaṭṭhasīsa	veḷaṭṭhasīsa	same	ai
+48624	70535	belaṭṭhisīsa	veḷaṭṭhasīsa	same	ai
+48627	48637	beluvagāmaka	beḷuvagāmaka	same	ai
+48627	70555	beluvagāmaka	veḷuvagāmaka	same	ai
+48637	70555	beḷuvagāmaka	veḷuvagāmaka	same	ai
+49245	49268	bhaṇḍa 2	bhaṇḍu 1	different	ai
+49349	76311	bhaddaji	bhaddajitthera	same	ai
+49380	76181	bhaddiya 1	bhalliya	different	ai
+49381	76181	bhaddiya 2	bhalliya	different	ai
+50072	50085	bhujagī	bhuñjatī	same	ai
+50072	50147	bhujagī	bhūjati	same	ai
+50085	50147	bhuñjatī	bhūjati	same	ai
+50319	50320	bhesakalāvana	bhesakaḷāvana	same	ai
+50330	55431	bhesika	rosika	same	ai
+50457	50458	makkarakaṭa	makkarakata	same	ai
+50486	50570	makhādevaambavana	maghadevaambavana	same	ai
+50570	50572	maghadevaambavana	maghadevambavana	same	ai
+50674	50675	macchasurasenā	macchasūrasenā	same	ai
+50674	50737	macchasurasenā	majjhasūrasenā	same	ai
+50937	53270	matula	methula	same	ai
+51002	51081	mathurā	madhurā	same	ai
+51648	51651	mahākaccāna	mahākaccāyana	same	ai
+51775	78795	mahāpajāpati	mahāpajāpatī	same	ai
+51837	52032	mahābyūha	mahāviyūha	same	ai
+51885	51886	mahāmoggalāna	mahāmoggallāna	same	ai
+52137	52146	māgaṇḍiya	māgandiya	same	ai
+52167	52309	māṇivara	mānicara	same	ai
+52173	52174	mātaṅgarañña	mātaṅgārañña	same	ai
+52472	52478	mālukyaputta 1	māluṅkyaputta	same	ai
+52553	52554	migasāṇā	migasālā	same	ai
+52710	52711	milakkha	milakkhaka 1	same	ai
+52804	64644	mukheluvana	suveḷuvana	same	ai
+53064	53065	musila	musīla	same	ai
+53064	53151	musila	mūsila	same	ai
+53065	53151	musīla	mūsila	same	ai
+53784	53786	yamataggi	yamadaggi	same	ai
+55438	62117	rohaṇa	sāṇa 1.3	different	manual
+55462	76606	lakuṇḍakabhaddiya	lakuṇḍabhaddiya	same	ai
+56126	56130	lomasakaṅgiya	lomasakaṃbhiya	same	ai
+56126	56132	lomasakaṅgiya	lomasavaṅgisa	different	ai
+56130	56132	lomasakaṃbhiya	lomasavaṅgisa	different	ai
+56428	56524	sakkā 2	sakyā	same	ai
+56658	61534	saṅkicca	saṃkicca 1	same	ai
+56976	62827	saṅgiya	siṅgiya	same	ai
+57257	57336	sañcaya 2.1	sañjaya 1	same	ai
+57257	57337	sañcaya 2.1	sañjaya 2	different	ai
+57257	76222	sañcaya 2.1	sañjaya 3	different	ai
+57341	60970	sañjāti 2	sayaṃjāti	same	ai
+57341	61378	sañjāti 2	sahajāti	same	ai
+57763	57764	sattamba	sattambaka	same	ai
+58298	58305	santusita 2	santussita 1	same	ai
+58721	58724	sappinikā	sappinī 2	same	ai
+58721	62952	sappinikā	sippinikā	same	ai
+58721	62954	sappinikā	sippinī	same	ai
+58724	62952	sappinī 2	sippinikā	same	ai
+58724	62954	sappinī 2	sippinī	same	ai
+60970	61378	sayaṃjāti	sahajāti	same	ai
+60995	61016	sarakāni	saraṇāni	same	ai
+61373	61382	sahajaniya	sahañcanika	same	ai
+61535	77063	saṃkicca 2	saṅkiccathera	same	ai
+62275	62386	sāpūga	sāmuga	same	ai
+62333	62336	sāmaṇḍaka	sāmaṇḍakāni	same	ai
+62480	71529	sārandada	sāranda	same	ai
+62571	82888	sālavatī 1	bhagalavatī 1	same	ai
+62787	63130	sikhari	sīdarī	same	ai
+62805	62816	sigālaka 2	siṅgālaka 2	same	ai
+62806	62817	sigālamātar	siṅgālakamātar	same	ai
+62806	74841	sigālamātar	siṅgālamātar	same	ai
+62817	74841	siṅgālakamātar	siṅgālamātar	same	ai
+62906	62908	sinipura	sinisūra	same	ai
+62952	62954	sippinikā	sippinī	same	ai
+63005	63022	sirivaḍḍha 1	sirīvaḍḍha	different	ai
+63006	63022	sirivaḍḍha 2	sirīvaḍḍha	same	ai
+63022	76213	sirīvaḍḍha	sirivaḍḍha 3	different	ai
+63065	88658	sivaka 1	sīvaka 3	same	ai
+63299	63302	sīsupacālā	sīsūpacālā	same	ai
+63685	64702	sucimukhī	sūcimukhī	same	ai
+64009	64029	sunidhavassakārā	sunīdhavassakārā	same	ai
+64132	64171	suppagedha	supparodha	same	ai
+64159	80735	suppatita	suppatīta 1	same	ai
+64209	65328	subha 3	sobha 2	different	ai
+64210	65328	subha 4	sobha 2	different	ai
+64220	64225	subhaṭa	subhadda 3	different	ai
+64347	64758	surasenā	sūrasenā	same	ai
+64385	64760	suriya 2	sūriya 2	same	ai
+64481	64489	susima 1	susīma 1	same	ai
+64482	64490	susima 2	susīma 2	same	ai
+64509	64662	susumāragira	suṃsumāragira	same	ai
+64644	70557	suveḷuvana	veḷuvana	different	manual
+64772	64773	sūriyavaccasā	sūriyavacchasā	same	ai
+65568	65569	vaṅgisa	vaṅgīsa	same	ai
+65747	72302	vajjiyamahita	vajjiyamāhita	same	ai
+66333	66546	vayabhiññā	vassabhaññā	same	ai
+66393	66939	varuṇā	vāruṇā	different	manual
+66393	81129	varuṇā	vāraṇā	different	manual
+66546	66547	vassabhaññā	vassabhiññā	same	ai
+66562	80736	vassavatī	yasavatī	same	ai
+66939	81129	vāruṇā	vāraṇā	same	ai
+67806	67818	viṭaṭūbha	viḍūḍabha	same	ai
+67812	67814	viṭucca	viṭū	different	ai
+67815	70179	viṭeṇḍu	veṭeṇḍu	same	ai
+69287	69380	visukamma	vissakamma	same	ai
+70157	70159	vekhanasa	vekhanassa	same	ai
+70163	70178	vegabbhari	veṭambarī	same	ai
+70210	70213	veṇḍu	veṇhu	same	ai
+70211	82938	veṇḍudevā	veṇhū	same	ai
+70535	76455	veḷaṭṭhasīsa	belaṭṭhi	same	ai
+70539	70540	veḷukaṇḍakiyā	veḷukaṇḍakī	same	ai
+71082	71192	haliddikāni	hāliddakāni	same	ai
+71082	71194	haliddikāni	hāliddikāni	same	ai
+71192	71194	hāliddakāni	hāliddikāni	same	ai
+71768	71769	vaṭajālikā	dhavajālikā	same	ai
+71768	71770	vaṭajālikā	vaṭṭajālikā	same	ai
+71769	71770	dhavajālikā	vaṭṭajālikā	same	ai
+72031	72032	sutanā	sudhanā	same	ai
+72041	72042	jantugāma	jattugāma	same	ai
+72041	72113	jantugāma	jatugāma	same	ai
+72042	72113	jattugāma	jatugāma	same	ai
+72233	72234	upacāla	uppāla	same	ai
+72235	72236	kaḷimbha 2	kavimbha	same	ai
+72348	80644	jānussoni	jāṇusoṇi	same	ai
+74112	74114	kuṇḍikā 2	kuṇḍiyā	same	ai
+74113	74115	kuṇḍadhānavana	kuṇḍiṭṭhānavana	same	ai
+76181	76413	bhalliya	bhaddiya 4	different	ai
+76181	89421	bhalliya	bhaddiya 5	different	ai
+76184	76185	cūḷavaccha	cūlagavaccha	same	ai
+76186	76187	mahāgavaccha	mahāvaccha	same	ai
+76189	76321	sivaka 2	sīvaka 2	same	ai
+76191	76192	sīgālapitar	siṅgālapitar	same	ai
+76191	76456	sīgālapitar	siṅgālapitika	same	ai
+76192	76456	siṅgālapitar	siṅgālapitika	same	ai
+76193	76194	kuṇḍala 3	kula 4	same	ai
+76218	76219	ramaṇīyavihāritthera	ramaṇīyavihārī	same	ai
+76232	76233	dutiyakuṭivihāritthera	dutiyakuṭivihārī	same	ai
+76243	76462	ekadhammasavanīya	ekadhammika	same	ai
+76252	76463	hatthārohaputta 2	ārohaputta	same	ai
+76276	76277	bandhana 7	bandhura	same	ai
+76278	76327	khitaka 1	nitaka	same	ai
+76289	76415	pārāsariya 1	pārāpariya 3	different	ai
+76306	76307	kimbila 2	kimila 2	same	ai
+76321	76322	sīvaka 2	sivaka 3	different	ai
+76324	76325	sambulakaccāna	sambahulakaccāna	same	ai
+76326	76327	khitaka 2	nitaka	same	ai
+76328	76329	selissariya	poṭiriya	same	ai
+76328	76330	selissariya	soṇapoṭiriya	same	ai
+76329	76330	poṭiriya	soṇapoṭiriya	same	ai
+76337	76338	cūḷaka 2	cūlaka	same	ai
+76349	76350	vassika 3	passika	same	ai
+76352	76353	upālitthera	upāli 3	different	ai
+76381	76382	tekicchakārī	tekicchakāni	same	ai
+76387	76388	purohitaputtajenta	purohitaputta 2	same	ai
+76390	76391	nhātakamunitthera	nhātakamuni	same	ai
+76390	76586	nhātakamunitthera	nhātamuni	same	ai
+76391	76586	nhātakamuni	nhātamuni	same	ai
+76393	76394	sirimanda	sirimaṇḍa	same	ai
+76395	76396	sabbakāmitthera	sabbakāmi	same	ai
+76413	76414	bhaddiya 4	kāḷigodhāputtabhaddiya	same	ai
+76415	76416	pārāpariya 3	pārāsariya 2	same	ai
+77235	77541	abhirūpanandā	nandā 1	different	ai
+77237	77284	aññatarātissā	tissā 1	different	ai
+77237	77285	aññatarātissā	tissā 2	same	ai
+77239	77270	aparāsāmā	sāmā 3	different	ai
+77239	77271	aparāsāmā	sāmā 4	same	ai
+77240	77288	aparāuttamā	uttamā 1	different	ai
+77240	77289	aparāuttamā	uttamā 2	same	ai
+77242	77258	bhaddākuṇḍalakesā	kuṇḍalakesā	same	ai
+77243	77622	bhadrā	bhaddā 3	different	ai
+77243	78555	bhadrā	bhaddā 4	different	ai
+77254	77262	kāḷī 4	mittākāḷī	same	ai
+77255	77276	kammāradhītar	subhākammāradhītar	same	ai
+77258	77622	kuṇḍalakesā	bhaddā 3	different	ai
+77258	78555	kuṇḍalakesā	bhaddā 4	same	ai
+77280	77297	sumanā 5	vuḍḍhapabbajitasumanā	different	ai
+77585	77586	anīkaratta	aṇīkadatta	same	ai
+79148	79149	indapattha	indapatta	same	ai
+81065	81066	kaliṅgā	kāliṅgā	same	ai
+82720	82721	cārura	cānura	same	ai
+83198	83199	dīghāvu 2	dīghāyu 2	same	ai

@@ -31,6 +31,25 @@ upstream update (it reads the words of the built text.db), then `npm run build:d
   "of Vesālī"). `not_names` lists the other DPD headwords of the form: `ānanda` "joy", `sakka` "able",
   `māṇava` "young man" make a form ambiguous.
 
+**One name twice in DPD** (`data/names/same.tsv`, `npm run names:same`): headwords of variant spellings of one name
+(nālandā / nāḷandā, mahāmoggalāna / mahāmoggallāna, payāga 1 / payāgā 1). The candidates are the names of one type that
+DPD lists as variants of each other (`variant`, `var_phonetic`, `var_text`: 329 pairs); Gemini judged them from both
+meanings and their linked DPPN entries (2026-10: 283 same, 46 different; 5 overruled by hand, `manual`). A group of the
+same is one name: the one most named in the texts keeps the others (`same_as`), which stay in the forms with their own
+homonym numbers (a word is told from its namesakes as before) and give it their mentions, settings and coordinates.
+Two homonyms of one headword are never merged (DPD numbers them as different ones). A page takes the plain slug of its lemma when no other page has
+it (nāḷandā: `nalanda`; the merged-away names, which have no page, move aside); the slugs of geo.tsv and of the
+decisions follow such renames.
+
+## Descriptions in the interface languages (`build/names/translations.ts`)
+The meaning and category of a name in Sinhala or Thai: `data/names/i18n/<lang>/meanings.tsv` and `families.tsv`
+(en, <lang>), keyed by the English text, so a rebuilt gazetteer only needs the new texts. Sinhala is tipitaka.lk's
+(Gemini, reviewed there; `dev/names-si`; copy its two files over after a run there). Thai is made by
+`npm run names:translate -- th` (Gemini gemini-4-argon, the same rules adapted to Thai, GEMINI_API_KEY; 2026-10: 4,024
+texts, $1.70; reviewed on samples: `--sample 50 [--offset n]` prints a spread without writing). Rows are only added: a row
+corrected (or deleted, to be translated again) by hand stays. The build writes table `entity_tr`; the names ops of the
+engine take `lang=` and add `meaningLocal` / `familyLocal` (the English fields stay: the client's rules read them).
+
 ## Settings (`build/names/settings.ts`)
 Read only from the fixed formulas, so that precision is high:
 

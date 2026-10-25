@@ -162,8 +162,8 @@
 {"c":{"k":"mn-2-1-8","q":"abhayo","pre":"nisidiathakho","o":314},"e":"abhaya-4","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-2-1-8","q":"abhayo","pre":"sampavaresiathakho","o":325},"e":"abhaya-4","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-2-1-8","q":"abhayo","pre":"ekamantamnisinnokho","o":339},"e":"abhaya-4","conf":0.9,"src":"ai"}
-{"c":{"k":"mn-2-1-8","q":"niganthati","pre":"etthabhanteanassum","o":363},"e":"nigantha","conf":0.9,"src":"ai"}
-{"c":{"k":"mn-2-1-8","q":"niganthati","pre":"etthabhanteanassum","o":373},"e":"nigantha","conf":0.9,"src":"ai"}
+{"c":{"k":"mn-2-1-8","q":"niganthati","pre":"etthabhanteanassum","o":363},"e":"nigantha-2","conf":0.9,"src":"ai"}
+{"c":{"k":"mn-2-1-8","q":"niganthati","pre":"etthabhanteanassum","o":373},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-2-1-8","q":"nigantho","pre":"idhahambhanteyena","o":377},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-2-1-8","q":"nigantham","pre":"nataputtotenupasankamiupasankamitva","o":381},"e":"nigantha-2","conf":0.9,"src":"ai"}
 {"c":{"k":"mn-2-1-8","q":"nigantho","pre":"khomambhante","o":391},"e":"nigantha-2","conf":0.9,"src":"ai"}

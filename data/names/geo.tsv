@@ -33,7 +33,7 @@ assapura	25.25	87	4	dppn-near
 atuma	27.0249	82.9633	2	sc-dppn
 avanti	22.6748	75.6244	3	sc-dppn
 avanti-1	22.6748	75.6244	1	sc-dppn
-ayojjha	25.6143	83.6719	1	sc-map:ayujjhā
+ayojjha-2	25.6143	83.6719	1	sc-map:ayujjhā
 ayujjha	25.6143	83.6719	1	sc-map:ayujjhā
 badarikarama	25.3899	81.3963	1	sc-map:badarikārāma
 bahuputta-1	26.0818	85.1152	1	sc-map:bahuputta cetiya
@@ -105,7 +105,7 @@ jatiyavana	25.8975	86.7934	1	sc-map:jātiyāvana
 jenta-1	24.7269	84.9133	4	in
 jetavana	27.5095	82.0401	1	sc-map:jetavana
 jivakambavana	24.9953	85.4354	1	sc-map:jīvakambavana
-kajangala	25.0489	87.838	1	sc-map:kajangala
+kajangala-2	25.0489	87.838	1	sc-map:kajangala
 kakkarapatta	27.5156	83.7735	3	sc-map:kakkarapatta
 kakudha	26.7371	83.8835	4	dppn-near
 kakudha-7	26.7371	83.8835	4	dppn-near
@@ -115,7 +115,7 @@ kalandakanivapa	25.03	85.42	4	in
 kalasila	24.9957	85.4168	1	sc-map:kāḷasilā
 kalinga	20.525	86.475	1	sc-dppn
 kalinga-3	20.525	86.475	1	sc-dppn
-kalinga-4	20.525	86.475	3	sc-dppn
+kalinga-4-2	20.525	86.475	3	sc-dppn
 kalinga-5	20.525	86.475	3	sc-dppn
 kalingarattha	20.525	86.475	4	in
 kallavalaputtagama	24.7269	84.9133	4	in
@@ -213,7 +213,7 @@ nala-1	24.75	85.01	4	dppn-near
 nalakapana	27.5171	82.0506	4	dppn-near
 nalamala	21.7245	73.0024	4	in
 nalanda	25.137	85.4435	1	sc-map:nāḷandā
-nalanda-2	25.137	85.4435	1	sc-map:nāḷandā
+nalanda-3	25.137	85.4435	1	sc-map:nāḷandā
 nalerupucimanda	26.8829	78.8137	1	sc-map:naḷerupucimanda
 natika	25.7356	85.2113	1	sc-journey:5) nādika
 natika-2	25.7356	85.2113	1	sc-journey:5) nādika
@@ -276,7 +276,7 @@ sattapanniguha	25.0071	85.4108	1	sc-map:sattapaṇṇiguhā
 savatthi	27.5195	82.063	1	sc-map:sāvatthī
 setabya	27.6689	82.5481	1	sc-map:setabyā
 silavati	27.6835	83.1253	3	sc-map:silāvatī
-silavati-2-2	27.6835	83.1253	3	sc-map:silāvatī
+silavati-2	27.6835	83.1253	3	sc-map:silāvatī
 simsapavana-1	26.927	80.1909	4	in
 sitavana	25.0313	85.3863	1	sc-map:sītavana
 soreyya	26.5339	79.301	2	sc-dppn
@@ -285,8 +285,8 @@ sumagadha	25.0178	85.3607	1	sc-map:sumāgadhā
 sunaparanta	22.8369	71.6162	2	sc-dppn
 supassa	24.9674	85.3869	4	in
 surasena	27.5521	77.3163	3	sc-dppn
-surasena-2	27.5521	77.3163	3	sc-dppn
-surasena-2-2	27.5521	77.3163	1	sc-dppn
+surasena-2	27.5521	77.3163	1	sc-dppn
+surasena-3	27.5521	77.3163	3	sc-dppn
 surundhana	25.3291	82.4139	4	in
 sutanu-2	27.5195	82.063	4	dppn-near
 suvideha	26.7122	85.9217	4	dppn-near
@@ -316,7 +316,7 @@ ukkattha	27.5935	82.8172	1	sc-map:ukkaṭṭha
 upavattana-1	26.7301	83.8986	1	sc-map:upavatta
 urunna	27.5171	82.0506	4	dppn-near
 uruvela	24.6951	84.9913	1	sc-map:uruvelā
-uruvela-2	24.6951	84.9913	1	sc-map:uruvelā
+uruvela-2-2	24.6951	84.9913	1	sc-map:uruvelā
 uruvelakappa	26.9857	84.0509	3	sc-map:uruvelakappa
 uttara-19	27.3791	83.5812	3	sc-map:uttara
 vaggumuda	26.2392	85.4352	4	dppn-near
