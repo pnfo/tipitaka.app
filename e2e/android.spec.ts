@@ -38,3 +38,12 @@ test('v2 links work in the app', async ({ page }) => {
   await page.goto(`${APP}/index.html#/?a=aa1-4-ro`)
   await expect(page).toHaveURL(/#\/latn\/dn-1-1#p\d+/)
 })
+
+test('help sections with hash routing', async ({ page }) => {
+  await withBridge(page)
+  await page.goto(`${APP}/index.html#/latn/help#v2`)
+  await expect(page.locator('#v2')).toBeInViewport()
+  await page.getByTestId('help').locator('nav a', { hasText: 'Searching' }).click()
+  await expect(page).toHaveURL(/#\/latn\/help#search$/)
+  await expect(page.locator('#search')).toBeInViewport()
+})

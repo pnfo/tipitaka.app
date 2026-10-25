@@ -1,7 +1,8 @@
 <!-- dictionary results: DPD analysis (lookup of an inflected form) or a typed word, other dictionaries, breakups -->
 <template>
   <div class="text-sm" style="overflow-wrap: anywhere" data-testid="dict-view">
-    <div v-if="!word" class="py-8 text-center text-muted">{{ t('Tap a word in the text to look it up.') }}</div>
+    <!-- (the dictionary search page shows its own introduction) -->
+    <div v-if="!word && mode === 'lookup'" class="py-8 text-center text-muted">{{ t('Tap a word in the text to look it up.') }}</div>
     <div v-else-if="loading" class="space-y-2 py-2" aria-busy="true">
       <div v-for="i in 4" :key="i" class="h-4 animate-pulse rounded bg-surface2" />
     </div>

@@ -68,6 +68,8 @@ export class PlaceMap {
   private tiles: L.TileLayer | null = null
   private places: MapPlace[] = []
   private labelled: { m: L.CircleMarker; prio: number }[] = []
+  /** Leaflet follows the window size only: the map's box also changes when the contents, the menu or the panel open or close */
+  private resizer: ResizeObserver | null = null
 
   constructor(el: HTMLElement, private opt: MapOptions) {
     const b = B.bbox
@@ -92,6 +94,9 @@ export class PlaceMap {
     const fill = () => this.map.setMinZoom(Math.max(4, this.map.getBoundsZoom([[b.s, b.w], [b.n, b.e]], true)))
     fill()
     this.map.on('resize', fill)
+    let frame = 0
+    this.resizer = new ResizeObserver(() => { cancelAnimationFrame(frame); frame = requestAnimationFrame(() => this.map.invalidateSize()) })
+    this.resizer.observe(el)
     this.map.fitBounds(MID)
     const zoomClass = () => {
       const z = this.map.getZoom()
@@ -326,7 +331,7 @@ export class PlaceMap {
     el.classList.toggle('tm-satellite', base === 'satellite')
   }
 
-  destroy() { this.map.remove() }
+  destroy() { this.resizer?.disconnect(); this.map.remove() }
 }
 
 /** the sources (English: PlaceMap passes them translated) */

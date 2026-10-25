@@ -5,7 +5,11 @@ import type { Gloss } from '@/data/types'
 /** transient ui state: drawers, the study panel (dictionary / commentary), toasts */
 export const useUi = defineStore('ui', () => {
   const treeOpen = ref(typeof window !== 'undefined' && window.innerWidth >= 1200)
+  /** the menu over the page (when it is not a column: composables/layout.ts) */
+  const navOpen = ref(false)
   const panelOpen = ref(false)
+  /** the header is slid away (App.vue, small screens, scrolling down) */
+  const headerHidden = ref(false)
   const panelTab = ref<'dict' | 'links' | 'info'>('dict')
   /** word being looked up in the study panel (Roman) */
   const lookupWord = ref('')
@@ -20,7 +24,7 @@ export const useUi = defineStore('ui', () => {
   const settingTarget = ref<{ key: string; para: number } | null>(null)
   /** the next navigation comes from inside a tab (breadcrumb, next): it replaces the text instead of opening a tab */
   const navInTab = ref(false)
-  /** the last page that was not the settings (the settings button goes back to it) */
+  /** the last page that was not a secondary page (router.ts SECONDARY: their close button goes back to it) */
   const lastPage = ref('')
   const toast = ref<{ msg: string; id: number } | null>(null)
   let toastTimer: ReturnType<typeof setTimeout> | undefined
@@ -55,6 +59,6 @@ export const useUi = defineStore('ui', () => {
     panelTab.value = 'info'
     panelOpen.value = true
   }
-  return { treeOpen, panelOpen, panelTab, lookupWord, lookupGlosses, alongside, linkTarget, settingTarget, navInTab, lastPage, toast, showToast,
+  return { treeOpen, navOpen, panelOpen, headerHidden, panelTab, lookupWord, lookupGlosses, alongside, linkTarget, settingTarget, navInTab, lastPage, toast, showToast,
     openLookup, openParaCommentary, openSetting }
 })

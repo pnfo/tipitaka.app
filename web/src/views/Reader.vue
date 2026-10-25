@@ -5,18 +5,21 @@
   Linked columns (mūla / aṭṭhakathā / ṭīkā) scroll together.
 -->
 <template>
-  <div>
-    <TabsBar v-if="!showColumns && (tabs.tabs.length > 1 || view !== 'single')" class="sticky top-14 z-20" @activate="activate" @close="closeTab" @close-others="closeOthers" />
+  <div ref="root">
+    <TabsBar v-if="!showColumns && (tabs.tabs.length > 1 || view !== 'single')" class="sticky top-14 z-20 transition-transform" :class="{ '-translate-y-[calc(100%+3.5rem)]': ui.headerHidden }" @activate="activate" @close="closeTab" @close-others="closeOthers" />
 
-    <!-- columns: every tab side by side, each with its own header (no tab strip); the list of open texts and the
-         view switch are in the header of the last column -->
-    <div v-if="showColumns" class="mx-auto flex max-w-[1800px]" :style="{ height: 'calc(100vh - 3.5rem)' }" data-testid="columns"
+    <!-- columns: the tabs side by side, as many as fit (at least two, also on phones), each with its own header (no tab
+         strip); the list of open texts and the view switch are in the header of the last column -->
+    <div v-if="showColumns" class="mx-auto flex max-w-[1800px]" :class="{ 'narrow-cols': colWidth < 360 }" :style="columnsHeight" data-testid="columns"
       @mouseover="onHover" @mouseout="onHover" @wheel.passive="onUserScroll" @touchstart.passive="onUserScroll" @keydown="onUserScroll" @pointerdown="onUserScroll">
-      <div v-for="(tb, i) in tabs.tabs" :key="tb.id" class="min-w-0 flex-1 border-r border-line last:border-r-0">
+      <!-- a click or tap in a column makes it the active one (before a word lookup opens the panel: the columns that
+           still fit next to the panel are the ones around the active column) -->
+      <div v-for="(tb, i) in shownTabs" :key="tb.id" class="min-w-0 flex-1 border-r border-line last:border-r-0"
+        @pointerdown="tb.id !== tabs.activeId && activate(tb.id)">
         <ReaderPane :ref="el => setPane(tb.id, el)" :tab="tb" contained :active="tb.id === tabs.activeId" closable
           :data-pane="tb.id" @info="i => onInfo(tb.id, i)" @visible="(k, p, i) => onVisible(tb.id, k, p, i)" @word="onWord" @alongside="openAlongside"
           @scrolled="onColumnScroll(tb.id)" @activate="activate(tb.id)" @close="closeTab(tb.id)">
-          <template v-if="i === tabs.tabs.length - 1" #actions>
+          <template v-if="i === shownTabs.length - 1" #actions>
             <TabsBar list-only @activate="activate" @close="closeTab" @close-others="closeOthers" />
           </template>
         </ReaderPane>
@@ -29,10 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, watch, type ComponentPublicInstance } from 'vue'
+import { computed, reactive, ref, watch, type ComponentPublicInstance } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
-import { useWindowSize } from '@vueuse/core'
+import { useElementSize, useWindowSize } from '@vueuse/core'
 import ReaderPane from '@/components/ReaderPane.vue'
 import TabsBar from '@/components/TabsBar.vue'
 import { useApi } from '@/data/api'
@@ -53,7 +56,29 @@ const { width } = useWindowSize()
 const wide = computed(() => width.value >= 900)
 
 const view = computed(() => settings.tabView)
-const showColumns = computed(() => view.value === 'columns' && wide.value && tabs.tabs.length > 1)
+const showColumns = computed(() => view.value === 'columns' && tabs.tabs.length > 1)
+
+// columns: as many as fit at MIN_COLUMN px (a landscape phone shows more), but at least two (portrait phones too);
+// with more tabs, the shown ones are a window that follows the active tab
+const MIN_COLUMN = 280
+const root = ref<HTMLElement | null>(null)
+const { width: rootWidth } = useElementSize(root)
+const maxColumns = computed(() => Math.max(2, Math.floor((rootWidth.value || width.value) / MIN_COLUMN)))
+const firstShown = ref(0)
+const shownTabs = computed(() => {
+  const n = Math.min(maxColumns.value, tabs.tabs.length), active = tabs.tabs.findIndex(t => t.id === tabs.activeId)
+  let start = Math.min(firstShown.value, tabs.tabs.length - n)
+  if (active >= 0 && active < start) start = active
+  if (active >= start + n) start = active - n + 1
+  return tabs.tabs.slice(Math.max(0, start), Math.max(0, start) + n)
+})
+watch(shownTabs, s => { const i = tabs.tabs.indexOf(s[0]); if (i >= 0) firstShown.value = i })
+const colWidth = computed(() => (rootWidth.value || width.value) / Math.max(1, shownTabs.value.length))
+// on phones the dictionary / commentary sheet takes the bottom of the screen: the columns end above it
+const columnsHeight = computed(() => {
+  const sheet = ui.panelOpen && width.value < 1200 ? ` - ${settings.sheetHeight}vh` : ''
+  return `height: calc(100vh - 3.5rem${sheet}); height: calc(100dvh - 3.5rem${sheet})`
+})
 
 // per tab: the node at the top of the view (page title, tree)
 const currentInfo = reactive<Record<number, NodeInfo>>({})
@@ -145,8 +170,13 @@ function onVisible(id: number, key: string, para: number, info: NodeInfo) {
 // ---------------- linked columns follow the scrolled one ----------------
 // The column the user scrolls (wheel, touch, keys, scrollbar) drives the others: the line at its top is mapped to
 // the other columns through the gloss underlines both have (interpolated between them), or else through the
-// paragraph links (jump to the linked paragraph).
+// paragraph links (jump to the linked paragraph). Only columns of different books follow each other (a text and its
+// aṭṭhakathā / ṭīkā): two places of the same book (two suttas of a vagga) share the underlines but are read separately.
 let driver = -1
+const linked = (a: number, b: number) => {
+  const ba = panes.get(a)?.book() ?? -1, bb = panes.get(b)?.book() ?? -1
+  return ba >= 0 && bb >= 0 && ba !== bb
+}
 function onUserScroll(e: Event) {
   const pane = (e.target as HTMLElement).closest('[data-pane]') as HTMLElement | null
   if (pane) driver = +pane.dataset.pane!
@@ -169,7 +199,7 @@ function onColumnScroll(id: number) {
     if (!srcRoot) return
     const src = anchorsOf(id, srcRoot)
     for (const [other, pane] of panes) {
-      if (other === id) continue
+      if (other === id || !linked(id, other)) continue
       const root = pane.scrollRoot()
       if (!root) continue
       const y = mapY(src, anchorsOf(other, root), srcRoot.scrollTop + TOP)
@@ -186,7 +216,7 @@ function syncColumns(id: number, para: number) {
   if (!src || !srcRoot) return
   const a = anchorsOf(id, srcRoot)
   for (const [other, pane] of panes) {
-    if (other === id) continue
+    if (other === id || !linked(id, other)) continue
     const root = pane.scrollRoot()
     if (root && mapY(a, anchorsOf(other, root), srcRoot.scrollTop + TOP) !== null) continue
     const target = src.linkTarget(para, pane.book())
@@ -206,12 +236,12 @@ function onHover(e: MouseEvent) {
   for (const el of hovered) el.classList.add('gl-hover')
 }
 
-/** open the commentary / mūla of a paragraph next to the text (columns on wide screens, a tab otherwise) */
+/** open the commentary / mūla of a paragraph next to the text (columns on wide screens or when chosen, a tab otherwise) */
 function openAlongside(key: string, para: number | undefined) {
   if (view.value === 'single') settings.tabView = wide.value ? 'columns' : 'tabbed'
   const from = tabs.activeId
   const tab = tabs.open(key, { newTab: true, target: para })
-  if (wide.value) tabs.activeId = from
+  if (view.value === 'columns') tabs.activeId = from
   else syncRoute(tab.current, para)
 }
 

@@ -31,3 +31,25 @@ test('the commentary column follows the mūla column word by word', async ({ pag
   }
   expect(close).toBeGreaterThanOrEqual(3)
 })
+
+// two places of the same book (a sutta and a section further on) load the same text with the same underlines once
+// scrolled into each other, but are read separately: no sync
+test('columns of the same book do not scroll together', async ({ page }) => {
+  await page.setViewportSize({ width: 1500, height: 900 })
+  await page.addInitScript(() => {
+    localStorage.setItem('tipitaka.app-settings-3', JSON.stringify({ tabView: 'columns' }))
+    localStorage.setItem('tipitaka.app-tabs-3', JSON.stringify({ tabs: [{ id: 1, key: 'dn-1-1', current: 'dn-1-1' }, { id: 2, key: 'dn-1-1-2', current: 'dn-1-1-2' }], active: 1 }))
+  })
+  await page.goto('/latn/dn-1-1')
+  const cols = page.getByTestId('column')
+  await expect(cols).toHaveCount(2)
+  await expect(cols.nth(1).locator('.para').first()).toBeVisible()
+  const tops = () => page.evaluate(() => [...document.querySelectorAll('[data-testid=column] .overflow-y-auto')].map(e => e.scrollTop))
+  const before = (await tops())[1]
+  const box = (await cols.nth(0).boundingBox())!
+  await page.mouse.move(box.x + box.width / 2, box.y + 400)
+  for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, 400); await page.waitForTimeout(300) }
+  const [first, second] = await tops()
+  expect(first).toBeGreaterThan(500)
+  expect(second).toBe(before)
+})

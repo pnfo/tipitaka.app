@@ -1,7 +1,7 @@
 <!-- open texts: a scrollable strip of tabs with scroll buttons and a list of all tabs (tipitaka.lk style);
      listOnly: just the list button (columns view: the columns have their own headers) -->
 <template>
-  <div :class="listOnly ? 'flex shrink-0 items-center' : 'flex h-10 items-stretch border-b border-line bg-surface'" data-testid="tab-bar" @click="listOnly && $event.stopPropagation()">
+  <div :class="listOnly ? 'flex shrink-0 items-center' : 'flex h-9 items-stretch border-b border-line bg-surface'" data-testid="tab-bar" @click="listOnly && $event.stopPropagation()">
     <template v-if="!listOnly">
     <button v-show="overflow" class="icon-btn h-full shrink-0 rounded-none" :aria-label="t('Scroll left')" @click="scrollBy(-1)"><IconLeft class="h-4 w-4" /></button>
     <div ref="strip" class="no-scrollbar flex min-w-0 flex-1 items-end overflow-x-auto" role="tablist" @scroll="updateOverflow">

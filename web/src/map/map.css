@@ -1,16 +1,20 @@
-/* the map of places (draw.ts): colours of the light / sepia / dark themes */
+/* the map of places (draw.ts): colours of the light / sepia / green / dark themes */
 .tmap {
   --map-sea: #dfe7ea; --map-land: #f6efe2; --map-mountain: #e4d6bf; --map-river: #6e9fbf; --map-coast: #9fb6c0;
   --map-border: #c9b9a3; --map-label: #6b625c; --map-river-label: #4f7c99; --map-place: var(--c-primary);
   --map-place-fill: #fff; --map-journey: #b4541f;
   background: var(--map-sea); font-family: inherit;
 }
-.sepia .tmap {
+.theme-sepia .tmap {
   --map-sea: #d9dccd; --map-land: #f1e6cc; --map-mountain: #e0cfa8; --map-river: #6f93a3; --map-coast: #a6b2a2;
 }
+.theme-green .tmap {
+  --map-sea: #d3e1dc; --map-land: #eaf1e3; --map-mountain: #d5dcc1; --map-river: #5f93a8; --map-coast: #9fb5ab;
+  --map-border: #b5c4ab; --map-label: #55645a; --map-river-label: #4a7d8f; --map-journey: #8a5a1f;
+}
 .dark .tmap {
-  --map-sea: #172126; --map-land: #24201c; --map-mountain: #3a3128; --map-river: #4f86a8; --map-coast: #3c4a50;
-  --map-border: #4a4038; --map-label: #a69c92; --map-river-label: #7fb2d1; --map-place-fill: #1d1a18; --map-journey: #f0a27a;
+  --map-sea: #1a2429; --map-land: #2a2622; --map-mountain: #3f362d; --map-river: #4f86a8; --map-coast: #3f4d53;
+  --map-border: #4d433b; --map-label: #a69c92; --map-river-label: #7fb2d1; --map-place-fill: #23201d; --map-journey: #f0a27a;
 }
 .tmap .tm-land { fill: var(--map-land); fill-opacity: 1; }
 .tmap .tm-mountain { fill: var(--map-mountain); fill-opacity: 0.8; }
@@ -59,7 +63,7 @@
 
 /* the shaded relief, blended over the land (the theme's colours stay) */
 .tmap .tm-relief-pane { mix-blend-mode: multiply; opacity: 0.38; }
-.sepia .tmap .tm-relief-pane { opacity: 0.45; }
+.theme-sepia .tmap .tm-relief-pane, .theme-green .tmap .tm-relief-pane { opacity: 0.45; }
 .dark .tmap .tm-relief-pane { mix-blend-mode: soft-light; opacity: 0.9; }
 .tmap.tm-online .tm-relief-pane { display: none; }
 .tmap .tm-region-label.tm-janapada-label span { font-size: 12.5px; font-weight: 600; opacity: 0.75; }

@@ -62,3 +62,5 @@ shared/  pure TS used by build, web and tests: markup, tokenizer, normalisation,
 | server | `server/main.go`, `api.go`, `ssr.go`, `markup.go`, `static.go`, `convert/` |
 | apps | `server/mobile/mobile.go`, `web/src/data/api.ts` (NativeSource), `dev-docs/native-bridge.md` |
 | web | `web/src/views/Reader.vue`, `components/TextColumn.vue`, `StudyPanel.vue`, `DictView.vue`, `views/Search.vue` |
+| navigation | `components/AppHeader.vue` (contents, search, back to the text, menu button), `NavPane.vue` (the menu: over the page, or a pinned column on wide screens when it fits: `composables/layout.ts`), `PageTitle.vue` (pages of the menu close back to the page before them: `router.ts` SECONDARY) |
+| ui text | `web/src/i18n/<lang>.json` (strings of `t()`, `npm run i18n:missing`); user guide `web/src/help/<lang>.md` (compiled by `web/help.ts`: `{#id}` anchors, `:icon:` lucide icons, `<!-- version: N -->`), shown at `/<script>/help` |

@@ -9,6 +9,10 @@ import { isScriptCode, SCRIPTS } from '@shared/scripts'
 import { useSettings } from '@/stores/settings'
 
 const cache = new Map<string, string>()
+/** the scripts most used (tipitaka.app visitors by country, Oct 2026: Thailand, Cambodia, Sri Lanka, India; Roman for
+ *  the rest), shown first in the settings */
+export const COMMON_SCRIPTS = ['latn', 'thai', 'khmr', 'sinh', 'deva']
+
 export function convertTo(text: string, script: string): string {
   if (script === 'latn' || !text) return text
   const k = script + '\u0000' + text

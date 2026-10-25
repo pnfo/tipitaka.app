@@ -5,8 +5,8 @@
  * [data-script]. Browsers only download the faces that are actually used. */
 @font-face { font-family: 'pali-latn'; src: url('../assets/fonts/NotoSerif-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 100.0%; }
 @font-face { font-family: 'pali-latn'; src: url('../assets/fonts/NotoSerif-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 100.0%; }
-@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 88.2%; }
-@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 88.2%; }
+@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/AbhayaUni-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 110.1%; }
+@font-face { font-family: 'pali-sinh'; src: url('../assets/fonts/AbhayaUni-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 110.1%; }
 @font-face { font-family: 'pali-deva'; src: url('../assets/fonts/NotoSerifDevanagari-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 101.1%; }
 @font-face { font-family: 'pali-deva'; src: url('../assets/fonts/NotoSerifDevanagari-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 101.1%; }
 @font-face { font-family: 'pali-beng'; src: url('../assets/fonts/NotoSerifBengali-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 100.4%; }
@@ -36,7 +36,7 @@
 @font-face { font-family: 'pali-brah'; src: url('../assets/fonts/NotoSansBrahmi-Regular.woff2') format('woff2'); font-display: swap; size-adjust: 93.9%; }
 
 [data-script='latn'], [data-script='cyrl'] { --font-text: 'pali-latn', 'Noto Serif', Georgia, serif; }
-[data-script='sinh'] { --font-text: 'pali-sinh', 'Noto Serif Sinhala', serif; }
+[data-script='sinh'] { --font-text: 'pali-sinh', 'Abhaya Uni', 'Noto Serif Sinhala', serif; }
 [data-script='deva'] { --font-text: 'pali-deva', 'Noto Serif Devanagari', serif; }
 [data-script='beng'], [data-script='asse'] { --font-text: 'pali-beng', 'Noto Serif Bengali', serif; }
 [data-script='guru'] { --font-text: 'pali-guru', 'Noto Sans Gurmukhi', sans-serif; }
@@ -62,8 +62,8 @@
 /* Interface text in a language with its own script: the face of that script only for its letters (unicode-range), so
  * Latin text in the interface (English meanings, numbers) stays in the system font. Sizes as users know them from
  * tipitaka.app v2 (scripts/measure-fonts.mjs). */
-@font-face { font-family: 'ui-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+0D80-0DFF, U+111E0-111FF, U+200C-200D, U+25CC; size-adjust: 113.2%; }
-@font-face { font-family: 'ui-sinh'; src: url('../assets/fonts/NotoSerifSinhala-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0D80-0DFF, U+111E0-111FF, U+200C-200D, U+25CC; size-adjust: 113.2%; }
+@font-face { font-family: 'ui-sinh'; src: url('../assets/fonts/AbhayaUni-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+0D80-0DFF, U+111E0-111FF, U+200C-200D, U+25CC; size-adjust: 141.3%; }
+@font-face { font-family: 'ui-sinh'; src: url('../assets/fonts/AbhayaUni-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0D80-0DFF, U+111E0-111FF, U+200C-200D, U+25CC; size-adjust: 141.3%; }
 @font-face { font-family: 'ui-mymr'; src: url('../assets/fonts/Pyidaungsu-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+1000-109F, U+A9E0-A9FF, U+AA60-AA7F, U+200C-200D, U+25CC; size-adjust: 112.2%; }
 @font-face { font-family: 'ui-mymr'; src: url('../assets/fonts/Pyidaungsu-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+1000-109F, U+A9E0-A9FF, U+AA60-AA7F, U+200C-200D, U+25CC; size-adjust: 112.2%; }
 @font-face { font-family: 'ui-thai'; src: url('../assets/fonts/THSarabunNew.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+0E00-0E7F, U+200C-200D, U+25CC; size-adjust: 171.3%; }

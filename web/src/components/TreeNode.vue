@@ -1,17 +1,24 @@
 <template>
   <div>
-    <div class="group flex items-start rounded-md" :class="isCurrent ? 'bg-primary-soft text-primary' : 'hover:bg-surface2'" :style="{ paddingLeft: `${depth * 12}px` }">
-      <button v-if="node.children" class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted hover:text-fg"
+    <!-- the chevron (its own button: open / close the branch) is centred on the first line of the title: its box has the
+         title's padding and line height, so the row does not get taller -->
+    <div class="group flex items-start rounded-md" :class="isCurrent ? 'bg-primary-soft text-primary' : 'hover:bg-surface2'" :style="{ paddingLeft: `${depth * INDENT}px` }"
+      @keydown.right="node.children && !open && tree.toggle(node.key)" @keydown.left="node.children && open && tree.toggle(node.key)">
+      <button v-if="node.children" class="flex w-7 shrink-0 justify-center py-1 leading-snug" data-testid="tree-toggle-branch"
         :aria-label="open ? t('Collapse') : t('Expand')" :aria-expanded="open" @click="tree.toggle(node.key)">
-        <IconChevron class="h-3.5 w-3.5 transition-transform" :class="{ 'rotate-90': open }" />
+        <span class="flex h-[1.375em] w-7 items-center justify-center rounded-md text-fg opacity-60 transition hover:bg-line hover:text-primary hover:opacity-100">
+          <IconChevron class="h-[18px] w-[18px] transition-transform" :class="{ 'rotate-90': open }" />
+        </span>
       </button>
-      <span v-else class="w-6 shrink-0" />
+      <span v-else class="w-7 shrink-0" />
       <RouterLink :to="{ name: 'read', params: { script, key: node.key } }" class="pali min-w-0 flex-1 py-1 pr-2 leading-snug"
         :aria-current="isCurrent ? 'page' : undefined" @click="onClick">
         {{ conv(node.title) }}
       </RouterLink>
     </div>
-    <div v-if="open && kids">
+    <!-- the children, with a guide line down from the chevron -->
+    <div v-if="open && kids" class="relative">
+      <span class="pointer-events-none absolute bottom-1 top-0 w-px bg-line" :style="{ left: `${depth * INDENT + 13.5}px` }" />
       <TreeNode v-for="c in kids" :key="c.key" :node="c" :depth="depth + 1" />
     </div>
   </div>
@@ -28,6 +35,7 @@ import { useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
 const props = defineProps<{ node: TNode; depth: number }>()
+const INDENT = 14 // px per level
 const tree = useTree(), ui = useUi()
 const { script, conv } = useScript()
 const { width } = useWindowSize()

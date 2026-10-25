@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto max-w-3xl px-4 pb-20 pt-6">
-    <h1 class="mb-4 text-2xl font-semibold">{{ t('Bookmarks') }}</h1>
-    <p v-if="!library.bookmarks.length" class="mb-8 text-muted">{{ t('No bookmarks yet. Use the bookmark button while reading.') }}</p>
+    <PageTitle :title="t('Bookmarks')" class="mb-4" />
+    <p v-if="!library.bookmarks.length" class="mb-8 text-muted">{{ t('No bookmarks yet. Add one with the button next to a paragraph: Add a bookmark.') }}</p>
     <ul v-else class="mb-10 divide-y divide-line" data-testid="bookmarks">
       <li v-for="b in library.bookmarks" :key="b.key + b.para" class="flex items-center gap-2 py-2">
         <RouterLink :to="{ name: 'read', params: { script, key: b.key }, hash: `#p${b.para}` }" class="min-w-0 flex-1 hover:text-primary">
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import PageTitle from '@/components/PageTitle.vue'
 import { useHead } from '@unhead/vue'
 import { computed } from 'vue'
 import IconTrash from '~icons/lucide/trash-2'

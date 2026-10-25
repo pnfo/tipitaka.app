@@ -1,7 +1,7 @@
 <!-- Pāḷi script converter (v2 misc/convert): input in any script (auto detected), output in the chosen one -->
 <template>
   <div class="mx-auto max-w-4xl px-4 pb-20 pt-6">
-    <h1 class="mb-1 text-2xl font-semibold">{{ t('Pali Script Converter') }}</h1>
+    <PageTitle :title="t('Pali Script Converter')" class="mb-1" />
     <p class="mb-4 text-sm text-muted">{{ t('Paste Pāḷi text in any script; it is converted to the selected script.') }}</p>
     <textarea v-model="input" rows="8" class="input pali mb-3 text-base" :placeholder="t('Input text')" data-testid="convert-input" />
     <div class="mb-3 flex flex-wrap items-center gap-2">
@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang="ts">
+import PageTitle from '@/components/PageTitle.vue'
 import { computed, ref, watch } from 'vue'
 import { useHead } from '@unhead/vue'
 import { convertMixed } from '@pnfo/pali-converter'

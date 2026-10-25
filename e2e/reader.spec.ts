@@ -1,18 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
-import { paraOptions } from './helpers'
+import { openMenu, paraOptions } from './helpers'
 
-/** the header script picker (wide screens) or the settings dropdown (phones) */
-async function pickScript(page: Page, isMobile: boolean, code: string) {
-  if (isMobile) {
-    await expect(page.getByTestId('script-picker')).toBeHidden()
-    await page.goto('/latn/settings')
-    await page.getByTestId('settings-script').getByTestId('script-picker').click()
-    await page.getByTestId(`script-${code}`).click()
-    await expect(page).toHaveURL(new RegExp(`/${code}/settings`))
-  } else {
-    await page.getByTestId('script-picker').click()
-    await page.getByTestId(`script-${code}`).click()
-  }
+/** the script picker of the menu */
+async function pickScript(page: Page, code: string) {
+  await (await openMenu(page)).getByTestId('script-picker').click()
+  await page.getByTestId(`script-${code}`).click()
 }
 
 test.describe('reader', () => {
@@ -41,10 +33,9 @@ test.describe('reader', () => {
     await expect(page.getByTestId('reader').locator('.para.nikaya')).toHaveText('Dīghanikāyo')
   })
 
-  test('changes the script in the url and the text', async ({ page, isMobile }) => {
+  test('changes the script in the url and the text', async ({ page }) => {
     await page.goto('/latn/dn-1-1')
-    await pickScript(page, isMobile, 'sinh')
-    if (isMobile) await page.goto('/dn-1-1')
+    await pickScript(page, 'sinh')
     await expect(page).toHaveURL(/\/sinh\/dn-1-1/)
     await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText(/^1\. බ්\u200d?රහ්මජාලසුත්තං$/)
     await expect(page.locator('html')).toHaveAttribute('lang', 'pi-Sinh')
@@ -136,9 +127,9 @@ test.describe('reader', () => {
     await expect(page.getByText('This page does not exist.')).toBeVisible()
   })
 
-  test('bare keys redirect to the saved script', async ({ page, isMobile }) => {
+  test('bare keys redirect to the saved script', async ({ page }) => {
     await page.goto('/latn/dn-1-1')
-    await pickScript(page, isMobile, 'thai')
+    await pickScript(page, 'thai')
     await page.goto('/mn-1-1-1')
     await expect(page).toHaveURL(/\/thai\/mn-1-1-1/)
   })

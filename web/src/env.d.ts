@@ -4,6 +4,12 @@
 declare const __IS_APP__: boolean
 declare const __BUILD_INFO__: { content_hash: string; db_version: number }
 
+/** the user guide, compiled by web/help.ts */
+declare module '*.md' {
+  const page: import('../help').HelpPage
+  export default page
+}
+
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
   const component: DefineComponent<object, object, unknown>
@@ -25,4 +31,5 @@ interface Window {
   TipitakaNative?: TipitakaNativeBridge
   webkit?: { messageHandlers?: { tipitaka?: { postMessage(m: { id: string; request: string }): void } } }
   __tipitakaResolve?: (id: string, response: string) => void
+  runtime?: { BrowserOpenURL?(url: string): void } // Wails (desktop app)
 }

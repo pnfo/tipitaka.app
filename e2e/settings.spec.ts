@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { paraOptions } from './helpers'
+import { openMenu, paraOptions } from './helpers'
 
 test.describe('settings and storage', () => {
   test('theme and text size persist', async ({ page }) => {
@@ -49,19 +49,15 @@ test('script converter page', async ({ page }) => {
 test('the script picked in settings applies to the open texts, also after going back', async ({ page, isMobile }) => {
   await page.goto('/latn/dn-1-1')
   await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText('1. Brahmajālasuttaṃ')
-  await page.getByTestId('settings-link').click()
-  await page.getByTestId('settings-script').getByTestId('script-picker').click()
-  await page.getByTestId('script-sinh').click()
+  await (await openMenu(page)).getByTestId('nav-settings').click()
+  await page.getByTestId('settings-script-sinh').click() // a common script: one tap
   await expect(page).toHaveURL(/\/sinh\/settings/)
-  await page.getByTestId('settings-link').click() // toggles back to the text: in the new script
+  await page.getByTestId('page-close').click() // back to the text: in the new script
   await expect(page).toHaveURL(/\/sinh\/dn-1-1/)
   await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText(/රහ්මජාලසුත්තං/)
   await page.goBack() // older history entries are shown in the new script too
   await expect(page).toHaveURL(/\/sinh\//)
-  if (!isMobile) {
-    await page.goto('/sinh/dn-1-1')
-    await expect(page.getByTestId('script-picker')).toBeVisible()
-  }
+  if (!isMobile) await expect(page.getByTestId('nav-pane').getByTestId('script-picker')).toContainText('සිංහල')
 })
 
 test('the text size scales the text and the interface, the same for every script', async ({ page, isMobile }) => {
@@ -69,13 +65,14 @@ test('the text size scales the text and the interface, the same for every script
   const tree = page.getByTestId('tree-toggle')
   const uiSize = () => page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize))
   expect(await uiSize()).toBe(16)
-  await page.getByTestId('settings-link').click()
+  await (await openMenu(page)).getByTestId('nav-settings').click()
   await page.getByTestId('text-size').fill('24')
   await expect.poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue('--text-size'))).toBe('24px')
   expect(await uiSize()).toBe(20) // the interface follows at 3/4 of the change
-  await page.getByTestId('settings-script').getByTestId('script-picker').click()
-  await page.getByTestId('script-thai').click()
-  await expect(page).toHaveURL(/\/thai\/settings/)
+  await page.getByTestId('script-more').click() // the others behind More; the chosen one joins the list
+  await page.getByTestId('script-mymr').click()
+  await expect(page).toHaveURL(/\/mymr\/settings/)
+  await expect(page.getByTestId('settings-script-mymr')).toHaveAttribute('aria-pressed', 'true')
   await expect(page.getByTestId('text-size')).toHaveValue('24')
   if (!isMobile) await expect(tree).toBeVisible()
 })
@@ -83,7 +80,7 @@ test('the text size scales the text and the interface, the same for every script
 test('the interface language sets the interface font', async ({ page }) => {
   await page.goto('/latn/settings')
   await expect(page.locator('html')).toHaveAttribute('data-ui-lang', 'en')
-  await page.getByRole('button', { name: 'සිංහල' }).click()
+  await page.getByRole('button', { name: 'සිංහල', exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-ui-lang', 'si')
   await expect(page.getByRole('heading', { level: 1 })).not.toHaveText('Settings')
   expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toContain('ui-sinh')
@@ -113,11 +110,13 @@ test('the dictionary sheet on phones keeps the height set by dragging', async ({
   expect(Math.abs((await sheet.boundingBox())!.height - h1)).toBeLessThan(3)
 })
 
-test('the settings button toggles back to the previous page', async ({ page }) => {
+test('the pages of the menu close back to the page before them', async ({ page }) => {
   await page.goto('/latn/search/bhikkhave')
-  await page.getByTestId('settings-link').click()
+  await (await openMenu(page)).getByTestId('nav-settings').click()
   await expect(page).toHaveURL(/\/latn\/settings/)
-  await page.getByTestId('settings-link').click()
+  await (await openMenu(page)).getByTestId('nav-help').click()
+  await expect(page).toHaveURL(/\/latn\/help/)
+  await page.getByTestId('page-close').click()
   await expect(page).toHaveURL(/\/latn\/search\/bhikkhave/)
 })
 

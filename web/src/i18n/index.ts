@@ -5,9 +5,11 @@
  */
 import { ref } from 'vue'
 
-export const UI_LANGS: { code: string; name: string }[] = [
-  { code: 'en', name: 'English' }, { code: 'si', name: 'සිංහල' }, { code: 'my', name: 'မြန်မာ' }, { code: 'th', name: 'ไทย' },
-  { code: 'kh', name: 'ខ្មែរ' }, { code: 'hi', name: 'हिन्दी' }, { code: 'ch', name: '中文' },
+/** name: in the language itself, english: for those who do not read it */
+export const UI_LANGS: { code: string; name: string; english: string }[] = [
+  { code: 'en', name: 'English', english: 'English' }, { code: 'si', name: 'සිංහල', english: 'Sinhala' }, { code: 'my', name: 'မြန်မာ', english: 'Myanmar' },
+  { code: 'th', name: 'ไทย', english: 'Thai' }, { code: 'kh', name: 'ខ្មែរ', english: 'Khmer' }, { code: 'hi', name: 'हिन्दी', english: 'Hindi' },
+  { code: 'ch', name: '中文', english: 'Chinese' },
 ]
 
 const loaders = import.meta.glob<{ default: Record<string, string> }>('./*.json')

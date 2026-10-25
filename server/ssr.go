@@ -25,7 +25,7 @@ import (
 
 // routes of the web app that are not text keys (web/src/router.ts)
 var reservedRoutes = map[string]string{"search": "Search", "titles": "Title search", "dict": "Dictionary", "bookmarks": "Bookmarks",
-	"settings": "Settings", "about": "About", "convert": "Pali script converter", "names": "Places and people", "map": "Map of the places"}
+	"settings": "Settings", "about": "About", "convert": "Pali script converter", "names": "Places and people", "map": "Map of the places", "help": "Help"}
 
 var scriptLang = map[string]string{"latn": "pi-Latn", "sinh": "pi-Sinh", "deva": "pi-Deva", "thai": "pi-Thai", "mymr": "pi-Mymr",
 	"khmr": "pi-Khmr", "laoo": "pi-Laoo", "beng": "pi-Beng", "tibt": "pi-Tibt", "cyrl": "pi-Cyrl", "guru": "pi-Guru", "gujr": "pi-Gujr",

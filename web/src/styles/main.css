@@ -15,14 +15,24 @@
   --text-size: 18px; --text-leading: 1.65; --reading-width: 760px;
   color-scheme: light;
 }
-.sepia {
+.theme-sepia {
   --c-primary: #6b3a1f; --c-primary-soft: #eadcc4; --c-link: #6b3a1f;
   --c-bg: #f4ecd8; --c-surface: #f9f3e3; --c-surface2: #ece2c9; --c-fg: #3b2f22; --c-muted: #76664f; --c-line: #dccdae;
   --c-highlight: #f3d36b;
+  /* the collection colours, earthier on the paper tone */
+  --c-mula: #b1471a; --c-atta: #4f4699; --c-tika: #3d7a3f; --c-anya: #7b3f8c;
+  --gl-mula: rgba(177, 71, 26, .5); --gl-atta: rgba(79, 70, 153, .42); --gl-tika: rgba(61, 122, 63, .5);
 }
-.dark {
+.theme-green { /* sage: a soft green page, forest green accents */
+  --c-primary: #2f5b3c; --c-primary-soft: #d2e2cc; --c-accent: #8a5a1f; --c-link: #2f5b3c;
+  --c-bg: #e4ede0; --c-surface: #eef4ea; --c-surface2: #d9e4d4; --c-fg: #1e2a21; --c-muted: #55645a; --c-line: #c6d5c0;
+  --c-highlight: #f1dd8c;
+  --c-mula: #a94a1c; --c-atta: #4b4a9a; --c-tika: #23706a; --c-anya: #7a3f88;
+  --gl-mula: rgba(169, 74, 28, .5); --gl-atta: rgba(75, 74, 154, .42); --gl-tika: rgba(35, 112, 106, .5);
+}
+.dark { /* warm charcoal, not black: less halation around the letters */
   --c-primary: #f0a27a; --c-primary-soft: #3a2a22; --c-accent: #f0a27a; --c-link: #f3b996;
-  --c-bg: #141211; --c-surface: #1d1a18; --c-surface2: #27231f; --c-fg: #ece6df; --c-muted: #a69c92; --c-line: #3a342e;
+  --c-bg: #1b1917; --c-surface: #23201d; --c-surface2: #2d2925; --c-fg: #e6dfd6; --c-muted: #a69c92; --c-line: #403a34;
   --c-highlight: #6b5410; --c-error: #ef9a9a;
   --c-mula: #fb923c; --c-atta: #a5b4fc; --c-tika: #86efac; --c-anya: #d8b4fe;
   --gl-mula: rgba(251, 146, 60, .6); --gl-atta: rgba(165, 180, 252, .6); --gl-tika: rgba(134, 239, 172, .55);
@@ -44,6 +54,7 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
   .icon-btn.active { background: var(--c-primary-soft); color: var(--c-primary); }
   .btn { @apply inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-sm; background: var(--c-surface); }
   .btn:hover { background: var(--c-surface2); }
+  .btn.on { border-color: var(--c-primary); background: var(--c-primary-soft); color: var(--c-primary); }
   .btn-primary { @apply inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-white; background: var(--c-primary); }
   .dark .btn-primary { color: #1d1a18; }
   .card { @apply rounded-xl border border-line p-4; background: var(--c-surface); }
@@ -66,8 +77,8 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .reading { font-family: var(--font-text); font-size: var(--text-size); line-height: var(--text-leading); }
 .reading .para { position: relative; margin: 0 0 0.55em; word-break: break-word; overflow-wrap: anywhere; }
 .reading .para.bodytext { text-indent: 1.5em; text-align: justify; }
+/* gatha1-3 / gathalast mark the place of a line in the verse, not an indent: all lines start together (as in v2 and VRI) */
 .reading .para.gatha1, .reading .para.gatha2, .reading .para.gatha3 { margin: 0 0 0 2.5em; text-align: left; }
-.reading .para.gatha2 { margin-left: 3.5em; } .reading .para.gatha3 { margin-left: 4.5em; }
 .reading .para.gathalast { margin: 0 0 0.9em 2.5em; text-align: left; }
 .reading .para.unindented, .reading .para.indent, .reading .para.hangnum { text-align: justify; }
 .reading .para.indent { margin-left: 1.5em; }
@@ -80,11 +91,16 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .reading .para.subhead { font-size: 1.1em; }
 .reading .para.subsubhead { font-size: 1em; }
 .reading .para { scroll-margin-top: 110px; }
+.reading .first-para > .para.heading { margin-top: 0.3em; }
+/* narrow columns (two on a phone): smaller verse and paragraph indents (--ind with them: the numbers hang in them) */
+.narrow-cols .reading .para.bodytext { --ind: 1em; text-indent: 1em; }
+.narrow-cols .reading .para.gatha1, .narrow-cols .reading .para.gatha2, .narrow-cols .reading .para.gatha3, .narrow-cols .reading .para.gathalast { --ind: 1.2em; margin-left: 1.2em; }
+.narrow-cols .reading .para.indent { margin-left: 0.8em; } /* the top of a text: no gap above its first heading */
 .reading .num { color: var(--c-primary); font-size: 0.8em; font-family: var(--font-ui); font-weight: 600; margin-right: 0.35em; text-indent: 0; }
 /* paragraph numbers hang at the left edge, in the space of the first line indent / verse margin (--ind), so numbered
    and unnumbered paragraphs start their text at the same place (.num is 0.8em: its em is 0.8 of the paragraph's) */
 .reading .para.bodytext { --ind: 1.5em; }
-.reading .para.gatha1, .reading .para.gathalast { --ind: 2.5em; } .reading .para.gatha2 { --ind: 3.5em; } .reading .para.gatha3 { --ind: 4.5em; }
+.reading .para.gatha1, .reading .para.gatha2, .reading .para.gatha3, .reading .para.gathalast { --ind: 2.5em; }
 .reading .para.has-num:not(.heading) > .num { display: inline-block; box-sizing: border-box; min-width: calc(var(--ind, 0em) / 0.8);
   margin-left: calc(var(--ind, 0em) / -0.8); margin-right: 0; padding-right: 0.35em; }
 .reading .para.target { background: var(--c-primary-soft); border-radius: 4px; box-shadow: 0 0 0 4px var(--c-primary-soft); }
@@ -140,14 +156,15 @@ input[type=range], input[type=checkbox] { accent-color: var(--c-primary); }
 .para-wrap { position: relative; }
 /* the hover area reaches over the left margin, so the pointer can move from the text to the button */
 .para-wrap::before { content: ''; position: absolute; top: 0; bottom: 0; left: -1.6rem; width: 1.6rem; }
-.para-dots { position: absolute; left: -1.45rem; top: calc(var(--text-leading, 1.65) * 0.5em - 0.65rem); display: inline-flex; height: 1.3rem; width: 1.3rem;
+.para-dots { position: absolute; left: -2.1rem; top: calc(var(--text-leading, 1.65) * 0.5em - 1rem); display: inline-flex; height: 2rem; width: 2rem; /* as on tipitaka.lk */
   align-items: center; justify-content: center; border-radius: 9999px; background: var(--c-surface); color: var(--c-link); box-shadow: 0 1px 3px rgba(0,0,0,.25);
   z-index: 2; visibility: hidden; opacity: 0; transition: opacity .12s, visibility 0s linear .4s; } /* em: the text size (centred on the first line) */
 .dark .para-dots { color: #7cb4ff; }
-/* small screens: equal gutters (px-5), the button fits in the left one */
-@media (max-width: 639px) { .para-dots { left: -1.25rem; } }
+/* small screens: equal gutters (px-5), the button reaches into the first line's indent / verse margin */
+@media (max-width: 639px) { .para-dots { left: -1.15rem; height: 1.75rem; width: 1.75rem; top: calc(var(--text-leading, 1.65) * 0.5em - 0.875rem); }
+  .reading .para-wrap > .heading + .para-dots { margin-top: -0.875rem; } }
 /* shown at once, hidden after a short delay (crossing the gap between paragraphs does not make it flicker) */
 .para-wrap.tapped .para-dots, .para-wrap.menu-open .para-dots { visibility: visible; opacity: 1; transition-delay: 0s; }
 @media (hover: hover) { .para-wrap:hover .para-dots { visibility: visible; opacity: 1; transition-delay: 0s; } }
 .para-wrap.menu-open .para-dots { box-shadow: 0 0 0 2px var(--c-link); }
-.reading .para-wrap > .heading + .para-dots { top: 50%; margin-top: -0.65rem; }
+.reading .para-wrap > .heading + .para-dots { top: 50%; margin-top: -1rem; }

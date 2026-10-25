@@ -3,6 +3,7 @@
 const v = (name) => `var(--c-${name})`
 module.exports = {
   content: [__dirname + '/index.html', __dirname + '/src/**/*.{vue,ts}'],
+  blocklist: ['sepia'], // the filter utility, not wanted (the sepia theme is the class theme-sepia)
   darkMode: ['variant', '.dark &'], // plain descendant selector (the default uses :is() which old WebViews lack)
   theme: {
     screens: { sm: '640px', md: '900px', lg: '1200px', xl: '1500px' },

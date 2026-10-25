@@ -19,6 +19,7 @@ export const routes: RouteRecordRaw[] = [
   { path: `/:script${S}/bookmarks`, name: 'bookmarks', component: () => import('./views/Bookmarks.vue') },
   { path: `/:script${S}/settings`, name: 'settings', component: () => import('./views/Settings.vue') },
   { path: `/:script${S}/about`, name: 'about', component: () => import('./views/About.vue') },
+  { path: `/:script${S}/help`, name: 'help', component: () => import('./views/Help.vue') },
   { path: `/:script${S}/convert`, name: 'convert', component: () => import('./views/Convert.vue') },
   { path: `/:script${S}/names/:slug(${KEY_RE})?`, name: 'names', component: () => import('./views/Names.vue') },
   { path: `/:script${S}/map`, name: 'map', component: () => import('./views/MapView.vue') },
@@ -26,6 +27,9 @@ export const routes: RouteRecordRaw[] = [
   { path: `/:key(${KEY_RE})`, name: 'bare', redirect: to => `/${useSettings().script}/${to.params.key}` },
   { path: '/:pathMatch(.*)*', name: 'notfound', component: () => import('./views/NotFound.vue') },
 ]
+
+/** pages opened from the menu that close back to the page before them (components/PageTitle.vue) */
+export const SECONDARY = ['settings', 'help', 'about', 'bookmarks', 'convert']
 
 let pendingScript = ''
 /** switch the Pāḷi script: the current page in the new script */
@@ -43,6 +47,7 @@ export function makeRouter() {
     scrollBehavior(to, _from, saved) {
       if (saved) return saved
       if (to.name === 'read') return false // the reader scrolls itself (paragraph targets, lazy text)
+      if (to.name === 'help' && to.hash) return false // the help page scrolls to its section once loaded
       return { top: 0 }
     },
   })
@@ -67,6 +72,6 @@ export function makeRouter() {
     pendingScript = ''
     if (s) settings.script = s
   })
-  router.afterEach(to => { if (to.name !== 'settings') useUi().lastPage = to.fullPath })
+  router.afterEach(to => { if (!SECONDARY.includes(to.name as string)) useUi().lastPage = to.fullPath })
   return router
 }

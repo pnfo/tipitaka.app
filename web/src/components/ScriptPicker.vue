@@ -1,6 +1,9 @@
 <!-- script selector: the url prefix changes, the rest of the route is kept -->
 <template>
-  <button ref="btn" class="btn h-9 shrink-0 px-2 sm:px-2.5" :aria-label="t('Pali script')" aria-haspopup="dialog" data-testid="script-picker" @click="open = !open">
+  <button v-if="more" ref="btn" class="btn h-9" :class="{ on: open }" aria-haspopup="dialog" data-testid="script-more" @click="open = !open">
+    {{ t('More') }}<IconDown class="h-4 w-4" />
+  </button>
+  <button v-else ref="btn" class="btn h-9 shrink-0 px-2 sm:px-2.5" :aria-label="t('Pali script')" aria-haspopup="dialog" data-testid="script-picker" @click="open = !open">
     <IconLanguages class="hidden h-4 w-4 text-muted sm:inline" />
     <span class="max-w-[6rem] truncate" :data-script="script" style="font-family: var(--font-text)">{{ info.native }}</span>
   </button>
@@ -23,11 +26,14 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { changeScript } from '@/router'
 import IconLanguages from '~icons/lucide/languages'
+import IconDown from '~icons/lucide/chevron-down'
 import Floating from './Floating.vue'
 import { SCRIPTS } from '@shared/scripts'
 import { convertTo, useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
+/** more: a "More" button after a list of the common scripts (settings) instead of the current script */
+defineProps<{ more?: boolean }>()
 const { script, info } = useScript()
 const router = useRouter()
 const open = ref(false)

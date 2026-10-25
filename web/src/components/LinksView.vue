@@ -1,7 +1,7 @@
 <!-- commentary (aṭṭhakathā / ṭīkā) and mūla paragraphs linked to the selected paragraph -->
 <template>
   <div class="text-sm" data-testid="links-view">
-    <div v-if="!ui.linkTarget" class="py-8 text-center text-muted">{{ t('Tap a paragraph number to see its commentary.') }}</div>
+    <div v-if="!ui.linkTarget" class="py-8 text-center text-muted">{{ t('Tap a paragraph number, then Show the commentary here.') }}</div>
     <div v-else-if="loading" class="h-20 animate-pulse rounded bg-surface2" />
     <div v-else-if="!items.length" class="py-8 text-center text-muted" data-testid="links-empty">{{ t('No linked commentary for this paragraph.') }}</div>
     <div v-for="it in items" v-else :key="it.key + it.para" class="mb-4" :class="`coll-${it.coll}`">

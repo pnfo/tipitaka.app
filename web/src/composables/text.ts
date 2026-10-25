@@ -61,5 +61,8 @@ export function wordAtPoint(x: number, y: number): { word: string; range: Range 
   const range = document.createRange()
   range.setStart(node, s)
   range.setEnd(node, e)
-  return { word: text.slice(s, e), range }
+  // the caret is the nearest letter, also far from the point (an indent, a margin, the gap between words): only a
+  // point on the word itself (with a few px for fingers) is a word
+  const near = Array.from(range.getClientRects()).some(r => x >= r.left - 4 && x <= r.right + 4 && y >= r.top - 4 && y <= r.bottom + 4)
+  return near ? { word: text.slice(s, e), range } : null
 }

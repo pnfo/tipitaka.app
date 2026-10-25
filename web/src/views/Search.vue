@@ -2,9 +2,6 @@
 <template>
   <div class="mx-auto max-w-4xl px-4 pb-20 pt-4">
     <form class="mb-3 flex items-center gap-2" @submit.prevent="submit">
-      <RouterLink v-if="backTo" :to="backTo.to" class="icon-btn h-10 w-10 border border-line" :title="t('Back to the text') + ': ' + conv(backTo.title)" data-testid="back-to-text">
-        <IconBack class="h-5 w-5" />
-      </RouterLink>
       <input v-model="input" class="input text-base" :data-script="inputScript" :style="inputScript !== 'latn' ? { fontFamily: 'var(--font-text)' } : undefined"
         :placeholder="t('Search')" type="search" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-testid="search-page-input">
       <button class="btn-primary h-10" type="submit" :aria-label="t('Search')"><IconSearch class="h-4 w-4" /></button>
@@ -15,6 +12,18 @@
       <RouterLink v-for="m in modes" :key="m.name" :to="{ name: m.name, params: { script, q: q || undefined }, query: m.name === 'search' ? route.query : {} }" role="tab"
         class="-mb-px border-b-2 px-3 py-2 text-sm" :class="route.name === m.name ? 'border-primary font-medium text-primary' : 'border-transparent text-muted hover:text-fg'"
         :data-testid="`mode-${m.name}`">{{ m.label }}</RouterLink>
+      <RouterLink :to="{ name: 'help', params: { script }, hash: '#search' }" class="icon-btn ml-auto self-center text-muted" :title="t('Help')" :aria-label="t('Help')">
+        <IconHelp class="h-4 w-4" /></RouterLink>
+    </div>
+
+    <!-- nothing searched yet: what the search type does, with examples -->
+    <div v-if="!q" class="mb-4 text-sm" data-testid="search-intro">
+      <p class="mb-2">{{ intro.text }}</p>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-muted">{{ t('For example:') }}</span>
+        <RouterLink v-for="e in intro.examples" :key="e" :to="{ name: route.name!, params: { script, q: e } }" class="chip pali hover:border-primary"
+          data-testid="search-example">{{ conv(e) }}</RouterLink>
+      </div>
     </div>
 
     <!-- full text search (v2 interface) -->
@@ -45,13 +54,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { watchDebounced } from '@vueuse/core'
 import IconSearch from '~icons/lucide/search'
+import IconHelp from '~icons/lucide/circle-question-mark'
 import DictView from '@/components/DictView.vue'
 import FtsResults from '@/components/FtsResults.vue'
 import CollectionFilter from '@/components/CollectionFilter.vue'
 import DictFilter from '@/components/DictFilter.vue'
-import IconBack from '~icons/lucide/arrow-left'
 import { useCollectionFilter } from '@/composables/filters'
-import { useTabs } from '@/stores/tabs'
 import { useApi } from '@/data/api'
 import type { TitleHit } from '@/data/types'
 import { detectScript, toRoman, useScript } from '@/composables/script'
@@ -69,15 +77,14 @@ watch(q, v => { if (toRoman(input.value.trim()) !== v) input.value = v ? conv(v)
 watch(script, () => { input.value = q.value ? conv(q.value) : '' })
 useHead({ title: computed(() => (q.value ? `${conv(q.value)} – ${t('Search')}` : t('Search'))) })
 
-// back to the text that was being read (the active tab)
-const tabs = useTabs()
-const backTo = computed(() => {
-  const tb = tabs.active
-  return tb ? { title: tb.title ?? tb.current, to: { name: 'read', params: { script: script.value, key: tb.current }, hash: tb.para !== undefined ? `#p${tb.para}` : '' } } : null
-})
 const { keys: collFilter } = useCollectionFilter()
 
 const modes = computed(() => [{ name: 'search', label: t('Full text') }, { name: 'titles', label: t('Titles') }, { name: 'dict', label: t('Dictionary') }] as const)
+const intro = computed(() => ({
+  search: { text: t('Find a word or a phrase in all the texts. A word also finds its other endings.'), examples: ['nibbāna', 'evaṃ me sutaṃ', 'ānāpānassati'] },
+  titles: { text: t('Find a sutta, a chapter or a book by its name.'), examples: ['brahmajāla', 'metta', 'satipaṭṭhāna'] },
+  dict: { text: t('Look up a word in the dictionaries.'), examples: ['dhamma', 'nibbāna', 'saṅkhāra'] },
+})[route.name as 'search' | 'titles' | 'dict'] ?? { text: '', examples: [] })
 
 function go(replace: boolean) {
   const r = toRoman(input.value.trim())

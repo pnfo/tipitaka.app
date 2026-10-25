@@ -48,14 +48,23 @@
       </div>
     </section>
 
-    <!-- (not inside the apps themselves) -->
+    <!-- (not inside the apps themselves: the stores do not allow links to other stores) -->
     <section v-if="!inApp" class="mb-10" data-testid="home-apps">
       <h2 class="section-title">{{ t('Apps') }}</h2>
-      <p class="mb-3 text-sm text-muted">{{ t('The same app works offline on Android and on Windows, macOS and Linux.') }}</p>
-      <div class="flex flex-wrap gap-2">
-        <a class="btn" href="https://play.google.com/store/apps/details?id=app.tipitaka.main">Android</a>
-        <a class="btn" href="https://github.com/pnfo/tipitaka.app/releases">Windows · macOS · Linux</a>
+      <p class="mb-3 text-sm text-muted">{{ t('The same app works offline on phones, tablets and computers.') }}</p>
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <a v-for="a in APPS" :key="a.name" :href="a.href" class="card flex items-center gap-3 hover:border-primary" :data-testid="`app-${a.id}`">
+          <component :is="a.icon" class="h-8 w-8 shrink-0 text-primary" />
+          <span class="min-w-0"><span class="block text-xs text-muted">{{ a.store }}</span><span class="block font-semibold">{{ a.name }}</span></span>
+        </a>
       </div>
+    </section>
+
+    <section class="card mb-10 space-y-2" data-testid="home-contact">
+      <h2 class="font-semibold">{{ t('Contact') }}</h2>
+      <p class="text-sm">{{ t('Questions, suggestions and bug reports are welcome:') }}
+        <a class="text-link underline" href="mailto:path.nirvana@gmail.com">path.nirvana@gmail.com</a> ·
+        <a class="text-link underline" href="https://github.com/pnfo/tipitaka.app/issues">GitHub</a></p>
     </section>
 
     <footer class="border-t border-line pt-6 text-center text-xs text-muted">
@@ -71,12 +80,16 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from 'vue'
 import { useHead } from '@unhead/vue'
-import { isNativeApp, useApi } from '@/data/api'
+import { isDesktopApp, isNativeApp, useApi } from '@/data/api'
 import type { TNode, Coll } from '@/data/types'
 import { useScript } from '@/composables/script'
 import { useLibrary } from '@/stores/library'
 import { useTree } from '@/stores/tree'
 import { t } from '@/i18n'
+import IconAndroid from '~icons/mdi/android'
+import IconApple from '~icons/mdi/apple'
+import IconWindows from '~icons/mdi/microsoft-windows'
+import IconMac from '~icons/mdi/apple-finder'
 
 const api = useApi()
 const library = useLibrary(), tree = useTree()
@@ -85,7 +98,13 @@ useHead({ title: '' })
 
 const DESC = computed<Record<Coll, string>>(() => ({ mula: t('Root texts'), atta: t('Commentaries'), tika: t('Sub-commentaries'),
   anya: t('Other texts: Visuddhimagga, grammar, chronicles…') }))
-const inApp = isNativeApp()
+const inApp = isNativeApp() || isDesktopApp()
+const APPS = [
+  { id: 'android', name: 'Android', store: 'Google Play', icon: IconAndroid, href: 'https://play.google.com/store/apps/details?id=app.tipitaka.main' },
+  { id: 'ios', name: 'iPhone & iPad', store: 'App Store', icon: IconApple, href: 'https://apps.apple.com/app/id6824157493' },
+  { id: 'windows', name: 'Windows', store: 'Microsoft Store', icon: IconWindows, href: 'https://apps.microsoft.com/detail/9nld3hjbz9bx' },
+  { id: 'mac', name: 'Mac', store: 'Mac App Store', icon: IconMac, href: 'https://apps.apple.com/app/id6824157493?platform=mac' },
+]
 const starters = ['dn-1-1', 'dn-2-9', 'mn-1-1-1', 'mn-1-1-10', 'sn-5-12-1-1', 'kn-dhp-1', 'kn-snp-1-8', 'kn-khp-5', 'anya-vism-1']
 const titles = reactive<Record<string, string>>({})
 

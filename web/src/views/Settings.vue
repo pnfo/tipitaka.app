@@ -1,10 +1,18 @@
 <template>
   <div class="mx-auto max-w-3xl space-y-6 px-4 pb-20 pt-5">
-    <h1 class="text-2xl font-semibold">{{ t('Settings') }}</h1>
+    <PageTitle :title="t('Settings')" />
 
     <section>
       <h2 class="section-title">{{ t('Pali script') }}</h2>
-      <div data-testid="settings-script"><ScriptPicker /></div>
+      <!-- the common scripts, the others behind More (and the current one when it is not common) -->
+      <div class="flex flex-wrap items-center gap-2" data-testid="settings-script">
+        <button v-for="s in shownScripts" :key="s.code" class="btn h-9" :class="{ on: s.code === script }" :aria-pressed="s.code === script"
+          :data-testid="`settings-script-${s.code}`" @click="changeScript(router, s.code)">
+          <span :data-script="s.code" style="font-family: var(--font-text)">{{ s.native }}</span>
+          <span v-if="s.code !== 'latn'" class="text-xs text-muted">{{ s.name }}</span>
+        </button>
+        <ScriptPicker more />
+      </div>
     </section>
 
     <section>
@@ -19,16 +27,18 @@
     <section>
       <h2 class="section-title">{{ t('Select User Interface Language') }}</h2>
       <div class="flex flex-wrap gap-2">
-        <button v-for="l in UI_LANGS" :key="l.code" class="chip text-sm" :class="{ on: settings.uiLang === l.code }" @click="settings.uiLang = l.code">{{ l.name }}</button>
+        <button v-for="l in UI_LANGS" :key="l.code" class="btn h-9" :class="{ on: settings.uiLang === l.code }" @click="settings.uiLang = l.code">{{ l.name }}</button>
       </div>
     </section>
 
     <section>
       <h2 class="section-title">{{ t('Appearance') }}</h2>
-      <div class="mb-4 flex gap-2">
-        <button v-for="th in THEMES" :key="th.id" class="flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-3 text-sm"
-          :class="settings.theme === th.id ? 'border-primary' : 'border-line'" :style="{ background: th.bg, color: th.fg }" :data-testid="`theme-${th.id}`" @click="settings.theme = th.id">
-          {{ th.label }}
+      <!-- swatches; auto (light or dark as the system) is split between the two -->
+      <div class="mb-4 grid grid-cols-5 gap-1.5 sm:gap-2">
+        <button v-for="th in THEMES" :key="th.id" class="flex min-w-0 items-center justify-center rounded-lg border px-1 py-3 text-sm"
+          :class="settings.theme === th.id ? 'border-primary ring-2 ring-primary' : 'border-line'" :style="{ background: th.bg, color: th.fg }"
+          :aria-pressed="settings.theme === th.id" :data-testid="`theme-${th.id}`" @click="settings.theme = th.id">
+          <span class="truncate" :class="th.id === 'auto' ? 'rounded bg-[#fbf8f3]/90 px-1' : ''">{{ th.label }}</span>
         </button>
       </div>
       <div class="card space-y-4">
@@ -38,6 +48,7 @@
           <input v-model.number="settings.leading" type="range" min="1.3" max="2.2" step="0.05" class="flex-1"><span class="w-10 text-right text-muted">{{ settings.leading.toFixed(2) }}</span></label>
         <label class="flex items-center gap-3 text-sm"><span class="w-32 shrink-0">{{ t('Text width') }}</span>
           <input v-model.number="settings.width" type="range" min="520" max="1100" step="20" class="flex-1"><span class="w-10 text-right text-muted">{{ settings.width }}</span></label>
+        <label class="flex items-center gap-2 text-sm"><input v-model="settings.autoHideHeader" type="checkbox"> {{ t('Hide the top bar when scrolling down (small screens)') }}</label>
         <div class="reading rounded-lg bg-bg p-3" :data-script="script">
           <p class="para bodytext"><span class="num">1</span>{{ conv('Evaṃ me sutaṃ – ekaṃ samayaṃ bhagavā antarā ca rājagahaṃ antarā ca nāḷandaṃ addhānamaggappaṭipanno hoti mahatā bhikkhusaṅghena saddhiṃ pañcamattehi bhikkhusatehi.') }}</p>
         </div>
@@ -65,15 +76,24 @@
 </template>
 
 <script setup lang="ts">
+import PageTitle from '@/components/PageTitle.vue'
 import { useHead } from '@unhead/vue'
 import DictFilter from '@/components/DictFilter.vue'
 import ScriptPicker from '@/components/ScriptPicker.vue'
 import { computed } from 'vue'
-import { useScript } from '@/composables/script'
-import { useSettings, type NotesMode, type TabView, type Theme } from '@/stores/settings'
+import { COMMON_SCRIPTS, useScript } from '@/composables/script'
+import { SCRIPTS } from '@shared/scripts'
+import { useRouter } from 'vue-router'
+import { changeScript } from '@/router'
+import { useSettings, type NotesMode, type TabView } from '@/stores/settings'
+import { useThemes } from '@/composables/themes'
 import { UI_LANGS, t } from '@/i18n'
 
 const settings = useSettings()
+const router = useRouter()
+const shownScripts = computed(() => SCRIPTS.filter(s => COMMON_SCRIPTS.includes(s.code) || s.code === script.value)
+  .sort((a, b) => rank(a.code) - rank(b.code)))
+const rank = (code: string) => (COMMON_SCRIPTS.includes(code) ? COMMON_SCRIPTS.indexOf(code) : COMMON_SCRIPTS.length)
 const { script, conv } = useScript()
 useHead({ title: computed(() => t('Settings')) })
 // computed: the labels follow a change of the interface language
@@ -82,9 +102,7 @@ const TAB_VIEWS = computed<{ id: TabView; label: string; desc: string }[]>(() =>
   { id: 'tabbed', label: t('Tabs'), desc: t('Every text opens in a new tab.') },
   { id: 'columns', label: t('Columns'), desc: t('Open texts are shown side by side (on wide screens).') },
 ])
-const THEMES = computed<{ id: Theme; label: string; bg: string; fg: string }[]>(() => [
-  { id: 'light', label: t('Light'), bg: '#fbf8f3', fg: '#2b2522' }, { id: 'sepia', label: t('Sepia'), bg: '#f4ecd8', fg: '#3b2f22' }, { id: 'dark', label: t('Dark'), bg: '#141211', fg: '#ece6df' },
-])
+const THEMES = useThemes()
 const NOTES = computed<{ id: NotesMode; label: string }[]>(() => [{ id: 'pointer', label: t('Marker') }, { id: 'inline', label: t('Inline') }, { id: 'hidden', label: t('Hidden') }])
 const EDITIONS = computed(() => [
   { id: 'M', label: t('Myanmar'), title: t('Myanmar (Chaṭṭha Saṅgāyana) edition') }, { id: 'V', label: 'VRI', title: t('VRI edition') },

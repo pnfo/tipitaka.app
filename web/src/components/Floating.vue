@@ -10,7 +10,8 @@
 <script setup lang="ts">
 import { ref, watch, nextTick, onBeforeUnmount } from 'vue'
 
-const props = defineProps<{ open: boolean; anchor: HTMLElement | null; align?: 'start' | 'end'; maxWidth?: number }>()
+/** closeOnly: a click outside only closes it (it does not also act on the page: a word lookup under a menu) */
+const props = defineProps<{ open: boolean; anchor: HTMLElement | null; align?: 'start' | 'end'; maxWidth?: number; closeOnly?: boolean }>()
 const emit = defineEmits<{ close: [] }>()
 const box = ref<HTMLElement>()
 const style = ref<Record<string, string>>({ left: '0px', top: '0px', visibility: 'hidden' })
@@ -28,6 +29,7 @@ function position() {
 function onDocClick(e: Event) {
   const t = e.target as Node
   if (box.value?.contains(t) || props.anchor?.contains(t)) return
+  if (props.closeOnly) { e.stopPropagation(); e.preventDefault() }
   emit('close')
 }
 const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') emit('close') }

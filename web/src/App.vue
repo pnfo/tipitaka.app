@@ -12,6 +12,7 @@
         <RouterView />
       </main>
       <StudyPanel />
+      <NavPane />
     </div>
     <Transition name="fade">
       <div v-if="ui.toast" :key="ui.toast.id" class="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-fg px-4 py-2 text-sm text-bg shadow-lg" role="status" data-testid="toast">
@@ -22,12 +23,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useWindowSize } from '@vueuse/core'
 import AppHeader from './components/AppHeader.vue'
 import TreeDrawer from './components/TreeDrawer.vue'
 import StudyPanel from './components/StudyPanel.vue'
+import NavPane from './components/NavPane.vue'
 import { useUi } from './stores/ui'
 import { useRouter } from 'vue-router'
 import { firstVisit, useSettings } from './stores/settings'
@@ -38,12 +40,12 @@ import { isScriptCode } from '@shared/scripts'
 import { useLibrary } from './stores/library'
 import { useScript } from './composables/script'
 import { setUiLang } from './i18n'
-import { isNativeApp, useApi } from './data/api'
+import { isDesktopApp, isNativeApp, useApi } from './data/api'
 
 const ui = useUi(), settings = useSettings(), library = useLibrary()
 const router = useRouter()
 const { script, info } = useScript()
-const { width } = useWindowSize()
+const { width, height } = useWindowSize()
 const wide = computed(() => width.value >= 1200)
 
 useHead({ titleTemplate: t => (t ? `${t} | Tipiṭaka.app` : 'Tipiṭaka.app – Pāḷi Tipiṭaka'), htmlAttrs: { lang: computed(() => info.value.lang) } })
@@ -51,7 +53,7 @@ watch(() => settings.uiLang, l => setUiLang(l), { immediate: true })
 
 // a new visitor: the script and interface language of their country, unless they chose one meanwhile or arrived
 // through a link that names a script (composables/country.ts)
-if (firstVisit && !isNativeApp()) {
+if (firstVisit && !isNativeApp() && !isDesktopApp()) { // the apps send nothing to other services
   const start = { script: settings.script, uiLang: settings.uiLang }
   const linkScript = isScriptCode(landingPath.split('/')[1])
   countryDefaults().then(d => {
@@ -60,7 +62,19 @@ if (firstVisit && !isNativeApp()) {
     if (!linkScript && settings.script === start.script && d.script !== settings.script) changeScript(router, d.script)
   })
 }
-if (!isNativeApp()) startStats(router, firstVisit, settings) // anonymous usage counts (the website only)
+if (!isNativeApp() && !isDesktopApp()) startStats(router, firstVisit, settings) // anonymous usage counts (the website only)
+
+// small screens: the header slides away when scrolling down and comes back when scrolling up (as on tipitaka.lk)
+const autoHide = computed(() => settings.autoHideHeader && (width.value < 640 || height.value < 700))
+let lastY = 0
+function onScroll() {
+  const y = window.scrollY
+  ui.headerHidden = autoHide.value && !ui.treeOpen && !ui.navOpen && y > lastY && y > 120
+  lastY = y
+}
+watch([autoHide, () => ui.treeOpen || ui.navOpen], ([a, open]) => { if (!a || open) ui.headerHidden = false })
+onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
+onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 
 onMounted(() => {
   document.getElementById('ssr')?.remove() // server rendered text is replaced by the app

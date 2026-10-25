@@ -1,13 +1,22 @@
 import { expect, type Locator, type Page } from '@playwright/test'
 
-/** opens the options menu of a paragraph through its ⋯ button (shown on hover, or after a tap on touch screens) */
+/** opens the options menu of a paragraph: through its ⋯ button (shown on hover), or on touch screens with a tap at
+ *  the start of its first line (the number / indent / margin there opens the options) */
 export async function paraOptions(page: Page, para: Locator) {
   const wrap = para.locator('xpath=..')
   const dots = wrap.getByTestId('para-options')
   await para.hover()
   if (!(await dots.isVisible())) await para.click({ position: { x: 1, y: 1 } })
-  await dots.click()
+  if (!(await page.getByTestId('para-menu').isVisible())) await dots.click()
   await expect(page.getByTestId('para-menu')).toBeVisible()
+}
+
+/** opens the menu (components/NavPane.vue): a column on wide screens, else over the page */
+export async function openMenu(page: Page): Promise<Locator> {
+  const nav = page.getByTestId('nav-pane')
+  if (!(await nav.isVisible())) await page.getByTestId('nav-toggle').click()
+  await expect(nav).toBeVisible()
+  return nav
 }
 
 /** the screen point of the middle of the first occurrence of a word in the reader text */

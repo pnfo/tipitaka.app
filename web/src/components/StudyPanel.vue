@@ -16,6 +16,8 @@
           {{ tab.label }}<span v-if="tab.count" class="ml-1.5 rounded-full bg-primary px-1.5 text-xs text-white" data-testid="gloss-count">{{ tab.count }}</span>
         </button>
         <span class="flex-1" />
+        <RouterLink :to="{ name: 'help', params: { script }, hash: HELP[ui.panelTab] }" class="icon-btn text-muted" :aria-label="t('Help')" :title="t('Help')">
+          <IconHelp class="h-4 w-4" /></RouterLink>
         <button class="icon-btn" :aria-label="t('Close')" data-testid="panel-close" @click="ui.panelOpen = false"><IconX class="h-5 w-5" /></button>
       </div>
       <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3">
@@ -33,15 +35,20 @@
 import { computed, ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import IconX from '~icons/lucide/x'
+import IconHelp from '~icons/lucide/circle-question-mark'
 import DictView from './DictView.vue'
 import GlossView from './GlossView.vue'
 import LinksView from './LinksView.vue'
 import SettingView from './SettingView.vue'
 import { useUi } from '@/stores/ui'
 import { useSettings } from '@/stores/settings'
+import { useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
 const ui = useUi(), settings = useSettings()
+const { script } = useScript()
+/** the section of the help of each tab */
+const HELP = { dict: '#dictionary', links: '#commentary', info: '#places' }
 const { width, height: vh } = useWindowSize()
 const wide = computed(() => width.value >= 1200)
 // the Commentary tab counts the explanations of the tapped word (one per commentary passage)

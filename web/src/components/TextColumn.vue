@@ -5,15 +5,15 @@
 -->
 <template>
   <div ref="root" :class="contained ? 'h-full overflow-y-auto overscroll-contain' : ''" @scroll.passive="onScroll(); $emit('scrolled')">
-    <div class="reading relative mx-auto max-w-reading px-5 sm:px-6" :class="`coll-${coll}`" @click="onClick">
-      <div v-if="from > 0" class="flex justify-center py-3 font-ui">
-        <button class="btn text-muted" :disabled="loadingPrev" data-testid="load-prev" @click="loadPrev"><IconUp class="h-4 w-4" />{{ t('Show previous text') }}</button>
+    <div class="reading relative mx-auto max-w-reading" :class="[`coll-${coll}`, contained ? 'px-3 sm:px-4' : 'px-4 sm:px-6']" @click="onClick">
+      <div v-if="from > 0" class="flex justify-center pt-2 font-ui">
+        <button class="btn py-1 text-xs text-muted" :disabled="loadingPrev" data-testid="load-prev" @click="loadPrev"><IconUp class="h-4 w-4" />{{ t('Show previous text') }}</button>
       </div>
       <!-- every paragraph / verse / heading has an options button (tipitaka.lk): shown on hover, on touch screens after a tap -->
-      <div v-for="p in paras" :key="p.i" class="para-wrap" :class="{ 'menu-open': menuFor === p.i, tapped: tapped === p.i }">
+      <div v-for="(p, n) in paras" :key="p.i" class="para-wrap" :class="{ 'menu-open': menuFor === p.i, tapped: tapped === p.i, 'first-para': n === 0 }">
         <div :id="`${idPrefix}p${p.i}`" :data-i="p.i" :data-k="p.k" :class="[paraClass(p), { target: p.i === target }]" v-html="render(p)" />
         <button class="para-dots" :aria-label="t('Options')" data-testid="para-options" @click.stop="openMenu(p.i, $event.currentTarget as HTMLElement)">
-          <IconDots class="h-3.5 w-3.5" />
+          <IconDots class="h-5 w-5" />
         </button>
       </div>
       <div v-if="loadingNext" class="py-6 text-center text-sm text-muted">{{ t('Loading…') }}</div>
@@ -61,7 +61,7 @@ const emit = defineEmits<{
   word: [roman: string, shown: string, glosses: number[], para: { key: string; para: number }]
   scrolled: []
   /** the options menu of a paragraph (anchor: the element to show it next to) */
-  menu: [para: Para, anchor: HTMLElement]
+  menu: [para: Para | null, anchor: HTMLElement | null] // null: close it
   loaded: [from: number, to: number, book: Book]
 }>()
 
@@ -111,7 +111,7 @@ async function init() {
   paras.value = c.paras
   emit('loaded', c.from, c.to, c.book)
   await nextTick()
-  await scrollToPara(first ?? c.from, first === undefined)
+  await scrollToPara(first ?? c.from)
   fillView()
 }
 
@@ -163,7 +163,7 @@ const scrollEl = (): HTMLElement | Window => (props.contained && root.value ? ro
 const scrollHeight = () => (props.contained && root.value ? root.value.scrollHeight : document.documentElement.scrollHeight)
 
 /** scroll a paragraph to the top of the view, loading it first when needed */
-async function scrollToPara(i: number, top = false) {
+async function scrollToPara(i: number) {
   if (!book.value) return
   if (i < from.value || i >= to.value) {
     const my = ++gen
@@ -178,7 +178,7 @@ async function scrollToPara(i: number, top = false) {
   }
   const el = document.getElementById(`${props.idPrefix}p${i}`)
   if (!el) return
-  if (top && i === from.value && !props.contained) { window.scrollTo(0, 0); return }
+  if (i === from.value && !props.contained) { window.scrollTo(0, 0); return } // the start: the very top, not 110px into it
   if (props.contained && root.value) root.value.scrollTop += el.getBoundingClientRect().top - root.value.getBoundingClientRect().top - 12
   else window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 110)
 }
@@ -208,18 +208,20 @@ function onScroll() {
   clearTimeout(scrollTimer)
   scrollTimer = setTimeout(() => {
     const host = props.contained ? root.value! : document.documentElement
-    const r = props.contained ? root.value!.getBoundingClientRect() : { top: 0, left: 0, width: window.innerWidth }
-    const x = r.left + Math.min(r.width / 2, 300), y = r.top + (props.contained ? 20 : 130)
-    const el = (document.elementFromPoint(x, y) as HTMLElement | null)?.closest('.para') as HTMLElement | null
-    if (el && host.contains(el)) emit('visible', +el.dataset.i!, el.dataset.k!)
+    // the first paragraph that reaches below the bars: also at the very top, where the line crosses a button or a gap
+    const y = props.contained ? root.value!.getBoundingClientRect().top + 20 : 130
+    const el = [...host.querySelectorAll<HTMLElement>('.para[data-i]')].find(e => e.getBoundingClientRect().bottom > y)
+    if (el) emit('visible', +el.dataset.i!, el.dataset.k!)
   }, 150)
 }
 
 // paragraph options (the menu itself is in ReaderPane); the button of the open menu stays visible
 const menuFor = ref<number | null>(null)
+/** the options of a paragraph; again (its button, number or margin) closes them */
 function openMenu(i: number, anchor: HTMLElement) {
   const p = paras.value.find(x => x.i === i)
   if (!p) return
+  if (menuFor.value === i) { menuFor.value = null; emit('menu', null, null); return }
   menuFor.value = i
   emit('menu', p, anchor)
 }
@@ -228,11 +230,46 @@ defineExpose({ scrollToPara, menuClosed: () => { menuFor.value = null }, scrollR
 // the last tapped paragraph shows its options button (touch screens have no hover)
 const tapped = ref<number | null>(null)
 let selected: HTMLElement | null = null
+/** the paragraph whose first line starts to the right of the point (a tap on its number, in its indent or in the margin before it) */
+function gutterPara(x: number, y: number, target: HTMLElement, paraEl: HTMLElement | null): HTMLElement | null {
+  if (paraEl && target.closest('.num')) return paraEl
+  const candidates = paraEl ? [paraEl] : [...(root.value?.querySelectorAll<HTMLElement>('.para[data-i]') ?? [])]
+  for (const p of candidates) {
+    const r = p.getBoundingClientRect()
+    if (y < r.top || y > r.bottom) continue
+    const first = firstTextRect(p)
+    return first && y <= first.bottom + 4 && x < first.left ? p : null
+  }
+  return null
+}
+
+/** the box of the first letter of a paragraph's text (after its number) */
+function firstTextRect(p: HTMLElement): DOMRect | null {
+  const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => (n.parentElement?.closest('.num') || !/\S/.test(n.textContent ?? '') ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT),
+  })
+  const n = walker.nextNode()
+  if (!n) return null
+  const i = (n.textContent ?? '').search(/\S/)
+  const range = document.createRange()
+  range.setStart(n, i)
+  range.setEnd(n, i + 1)
+  return range.getClientRects()[0] ?? null
+}
+
 function onClick(e: MouseEvent) {
   const target = e.target as HTMLElement
   const ptr = target.closest('.note-ptr') as HTMLElement | null
   const paraEl = target.closest('.para') as HTMLElement | null
   tapped.value = paraEl ? +paraEl.dataset.i! : null
+  // the start of a paragraph's first line (its number, the indent, the margin before it) opens its options
+  const gutter = !ptr && gutterPara(e.clientX, e.clientY, target, paraEl)
+  if (gutter) {
+    tapped.value = +gutter.dataset.i!
+    const dots = gutter.parentElement?.querySelector<HTMLElement>('.para-dots')
+    if (dots) openMenu(+gutter.dataset.i!, dots)
+    return
+  }
   if (ptr && paraEl) {
     const p = paras.value.find(x => x.i === +paraEl.dataset.i!)
     const text = p ? noteTexts(p.t)[+ptr.dataset.i!] : ''

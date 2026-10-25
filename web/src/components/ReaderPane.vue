@@ -38,7 +38,7 @@
     <div v-else :class="contained ? 'min-h-0 flex-1' : 'pb-24 pt-2'">
       <TextColumn ref="column" :node-key="tab.key" :script="script" :conv="conv" :coll="info.coll" :target="tab.target" :start="startPara"
         :highlight="tab.hl" :glosses="spans" :contained="contained" :id-prefix="contained ? `t${tab.id}-` : ''"
-        @visible="onVisible" @word="(w, _s, ids, para) => $emit('word', w, glossesOf(ids), para)" @scrolled="$emit('scrolled')" @menu="(p, el) => { menu = { para: p, anchor: el } }" @loaded="onLoaded">
+        @visible="onVisible" @word="(w, _s, ids, para) => $emit('word', w, glossesOf(ids), para)" @scrolled="$emit('scrolled')" @menu="(p, el) => { menu = p && el ? { para: p, anchor: el } : null }" @loaded="onLoaded">
         <template #end>
           <nav v-if="next" class="mt-10 flex justify-end border-t border-line pt-4 font-ui text-sm">
             <RouterLink :to="{ name: 'read', params: { script, key: next.key } }" class="btn" @click="ui.navInTab = true">

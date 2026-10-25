@@ -1,6 +1,6 @@
 <!-- options of a paragraph or heading (tipitaka.lk / v2): link, copy, commentary / mūla, bookmark -->
 <template>
-  <Floating :open="!!para" :anchor="anchor" @close="$emit('close')">
+  <Floating :open="!!para" :anchor="anchor" close-only @close="$emit('close')">
     <div v-if="para" class="min-w-[230px] py-1 text-sm" data-testid="para-menu" @click="$emit('close')">
       <button class="menu-item" data-testid="menu-link" @click="copyLink"><IconShare class="h-4 w-4" />{{ t('Get a link') }}</button>
       <button class="menu-item" data-testid="menu-copy" @click="copyText"><IconCopy class="h-4 w-4" />{{ t('Copy the paragraph') }}</button>

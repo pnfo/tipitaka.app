@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
-import { DEFAULTS, SETTINGS_KEY, guessFromBrowser, loadSettings, migrateV2, useSettings } from './settings'
+import { DEFAULTS, SETTINGS_KEY, guessFromBrowser, loadSettings, migrateV2, themeClass, useSettings } from './settings'
 import { BOOKMARKS_KEY, useLibrary } from './library'
 import { MAX_TABS, TABS_KEY, useTabs } from './tabs'
 import type { Api } from '@/data/api'
@@ -13,9 +13,19 @@ beforeEach(() => {
 })
 
 describe('settings', () => {
+  it('maps the themes to the class of <html>; auto follows the system', () => {
+    expect(themeClass('light')).toBe('')
+    expect(themeClass('sepia')).toBe('theme-sepia') // not Tailwind's "sepia" filter utility
+    expect(themeClass('green')).toBe('theme-green')
+    expect(themeClass('dark')).toBe('dark')
+    expect(themeClass('auto', true)).toBe('dark')
+    expect(themeClass('auto', false)).toBe('')
+  })
   it('migrates the v2 settings', () => {
     expect(migrateV2({ paliScript: 'si', uiLanguage: 'si', dictList: ['en-pts'], colorTheme: 'dark', tabViewFormat: 'columns' }))
       .toEqual({ script: 'sinh', uiLang: 'si', dicts: ['dpd', 'en-pts'], theme: 'dark', tabView: 'columns' })
+    expect(migrateV2({ footnoteFormat: 'none' }).notes).toBe('hidden') // v2 "Do Not Show"
+    expect(migrateV2({ footnoteFormat: 'inline' }).notes).toBe('inline')
     localStorage.setItem('settings', JSON.stringify({ paliScript: 'my' }))
     expect(loadSettings().script).toBe('mymr')
   })
