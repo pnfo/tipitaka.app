@@ -16,8 +16,15 @@ var staticExt = map[string]bool{".js": true, ".css": true, ".png": true, ".jpg":
 	".svg": true, ".ico": true, ".json": true, ".txt": true, ".map": true, ".woff": true, ".woff2": true, ".ttf": true,
 	".webmanifest": true, ".xml": true, ".html": true}
 
+// v2 pages that Google still sends people to
+var legacyPaths = map[string]string{"/index.html": "/", "/misc/convert/index.html": "/latn/convert", "/misc/convert": "/latn/convert"}
+
 func (a *App) handleStatic(w http.ResponseWriter, r *http.Request) {
 	p := path.Clean("/" + r.URL.Path)
+	if target, ok := legacyPaths[p]; ok {
+		http.Redirect(w, r, target, http.StatusMovedPermanently)
+		return
+	}
 	if p != "/" && a.distDir != "" {
 		full := filepath.Join(a.distDir, filepath.FromSlash(p))
 		if st, err := os.Stat(full); err == nil && !st.IsDir() {
@@ -103,7 +110,13 @@ func (a *App) handleSitemap(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	w.Header().Set("Cache-Control", "public, max-age=86400")
 	fmt.Fprint(w, `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
-	fmt.Fprintf(w, "<url><loc>%s/%s</loc></url>", a.cfg.Site, script)
+	// the Roman home is the site root (its canonical)
+	if script == "latn" {
+		fmt.Fprintf(w, "<url><loc>%s/</loc></url>", a.cfg.Site)
+	} else {
+		fmt.Fprintf(w, "<url><loc>%s/%s</loc></url>", a.cfg.Site, script)
+	}
+	fmt.Fprintf(w, "<url><loc>%s/%s/convert</loc></url>", a.cfg.Site, script)
 	for _, n := range a.eng.SitemapNodes() {
 		fmt.Fprintf(w, "<url><loc>%s/%s/%s</loc></url>", a.cfg.Site, script, n)
 	}

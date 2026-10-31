@@ -27,6 +27,9 @@ import (
 var reservedRoutes = map[string]string{"search": "Search", "titles": "Title search", "dict": "Dictionary", "bookmarks": "Bookmarks",
 	"settings": "Settings", "about": "About", "convert": "Pali script converter", "names": "Places and people", "map": "Map of the places", "help": "Help"}
 
+// reserved routes that are pages for searches (canonical; convert is in the sitemaps)
+var indexedRoutes = map[string]bool{"convert": true, "about": true, "help": true}
+
 var scriptLang = map[string]string{"latn": "pi-Latn", "sinh": "pi-Sinh", "deva": "pi-Deva", "thai": "pi-Thai", "mymr": "pi-Mymr",
 	"khmr": "pi-Khmr", "laoo": "pi-Laoo", "beng": "pi-Beng", "tibt": "pi-Tibt", "cyrl": "pi-Cyrl", "guru": "pi-Guru", "gujr": "pi-Gujr",
 	"telu": "pi-Telu", "knda": "pi-Knda", "mlym": "pi-Mlym", "taml": "pi-Taml", "asse": "pi-Beng", "lana": "pi-Lana", "brah": "pi-Brah",
@@ -38,6 +41,7 @@ var legacyScript = map[string]string{"si": "sinh", "hi": "deva", "ro": "latn", "
 	"tb": "tibt", "cy": "cyrl"}
 
 const siteName = "Tipiṭaka.app"
+const convertDesc = "Convert Pāḷi text between 22 scripts: Roman, Sinhala, Devanagari, Thai, Myanmar, Khmer, Lao, Bengali, Tibetan and more."
 const defaultDesc = "Pāḷi Tipiṭaka (Chaṭṭha Saṅgāyana) with aṭṭhakathā, ṭīkā and other texts in 22 scripts, full text search and dictionaries (DPD and more)."
 
 var (
@@ -156,8 +160,9 @@ func (a *App) renderPath(ctx context.Context, path string) page {
 		script, rest = parts[0], parts[1:]
 	}
 	switch {
-	case len(parts) == 1 && parts[0] == "":
-		return a.simplePage("", "latn", siteName+" – Pāḷi Tipiṭaka", defaultDesc, a.cfg.Site+"/latn")
+	// the root and /latn are the same page: the root is canonical (the url Google ranks)
+	case len(parts) == 1 && parts[0] == "", script == "latn" && len(rest) == 0:
+		return a.simplePage("", "latn", siteName+" – Pāḷi Tipiṭaka", defaultDesc, a.cfg.Site+"/")
 	case script != "" && len(rest) == 0:
 		return a.simplePage(script, script, siteName+" – Pāḷi Tipiṭaka", defaultDesc, a.cfg.Site+"/"+script)
 	case len(rest) == 2 && rest[0] == "names" && rest[1] != "":
@@ -172,7 +177,15 @@ func (a *App) renderPath(ctx context.Context, path string) page {
 		if script == "" {
 			script = "latn"
 		}
-		return a.simplePage(script, script, reservedRoutes[rest[0]]+" | "+siteName, defaultDesc, "")
+		canonical := ""
+		if indexedRoutes[rest[0]] && len(rest) == 1 {
+			canonical = fmt.Sprintf("%s/%s/%s", a.cfg.Site, script, rest[0])
+		}
+		desc := defaultDesc
+		if rest[0] == "convert" {
+			desc = convertDesc
+		}
+		return a.simplePage(script, script, reservedRoutes[rest[0]]+" | "+siteName, desc, canonical)
 	case len(rest) == 1 && a.eng.HasKey(rest[0]):
 		if script == "" {
 			script = "latn" // bare /<key>: Roman, the client switches to the saved script

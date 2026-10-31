@@ -117,11 +117,32 @@ func TestSSR(t *testing.T) {
 
 func TestLegacyRedirect(t *testing.T) {
 	h := testApp(t).Handler()
+	for from, to := range map[string]string{"/index.html": "/", "/misc/convert/index.html": "/latn/convert"} {
+		req := httptest.NewRequest("GET", from, nil)
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		if rec.Code != 301 || rec.Header().Get("Location") != to {
+			t.Errorf("%s: %d %q", from, rec.Code, rec.Header().Get("Location"))
+		}
+	}
 	req := httptest.NewRequest("GET", "/?a=aa1-4-si", nil)
 	rec := httptest.NewRecorder()
 	h.ServeHTTP(rec, req)
 	if rec.Code != 301 || !strings.HasPrefix(rec.Header().Get("Location"), "/sinh/dn-1-1") {
 		t.Fatalf("legacy redirect %d %q", rec.Code, rec.Header().Get("Location"))
+	}
+}
+
+func TestCanonical(t *testing.T) {
+	h := testApp(t).Handler()
+	for url, canonical := range map[string]string{"/": "https://tipitaka.app/", "/latn": "https://tipitaka.app/", "/sinh": "https://tipitaka.app/sinh",
+		"/thai/convert": "https://tipitaka.app/thai/convert"} {
+		if _, body := get(t, h, url); !strings.Contains(body, `<link rel="canonical" href="`+canonical+`">`) {
+			t.Errorf("%s: canonical not %s", url, canonical)
+		}
+	}
+	if _, body := get(t, h, "/latn/search"); strings.Contains(body, `rel="canonical"`) {
+		t.Error("search must not have a canonical")
 	}
 }
 
@@ -132,6 +153,10 @@ func TestSitemapRobots(t *testing.T) {
 	}
 	if _, body := get(t, h, "/sitemaps/latn.xml"); !strings.Contains(body, "https://tipitaka.app/latn/dn-1-1</loc>") || strings.Contains(body, "/latn/dn-1-1-3<") {
 		t.Fatal("sitemap must list suttas but not sections")
+	}
+	if _, body := get(t, h, "/sitemaps/latn.xml"); !strings.Contains(body, "<loc>https://tipitaka.app/</loc>") || strings.Contains(body, "/latn</loc>") ||
+		!strings.Contains(body, "/latn/convert</loc>") {
+		t.Fatal("latn sitemap: the root, not /latn, and the converter")
 	}
 	if res, _ := get(t, h, "/sitemaps/nope.xml"); res.StatusCode != 404 {
 		t.Fatal("unknown sitemap")
