@@ -206,6 +206,7 @@ func scriptOr(s string) string {
 func (a *App) simplePage(script, lang, title, desc, canonical string) page {
 	out := a.baseHTML(scriptLang[lang])
 	out = titleRe.ReplaceAllLiteralString(out, "<title>"+html.EscapeString(title)+"</title>")
+	out = descRe.ReplaceAllLiteralString(out, fmt.Sprintf(`<meta name="description" content="%s">`, html.EscapeString(desc)))
 	head := fmt.Sprintf(`<meta property="og:title" content="%s"><meta property="og:description" content="%s"><meta property="og:type" content="website">`,
 		html.EscapeString(title), html.EscapeString(desc))
 	if canonical != "" {

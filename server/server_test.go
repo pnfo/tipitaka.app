@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"html"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -140,6 +141,9 @@ func TestCanonical(t *testing.T) {
 		if _, body := get(t, h, url); !strings.Contains(body, `<link rel="canonical" href="`+canonical+`">`) {
 			t.Errorf("%s: canonical not %s", url, canonical)
 		}
+	}
+	if _, body := get(t, h, "/thai/convert"); !strings.Contains(body, `<meta name="description" content="`+html.EscapeString(convertDesc)+`">`) {
+		t.Error("converter description")
 	}
 	if _, body := get(t, h, "/latn/search"); strings.Contains(body, `rel="canonical"`) {
 		t.Error("search must not have a canonical")
