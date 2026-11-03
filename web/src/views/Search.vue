@@ -62,7 +62,7 @@ import DictFilter from '@/components/DictFilter.vue'
 import { useCollectionFilter } from '@/composables/filters'
 import { useApi } from '@/data/api'
 import type { TitleHit } from '@/data/types'
-import { detectScript, toRoman, useScript } from '@/composables/script'
+import { convertTo, detectScript, toRoman, useScript } from '@/composables/script'
 import { t } from '@/i18n'
 
 const route = useRoute(), router = useRouter()
@@ -94,7 +94,8 @@ function go(replace: boolean) {
   if (replace) router.replace(to)
   else router.push(to)
 }
-const submit = () => go(false)
+// (submitted: the box shows the query as the app reads it, in the script it was typed in; not while typing)
+const submit = () => { const r = toRoman(input.value.trim()); if (r) input.value = convertTo(r, inputScript.value); go(false) }
 // search as you type (v2 behaviour) once every word has a few letters (short prefixes match too much)
 watchDebounced(input, v => {
   const words = toRoman(v.trim()).split(/\s+/).filter(Boolean)

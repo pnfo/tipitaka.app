@@ -43,23 +43,36 @@
         {{ t('{0} word forms', res.combos.length) }} · {{ t('{0} matches in {1} texts', res.total, res.groups.length) }}
         <span v-if="res.truncated" class="text-error"> · {{ t('the query is broad, results are limited') }}</span>
       </div>
+      <!-- narrow screens: the word forms and the texts are two tabs; choosing a form shows its texts -->
+      <div v-if="tabs" class="mb-3 flex rounded-full border border-line p-0.5" role="tablist" data-testid="fts-tabs">
+        <button class="seg flex-1" :class="{ on: pane === 'forms' }" role="tab" :aria-selected="pane === 'forms'" data-testid="fts-tab-forms" @click="pane = 'forms'">
+          {{ t('Word forms') }} <span class="tabular-nums">{{ res.combos.length }}</span></button>
+        <button class="seg flex-1" :class="{ on: pane === 'texts' }" role="tab" :aria-selected="pane === 'texts'" data-testid="fts-tab-texts" @click="pane = 'texts'">
+          {{ t('Texts') }} <span class="tabular-nums">{{ res.groups.length }}</span></button>
+      </div>
       <div class="md:flex md:items-start md:gap-4">
-        <!-- word forms -->
-        <div class="mb-3 md:sticky md:top-[7.5rem] md:mb-0 md:max-h-[calc(100vh-9rem)] md:w-72 md:shrink-0 md:overflow-y-auto" data-testid="fts-combos">
-          <div class="flex gap-1.5 overflow-x-auto pb-1 md:block md:space-y-0.5 md:overflow-visible md:pb-0">
-            <button v-if="res.combos.length > 1" class="combo" :class="{ on: combo < 0 }" data-testid="combo-all" @click="setOpt('combo', 'all')">
+        <!-- word forms (whole: they wrap) -->
+        <div v-show="!tabs || pane === 'forms'" class="mb-3 md:sticky md:top-[7.5rem] md:mb-0 md:max-h-[calc(100vh-9rem)] md:w-72 md:shrink-0 md:overflow-y-auto"
+          data-testid="fts-combos">
+          <div class="space-y-0.5">
+            <button v-if="res.combos.length > 1" class="combo" :class="{ on: combo < 0 }" data-testid="combo-all" @click="pick('all')">
               <span class="flex-1 text-left">{{ t('All forms') }}</span><span class="tabular-nums text-muted">{{ allFreq }}</span>
             </button>
-            <button v-for="c in res.combos" :key="c.id" class="combo pali" :class="{ on: combo === c.id }" data-testid="combo" @click="setOpt('combo', String(c.id))">
-              <span class="flex-1 truncate text-left">{{ c.words.map(conv).join(' … ') }}</span>
+            <button v-for="c in res.combos" :key="c.id" class="combo pali" :class="{ on: combo === c.id }" data-testid="combo" @click="pick(String(c.id))">
+              <span class="min-w-0 flex-1 break-words text-left">{{ c.words.map(conv).join(' … ') }}</span>
               <span class="tabular-nums text-muted" :title="t('occurrences')">{{ c.freq }}</span>
-              <span class="hidden w-10 text-right text-xs tabular-nums text-muted md:inline" :title="t('texts')">{{ c.books }}</span>
+              <span class="w-10 text-right text-xs tabular-nums text-muted" :title="t('texts')">{{ c.books }}</span>
             </button>
           </div>
         </div>
 
         <!-- texts with hits -->
-        <div class="min-w-0 flex-1">
+        <div v-show="!tabs || pane === 'texts'" class="min-w-0 flex-1">
+          <!-- (tabs: the form shown, back to the forms) -->
+          <button v-if="tabs" class="combo pali mb-2 w-full" data-testid="fts-back-forms" @click="pane = 'forms'">
+            <IconBack class="h-4 w-4 shrink-0 text-muted" />
+            <span class="min-w-0 flex-1 break-words text-left">{{ combo < 0 ? t('All forms') : res.combos.find(c => c.id === combo)?.words.map(conv).join(' … ') }}</span>
+          </button>
           <div class="mb-2 flex items-center gap-2 text-xs text-muted">
             <span class="flex-1">{{ t('Texts') }}</span>
             <button class="chip" :class="{ on: opt('sortFreq') }" data-testid="opt-sortFreq" @click="setOpt('sortFreq', !opt('sortFreq'))">{{ t('Sort by number of hits') }}</button>
@@ -100,6 +113,8 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import IconChevron from '~icons/lucide/chevron-right'
+import IconBack from '~icons/lucide/arrow-left'
+import { useWindowSize } from '@vueuse/core'
 import { ApiError, useApi } from '@/data/api'
 import type { FtsGroup, FtsHit, FtsResult } from '@/data/types'
 import { useScript } from '@/composables/script'
@@ -122,6 +137,16 @@ const phrase = computed(() => route.query.mode !== 'near')
 // v2 showed the first (most frequent) form; ?combo=all shows every form
 const combo = computed(() => (route.query.combo === 'all' ? -1 : typeof route.query.combo === 'string' && route.query.combo !== '' ? +route.query.combo : 0))
 const terms = computed(() => props.q.split(/\s+/).filter(Boolean))
+
+// narrow screens (below md): word forms | texts tabs, when there is more than one form; the texts once a form was chosen
+const { width } = useWindowSize()
+const tabs = computed(() => width.value < 900 && (res.value?.combos.length ?? 0) > 1)
+const pane = ref<'forms' | 'texts'>(route.query.combo !== undefined ? 'texts' : 'forms')
+watch(() => props.q, () => { pane.value = 'forms' })
+function pick(c: string) {
+  setOpt('combo', c)
+  if (tabs.value) { pane.value = 'texts'; window.scrollTo({ top: 0 }) }
+}
 
 function setOpt(k: string, v: boolean | string) {
   const query = { ...route.query }
@@ -214,8 +239,7 @@ function snippet(h: FtsHit): string {
 </script>
 
 <style scoped>
-.combo { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; border-radius: .5rem; border: 1px solid var(--c-line); background: var(--c-surface); padding: .3rem .6rem; font-size: .95rem; }
-@media (min-width: 900px) { .combo { width: 100%; border-color: transparent; background: transparent; } }
+.combo { display: flex; width: 100%; align-items: center; gap: .5rem; border-radius: .5rem; border: 1px solid transparent; padding: .3rem .6rem; font-size: .95rem; text-align: left; }
 .combo:hover { background: var(--c-surface2); }
 .combo.on { border-color: var(--c-primary); background: var(--c-primary-soft); color: var(--c-primary); }
 .seg { border-radius: 9999px; padding: .15rem .75rem; font-size: .875rem; color: var(--c-muted); }

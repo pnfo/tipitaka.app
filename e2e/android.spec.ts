@@ -27,6 +27,7 @@ test('reads, searches and looks up words through the bridge', async ({ page }) =
   await page.goto(`${APP}/index.html#/latn/dn-1-1`)
   await expect(page.getByTestId('reader').locator('.para.heading').first()).toHaveText('1. Brahmajālasuttaṃ')
   await page.goto(`${APP}/index.html#/latn/search/bhikkhave`)
+  await page.getByTestId('fts-tab-texts').click() // (a phone: the word forms come first)
   await expect(page.getByTestId('fts-group').first()).toBeVisible()
   await page.goto(`${APP}/index.html#/latn/dict/dhamma`)
   await expect(page.getByTestId('dpd-head').first()).toBeVisible()

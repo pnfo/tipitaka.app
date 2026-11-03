@@ -24,9 +24,10 @@ export function convertTo(text: string, script: string): string {
   return v
 }
 
-/** user input in any script -> Roman lower case (search, dictionary) */
+/** user input in any script -> Roman lower case (search, dictionary). Pāḷi has only the short e and o: a long one
+ *  typed in Roman (ē, ō) is the short one (the scripts' long signs, Sinhala ේ ෝ, already convert to e, o) */
 export function toRoman(input: string): string {
-  return convertMixed(input, 'latn').toLowerCase()
+  return convertMixed(input, 'latn').toLowerCase().replace(/ē/g, 'e').replace(/ō/g, 'o')
 }
 
 /** the script of typed text (first letter that is not Roman); used to pick the font of search inputs */

@@ -1,4 +1,10 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+
+/** phones: the texts tab of the full text results (the word forms come first) */
+async function textsTab(page: Page) {
+  await expect(page.getByTestId('fts-combos').or(page.getByTestId('fts-groups')).first()).toBeVisible()
+  if (await page.getByTestId('fts-tabs').isVisible()) await page.getByTestId('fts-tab-texts').click()
+}
 
 test.describe('search', () => {
   test('the search box suggests titles and runs a text search', async ({ page }) => {
@@ -15,6 +21,7 @@ test.describe('search', () => {
   test('full text results: word forms, texts with counts, hits in context (v2 layout)', async ({ page }) => {
     await page.goto('/latn/search/bhikkhave')
     await expect(page.getByTestId('combo').first()).toContainText('bhikkhave')
+    await textsTab(page)
     const group = page.getByTestId('fts-group').first()
     await expect(group).toBeVisible()
     await group.getByTestId('group-expand').click()
@@ -121,6 +128,7 @@ test.describe('search', () => {
     await page.goto('/latn/search')
     await page.getByTestId('search-page-input').fill('bhikkhave')
     await expect(page).toHaveURL(/\/latn\/search\/bhikkhave/)
+    await textsTab(page)
     await expect(page.getByTestId('fts-group').first()).toBeVisible()
   })
 
@@ -134,5 +142,29 @@ test.describe('search', () => {
   test('title search', async ({ page }) => {
     await page.goto('/latn/titles/sila')
     await expect(page.getByTestId('title-hits')).toContainText('Cūḷasīlaṃ')
+  })
+
+  test('phones: word forms and texts are tabs; a form opens its texts, back to the forms', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'phones only')
+    await page.goto('/latn/search/bhikkhave')
+    const forms = page.getByTestId('fts-combos'), texts = page.getByTestId('fts-groups')
+    await expect(forms).toBeVisible()
+    await expect(texts).toBeHidden()
+    await forms.getByTestId('combo').nth(1).click()
+    await expect(page).toHaveURL(/combo=/)
+    await expect(texts).toBeVisible()
+    await expect(forms).toBeHidden()
+    await page.getByTestId('fts-back-forms').click()
+    await expect(forms).toBeVisible()
+  })
+
+  test('the box shows the query as searched: Pāḷi has only the short e and o', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'the header box (phones: the search page box)')
+    await page.goto('/latn')
+    const box = page.getByTestId('search-input')
+    await box.fill('ධම්මෝ')
+    await page.getByTestId('search-menu').getByRole('option').first().click()
+    await expect(page).toHaveURL(/\/search\/dhammo/)
+    await expect(box).toHaveValue('ධම්මො')
   })
 })

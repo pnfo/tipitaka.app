@@ -40,7 +40,7 @@ import IconBook from '~icons/lucide/book-a'
 import IconFile from '~icons/lucide/file-text'
 import { useApi } from '@/data/api'
 import type { TitleHit } from '@/data/types'
-import { detectScript, toRoman, useScript } from '@/composables/script'
+import { convertTo, detectScript, toRoman, useScript } from '@/composables/script'
 import { readJson, writeJson } from '@/stores/storage'
 import { useCollectionFilter } from '@/composables/filters'
 import { t } from '@/i18n'
@@ -104,6 +104,8 @@ function go(name: SearchType, r: string) {
 function choose(i: number) {
   const it = items.value[i]
   if (!it) return
+  // the box shows what was searched: the query as the app reads it, in the script it was typed in (ආරෝප -> ආරොප)
+  if (it.term !== undefined) q.value = convertTo(roman.value, inputScript.value)
   it.go()
   close()
 }
