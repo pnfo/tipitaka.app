@@ -176,6 +176,17 @@ func TestFts(t *testing.T) {
 	if !words["dhammaṃ"] || !words["dhammā"] {
 		t.Fatalf("prefix/fold search: %v", words)
 	}
+	// a final short a is open: dhamma finds dhammo (the Indic scripts' final consonant ධම්ම: the consonant + any vowel)
+	if !words["dhammo"] {
+		t.Fatalf("open final a: %v", words)
+	}
+	// not with exact, nor for a long ā
+	ex, _ := e.Fts(ctx, FtsQuery{Terms: []string{"dhamma"}, Exact: true, Combo: -1})
+	for _, c := range ex.Combos {
+		if Fold(c.Words[0]) != "dhamma" {
+			t.Fatalf("exact: %v", c.Words)
+		}
+	}
 	// suffix
 	s, _ := e.Fts(ctx, FtsQuery{Terms: []string{"*ssa"}, Combo: -1})
 	for _, c := range s.Combos {
@@ -340,6 +351,17 @@ func TestNormalize(t *testing.T) {
 	}
 	if Levenshtein("dhamma", "dhammā") != 1 || Levenshtein("", "abc") != 3 {
 		t.Error("levenshtein")
+	}
+	for in, want := range map[string]string{"āropa": "ārop", "dhamma": "dhamm", "na": "na", "dhammā": "dhammā", "bhikkhu": "bhikkhu",
+		"saṃ": "saṃ", "pīti": "pīti", "ea": "ea", "kāya": "kāy"} {
+		if got := openEnd(in); got != want {
+			t.Errorf("openEnd(%q) = %q want %q", in, got, want)
+		}
+	}
+	for in, want := range map[string]string{"dhamma*": "dhamm*", "*dhamma*": "*dhamm*", "*ssa": "*ssa", "āropa": "āropa", "ka*ta": "ka*ta"} {
+		if got := openStarts(in); got != want {
+			t.Errorf("openStarts(%q) = %q want %q", in, got, want)
+		}
 	}
 }
 

@@ -11,8 +11,9 @@ import (
 )
 
 // Full text search over the token/posting index (build/fts.ts). Semantics of the v2 search are kept:
-//   - every term is a word pattern: by default a prefix (dhamma -> dhamma*), * and ? are wildcards anywhere
-//     (*ssa = suffix, *na* = infix); exact disables the implicit prefix
+//   - every term is a word pattern: by default a prefix (dhamma -> dhamm*: a final short a is the ending, and in the
+//     Indic scripts it is a final consonant without vowel sign: openEnd), * and ? are wildcards anywhere (*ssa =
+//     suffix, *na* = infix); exact disables the implicit prefix
 //   - terms without diacritics match diacritic-insensitively (dhamma ~ dhammā)
 //   - several terms: within distance words of each other (any order), in order (order) or adjacent (phrase)
 //   - results are grouped by the combination of matched words ("combos") with their frequencies
@@ -121,6 +122,8 @@ func (e *Engine) matchTokens(ctx context.Context, term string, exact bool) ([]to
 	if !exact && !strings.ContainsAny(t, "*?") { // implicit prefix only when the user wrote no wildcard
 		t += "*"
 	}
+	// before a *, the start of words: a final short a is open (dhamma* -> dhamm*)
+	t = openStarts(t)
 	sensitive := HasDiacritics(t)
 	f := Fold(t)
 	var where string

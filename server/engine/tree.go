@@ -91,6 +91,9 @@ func (e *Engine) Titles(ctx context.Context, q string, filter []string, limit in
 	if limit <= 0 || limit > 500 {
 		limit = 100
 	}
+	// the last word is the start of a word: a final short a is open (āropa, ආරොප -> ārop: āropeti too, normalize.go openEnd)
+	last := strings.LastIndexByte(q, ' ') + 1
+	q = q[:last] + openEnd(q[last:])
 	sensitive := HasDiacritics(q)
 	fq := Fold(q)
 	allowed := e.underKeys(filter)

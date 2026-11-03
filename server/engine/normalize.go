@@ -64,3 +64,30 @@ func Levenshtein(a, b string) int {
 	}
 	return prev[len(rb)]
 }
+
+// openEnd drops the short a that ends a word after a consonant (dhamma -> dhamm, āropa -> ārop), for the words
+// searched as the start of words: a Pāḷi word finds its other endings (dhammo, dhammassa), and in the Indic scripts a
+// final consonant without a vowel sign is the consonant with any vowel or consonant after it (ආරොප: āropa, āropeti,
+// āropito, āroppa), which in Roman is the stem. Words of two letters stay (na, ca).
+func openEnd(w string) string {
+	r := []rune(w)
+	n := len(r)
+	if n < 3 || r[n-1] != 'a' || !isConsonant(r[n-2]) {
+		return w
+	}
+	return string(r[:n-1])
+}
+
+// openStarts opens the word starts of a * pattern (the parts before a *): dhamma* -> dhamm*, *ārop* stays.
+func openStarts(p string) string {
+	parts := strings.Split(p, "*")
+	for i := 0; i < len(parts)-1; i++ {
+		parts[i] = openEnd(parts[i])
+	}
+	return strings.Join(parts, "*")
+}
+
+// isConsonant: a letter of a Pāḷi consonant in Roman (not a vowel, not ṃ)
+func isConsonant(r rune) bool {
+	return unicode.IsLetter(r) && !strings.ContainsRune("aāiīuūeoṃṁ", r)
+}

@@ -139,6 +139,11 @@ test.describe('search', () => {
     await expect(page).toHaveURL(/\/sinh\/search\/bhikkhave/)
   })
 
+  test('a word ending in a consonant without vowel sign finds every vowel after it (ධම්ම: dhammo too)', async ({ page }) => {
+    await page.goto('/sinh/search/' + encodeURIComponent('dhamma'))
+    await expect(page.getByTestId('fts-combos')).toContainText('ධම්මො')
+  })
+
   test('title search', async ({ page }) => {
     await page.goto('/latn/titles/sila')
     await expect(page.getByTestId('title-hits')).toContainText('Cūḷasīlaṃ')

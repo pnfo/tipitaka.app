@@ -144,7 +144,8 @@ func (e *Engine) Dicts(ctx context.Context) ([]Dict, error) {
 func placeholders(n int) string { return strings.Repeat(",?", n)[1:] }
 
 // Dictionary looks up a typed word: exact (diacritic-insensitive unless it has diacritics) or a * ? pattern,
-// falling back to a prefix search when nothing matches. dicts limits the dictionaries (codes), DPD is "dpd";
+// falling back to a prefix search when nothing matches (patterns and prefixes with the final short a open:
+// āropa*, ආරොප -> ārop*, normalize.go openEnd). dicts limits the dictionaries (codes), DPD is "dpd";
 // none: all but the opt-in dictionaries.
 func (e *Engine) Dictionary(ctx context.Context, word string, dicts []string, limit int) (*DictResult, error) {
 	if e.dict == nil {
@@ -221,7 +222,7 @@ func (e *Engine) Dictionary(ctx context.Context, word string, dicts []string, li
 		return rows.Err()
 	}
 	if strings.ContainsAny(f, "*?") {
-		if err := run("GLOB", f, w); err != nil {
+		if err := run("GLOB", openStarts(f), openStarts(w)); err != nil {
 			return nil, err
 		}
 	} else {
@@ -229,7 +230,7 @@ func (e *Engine) Dictionary(ctx context.Context, word string, dicts []string, li
 			return nil, err
 		}
 		if len(res.Entries) == 0 {
-			if err := run("GLOB", f+"*", w+"*"); err != nil {
+			if err := run("GLOB", openStarts(f+"*"), openStarts(w+"*")); err != nil {
 				return nil, err
 			}
 		}
@@ -253,14 +254,14 @@ func (e *Engine) Dictionary(ctx context.Context, word string, dicts []string, li
 	if useDpd {
 		pat, op := f, "="
 		if strings.ContainsAny(f, "*?") {
-			op = "GLOB"
+			pat, op = openStarts(f), "GLOB"
 		}
 		heads, err := e.dpdHeads(ctx, "fold "+op+" ?", []any{pat}, 50)
 		if err != nil {
 			return nil, err
 		}
 		if len(heads) == 0 && op == "=" {
-			if heads, err = e.dpdHeads(ctx, "fold GLOB ?", []any{f + "*"}, 30); err != nil {
+			if heads, err = e.dpdHeads(ctx, "fold GLOB ?", []any{openStarts(f + "*")}, 30); err != nil {
 				return nil, err
 			}
 		}
