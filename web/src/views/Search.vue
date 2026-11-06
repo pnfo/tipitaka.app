@@ -2,7 +2,7 @@
 <template>
   <div class="mx-auto max-w-4xl px-4 pb-20 pt-4">
     <form class="mb-3 flex items-center gap-2" @submit.prevent="submit">
-      <input v-model="input" class="input text-base" :data-script="inputScript" :style="inputScript !== 'latn' ? { fontFamily: 'var(--font-text)' } : undefined"
+      <input v-model="input" class="input text-base" :data-script="inputScript" :style="inputScript !== 'latn' ? { fontFamily: 'var(--font-label)' } : undefined"
         :placeholder="t('Search')" type="search" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-testid="search-page-input">
       <button class="btn-primary h-10" type="submit" :aria-label="t('Search')"><IconSearch class="h-4 w-4" /></button>
       <DictFilter v-if="route.name === 'dict'" />

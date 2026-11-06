@@ -8,7 +8,7 @@
   <aside v-if="column || overlay" :class="column ? 'sticky top-14 h-[calc(100vh-3.5rem)] shrink-0 border-l' : 'fixed bottom-0 right-0 top-14 z-40 max-w-[85vw] border-l shadow-2xl'"
     class="overflow-y-auto overscroll-contain border-line bg-surface" :style="{ width: `${NAV_WIDTH}px` }" :aria-label="t('Menu')" data-testid="nav-pane">
     <div class="flex items-center gap-1 border-b border-line py-1.5 pl-3 pr-1.5">
-      <span class="flex-1 truncate font-semibold text-primary" style="font-family: var(--font-text)">{{ conv('Tipiṭaka') }}</span>
+      <span class="flex-1 truncate font-semibold text-primary" style="font-family: var(--font-label)">{{ conv('Tipiṭaka') }}</span>
       <button v-if="overlay && navFits" class="icon-btn text-muted" :title="t('Keep open')" :aria-label="t('Keep open')" data-testid="nav-pin" @click="pin"><IconPin class="h-4 w-4" /></button>
       <button ref="closeBtn" class="icon-btn" :title="t('Close')" :aria-label="t('Close')" data-testid="nav-close" @click="close"><IconX class="h-5 w-5" /></button>
     </div>

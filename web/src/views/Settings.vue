@@ -8,7 +8,7 @@
       <div class="flex flex-wrap items-center gap-2" data-testid="settings-script">
         <button v-for="s in shownScripts" :key="s.code" class="btn h-9" :class="{ on: s.code === script }" :aria-pressed="s.code === script"
           :data-testid="`settings-script-${s.code}`" @click="changeScript(router, s.code)">
-          <span :data-script="s.code" style="font-family: var(--font-text)">{{ s.native }}</span>
+          <span :data-script="s.code" style="font-family: var(--font-label)">{{ s.native }}</span>
           <span v-if="s.code !== 'latn'" class="text-xs text-muted">{{ s.name }}</span>
         </button>
         <ScriptPicker more />

@@ -7,7 +7,7 @@
     </button>
     <RouterLink :to="{ name: 'home', params: { script } }" class="mr-1 hidden shrink-0 items-center gap-2 sm:flex" :aria-label="t('Home')" :title="t('Home')">
       <img :src="logo" alt="" class="h-7 w-7 rounded-full" width="28" height="28">
-      <span class="hidden font-semibold tracking-tight text-primary sm:inline" style="font-family: var(--font-text)">{{ conv('Tipiṭaka') }}</span>
+      <span class="hidden font-semibold tracking-tight text-primary sm:inline" style="font-family: var(--font-label)">{{ conv('Tipiṭaka') }}</span>
     </RouterLink>
     <div class="flex min-w-0 flex-1 justify-center">
       <!-- the search pages have their own box on phones -->

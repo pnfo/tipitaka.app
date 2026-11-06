@@ -32,10 +32,21 @@ Pāḷi text (`pali-<script>`): halfway (geometric mean) between
 Interface text (`ui-<script>`): the v2 size, since v2's interface text was 16px in the script font while ours is
 mostly 14px (×16/14; English: Times 16px in v2 ≈ system-ui 14px).
 
+Sizes chosen by eye are in `FIXED` in the script, which `--write` keeps: Tai Tham 185% and Myanmar 120% ("mana" is a
+tall pair in Lamphun and Pyidaungsu: by the median consonant height they were 0.65 and 0.78 × x-height, Thai, Lao,
+Sinhala, Devanagari 1.15–1.21), Sinhala 100% / 130% (smaller than the
+computed 111.1% / 142.6%).
+
+Pāḷi labels in the interface (`.pali`: the tree, cards, lists, titles, the script names; not the reading text, which
+is `.reading`) use `--font-label`, which is the text font unless a script sets its own. Sinhala labels are
+`label-sinh` (the same AbhayaUni files at 112.5%, set by hand): the tree then has the letter height of tipitaka.lk's
+tree and text (both 18px there, 11.6px letters) and the same as our 18px text, and Pāḷi names stand out a little from
+the 130% interface text next to them.
+
 | script | own height | Pāḷi size-adjust | interface size-adjust |
 |---|---|---|---|
 | latn | 1.00 | 100% | |
-| sinh | 1.16 | 111.1% | 142.6% |
+| sinh | 1.16 | 100% (fixed) | 130% (fixed) |
 | deva | 1.13 | 101.1% | 114.5% |
 | beng | 1.14 | 100.4% | |
 | guru | 1.12 | 101.4% | |
@@ -46,9 +57,9 @@ mostly 14px (×16/14; English: Times 16px in v2 ≈ system-ui 14px).
 | taml | 1.01 | 106.5% | |
 | khmr | 1.23 | 96.2% | 112.7% |
 | thai | 0.73 | 153.3% | 171.3% |
-| mymr | 1.63 | 83.2% | 112.2% |
+| mymr | 1.63 | 120% (fixed) | 112.2% |
 | laoo | 1.23 | 96.7% | |
-| lana | 1.01 | 106.7% | |
+| lana | 1.01 | 185% (fixed) | |
 | tibt | 1.94 | 77.0% | |
 | brah | 1.31 | 93.9% | |
 

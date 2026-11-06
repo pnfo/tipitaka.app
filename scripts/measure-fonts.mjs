@@ -14,6 +14,10 @@ const css = fs.readFileSync(CSS, 'utf8')
 const V2 = { sinh: 1.45, mymr: 1.6, thai: 1.1, khmr: 1.21, deva: 1.13 }
 const EQUAL = 1.15 // non-Roman letters at 1.15× the Roman x-height look the same size
 const MIN = 0.5, MAX = 1.6
+// sizes chosen by eye that the measurement does not override (Sinhala: smaller than halfway to v2, 2026-11-06)
+// Tai Tham (Lamphun) and Myanmar: 'mana' is a tall pair in these fonts, by the median consonant height (Thai, Lao,
+// Sinhala, Devanagari 1.15-1.21 × x-height) they were much smaller (Tai Tham 0.65, Myanmar 0.78)
+const FIXED = { sinh: { adjust: 1.0, ui: 1.3 }, lana: { adjust: 1.85 }, mymr: { adjust: 1.2 } }
 
 // the regular face of every script (single faces have no font-weight)
 const faces = [...css.matchAll(/@font-face \{ font-family: 'pali-([a-z]+)'; src: url\('\.\.\/assets\/fonts\/([^']+)'\)([^}]*)\}/g)]
@@ -55,6 +59,7 @@ const rows = faces.map(({ script }) => {
 // 14px (text-sm), which matches v2's English (Times 16px ≈ system-ui 14px x-height) but not the script fonts
 const UI_V2 = 16 / 14
 for (const r of rows) r.ui = V2[r.script] ? V2[r.script] / r.own * UI_V2 : undefined
+for (const r of rows) if (FIXED[r.script]) Object.assign(r, FIXED[r.script])
 console.table(rows.map(r => ({ script: r.script, 'own height': r.own.toFixed(2), target: r.target.toFixed(2), 'size-adjust': `${(r.adjust * 100).toFixed(1)}%`,
   'ui size-adjust': r.ui ? `${(r.ui * 100).toFixed(1)}%` : '' })))
 

@@ -42,6 +42,9 @@
 html, body { background: var(--c-bg); color: var(--c-fg); }
 /* nothing may widen the layout on phones (mobile browsers would zoom the whole page out) */
 body { overflow-x: hidden; }
+/* truncate (overflow hidden) also clips the letters that reach above or below the line box: Tai Tham's tall aa and
+ * vowels above, the stacks of Myanmar and Sinhala; clip only sideways, the ellipsis stays (Chrome 90, Safari 16) */
+@supports (overflow: clip) { .truncate { overflow-x: clip; overflow-y: visible; } }
 body { font-family: var(--font-ui); margin: 0; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
