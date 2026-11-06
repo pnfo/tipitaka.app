@@ -31,7 +31,7 @@
 @font-face { font-family: 'pali-mymr'; src: url('../assets/fonts/Pyidaungsu-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; size-adjust: 83.2%; }
 @font-face { font-family: 'pali-mymr'; src: url('../assets/fonts/Pyidaungsu-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; size-adjust: 83.2%; }
 @font-face { font-family: 'pali-laoo'; src: url('../assets/fonts/LaoPaliAlpha-Regular.woff') format('woff'); font-display: swap; size-adjust: 96.7%; }
-@font-face { font-family: 'pali-lana'; src: url('../assets/fonts/TaiThamLN2.woff') format('woff'); font-display: swap; size-adjust: 83.3%; }
+@font-face { font-family: 'pali-lana'; src: url('../assets/fonts/Lamphun.woff2') format('woff2'); font-display: swap; size-adjust: 106.7%; }
 @font-face { font-family: 'pali-tibt'; src: url('../assets/fonts/DDC_Uchen.woff2') format('woff2'); font-display: swap; size-adjust: 77.0%; }
 @font-face { font-family: 'pali-brah'; src: url('../assets/fonts/NotoSansBrahmi-Regular.woff2') format('woff2'); font-display: swap; size-adjust: 93.9%; }
 

@@ -7,6 +7,11 @@ variable Tamil subset of Google Fonts); its superscripts ²³⁴ come from `pali
 Text in Pāḷi gets `font-family: var(--font-text)`, which `[data-script]` sets per script. Browsers download only the
 faces that are used.
 
+Tai Tham (`lana`) uses Lamphun (Richard Wordingham, https://wrdingham.co.uk/lanna/, SIL OFL, Reserved Font Name
+Lamphun; the .otf converted to woff2 unchanged), a Lanna-style face that shapes Pāḷi correctly in HarfBuzz/USE: the
+earlier Tai Tham LN2 broke every e/o after a stack (ᨵᨾ᩠ᨾᩮᩣ with a visible sakot), and Noto Sans Tai Tham (the system
+fallback) puts the e after the stack instead of before it as in Lanna writing.
+
 The interface language has its own font: `setUiLang()` sets `html[data-ui-lang]`, and `--font-ui` starts with a
 `ui-<script>` face (si → Sinhala, my → Myanmar, th → Thai, kh → Khmer, hi → Devanagari; English and Chinese use the
 system font). The `ui-` faces have a `unicode-range` of their script only, so Latin text in the interface (English
@@ -43,7 +48,7 @@ mostly 14px (×16/14; English: Times 16px in v2 ≈ system-ui 14px).
 | thai | 0.73 | 153.3% | 171.3% |
 | mymr | 1.63 | 83.2% | 112.2% |
 | laoo | 1.23 | 96.7% | |
-| lana | 1.66 | 83.3% | |
+| lana | 1.01 | 106.7% | |
 | tibt | 1.94 | 77.0% | |
 | brah | 1.31 | 93.9% | |
 
