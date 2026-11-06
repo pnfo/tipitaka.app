@@ -35,7 +35,7 @@ mostly 14px (×16/14; English: Times 16px in v2 ≈ system-ui 14px).
 | script | own height | Pāḷi size-adjust | interface size-adjust |
 |---|---|---|---|
 | latn | 1.00 | 100% | |
-| sinh | 1.46 | 88.2% | 113.2% |
+| sinh | 1.16 | 111.1% | 142.6% |
 | deva | 1.13 | 101.1% | 114.5% |
 | beng | 1.14 | 100.4% | |
 | guru | 1.12 | 101.4% | |
