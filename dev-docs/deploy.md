@@ -55,12 +55,27 @@ The **sync-upstream** workflow runs daily: new tipitaka-xml commits (or a DPD re
 the build report (changed texts, key changes). Merge, run the release workflow, deploy.
 
 ## Desktop
-The release workflow builds zips natively for linux (amd64/arm64), macOS (intel/arm) and windows
-(`scripts/release-desktop.sh`). Sign/notarize macOS builds with `server/sign-notorize.sh`.
+Windows and macOS are released through the stores (below), not as zips. The release workflow still builds a
+zip on each OS (`scripts/release-desktop.sh`, the server mode with the web app and the dbs).
 
 ## Android / iOS
 `scripts/build-mobile.sh android|ios` (also a release artifact) + `web/dist-app` + the dbs; see
 `dev-docs/native-bridge.md`.
+
+## Store releases (the four apps)
+Windows is in the Microsoft Store only, macOS in the Mac App Store only, Android in Google Play, iOS in the App Store
+(no GitHub zips, no notarization). One version for all: set it in `package.json` (each store needs a higher one than
+the last upload) and write the release notes (≤ 500 characters, Play's limit) to `release/notes-<version>.txt`.
+The keys are in `/Volumes/2TB/node/api-keys` (Play service account, `.env.windows`) and the App Store Connect key
+of `scripts/asc.mjs`.
+1. **Android**: `versionCode`/`versionName` in `app/build.gradle` of `/Volumes/2TB/Android/Tipitaka-app-v3`; then
+   `npm run build:web:app && scripts/build-mobile.sh android && scripts/android-assets.sh /Volumes/2TB/Android/Tipitaka-app-v3`
+   (fresh builds: android-assets.sh reuses an existing web/dist-app and engine.aar), `./gradlew bundleRelease` there,
+   `node scripts/play-upload.mjs <aab> --notes <file>` (production at 100%; `--fraction 0.2` staged, `--draft`, `--dry-run`).
+2. **Windows**: `scripts/build-desktop.sh windows` → `release/tipitaka_app-<version>.msix`, then
+   `node scripts/msstore-upload.mjs <msix> --notes <file>` (published when certified; `--manual`, `--dry-run`).
+3. **iOS + macOS**: `scripts/build-apple.sh all --upload`, then `node scripts/asc-release.mjs <version> --notes <file>`
+   (waits for the processed builds, creates the versions, What's New, submits; released when approved; `--manual`).
 
 * The text db is uploaded as `text-<content_hash>.db`; the content hash covers the text and everything derived that
   goes into the db (links, the commentary alignment, the names, settings and mentions), so a new alignment or names
